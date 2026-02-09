@@ -1,6 +1,6 @@
 import { GameControls } from '@/components/controls';
 import { MeasuresSection } from '@/components/measures';
-import { PoisonSelector } from '@/components/poison';
+import { PoisonSection } from '@/components/poison';
 import type { RhythmMeasure } from '@/types/rhythm';
 
 type BodyProps = {
@@ -24,7 +24,7 @@ export function Body({
 				reuseDisabled={poisonRhythm === null}
 			/>
 
-			<PoisonSelector poisonRhythm={poisonRhythm} />
+			<PoisonSection poisonRhythm={poisonRhythm} />
 
 			<MeasuresSection measures={measures} />
 		</main>

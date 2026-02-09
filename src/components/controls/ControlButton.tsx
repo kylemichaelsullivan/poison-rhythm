@@ -15,8 +15,8 @@ export function ControlButton({
 	const styles = disabled
 		? 'border-dark bg-dark text-mid cursor-not-allowed'
 		: variant === 'primary'
-			? 'border-mid bg-primary text-white hover:opacity-90'
-			: 'border-mid bg-dark text-white hover:bg-mid';
+			? 'border-mid bg-primary text-white hover:border-white hover:opacity-90'
+			: 'border-mid bg-dark text-white hover:border-white hover:bg-mid';
 
 	return (
 		<button

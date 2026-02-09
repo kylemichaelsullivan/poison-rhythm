@@ -20,7 +20,7 @@ export function DifficultySlider({ value, onChange }: DifficultySliderProps) {
 				title='Difficulty'
 				onChange={(e) => onChange(Number(e.target.value))}
 			/>
-			<span className='tabular-nums text-white'>{value}</span>
+			<span className='tabular-nums font-bold'>{value}</span>
 		</div>
 	);
 }

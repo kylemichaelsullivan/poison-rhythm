@@ -1,1 +1,1 @@
-export { PoisonSelector } from './PoisonSelector';
+export { PoisonSection } from './PoisonSection';
