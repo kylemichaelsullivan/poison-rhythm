@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+@theme {
+	/* Raw palette (OKLCH) */
+	--color-cyan-600: oklch(60.9% 0.126 221.723);
+	--color-orange-400: oklch(75% 0.183 55.934);
+	--color-stone-50: oklch(98.5% 0.001 106.423);
+	--color-stone-200: oklch(92.3% 0.003 48.717);
+	--color-stone-400: oklch(70.9% 0.01 56.259);
+	--color-stone-700: oklch(37.4% 0.01 67.558);
+	--color-stone-950: oklch(14.7% 0.004 49.25);
+
+	/* Light theme (light bg): primary=orange, fg=950, bg=50. Dark theme (dark bg): primary=cyan, fg=50, bg=950. */
+	--color-primary: light-dark(var(--color-cyan-600), var(--color-orange-400));
+	--color-secondary: light-dark(var(--color-orange-400), var(--color-cyan-600));
+	--color-light: light-dark(var(--color-stone-200), var(--color-stone-700));
+	--color-mid: var(--color-stone-400);
+	--color-dark: light-dark(var(--color-stone-700), var(--color-stone-200));
+	--color-white: light-dark(
+		var(--color-stone-50),
+		var(--color-stone-950)
+	); /* fg: dark on light, light on dark */
+	--color-black: light-dark(
+		var(--color-stone-950),
+		var(--color-stone-50)
+	); /* bg */
+}
+
+:root {
+	color-scheme: light dark;
+}
+
+/* User override: data-theme sets which side of light-dark() is used (light = 1st arg, dark = 2nd) */
+:root[data-theme="dark"] {
+	color-scheme: dark;
+}
+:root[data-theme="light"] {
+	color-scheme: light;
+}
+
+button,
+input {
+	cursor: pointer;
+}
+
+*:disabled {
+	cursor: not-allowed;
+}
+
+/* 16-column grid for 4/4 measure with 16th-note subdivisions */
+grid-cols-16 {
+	grid-template-columns: repeat(16, minmax(0, 1fr));
+}

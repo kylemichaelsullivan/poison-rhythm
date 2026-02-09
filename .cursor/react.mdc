@@ -1,0 +1,105 @@
+---
+globs: **/*.tsx, **/*.ts
+exclude: **/__tests__/**, **/*.test.*, **/*.spec.*, **/*.css
+alwaysApply: false
+---
+
+# React Development Standards for Poison Rhythm
+
+## Component Architecture
+
+### Single-Purpose Components
+
+- **One component per file**: Each file contains exactly one React component
+- **Bite-sized components**: Components should be focused and single-purpose (one thing == one component == one file)
+- **Descriptive naming**: Use PascalCase with descriptive names indicating visual purpose
+- **Component suffixes**: Use appropriate suffixes (e.g., `Selector`, `Grid`, `Slider`, `Controls`)
+
+### Component Guidelines
+
+- **TypeScript types**: Prefer `type` over `interface` for component props and data structures
+- **Named exports**: Export components as named exports using `export function` or `export const`
+- **Props interface**: Define clear, typed props with descriptive names
+- **forwardRef usage**: Use `forwardRef` for components that need to expose DOM refs
+
+### Performance Optimization
+
+- **React.memo**: Use for components with stable props when re-renders are costly
+- **useMemo**: Use for expensive computations (e.g., derived lists, filtering)
+- **useCallback**: Use for event handlers passed as props to avoid unnecessary re-renders
+- **Bundle**: Rely on Vite’s tree-shaking; import only what you need
+
+## State Management
+
+- **Game state hook**: `usePoisonGame` holds poisonRhythm, measures, poisonFoundAt and handlers (handleGenerate, handleNewPoison, handleReusePoison, handlePoisonChange); used by `App.tsx`
+- **Difficulty context**: `DifficultyProvider` and `useDifficulty` from `@/contexts/DifficultyContext` provide difficulty (1–5) used by usePoisonGame and GameControls
+- **Local state**: Use `useState` and `useCallback` in hooks or parent components
+- **Lifting state**: Pass state and handlers from App (via usePoisonGame) down to GameControls, PoisonSelector, MeasuresSection
+- **No global store required**: Current app is small; avoid adding Zustand or similar unless state grows significantly
+
+## Accessibility Standards
+
+### ARIA and Semantics
+
+- **Proper ARIA labels**: Include appropriate ARIA labels and roles where needed
+- **Keyboard navigation**: Support keyboard navigation with proper tabIndex and button semantics
+- **Focus management**: Use native focusable elements for controls
+- **Semantic HTML**: Use semantic HTML (buttons, headings, sections)
+
+### Error and Loading
+
+- **Disabled states**: Disable buttons when an action is not applicable (e.g. “Generate” when poison is found)
+- **Clear feedback**: Show clear feedback when poison is found (e.g. “Poison found at measure #N!”)
+
+## Poison Rhythm–Specific Guidelines
+
+### Rhythm and Measures
+
+- **RhythmMeasure**: Use the `RhythmMeasure` type from `@/types/rhythm` for measure data
+- **rhythm-generator**: Use `generateRandomMeasure`, `QUARTER_NOTES` from `@/lib/rhythm-generator`
+- **rhythm-utils**: Use `rhythmsEqual` from `@/lib/rhythm-utils` to compare measures
+
+### Components
+
+- **App**: Uses `usePoisonGame`; renders AppTitle, GameControls, PoisonSelector, MeasuresSection; wrapped by DifficultyProvider in main.tsx
+- **GameControls**: Section with DifficultySlider + ControlButtons (New, Reuse)
+- **PoisonSelector**: Section showing current poison rhythm via MeasureGrid (read-only)
+- **MeasuresSection**: SectionTitle + MeasureSlider or empty state
+- **MeasureSlider**: Carousel (CarouselNavButtons + CurrentMeasureDisplay)
+- **MeasureGrid**: Single measure grid; `isPoison`/`isActive`; uses MeasureCell; `.grid-cols-16` from index.css
+
+### Typography
+
+- **Typographic apostrophe**: Use ’ instead of ' in all user-facing text
+- **Consistent spacing**: Follow established flex/gap spacing patterns
+
+## File Organization
+
+### Component Structure
+
+```
+src/
+├── App.tsx
+├── main.tsx              # Wraps App with DifficultyProvider
+├── index.css
+├── components/
+│   ├── controls/         # CarouselNavButton, CarouselNavButtons, ControlButton, ControlButtons, DifficultySlider, GameControls
+│   ├── layout/           # AppTitle, Section, SectionTitle
+│   ├── measures/         # CurrentMeasureDisplay, MeasureCell, MeasureGrid, MeasureSlider, MeasuresSection
+│   └── poison/           # PoisonSelector
+├── contexts/
+│   └── DifficultyContext.tsx
+├── hooks/
+│   └── usePoisonGame.ts
+├── lib/
+│   ├── rhythm-generator.ts
+│   └── rhythm-utils.ts
+└── types/
+    └── rhythm.ts
+```
+
+### Import Paths
+
+- Use the `@/` alias for imports under `src/`
+- Prefer barrel imports: `@/components/controls`, `@/components/layout`, `@/components/measures`, `@/components/poison`
+- Direct paths when needed: `@/lib/rhythm-generator`, `@/types/rhythm`, `@/contexts/DifficultyContext`

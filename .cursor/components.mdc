@@ -1,0 +1,194 @@
+---
+globs: **/components/**/*.tsx
+alwaysApply: false
+---
+# Poison Rhythm Component Standards
+
+## File Organization
+
+```
+src/components/
+├── controls/              # Game control buttons and sliders
+│   ├── CarouselNavButton.tsx  # Prev/Next arrow button for measure carousel
+│   ├── CarouselNavButtons.tsx # Wraps prev/next + children (current measure)
+│   ├── ControlButton.tsx     # Reusable button (label, onClick, variant: primary | secondary)
+│   ├── ControlButtons.tsx    # New, Reuse buttons (uses ControlButton)
+│   ├── DifficultySlider.tsx  # Difficulty selector (uses useDifficulty)
+│   ├── GameControls.tsx      # Section with DifficultySlider + ControlButtons
+│   └── index.ts
+├── layout/                # Layout primitives
+│   ├── AppTitle.tsx           # App title
+│   ├── Section.tsx            # Wrapper: SectionTitle + children (border, padding)
+│   ├── SectionTitle.tsx       # Section heading
+│   └── index.ts
+├── measures/              # Measure carousel and grid
+│   ├── CurrentMeasureDisplay.tsx # Single measure + index; uses MeasureGrid
+│   ├── MeasureCell.tsx        # Single cell in a measure grid
+│   ├── MeasureGrid.tsx        # One measure grid; isPoison/isActive styling; uses MeasureCell
+│   ├── MeasureSlider.tsx      # Carousel over measures; CarouselNavButtons + CurrentMeasureDisplay
+│   ├── MeasuresSection.tsx    # "Measures" section: SectionTitle + MeasureSlider or empty state
+│   └── index.ts
+└── poison/                # Poison rhythm selector
+    ├── PoisonSelector.tsx     # Section showing current poison rhythm via MeasureGrid
+    └── index.ts
+```
+
+## Component Structure Guidelines
+
+### Avoid Superfluous Wrappers
+
+- **Remove unnecessary wrapper divs**: Don't create wrapper divs that add DOM complexity without benefit
+- **Simplify component structure**: Remove redundant nesting when possible
+- **Keep meaningful wrappers**: Retain wrappers that serve styling, semantic, or layout purposes
+
+### Spacing Guidelines
+
+- **Avoid `space-*` utilities**: Don't use `space-x-*` or `space-y-*` — they rely on margin-based spacing
+- **Use flex/gap spacing**: Use `flex flex-col gap-*` for vertical spacing and `flex items-center gap-*` for horizontal spacing
+- **Maintain visual consistency**: Spacing changes should preserve the intended layout
+
+#### Spacing Examples
+
+```tsx
+// ❌ Avoid - margin-based spacing
+<div className='space-y-4'>
+  <Component />
+</div>
+
+// ✅ Good - flexbox-based spacing
+<div className='flex flex-col gap-4'>
+  <Component />
+</div>
+```
+
+```tsx
+// ❌ Avoid - redundant wrapper
+<div className='Container'>
+  <div className='flex flex-col gap-4'>
+    <Component />
+  </div>
+</div>
+
+// ✅ Good - simplified structure
+<div className='Container flex flex-col gap-4'>
+  <Component />
+</div>
+```
+
+## Core Components
+
+### App (root)
+
+- **Uses**: `usePoisonGame`; renders AppTitle, GameControls, PoisonSelector, MeasuresSection
+- **State**: Lifted via `usePoisonGame`: poisonRhythm, measures, poisonFoundAt, handlers
+
+### GameControls
+
+- **Purpose**: Section with difficulty slider and control buttons (New, Reuse)
+- **Props**: `onNewPoison`, `onReusePoison`
+- **Uses**: Section, DifficultySlider, ControlButtons; `useDifficulty` from `@/contexts/DifficultyContext`
+- **Behavior**: DifficultySlider sets difficulty (1–5); ControlButtons trigger New (new poison + measures) and Reuse (same poison, new measures)
+
+### PoisonSelector
+
+- **Purpose**: Section that displays the current poison rhythm (read-only)
+- **Props**: `poisonRhythm: RhythmMeasure`
+- **Uses**: Section, MeasureGrid (with `isPoison`)
+
+### MeasuresSection
+
+- **Purpose**: "Measures" area: empty state or MeasureSlider
+- **Props**: `measures: RhythmMeasure[]`
+- **Uses**: SectionTitle, MeasureSlider
+
+### MeasureSlider
+
+- **Purpose**: Carousel over measures with Prev/Next
+- **Props**: `measures: RhythmMeasure[]`
+- **Uses**: CarouselNavButtons, CurrentMeasureDisplay
+
+### MeasureGrid
+
+- **Purpose**: Render one measure (16th-note grid) with optional poison/active styling
+- **Props**: `measure: RhythmMeasure`, `isPoison?: boolean`, `isActive?: boolean`
+- **Uses**: MeasureCell; `.grid-cols-16` from `src/index.css`
+- **Usage**: PoisonSelector (poison display), CurrentMeasureDisplay (current measure in carousel)
+
+### Section / SectionTitle
+
+- **Section**: Wrapper with title and children; border, padding, gap. Props: `title`, `children`, `className?`
+- **SectionTitle**: Section heading used inside Section and in MeasuresSection
+
+## Component Patterns
+
+### Standard Component
+
+```tsx
+import type { ReactNode } from 'react';
+import clsx from 'clsx';
+
+type ComponentProps = {
+	title: string;
+	variant?: 'primary' | 'secondary';
+	children?: ReactNode;
+};
+
+export function ComponentName({
+	title,
+	variant = 'primary',
+	children,
+}: ComponentProps) {
+	return (
+		<div
+			className={clsx(
+				'ComponentName base-classes',
+				variant === 'secondary' && 'secondary-classes',
+			)}
+		>
+			{children}
+		</div>
+	);
+}
+```
+
+### forwardRef (when DOM ref is needed)
+
+```tsx
+import { forwardRef } from 'react';
+import clsx from 'clsx';
+
+type ComponentProps = { /* ... */ };
+
+export const ComponentName = forwardRef<HTMLDivElement, ComponentProps>(
+	({ title, variant = 'primary', children }, ref) => {
+		return (
+			<div
+				ref={ref}
+				className={clsx(
+					'ComponentName base-classes',
+					variant === 'secondary' && 'secondary-classes',
+				)}
+			>
+				{children}
+			</div>
+		);
+	},
+);
+```
+
+## Guidelines
+
+- **TypeScript types**: Prefer `type` over `interface` for props
+- **Named exports**: Use `export function` or `export const` for components
+- **Props**: Define a single props type per component (e.g. `MeasureSliderProps`)
+- **Imports**: Use barrel imports where available (`@/components/controls`, `@/components/layout`, `@/components/measures`, `@/components/poison`); otherwise `@/lib/...`, `@/types/...`, `@/contexts/...`
+
+## Typography
+
+- **Typographic apostrophe**: Use ’ instead of ' in all user-facing text
+
+## Accessibility
+
+- **Buttons**: Use `<button type='button'>` for actions; set `disabled` when not applicable
+- **Labels**: Use clear, descriptive text for controls
+- **Contrast**: Use slate/amber/cyan palette consistently for readability

@@ -1,0 +1,125 @@
+---
+globs: **/*.tsx, **/*.ts, **/*.css
+exclude: **/__tests__/**, **/*.test.*, **/*.spec.*, **/node_modules/**
+alwaysApply: false
+---
+
+# Styling Standards
+
+## Typography
+
+- **Apostrophes**: ALL user-facing text MUST use the typographic apostrophe ’ instead of the straight apostrophe '
+- **Consistency**: Maintain consistent typography throughout the application
+
+## Tailwind CSS
+
+- **Custom utilities**: Use or extend utilities from `src/index.css` (e.g. `.grid-cols-16`) when needed
+- **Direct strings**: Use direct strings for simple cases without conditionals
+- **No margins**: Avoid using Tailwind margin classes (`m-*`, `mx-*`, `my-*`, `mt-*`, `mr-*`, `mb-*`, `ml-*`)
+- **No space utilities**: Avoid `space-x-*` or `space-y-*` utilities — they rely on margins
+- **Formatting**: Use Biome for formatting and linting (including class order where applicable)
+- **Utility function**: Use `clsx()` for conditional classes (not `cn()`)
+
+### ClassName Patterns
+
+```tsx
+// Component name should be first in className for debugging
+className='ComponentName bg-white rounded-lg border p-4'
+
+// Conditional cases - use clsx
+className={clsx(
+  'ComponentName base-classes',
+  isActive && 'active-classes',
+  isDisabled && 'disabled-classes',
+  className
+)}
+
+// Component props - use clsx
+className={clsx('ComponentName base-classes', className)}
+```
+
+### JSX Attribute Order
+
+Follow this specific order for JSX attributes:
+
+1. **type** - Element type (for form elements)
+2. **className** - CSS classes
+3. **Standard HTML attributes** - (alphabetically)
+4. **Event handlers** - (alphabetically, starting with 'on')
+5. **ARIA attributes** - (alphabetically)
+6. **Custom data attributes** - (alphabetically)
+7. **ref** - React ref (penultimate)
+8. **id** - Element identifier (always last)
+
+#### JSX Attribute Order Example
+
+```tsx
+<button
+	type='button'
+	className='Button rounded-lg border bg-white p-4'
+	disabled={isDisabled}
+	title='Submit form'
+	onClick={handleClick}
+	onKeyDown={handleKeyDown}
+	aria-label='Submit form'
+	aria-describedby='submit-help'
+	data-testid='submit-button'
+	ref={buttonRef}
+	id='submit-button'
+>
+	Submit
+</button>
+```
+
+### Layout Principles
+
+- **Flexbox/Grid**: Use Flexbox and Grid for layouts
+- **Avoid margins**: Don't use CSS margins except for printing and where flex/grid won't work
+- **Avoid space- utilities**: Don't use `space-x-*` or `space-y-*` — they rely on margins
+- **Use flex/gap**: Use `flex flex-col gap-*` for vertical spacing and `flex items-center gap-*` for horizontal spacing
+- **Consistent spacing**: Use Tailwind's spacing scale
+
+### Spacing Patterns
+
+```tsx
+// Vertical spacing
+className='flex flex-col gap-2';   // Small gaps
+className='flex flex-col gap-4';   // Medium gaps
+className='flex flex-col gap-6';   // Large gaps
+
+// Horizontal spacing
+className='flex items-center gap-2';
+className='flex justify-between';
+
+// Responsive spacing
+className='flex flex-col gap-3 sm:gap-4';
+className='flex items-center gap-1.5 sm:gap-2';
+```
+
+### Component Structure
+
+- **Avoid superfluous wrappers**: Don't create unnecessary wrapper divs that add DOM complexity
+- **Simplify nesting**: Remove redundant wrapper elements when possible
+- **Keep meaningful wrappers**: Retain wrappers that serve styling, semantic, or organizational purposes
+
+#### Wrapper Removal Examples
+
+```tsx
+// ❌ Avoid - redundant wrapper
+<div className='flex flex-col gap-6'>
+  <div className='flex flex-col gap-6'>
+    <Component />
+  </div>
+</div>
+
+// ✅ Good - simplified structure
+<div className='flex flex-col gap-6'>
+  <Component />
+</div>
+```
+
+## CSS Best Practices
+
+- **No !important**: Avoid using `!important` declarations in CSS
+- **TypeScript**: Avoid using the `any` type in TypeScript code
+- **Semantic HTML**: Use semantic HTML elements for better accessibility

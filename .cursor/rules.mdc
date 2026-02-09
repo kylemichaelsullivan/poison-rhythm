@@ -1,0 +1,165 @@
+---
+alwaysApply: true
+---
+
+# Poison Rhythm Project Rules
+
+## Core Principles
+
+- Write and review code like a senior developer
+- Challenge erroneous assumptions and inefficiencies
+- Use **bun** for package management
+- Use **TypeScript** with strict configuration
+- Follow **Vite + React** architecture
+- Use typographic apostrophe ’ instead of straight apostrophe ' in ALL user-facing text
+
+## Package Management
+
+- **Package manager**: bun
+- **Build**: `bun run build`
+- **Development**: `bun run dev`
+
+## Development Scripts
+
+- **Format / lint**: `bun run check` (Biome check --write)
+- **Lint only**: `bun run lint`
+- **Preview build**: `bun run preview`
+
+## Project Structure
+
+```
+src/
+├── App.tsx              # Root app component (uses usePoisonGame)
+├── main.tsx             # Entry point (wraps App with DifficultyProvider)
+├── index.css            # Global styles (Tailwind, .grid-cols-16)
+├── components/          # React components (grouped by domain)
+│   ├── controls/        # Game control buttons and sliders
+│   │   ├── CarouselNavButton.tsx
+│   │   ├── CarouselNavButtons.tsx
+│   │   ├── ControlButton.tsx
+│   │   ├── ControlButtons.tsx
+│   │   ├── DifficultySlider.tsx
+│   │   ├── GameControls.tsx
+│   │   └── index.ts
+│   ├── layout/          # Layout primitives
+│   │   ├── AppTitle.tsx
+│   │   ├── Section.tsx
+│   │   ├── SectionTitle.tsx
+│   │   └── index.ts
+│   ├── measures/        # Measure carousel and grid
+│   │   ├── CurrentMeasureDisplay.tsx
+│   │   ├── MeasureCell.tsx
+│   │   ├── MeasureGrid.tsx
+│   │   ├── MeasureSlider.tsx
+│   │   ├── MeasuresSection.tsx
+│   │   └── index.ts
+│   └── poison/          # Poison rhythm selector
+│       ├── PoisonSelector.tsx
+│       └── index.ts
+├── contexts/
+│   └── DifficultyContext.tsx  # DifficultyProvider, useDifficulty
+├── hooks/
+│   └── usePoisonGame.ts # Game state: poisonRhythm, measures, poisonFoundAt, handlers
+├── lib/                 # Utilities and logic
+│   ├── rhythm-generator.ts
+│   └── rhythm-utils.ts
+└── types/
+    └── rhythm.ts
+```
+
+## Code Organization
+
+### Import Organization
+
+- **Defined order**: Follow specific import order, then alphabetize within each group
+- **Import order**:
+  1. React imports (from 'react')
+  2. Third-party libraries (alphabetically by source)
+  3. Internal project imports (alphabetically by path, use `@/` alias)
+  4. Type imports (alphabetically by path)
+- **Avoid React namespace**: Import React types directly, avoid `React.` prefix
+- **Named imports**: Use named imports for better tree-shaking
+
+#### Import Order Example
+
+```tsx
+// 1. React imports
+import { useCallback, useState } from 'react';
+import type { ReactNode } from 'react';
+
+// 2. Third-party libraries (alphabetically by source)
+import clsx from 'clsx';
+
+// 3. Internal project imports (alphabetically by path)
+import { MeasureGrid } from '@/components/measures';
+import { generateRandomMeasure } from '@/lib/rhythm-generator';
+import type { RhythmMeasure } from '@/types/rhythm';
+```
+
+### File Structure
+
+```tsx
+// Standard component file structure
+import type { ReactNode } from 'react';
+import clsx from 'clsx';
+
+type ComponentProps = {
+	// Required props
+	title: string;
+	// Optional props with defaults
+	variant?: 'primary' | 'secondary';
+	disabled?: boolean;
+	// Children
+	children?: ReactNode;
+};
+
+export function ComponentName({
+	title,
+	variant = 'primary',
+	disabled = false,
+	children,
+}: ComponentProps) {
+	return (
+		<div
+			className={clsx(
+				'ComponentName base-classes',
+				variant === 'secondary' && 'secondary-classes',
+				disabled && 'disabled-classes'
+			)}
+		>
+			{children}
+		</div>
+	);
+}
+```
+
+## Styling Guidelines
+
+### CSS and Styling
+
+- **Avoid Tailwind margin/space classes**: Do not use margin or space classes in Tailwind
+- **No !important declarations**: Avoid using `!important` in CSS
+- **Tailwind**: Use Tailwind utilities; custom utilities live in `src/index.css` when needed
+
+### React Best Practices
+
+- **TypeScript**: Avoid using `any` type, prefer proper typing
+- **Component optimization**: Use `memo`, `useCallback`, `useMemo` when appropriate for performance
+
+## Comments and Documentation
+
+### Comment Guidelines
+
+- **Minimal comments**: Limit comments to non-obvious functionality
+- **Purpose comments**: Comment on oddities that have non-obvious purposes
+- **Self-documenting code**: Write code that explains itself through clear naming and structure
+- **JSDoc**: Use JSDoc for complex props and functions when helpful
+
+## Communication Standards
+
+### Progress Updates
+
+- **Meaningful updates only**: Avoid inane progress updates and status reports
+- **Focus on substance**: Communicate actual progress, blockers, or decisions that matter
+- **No busy work updates**: Don't report on routine tasks or obvious progress
+- **Efficiency**: Respect time by being concise and relevant
