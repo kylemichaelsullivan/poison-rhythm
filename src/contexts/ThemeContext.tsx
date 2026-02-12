@@ -8,12 +8,26 @@ import {
 	useSyncExternalStore,
 } from 'react';
 
-const STORAGE_KEY = 'poison-rhythm-theme';
+const THEME_STORAGE_KEY = 'poison-rhythm-theme';
+const SUBDIVISION_STORAGE_KEY = 'poison-rhythm-subdivision';
+
+export type SubdivisionLevel = 'quarters' | 'eighths' | 'sixteenths';
+
+/** Default when nothing is stored: show 1/4s, 1/8s, and 1/16s */
+const DEFAULT_SUBDIVISION_LEVEL: SubdivisionLevel = 'sixteenths';
 
 function getStoredTheme(): 'light' | 'dark' | null {
 	if (typeof window === 'undefined') return null;
-	const s = localStorage.getItem(STORAGE_KEY);
+	const s = localStorage.getItem(THEME_STORAGE_KEY);
 	return s === 'light' || s === 'dark' ? s : null;
+}
+
+function getStoredSubdivision(): SubdivisionLevel {
+	if (typeof window === 'undefined') return DEFAULT_SUBDIVISION_LEVEL;
+	const s = localStorage.getItem(SUBDIVISION_STORAGE_KEY);
+	return s === 'quarters' || s === 'eighths' || s === 'sixteenths'
+		? s
+		: DEFAULT_SUBDIVISION_LEVEL;
 }
 
 function subscribeToSystemTheme(cb: () => void) {
@@ -34,6 +48,8 @@ type ThemeContextValue = {
 	theme: 'light' | 'dark' | null;
 	setTheme: (theme: 'light' | 'dark' | null) => void;
 	effectiveTheme: 'light' | 'dark';
+	subdivisionLevel: SubdivisionLevel;
+	setSubdivisionLevel: (level: SubdivisionLevel) => void;
 };
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
@@ -41,6 +57,9 @@ const ThemeContext = createContext<ThemeContextValue | null>(null);
 export function ThemeProvider({ children }: { children: ReactNode }) {
 	const [theme, setThemeState] = useState<'light' | 'dark' | null>(
 		getStoredTheme,
+	);
+	const [subdivisionLevel, setSubdivisionLevelState] = useState<SubdivisionLevel>(
+		getStoredSubdivision,
 	);
 	const systemDark = useSyncExternalStore(
 		subscribeToSystemTheme,
@@ -51,10 +70,15 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 	const setTheme = useCallback((next: 'light' | 'dark' | null) => {
 		setThemeState(next);
 		if (next === null) {
-			localStorage.removeItem(STORAGE_KEY);
+			localStorage.removeItem(THEME_STORAGE_KEY);
 		} else {
-			localStorage.setItem(STORAGE_KEY, next);
+			localStorage.setItem(THEME_STORAGE_KEY, next);
 		}
+	}, []);
+
+	const setSubdivisionLevel = useCallback((level: SubdivisionLevel) => {
+		setSubdivisionLevelState(level);
+		localStorage.setItem(SUBDIVISION_STORAGE_KEY, level);
 	}, []);
 
 	const effectiveTheme: 'light' | 'dark' =
@@ -76,6 +100,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 		theme,
 		setTheme,
 		effectiveTheme,
+		subdivisionLevel,
+		setSubdivisionLevel,
 	};
 
 	return (

@@ -1,6 +1,6 @@
 import { faLightbulb } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useTheme } from '@/contexts/ThemeContext';
+import { useTheme } from '@/contexts';
 
 export function ThemeToggle() {
 	const { effectiveTheme, setTheme } = useTheme();

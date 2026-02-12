@@ -10,20 +10,14 @@
 	--color-stone-700: oklch(37.4% 0.01 67.558);
 	--color-stone-950: oklch(14.7% 0.004 49.25);
 
-	/* Light theme (light bg): primary=orange, fg=950, bg=50. Dark theme (dark bg): primary=cyan, fg=50, bg=950. */
+	/* Light theme */
 	--color-primary: light-dark(var(--color-cyan-600), var(--color-orange-400));
 	--color-secondary: light-dark(var(--color-orange-400), var(--color-cyan-600));
 	--color-light: light-dark(var(--color-stone-200), var(--color-stone-700));
 	--color-mid: var(--color-stone-400);
 	--color-dark: light-dark(var(--color-stone-700), var(--color-stone-200));
-	--color-white: light-dark(
-		var(--color-stone-50),
-		var(--color-stone-950)
-	); /* fg: dark on light, light on dark */
-	--color-black: light-dark(
-		var(--color-stone-950),
-		var(--color-stone-50)
-	); /* bg */
+	--color-white: light-dark(var(--color-stone-50), var(--color-stone-950));
+	--color-black: light-dark(var(--color-stone-950), var(--color-stone-50));
 }
 
 :root {
@@ -34,6 +28,7 @@
 :root[data-theme="dark"] {
 	color-scheme: dark;
 }
+
 :root[data-theme="light"] {
 	color-scheme: light;
 }
@@ -50,4 +45,33 @@ input {
 /* 16-column grid for 4/4 measure with 16th-note subdivisions */
 grid-cols-16 {
 	grid-template-columns: repeat(16, minmax(0, 1fr));
+}
+
+/* Quarters only: show 1st, 5th, 9th, 13th cells (4n+1); each spans 4, aspect 4/1 */
+.grid-quarters .MeasureCell:not(:nth-child(4n + 1)) {
+	display: none;
+}
+.grid-quarters .MeasureCell:nth-child(4n + 1) {
+	aspect-ratio: 4 / 1;
+	grid-column: span 4;
+}
+
+/* Eighths: show odd cells; each spans 2, aspect 2/1 */
+.grid-eighths .MeasureCell:nth-child(even) {
+	display: none;
+}
+.grid-eighths .MeasureCell:nth-child(odd) {
+	aspect-ratio: 2 / 1;
+	grid-column: span 2;
+}
+
+/* Small screens: never show 16ths (force eighths when user chose sixteenths) */
+@media (max-width: 48rem) {
+	.Body:not(.grid-quarters):not(.grid-eighths) .MeasureCell:nth-child(even) {
+		display: none;
+	}
+	.Body:not(.grid-quarters):not(.grid-eighths) .MeasureCell:nth-child(odd) {
+		aspect-ratio: 2 / 1;
+		grid-column: span 2;
+	}
 }
