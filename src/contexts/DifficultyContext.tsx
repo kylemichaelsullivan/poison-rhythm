@@ -15,7 +15,7 @@ type DifficultyProviderProps = {
 
 export function DifficultyProvider({
 	children,
-	defaultValue = 3,
+	defaultValue = 2,
 }: DifficultyProviderProps) {
 	const [difficulty, setDifficulty] = useState(defaultValue);
 
