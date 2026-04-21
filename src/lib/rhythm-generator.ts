@@ -1,4 +1,5 @@
-import { MEASURE_LENGTH, type RhythmMeasure } from '@/types/rhythm';
+import type { RhythmMeasure } from '@/types';
+import { MEASURE_LENGTH } from '@/types';
 
 export const QUARTER_NOTES: RhythmMeasure = [
 	true,
