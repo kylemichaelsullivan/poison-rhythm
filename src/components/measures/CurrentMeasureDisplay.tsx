@@ -1,5 +1,5 @@
-import type { RhythmMeasure } from '@/types/rhythm';
-import { MeasureGrid } from './MeasureGrid';
+import type { RhythmMeasure } from '@/types';
+import { MeasureGrid } from '.';
 
 type CurrentMeasureDisplayProps = {
 	measure: RhythmMeasure;

@@ -1,6 +1,6 @@
 import { Section } from '@/components/layout';
 import { MeasureGrid } from '@/components/measures';
-import type { RhythmMeasure } from '@/types/rhythm';
+import type { RhythmMeasure } from '@/types';
 
 type PoisonSectionProps = {
 	poisonRhythm: RhythmMeasure | null;

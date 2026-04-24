@@ -1,7 +1,6 @@
 import { Section } from '@/components/layout';
-import { useDifficulty } from '@/contexts/DifficultyContext';
-import { ControlButtons } from './ControlButtons';
-import { DifficultySlider } from './DifficultySlider';
+import { useDifficulty } from '@/contexts';
+import { ControlButtons, DifficultySlider } from '.';
 
 type GameControlsProps = {
 	onNewPoison: () => void;

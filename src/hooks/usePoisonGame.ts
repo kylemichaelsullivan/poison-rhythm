@@ -1,8 +1,7 @@
 import { useCallback, useState } from 'react';
-import { useDifficulty } from '@/contexts/DifficultyContext';
-import { generateRandomMeasure } from '@/lib/rhythm-generator';
-import { rhythmsEqual } from '@/lib/rhythm-utils';
-import type { RhythmMeasure } from '@/types/rhythm';
+import { useDifficulty } from '@/contexts';
+import { generateRandomMeasure, rhythmsEqual } from '@/lib';
+import type { RhythmMeasure } from '@/types';
 
 function generateMeasureDifferentFrom(
 	difficulty: number,

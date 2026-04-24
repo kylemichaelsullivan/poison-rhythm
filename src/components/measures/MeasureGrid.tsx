@@ -1,5 +1,5 @@
-import type { RhythmMeasure } from '@/types/rhythm';
-import { MeasureCell } from './MeasureCell';
+import type { RhythmMeasure } from '@/types';
+import { MeasureCell } from '.';
 
 type MeasureGridProps = {
 	measure: RhythmMeasure;

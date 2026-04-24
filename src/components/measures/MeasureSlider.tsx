@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import type { RhythmMeasure } from '@/types/rhythm';
-import { CarouselNavButtons } from '../controls/CarouselNavButtons';
+import { CarouselNavButtons } from '@/components/controls';
+import type { RhythmMeasure } from '@/types';
 import { CurrentMeasureDisplay } from './CurrentMeasureDisplay';
 
 type MeasureSliderProps = {
