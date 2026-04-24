@@ -22,14 +22,14 @@ export function ShowNotes() {
 	}
 
 	return (
-		<div ref={wrapperRef} className='ShowNotes relative'>
+		<div className='ShowNotes relative' ref={wrapperRef}>
 			<button
 				type='button'
 				className={clsx(
 					'flex items-center justify-center bg-dark/50 border border-mid rounded text-sm text-center w-10 h-10 px-2 py-1 transition-colors hover:bg-dark/70',
 					open && 'ring-2 ring-primary',
 				)}
-				title='Show note subdivisions'
+				title='Select Note Subdivisions'
 				onClick={() => setOpen((prev) => !prev)}
 				aria-expanded={open}
 				aria-haspopup='dialog'

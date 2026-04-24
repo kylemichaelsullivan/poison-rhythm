@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { SectionTitle } from './SectionTitle';
+import { SectionTitle } from '.';
 
 type SectionProps = {
 	title: string;
