@@ -1,7 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { DifficultyProvider } from '@/contexts/DifficultyContext';
-import { ThemeProvider } from '@/contexts/ThemeContext';
+import { DifficultyProvider, ThemeProvider } from '@/contexts';
 import App from './App.tsx';
 import './index.css';
 

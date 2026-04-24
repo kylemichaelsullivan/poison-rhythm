@@ -1,5 +1,5 @@
 import { Body, Footer, Header } from '@/components/layout';
-import { usePoisonGame } from '@/hooks/usePoisonGame';
+import { usePoisonGame } from '@/hooks';
 
 function App() {
 	const { poisonRhythm, measures, handleNewPoison, handleReusePoison } =
