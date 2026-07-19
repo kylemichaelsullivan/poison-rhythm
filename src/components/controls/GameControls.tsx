@@ -1,28 +1,48 @@
-import { Section } from '@/components/layout';
+import { useState } from 'react';
+import { Modal, Section } from '@/components/layout';
 import { useDifficulty } from '@/contexts';
-import { ControlButtons, DifficultySlider } from '.';
+import { DIFFICULTY_LEVELS, formatDifficultyHelpText } from '@/lib';
+import { DifficultySlider } from '.';
 
-type GameControlsProps = {
-	onNewPoison: () => void;
-	onReusePoison: () => void;
-	reuseDisabled?: boolean;
-};
-
-export function GameControls({
-	onNewPoison,
-	onReusePoison,
-	reuseDisabled = false,
-}: GameControlsProps) {
+export function GameControls() {
 	const { difficulty, setDifficulty } = useDifficulty();
+	const [helpOpen, setHelpOpen] = useState(false);
 
 	return (
-		<Section title='Controls'>
-			<DifficultySlider value={difficulty} onChange={setDifficulty} />
-			<ControlButtons
-				onNewPoison={onNewPoison}
-				onReusePoison={onReusePoison}
-				reuseDisabled={reuseDisabled}
-			/>
-		</Section>
+		<>
+			<Section
+				title='Difficulty'
+				headerAction={
+					<button
+						type='button'
+						className='flex justify-center items-center rounded-full border border-mid bg-dark size-6 text-sm font-semibold leading-none text-white transition-colors hover:border-white hover:bg-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-dark'
+						title='Explain Difficulties'
+						aria-label='Explain Difficulty Levels'
+						onClick={() => setHelpOpen(true)}
+					>
+						i
+					</button>
+				}
+			>
+				<DifficultySlider value={difficulty} onChange={setDifficulty} />
+			</Section>
+			<Modal
+				open={helpOpen}
+				title='Difficulty Levels'
+				onClose={() => setHelpOpen(false)}
+			>
+				<ul className='flex flex-col gap-3 text-dark text-sm'>
+					{DIFFICULTY_LEVELS.map((entry, index) => {
+						const level = index + 1;
+						return (
+							<li key={level} className='flex gap-3'>
+								<span className='font-bold tabular-nums'>{level}</span>
+								<span>{formatDifficultyHelpText(entry)}</span>
+							</li>
+						);
+					})}
+				</ul>
+			</Modal>
+		</>
 	);
 }
