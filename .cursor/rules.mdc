@@ -18,6 +18,7 @@ alwaysApply: true
 - **Package manager**: bun
 - **Build**: `bun run build`
 - **Development**: `bun run dev`
+- **Tests**: `bun run test`
 
 ## Development Scripts
 
@@ -29,42 +30,19 @@ alwaysApply: true
 
 ```
 src/
-├── App.tsx              # Root app component (uses usePoisonGame)
-├── main.tsx             # Entry point (wraps App with DifficultyProvider)
-├── index.css            # Global styles (Tailwind, .grid-cols-16)
-├── components/          # React components (grouped by domain)
-│   ├── controls/        # Game control buttons and sliders
-│   │   ├── CarouselNavButton.tsx
-│   │   ├── CarouselNavButtons.tsx
-│   │   ├── ControlButton.tsx
-│   │   ├── ControlButtons.tsx
-│   │   ├── DifficultySlider.tsx
-│   │   ├── GameControls.tsx
-│   │   └── index.ts
-│   ├── layout/          # Layout primitives
-│   │   ├── AppTitle.tsx
-│   │   ├── Section.tsx
-│   │   ├── SectionTitle.tsx
-│   │   └── index.ts
-│   ├── measures/        # Measure carousel and grid
-│   │   ├── CurrentMeasureDisplay.tsx
-│   │   ├── MeasureCell.tsx
-│   │   ├── MeasureGrid.tsx
-│   │   ├── MeasureSlider.tsx
-│   │   ├── MeasuresSection.tsx
-│   │   └── index.ts
-│   └── poison/          # Poison rhythm selector
-│       ├── PoisonSelector.tsx
-│       └── index.ts
-├── contexts/
-│   └── DifficultyContext.tsx  # DifficultyProvider, useDifficulty
-├── hooks/
-│   └── usePoisonGame.ts # Game state: poisonRhythm, measures, poisonFoundAt, handlers
-├── lib/                 # Utilities and logic
-│   ├── rhythm-generator.ts
-│   └── rhythm-utils.ts
-└── types/
-    └── rhythm.ts
+├── App.tsx                 # Root shell: Header, Body, Footer
+├── main.tsx                # ThemeProvider → MetronomeProvider → DifficultyProvider → App
+├── index.css               # Tailwind theme tokens, grid helpers, blink animation
+├── assets/svg/             # Local SVG icons imported via SVGR (`*.svg?react`)
+├── components/
+│   ├── controls/           # Difficulty, New/Reuse, play/pause, carousel nav
+│   ├── layout/             # Chrome, modals, ShowNotes, metronome panel, ThemeToggle
+│   ├── measures/           # Measure carousel, grid, and playback highlighting
+│   └── poison/             # Poison rhythm section with New/Reuse controls
+├── contexts/               # Difficulty, Theme, Metronome
+├── hooks/                  # usePoisonGame, metronome helpers
+├── lib/                    # Rhythm generation, difficulty, tempo, playback math
+└── types/                  # RhythmMeasure
 ```
 
 ## Code Organization
@@ -104,12 +82,9 @@ import type { ReactNode } from 'react';
 import clsx from 'clsx';
 
 type ComponentProps = {
-	// Required props
 	title: string;
-	// Optional props with defaults
 	variant?: 'primary' | 'secondary';
 	disabled?: boolean;
-	// Children
 	children?: ReactNode;
 };
 
@@ -124,7 +99,7 @@ export function ComponentName({
 			className={clsx(
 				'ComponentName base-classes',
 				variant === 'secondary' && 'secondary-classes',
-				disabled && 'disabled-classes'
+				disabled && 'disabled-classes',
 			)}
 		>
 			{children}
