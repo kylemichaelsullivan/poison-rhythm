@@ -3,7 +3,7 @@ import {
 	clampTempo,
 	decrementTempoByStep,
 	incrementTempoByStep,
-} from './metronome-tempo';
+} from '../metronome-tempo';
 
 describe('metronome-tempo', () => {
 	test('clamps tempo to the supported range', () => {

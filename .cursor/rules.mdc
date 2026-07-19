@@ -36,14 +36,22 @@ src/
 ├── assets/svg/             # Local SVG icons imported via SVGR (`*.svg?react`)
 ├── components/
 │   ├── controls/           # Difficulty, New/Reuse, play/pause, carousel nav
-│   ├── layout/             # Chrome, modals, ShowNotes, metronome panel, ThemeToggle
+│   ├── layout/             # Chrome, modals, ShowNotes, metronome panel
 │   ├── measures/           # Measure carousel, grid, and playback highlighting
 │   └── poison/             # Poison rhythm section with New/Reuse controls
 ├── contexts/               # Difficulty, Theme, Metronome
 ├── hooks/                  # usePoisonGame, metronome helpers
 ├── lib/                    # Rhythm generation, difficulty, tempo, playback math
+│   └── __tests__/          # Bun unit tests for lib modules
 └── types/                  # RhythmMeasure
 ```
+
+## Testing
+
+- **Runner**: Bun (`bun run test`)
+- **Location**: Colocate suites in a sibling `__tests__/` folder (e.g. `src/lib/__tests__/`)
+- **Naming**: `*.test.ts` / `*.test.tsx` (or `*.spec.*`)
+- **Imports**: Use the `@/` alias for modules under test
 
 ## Code Organization
 

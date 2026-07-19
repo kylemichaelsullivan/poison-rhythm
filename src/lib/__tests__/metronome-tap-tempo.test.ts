@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { applyTapTempo } from './metronome-tap-tempo';
+import { applyTapTempo } from '../metronome-tap-tempo';
 
 describe('metronome-tap-tempo', () => {
 	test('averages recent taps into a tempo', () => {

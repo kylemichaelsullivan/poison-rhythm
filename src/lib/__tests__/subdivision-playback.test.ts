@@ -4,7 +4,7 @@ import {
 	isQuarterDownbeat,
 	subdivisionPulseDivisor,
 	subdivisionStepCount,
-} from './subdivision-playback';
+} from '../subdivision-playback';
 
 describe('subdivision-playback', () => {
 	test('maps subdivision levels to step counts and pulse divisors', () => {

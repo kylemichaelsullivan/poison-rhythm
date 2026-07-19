@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test';
-import { hitRangeForLevel } from './difficulty-levels';
-import { generateRandomMeasure } from './rhythm-generator';
-import { countHits, isValidRhythm } from './rhythm-utils';
+import { hitRangeForLevel } from '../difficulty-levels';
+import { generateRandomMeasure } from '../rhythm-generator';
+import { countHits, isValidRhythm } from '../rhythm-utils';
 
 describe('rhythm-generator', () => {
 	test('generates valid measures within each difficulty hit range', () => {

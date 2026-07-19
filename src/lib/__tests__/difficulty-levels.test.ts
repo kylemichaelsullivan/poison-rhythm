@@ -5,7 +5,7 @@ import {
 	DIFFICULTY_MIN,
 	formatDifficultyHelpText,
 	hitRangeForLevel,
-} from './difficulty-levels';
+} from '../difficulty-levels';
 
 describe('difficulty-levels', () => {
 	test('exposes five levels with clamped hit ranges', () => {

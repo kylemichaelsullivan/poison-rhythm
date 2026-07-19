@@ -39,6 +39,10 @@ bun run test
 | `bun run test` | Run Bun unit tests |
 | `bun run preview` | Preview production build |
 
+## Tests
+
+Unit tests live in `__tests__/` folders next to the code they cover (currently `src/lib/__tests__/`). Run them with `bun run test`.
+
 ## How to Play
 
 1. Use the **difficulty slider** to set complexity (1–5). Open the **i** help control for level details.

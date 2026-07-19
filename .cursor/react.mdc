@@ -94,6 +94,7 @@ src/
 ├── contexts/
 ├── hooks/
 ├── lib/
+│   └── __tests__/          # Bun unit tests for lib modules
 └── types/
 ```
 
@@ -102,3 +103,4 @@ src/
 - Use the `@/` alias for imports under `src/`
 - Prefer barrel imports: `@/components/controls`, `@/components/layout`, `@/components/measures`, `@/components/poison`
 - Direct paths when needed: `@/lib/rhythm-generator`, `@/types/rhythm`, `@/contexts`
+- Tests live in sibling `__tests__/` folders and import modules under test via `@/`
