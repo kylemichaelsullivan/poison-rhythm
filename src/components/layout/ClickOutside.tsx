@@ -1,15 +1,15 @@
 import type { RefObject } from 'react';
 import { useEffect } from 'react';
 
-type ClickOutsideGuardProps = {
+type ClickOutsideProps = {
 	wrapperRef: RefObject<HTMLElement | null>;
 	onClickOutside: (e: MouseEvent) => void;
 };
 
-export function ClickOutsideGuard({
+export function ClickOutside({
 	wrapperRef,
 	onClickOutside,
-}: ClickOutsideGuardProps) {
+}: ClickOutsideProps) {
 	useEffect(() => {
 		const fn = (e: MouseEvent) => {
 			if (

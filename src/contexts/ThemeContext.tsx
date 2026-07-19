@@ -58,9 +58,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 	const [theme, setThemeState] = useState<'light' | 'dark' | null>(
 		getStoredTheme,
 	);
-	const [subdivisionLevel, setSubdivisionLevelState] = useState<SubdivisionLevel>(
-		getStoredSubdivision,
-	);
+	const [subdivisionLevel, setSubdivisionLevelState] =
+		useState<SubdivisionLevel>(getStoredSubdivision);
 	const systemDark = useSyncExternalStore(
 		subscribeToSystemTheme,
 		getSystemDark,
