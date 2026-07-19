@@ -1,6 +1,6 @@
 export { AppTitle } from './AppTitle';
 export { Body } from './Body';
-export { Metronome } from './button';
+export { ActionButton, Metronome, Settings } from './button';
 export { CornerModal } from './CornerModal';
 export { Footer } from './Footer';
 export { Header } from './Header';
@@ -9,4 +9,3 @@ export { Modal } from './Modal';
 export { Section } from './Section';
 export { SectionTitle } from './SectionTitle';
 export { ShowNotes } from './ShowNotes';
-export { ThemeToggle } from './ThemeToggle';

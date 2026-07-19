@@ -7,6 +7,7 @@ Assets in this directory are from the following sources:
 - metronome: metronome-7648370
 - minus: minus-8138149
 - pause: pause-3102553
+- person: person-8322789
 - play: play-3102552
 - plus: plus-8138142
 - repeat: reuse-1929746

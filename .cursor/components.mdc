@@ -34,7 +34,6 @@ src/components/
 │   ├── ShowNotes.tsx
 │   ├── ShowNotesSlider.tsx
 │   ├── SkipLink.tsx
-│   ├── ThemeToggle.tsx
 │   ├── button/
 │   ├── metronome/
 │   └── index.ts

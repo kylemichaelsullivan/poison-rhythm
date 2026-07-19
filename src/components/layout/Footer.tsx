@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { appChromeBarClassName } from '@/lib/control-classes';
-import { Metronome } from './button';
+import { Metronome, Settings } from './button';
 import { Copyright } from './Copyright';
 
 export function Footer() {
@@ -10,7 +10,7 @@ export function Footer() {
 		>
 			<Metronome />
 			<Copyright />
-			<div className='size-10' aria-hidden='true' />
+			<Settings />
 		</footer>
 	);
 }

@@ -47,8 +47,8 @@ Unit tests live in `__tests__/` folders next to the code they cover (currently `
 
 1. Use the **difficulty slider** to set complexity (1–5). Open the **i** help control for level details.
 2. Note the **poison rhythm** shown in the Poison Rhythm section.
-3. Click **New** to start: a new poison is chosen and measures are generated with it hidden among them.
+3. Click **+** to start: a new poison is chosen and measures are generated with it hidden among them.
 4. Use **Prev/Next** to step through measures and find which one matches the poison.
 5. Click **Reuse** to keep the same poison and regenerate measures.
 6. Use **Play** to hear the current measures with a count-in; open the footer **metronome** to set tempo or tap tempo.
-7. Use the header **note subdivision** control and **theme toggle** to adjust display density and light/dark mode.
+7. Use the header **note subdivision** control to adjust display density, and the footer **Settings** to pick a light, dark, or system theme.

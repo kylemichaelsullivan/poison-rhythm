@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import { appChromeBarClassName } from '@/lib/control-classes';
-import { AppTitle, ShowNotes, ThemeToggle } from '.';
+import { AppTitle, ShowNotes } from '.';
+import { ActionButton } from './button';
 
 export function Header() {
 	return (
@@ -9,7 +10,7 @@ export function Header() {
 		>
 			<ShowNotes />
 			<AppTitle />
-			<ThemeToggle />
+			<ActionButton />
 		</header>
 	);
 }
