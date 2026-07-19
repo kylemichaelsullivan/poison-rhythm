@@ -30,7 +30,7 @@ export function PlayControls({
 					isMeasuresRunning && isLit && 'is-lit',
 				)}
 				isPlaying={isMeasuresRunning}
-				title={disabled ? 'Click the New button first' : undefined}
+				title={disabled ? 'Click + First' : undefined}
 				disabled={disabled}
 				onClick={toggleMeasures}
 				onDisabledClick={onDisabledClick}

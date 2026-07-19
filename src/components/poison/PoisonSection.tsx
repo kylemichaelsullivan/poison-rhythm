@@ -23,7 +23,7 @@ export function PoisonSection({
 		<Section title='Poison Rhythm'>
 			{poisonRhythm === null ? (
 				<p className='border border-mid rounded-lg border-dashed bg-dark/50 text-white text-center p-8'>
-					Click <b>New</b> to start.
+					Click <b>+</b> to start.
 				</p>
 			) : (
 				<MeasureGrid measure={poisonRhythm} />

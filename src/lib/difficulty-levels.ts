@@ -10,7 +10,7 @@ export const DIFFICULTY_LEVELS = [
 	{
 		hits: [2, 4],
 		summary: 'Fewest hits',
-		description: 'only on the downbeats (1, 2, 3, 4).',
+		description: 'only on the downbeats.',
 	},
 	{
 		hits: [4, 6],
