@@ -8,9 +8,9 @@ type MeasuresSectionProps = {
 
 export function MeasuresSection({ measures }: MeasuresSectionProps) {
 	return (
-		<Section title="Measures">
+		<Section title='Measures'>
 			{measures.length === 0 ? (
-				<p className="border border-mid rounded-lg border-dashed bg-dark/50 text-white text-center p-8">
+				<p className='border border-mid rounded-lg border-dashed bg-dark/50 text-white text-center p-8'>
 					Click <b>New</b> to start.
 				</p>
 			) : (

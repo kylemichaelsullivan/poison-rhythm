@@ -22,9 +22,8 @@ function computeBatch(
 	prev: RhythmMeasure[],
 	poisonRhythm: RhythmMeasure,
 	difficulty: number,
-): { nextMeasures: RhythmMeasure[]; foundIndex: number | null } {
+): RhythmMeasure[] {
 	const batch: RhythmMeasure[] = [];
-	let foundIndex: number | null = null;
 	let done = false;
 	const lastExisting = prev.length > 0 ? prev[prev.length - 1] : null;
 
@@ -39,7 +38,6 @@ function computeBatch(
 			if (Math.random() < poisonProbability(index)) {
 				m = poisonRhythm;
 				batch.push(m);
-				foundIndex = batch.length - 1;
 				batch.push(generateMeasureDifferentFrom(difficulty, m));
 				done = true;
 			} else {
@@ -54,78 +52,28 @@ function computeBatch(
 		}
 	}
 
-	return {
-		nextMeasures: [...prev, ...batch],
-		foundIndex: foundIndex !== null ? prev.length + foundIndex : null,
-	};
+	return [...prev, ...batch];
 }
 
 export function usePoisonGame() {
 	const { difficulty } = useDifficulty();
 	const [poisonRhythm, setPoisonRhythm] = useState<RhythmMeasure | null>(null);
 	const [measures, setMeasures] = useState<RhythmMeasure[]>([]);
-	const [poisonFoundAt, setPoisonFoundAt] = useState<number | null>(null);
-
-	const handlePoisonChange = useCallback((poison: RhythmMeasure) => {
-		setPoisonRhythm(poison);
-		setMeasures([]);
-		setPoisonFoundAt(null);
-	}, []);
-
-	const handleGenerate = useCallback(() => {
-		if (poisonRhythm === null || poisonFoundAt !== null) return;
-		setMeasures((prev) => {
-			const { nextMeasures, foundIndex } = computeBatch(
-				prev,
-				poisonRhythm,
-				difficulty,
-			);
-			if (foundIndex !== null) {
-				setPoisonFoundAt(foundIndex);
-			}
-			return nextMeasures;
-		});
-	}, [difficulty, poisonRhythm, poisonFoundAt]);
 
 	const handleNewPoison = useCallback(() => {
 		const newPoison = generateRandomMeasure(difficulty);
 		setPoisonRhythm(newPoison);
-		setPoisonFoundAt(null);
-		setMeasures(() => {
-			const { nextMeasures, foundIndex } = computeBatch(
-				[],
-				newPoison,
-				difficulty,
-			);
-			if (foundIndex !== null) {
-				setPoisonFoundAt(foundIndex);
-			}
-			return nextMeasures;
-		});
+		setMeasures(computeBatch([], newPoison, difficulty));
 	}, [difficulty]);
 
 	const handleReusePoison = useCallback(() => {
 		if (poisonRhythm === null) return;
-		setPoisonFoundAt(null);
-		setMeasures(() => {
-			const { nextMeasures, foundIndex } = computeBatch(
-				[],
-				poisonRhythm,
-				difficulty,
-			);
-			if (foundIndex !== null) {
-				setPoisonFoundAt(foundIndex);
-			}
-			return nextMeasures;
-		});
+		setMeasures(computeBatch([], poisonRhythm, difficulty));
 	}, [difficulty, poisonRhythm]);
 
 	return {
 		poisonRhythm,
 		measures,
-		poisonFoundAt,
-		handlePoisonChange,
-		handleGenerate,
 		handleNewPoison,
 		handleReusePoison,
 	};

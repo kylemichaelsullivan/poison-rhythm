@@ -1,5 +1,6 @@
 import clsx from 'clsx';
-import { GameControls } from '@/components/controls';
+import { useCallback, useRef } from 'react';
+import { GameControls, PlayControls } from '@/components/controls';
 import { MeasuresSection } from '@/components/measures';
 import { PoisonSection } from '@/components/poison';
 import { useTheme } from '@/contexts';
@@ -19,6 +20,25 @@ export function Body({
 	onReusePoison,
 }: BodyProps) {
 	const { subdivisionLevel } = useTheme();
+	const newPoisonButtonRef = useRef<HTMLButtonElement>(null);
+	const focusNewPoisonButton = useCallback(() => {
+		const button = newPoisonButtonRef.current;
+		if (!button) {
+			return;
+		}
+		// Programmatic focus after a mouse click doesn’t match :focus-visible,
+		// so force the ring until the button loses focus.
+		button.dataset.forceFocusRing = 'true';
+		button.addEventListener(
+			'blur',
+			() => {
+				delete button.dataset.forceFocusRing;
+			},
+			{ once: true },
+		);
+		button.focus();
+	}, []);
+
 	return (
 		<main
 			className={clsx(
@@ -27,15 +47,22 @@ export function Body({
 				subdivisionLevel === 'eighths' && 'grid-eighths',
 			)}
 		>
-			<GameControls
+			<GameControls />
+
+			<PoisonSection
+				poisonRhythm={poisonRhythm}
 				onNewPoison={onNewPoison}
 				onReusePoison={onReusePoison}
-				reuseDisabled={poisonRhythm === null}
+				onReuseDisabledClick={focusNewPoisonButton}
+				newButtonRef={newPoisonButtonRef}
 			/>
 
-			<PoisonSection poisonRhythm={poisonRhythm} />
-
 			<MeasuresSection measures={measures} />
+
+			<PlayControls
+				disabled={measures.length === 0}
+				onDisabledClick={focusNewPoisonButton}
+			/>
 		</main>
 	);
 }

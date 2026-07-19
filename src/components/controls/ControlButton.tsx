@@ -1,8 +1,25 @@
+import clsx from 'clsx';
+import type { Ref } from 'react';
+import { Icon, type SvgIconComponent } from '@/components/layout/Icon';
+import {
+	focusVisibleRingClassName,
+	forcedFocusRingClassName,
+} from '@/lib/control-classes';
+
 type ControlButtonProps = {
 	label: string;
 	onClick: () => void;
 	variant?: 'primary' | 'secondary';
 	disabled?: boolean;
+	title?: string;
+	/** Rendered in place of the label, which becomes the accessible name. */
+	icon?: SvgIconComponent;
+	/**
+	 * When provided, a disabled button stays focusable (via aria-disabled)
+	 * and clicks call this instead of onClick.
+	 */
+	onDisabledClick?: () => void;
+	ref?: Ref<HTMLButtonElement>;
 };
 
 export function ControlButton({
@@ -10,7 +27,12 @@ export function ControlButton({
 	onClick,
 	variant = 'secondary',
 	disabled = false,
+	title,
+	icon,
+	onDisabledClick,
+	ref,
 }: ControlButtonProps) {
+	const isSoftDisabled = disabled && onDisabledClick !== undefined;
 	const base = 'border rounded font-medium px-4 py-2 transition';
 	const styles = disabled
 		? 'border-dark bg-dark text-mid cursor-not-allowed'
@@ -21,11 +43,21 @@ export function ControlButton({
 	return (
 		<button
 			type='button'
-			className={`ControlButton ${base} ${styles}`}
-			onClick={onClick}
-			disabled={disabled}
+			className={clsx(
+				'ControlButton',
+				base,
+				styles,
+				focusVisibleRingClassName,
+				forcedFocusRingClassName,
+			)}
+			title={title}
+			disabled={disabled && !isSoftDisabled}
+			onClick={disabled ? onDisabledClick : onClick}
+			aria-disabled={disabled || undefined}
+			aria-label={icon ? label : undefined}
+			ref={ref}
 		>
-			{label}
+			{icon ? <Icon svg={icon} size='md' /> : label}
 		</button>
 	);
 }
