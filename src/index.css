@@ -41,13 +41,15 @@
 	color-scheme: light;
 }
 
-button,
-input {
-	cursor: pointer;
-}
+@layer base {
+	button,
+	input {
+		cursor: pointer;
+	}
 
-*:disabled {
-	cursor: not-allowed;
+	*:disabled {
+		cursor: not-allowed;
+	}
 }
 
 /* Metronome blinker (from bad-metronome) */

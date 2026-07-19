@@ -29,7 +29,7 @@ export const forcedFocusRingClassName =
 	'data-force-focus-ring:outline-none data-force-focus-ring:ring-2 data-force-focus-ring:ring-primary data-force-focus-ring:ring-offset-2 data-force-focus-ring:ring-offset-chrome';
 
 export const roundPlayPauseButtonClassName =
-	'flex justify-center items-center rounded-full bg-primary w-12 h-12 p-3 text-white transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:hover:opacity-50';
+	'flex justify-center items-center rounded-full bg-primary w-12 h-12 p-3 text-white transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 aria-disabled:hover:opacity-50';
 
 export const modifyTempoButtonClassName =
 	'absolute flex justify-center items-center border border-mid rounded bg-primary w-8 h-8 p-2 text-white transition hover:border-white hover:opacity-90 top-1/2 -translate-y-1/2 disabled:opacity-50';

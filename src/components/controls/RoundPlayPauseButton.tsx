@@ -41,6 +41,7 @@ export function RoundPlayPauseButton({
 			className={clsx(
 				roundPlayPauseButtonClassName,
 				focusVisibleRingClassName,
+				disabled && 'cursor-not-allowed',
 				className,
 			)}
 			title={title ?? accessibleName}
