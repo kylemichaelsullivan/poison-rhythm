@@ -1,9 +1,16 @@
-export function Footer() {
-	const currentYear = new Date().getFullYear();
+import clsx from 'clsx';
+import { appChromeBarClassName } from '@/lib/control-classes';
+import { Metronome } from './button';
+import { Copyright } from './Copyright';
 
+export function Footer() {
 	return (
-		<footer className='Footer border-t border-mid text-center p-4 w-full'>
-			&copy; {currentYear} Poison Rhythm
+		<footer
+			className={clsx('Footer border-t border-mid', appChromeBarClassName)}
+		>
+			<Metronome />
+			<Copyright />
+			<div className='size-10' aria-hidden='true' />
 		</footer>
 	);
 }

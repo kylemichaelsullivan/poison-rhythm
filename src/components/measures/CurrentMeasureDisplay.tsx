@@ -7,10 +7,17 @@ type CurrentMeasureDisplayProps = {
 	totalCount: number;
 };
 
-export function CurrentMeasureDisplay({ measure }: CurrentMeasureDisplayProps) {
+export function CurrentMeasureDisplay({
+	measure,
+	currentIndex,
+	totalCount,
+}: CurrentMeasureDisplayProps) {
 	return (
 		<div className='CurrentMeasureDisplay flex flex-col gap-1 items-center w-full'>
-			<MeasureGrid measure={measure} />
+			<p className='text-sm text-mid tabular-nums'>
+				Measure {currentIndex + 1} of {totalCount}
+			</p>
+			<MeasureGrid measure={measure} playback />
 		</div>
 	);
 }

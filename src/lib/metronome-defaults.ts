@@ -1,0 +1,9 @@
+export const BPM_MIN = 40;
+export const BPM_MAX = 300;
+export const BPM_INPUT_STEP = 1;
+export const BPM_BUTTON_STEP = 5;
+export const BPM_DEFAULT = 120;
+export const TAP_RESET_MS = 1000;
+export const TAP_SAMPLE_COUNT = 3;
+export const BEAT_FLASH_MS = 100;
+export const COUNT_IN_BEATS = 4;

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { CarouselNavButtons } from '@/components/controls';
+import { useMetronome } from '@/contexts';
 import type { RhythmMeasure } from '@/types';
 import { CurrentMeasureDisplay } from './CurrentMeasureDisplay';
 
@@ -9,6 +10,8 @@ type MeasureSliderProps = {
 
 export function MeasureSlider({ measures }: MeasureSliderProps) {
 	const [currentIndex, setCurrentIndex] = useState(0);
+	const { isMeasuresRunning, isMeasuresPlaying, measureCycle, stop } =
+		useMetronome();
 
 	// When measures are replaced (e.g. after Reset), clamp index and reset to 0 so nav works
 	useEffect(() => {
@@ -18,6 +21,27 @@ export function MeasureSlider({ measures }: MeasureSliderProps) {
 			setCurrentIndex(0);
 		}
 	}, [measures.length, currentIndex]);
+
+	// Play always restarts from the first measure
+	useEffect(() => {
+		if (isMeasuresRunning) {
+			setCurrentIndex(0);
+		}
+	}, [isMeasuresRunning]);
+
+	useEffect(() => {
+		if (!isMeasuresPlaying || measureCycle === 0) {
+			return;
+		}
+
+		setCurrentIndex((i) => {
+			if (i >= measures.length - 1) {
+				stop();
+				return i;
+			}
+			return i + 1;
+		});
+	}, [measureCycle, isMeasuresPlaying, measures.length, stop]);
 
 	const safeIndex =
 		measures.length > 0 ? Math.min(currentIndex, measures.length - 1) : 0;

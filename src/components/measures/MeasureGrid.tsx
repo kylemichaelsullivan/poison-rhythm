@@ -3,13 +3,19 @@ import { MeasureCell } from '.';
 
 type MeasureGridProps = {
 	measure: RhythmMeasure;
+	playback?: boolean;
 };
 
-export function MeasureGrid({ measure }: MeasureGridProps) {
+export function MeasureGrid({ measure, playback = false }: MeasureGridProps) {
 	return (
 		<div className='MeasureGrid grid grid-cols-16 gap-1 w-full'>
 			{measure.map((cell, i) => (
-				<MeasureCell value={cell} index={i} key={`${i}-${cell}`} />
+				<MeasureCell
+					value={cell}
+					playback={playback}
+					index={i}
+					key={`${i}-${cell}`}
+				/>
 			))}
 		</div>
 	);

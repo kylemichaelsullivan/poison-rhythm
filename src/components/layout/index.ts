@@ -1,7 +1,11 @@
 export { AppTitle } from './AppTitle';
 export { Body } from './Body';
+export { Metronome } from './button';
+export { CornerModal } from './CornerModal';
 export { Footer } from './Footer';
 export { Header } from './Header';
+export { Icon } from './Icon';
+export { Modal } from './Modal';
 export { Section } from './Section';
 export { SectionTitle } from './SectionTitle';
 export { ShowNotes } from './ShowNotes';

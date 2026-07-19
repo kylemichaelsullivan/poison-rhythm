@@ -1,8 +1,12 @@
+import clsx from 'clsx';
+import { appChromeBarClassName } from '@/lib/control-classes';
 import { AppTitle, ShowNotes, ThemeToggle } from '.';
 
 export function Header() {
 	return (
-		<header className='Header flex justify-between items-center gap-4 border-b border-mid text-center p-4 w-full'>
+		<header
+			className={clsx('Header border-b border-mid', appChromeBarClassName)}
+		>
 			<ShowNotes />
 			<AppTitle />
 			<ThemeToggle />
