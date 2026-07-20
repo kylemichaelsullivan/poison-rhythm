@@ -25,7 +25,7 @@ export function MeasureCell({
 	return (
 		<div
 			className={clsx(
-				'MeasureCell aspect-square rounded-sm transition-shadow',
+				'MeasureCell aspect-square rounded-sm',
 				value ? 'bg-primary' : 'bg-dark',
 				isBeatBoundaryLeft && 'border-l-2 border-mid',
 				isBeatBoundaryRight && 'border-r-2 border-mid',
