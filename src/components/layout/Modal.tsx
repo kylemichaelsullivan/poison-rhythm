@@ -6,6 +6,8 @@ type ModalProps = {
 	open: boolean;
 	fullWidth?: boolean;
 	title?: string;
+	/** Used when `title` is omitted so the dialog still has an accessible name. */
+	ariaLabel?: string;
 	onClose: () => void;
 	children?: ReactNode;
 };
@@ -23,6 +25,7 @@ export function Modal({
 	open,
 	fullWidth = false,
 	title,
+	ariaLabel,
 	onClose,
 	children,
 }: ModalProps) {
@@ -116,7 +119,7 @@ export function Modal({
 				tabIndex={-1}
 				aria-modal='true'
 				aria-labelledby={title ? titleId : undefined}
-				aria-label={title ? undefined : 'Modal'}
+				aria-label={title ? undefined : (ariaLabel ?? 'Modal')}
 				ref={dialogRef}
 			>
 				<button
