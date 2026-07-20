@@ -28,6 +28,24 @@ export const focusVisibleRingClassName =
 export const forcedFocusRingClassName =
 	'data-force-focus-ring:outline-none data-force-focus-ring:ring-2 data-force-focus-ring:ring-primary data-force-focus-ring:ring-offset-2 data-force-focus-ring:ring-offset-chrome';
 
+/** Focus an element and show the forced focus ring until it blurs. */
+export function focusWithForcedRing(
+	element: HTMLElement | null | undefined,
+): void {
+	if (!element) {
+		return;
+	}
+	element.dataset.forceFocusRing = 'true';
+	element.addEventListener(
+		'blur',
+		() => {
+			delete element.dataset.forceFocusRing;
+		},
+		{ once: true },
+	);
+	element.focus();
+}
+
 export const roundPlayPauseButtonClassName =
 	'flex justify-center items-center rounded-full bg-primary w-12 h-12 p-3 text-white transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 aria-disabled:hover:opacity-50';
 

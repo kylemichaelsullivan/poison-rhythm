@@ -4,6 +4,7 @@ import { GameControls, PlayControls } from '@/components/controls';
 import { MeasuresSection } from '@/components/measures';
 import { PoisonSection } from '@/components/poison';
 import { useTheme } from '@/contexts';
+import { focusWithForcedRing } from '@/lib/control-classes';
 import type { RhythmMeasure } from '@/types';
 
 type BodyProps = {
@@ -21,23 +22,20 @@ export function Body({
 }: BodyProps) {
 	const { subdivisionLevel } = useTheme();
 	const newPoisonButtonRef = useRef<HTMLButtonElement>(null);
+	const playButtonRef = useRef<HTMLButtonElement>(null);
+
 	const focusNewPoisonButton = useCallback(() => {
-		const button = newPoisonButtonRef.current;
-		if (!button) {
-			return;
-		}
-		// Programmatic focus after a mouse click doesn’t match :focus-visible,
-		// so force the ring until the button loses focus.
-		button.dataset.forceFocusRing = 'true';
-		button.addEventListener(
-			'blur',
-			() => {
-				delete button.dataset.forceFocusRing;
-			},
-			{ once: true },
-		);
-		button.focus();
+		focusWithForcedRing(newPoisonButtonRef.current);
 	}, []);
+
+	const focusPlayButton = useCallback(() => {
+		focusWithForcedRing(playButtonRef.current);
+	}, []);
+
+	const handleNewPoison = useCallback(() => {
+		onNewPoison();
+		focusPlayButton();
+	}, [onNewPoison, focusPlayButton]);
 
 	return (
 		<main
@@ -51,17 +49,22 @@ export function Body({
 
 			<PoisonSection
 				poisonRhythm={poisonRhythm}
-				onNewPoison={onNewPoison}
+				onNewPoison={handleNewPoison}
 				onReusePoison={onReusePoison}
 				onReuseDisabledClick={focusNewPoisonButton}
+				onEmptyClick={focusNewPoisonButton}
 				newButtonRef={newPoisonButtonRef}
 			/>
 
-			<MeasuresSection measures={measures} />
+			<MeasuresSection
+				measures={measures}
+				onEmptyClick={focusNewPoisonButton}
+			/>
 
 			<PlayControls
 				disabled={measures.length === 0}
 				onDisabledClick={focusNewPoisonButton}
+				playButtonRef={playButtonRef}
 			/>
 		</main>
 	);

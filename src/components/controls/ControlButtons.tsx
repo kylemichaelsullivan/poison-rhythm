@@ -32,7 +32,9 @@ export function ControlButtons({
 				label='Reuse'
 				icon={RepeatIcon}
 				title={
-					reuseDisabled ? 'Click + First' : 'New Measures, Same Poison Rhythm'
+					reuseDisabled
+						? 'Click + To Start'
+						: 'New Measures, Same Poison Rhythm'
 				}
 				onClick={onReusePoison}
 				disabled={reuseDisabled}

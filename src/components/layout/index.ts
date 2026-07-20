@@ -2,6 +2,7 @@ export { AppTitle } from './AppTitle';
 export { Body } from './Body';
 export { ActionButton, Metronome, Settings } from './button';
 export { CornerModal } from './CornerModal';
+export { EmptyStartPrompt } from './EmptyStartPrompt';
 export { Footer } from './Footer';
 export { Header } from './Header';
 export { Icon } from './Icon';

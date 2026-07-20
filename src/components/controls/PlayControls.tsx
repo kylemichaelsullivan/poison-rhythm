@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useEffect } from 'react';
+import { type Ref, useEffect } from 'react';
 import { useMetronome } from '@/contexts';
 import { RoundPlayPauseButton } from './RoundPlayPauseButton';
 
@@ -7,11 +7,13 @@ type PlayControlsProps = {
 	disabled?: boolean;
 	/** Called when the button is clicked while disabled. */
 	onDisabledClick?: () => void;
+	playButtonRef?: Ref<HTMLButtonElement>;
 };
 
 export function PlayControls({
 	disabled = false,
 	onDisabledClick,
+	playButtonRef,
 }: PlayControlsProps) {
 	const { isMeasuresRunning, isLit, toggleMeasures, stop } = useMetronome();
 
@@ -30,10 +32,11 @@ export function PlayControls({
 					isMeasuresRunning && isLit && 'is-lit',
 				)}
 				isPlaying={isMeasuresRunning}
-				title={disabled ? 'Click + First' : undefined}
+				title={disabled ? 'Click + Start' : undefined}
 				disabled={disabled}
 				onClick={toggleMeasures}
 				onDisabledClick={onDisabledClick}
+				ref={playButtonRef}
 			/>
 		</div>
 	);

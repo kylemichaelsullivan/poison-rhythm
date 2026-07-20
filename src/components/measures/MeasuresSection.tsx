@@ -1,18 +1,20 @@
-import { Section } from '@/components/layout';
+import { EmptyStartPrompt, Section } from '@/components/layout';
 import type { RhythmMeasure } from '@/types';
 import { MeasureSlider } from '.';
 
 type MeasuresSectionProps = {
 	measures: RhythmMeasure[];
+	onEmptyClick?: () => void;
 };
 
-export function MeasuresSection({ measures }: MeasuresSectionProps) {
+export function MeasuresSection({
+	measures,
+	onEmptyClick,
+}: MeasuresSectionProps) {
 	return (
 		<Section title='Measures'>
 			{measures.length === 0 ? (
-				<p className='border border-mid rounded-lg border-dashed bg-dark/50 text-white text-center p-8'>
-					Click <b>+</b> to start.
-				</p>
+				<EmptyStartPrompt onClick={onEmptyClick} />
 			) : (
 				<MeasureSlider measures={measures} />
 			)}

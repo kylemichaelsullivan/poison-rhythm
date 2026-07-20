@@ -1,9 +1,11 @@
 import clsx from 'clsx';
+import type { Ref } from 'react';
 import PauseIcon from '@/assets/svg/pause.svg?react';
 import PlayIcon from '@/assets/svg/play.svg?react';
 import { Icon } from '@/components/layout/Icon';
 import {
 	focusVisibleRingClassName,
+	forcedFocusRingClassName,
 	roundPlayPauseButtonClassName,
 } from '@/lib/control-classes';
 
@@ -21,6 +23,7 @@ type RoundPlayPauseButtonProps = {
 	 * and clicks call this instead of onClick.
 	 */
 	onDisabledClick?: () => void;
+	ref?: Ref<HTMLButtonElement>;
 };
 
 export function RoundPlayPauseButton({
@@ -31,6 +34,7 @@ export function RoundPlayPauseButton({
 	className,
 	disabled = false,
 	onDisabledClick,
+	ref,
 }: RoundPlayPauseButtonProps) {
 	const accessibleName = label ?? (isPlaying ? 'Pause' : 'Play');
 	const isSoftDisabled = disabled && onDisabledClick !== undefined;
@@ -41,6 +45,7 @@ export function RoundPlayPauseButton({
 			className={clsx(
 				roundPlayPauseButtonClassName,
 				focusVisibleRingClassName,
+				forcedFocusRingClassName,
 				disabled && 'cursor-not-allowed',
 				className,
 			)}
@@ -49,6 +54,7 @@ export function RoundPlayPauseButton({
 			onClick={disabled ? onDisabledClick : onClick}
 			aria-disabled={disabled || undefined}
 			aria-label={accessibleName}
+			ref={ref}
 		>
 			<Icon svg={isPlaying ? PauseIcon : PlayIcon} size='md' />
 		</button>
