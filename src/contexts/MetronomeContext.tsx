@@ -130,15 +130,19 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 
 		const beep = () => {
 			const context = getAudioContext();
-			void context.resume();
+			const now = context.currentTime;
+			const duration = BEAT_FLASH_MS / 1000;
 			const oscillator = context.createOscillator();
 			const gain = context.createGain();
 			oscillator.type = 'sine';
-			gain.gain.value = 0.2;
+			// Quick attack/decay envelope so the click has no pops at the edges
+			gain.gain.setValueAtTime(0, now);
+			gain.gain.linearRampToValueAtTime(0.2, now + 0.002);
+			gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
 			oscillator.connect(gain);
 			gain.connect(context.destination);
-			oscillator.start();
-			oscillator.stop(context.currentTime + BEAT_FLASH_MS / 1000);
+			oscillator.start(now);
+			oscillator.stop(now + duration + 0.01);
 		};
 
 		const flash = () => {
@@ -192,7 +196,7 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 			}
 		};
 
-		if (activeSource === 'measures') {
+		const startCountIn = () => {
 			setIsCountingIn(true);
 			stepRef.current = 0;
 			setSubdivisionIndex(0);
@@ -215,9 +219,30 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 
 			countInBeat();
 			intervalId = setInterval(countInBeat, quarterMs);
+		};
+
+		const begin = () => {
+			if (cancelled) {
+				return;
+			}
+
+			if (activeSource === 'measures') {
+				startCountIn();
+			} else {
+				setIsCountingIn(false);
+				startPlayback();
+			}
+		};
+
+		// Wait for the AudioContext to actually be running before scheduling
+		// the first beat; beeps fired while the context is still resuming get
+		// queued up and play back jumbled together.
+		const context = getAudioContext();
+
+		if (context.state === 'running') {
+			begin();
 		} else {
-			setIsCountingIn(false);
-			startPlayback();
+			void context.resume().then(begin);
 		}
 
 		return () => {
