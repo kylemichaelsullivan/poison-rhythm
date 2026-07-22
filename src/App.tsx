@@ -1,4 +1,4 @@
-import { Body, Footer, Header } from '@/components/layout';
+import { AboutPoisonRhythmProvider, Body, Footer, Header } from '@/components/layout';
 import { usePoisonGame } from '@/hooks';
 
 function App() {
@@ -6,18 +6,20 @@ function App() {
 		usePoisonGame();
 
 	return (
-		<div className='flex min-h-screen flex-col items-center gap-6 bg-white text-black'>
-			<Header />
+		<AboutPoisonRhythmProvider>
+			<div className='flex min-h-screen flex-col items-center gap-6 bg-white text-black'>
+				<Header />
 
-			<Body
-				poisonRhythm={poisonRhythm}
-				measures={measures}
-				onNewPoison={handleNewPoison}
-				onReusePoison={handleReusePoison}
-			/>
+				<Body
+					poisonRhythm={poisonRhythm}
+					measures={measures}
+					onNewPoison={handleNewPoison}
+					onReusePoison={handleReusePoison}
+				/>
 
-			<Footer />
-		</div>
+				<Footer />
+			</div>
+		</AboutPoisonRhythmProvider>
 	);
 }
 

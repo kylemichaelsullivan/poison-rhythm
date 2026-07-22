@@ -1,4 +1,8 @@
 export { AppTitle } from './AppTitle';
+export {
+	AboutPoisonRhythmButton,
+	AboutPoisonRhythmProvider,
+} from './about';
 export { Body } from './Body';
 export { ActionButton, Metronome, Settings } from './button';
 export { CornerModal } from './CornerModal';

@@ -64,8 +64,9 @@
 	}
 }
 
-/* About-modal brand title: slow lava-lamp gradient clipped to glyphs */
-.AppTitleBrand {
+/* Brand title: slow lava-lamp gradient clipped to glyphs (modal always, triggers on hover) */
+.AppTitleBrand,
+.AppTitleBrandTrigger:hover {
 	background-image: linear-gradient(
 		125deg,
 		var(--color-primary) 0%,
@@ -79,7 +80,9 @@
 	-webkit-background-clip: text;
 	background-clip: text;
 	color: transparent;
-	filter: drop-shadow(0 0 0.45rem color-mix(in oklch, var(--color-primary) 40%, transparent));
+	filter: drop-shadow(
+		0 0 0.45rem color-mix(in oklch, var(--color-primary) 40%, transparent)
+	);
 	animation: app-title-brand-lava 22s ease-in-out infinite;
 }
 
@@ -100,7 +103,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.AppTitleBrand {
+	.AppTitleBrand,
+	.AppTitleBrandTrigger:hover {
 		animation: none;
 		background-position: 40% 50%;
 	}
