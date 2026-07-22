@@ -39,9 +39,36 @@ bun run test
 | `bun run test` | Run Bun unit tests |
 | `bun run preview` | Preview production build |
 
+## Project Structure
+
+```
+src/
+├── components/
+│   ├── controls/     # Difficulty, New/Reuse, play/pause, carousel nav
+│   ├── layout/       # Chrome, modals, ShowNotes, metronome, settings
+│   │   ├── button/   # Footer corner triggers (Settings, Metronome, Account)
+│   │   ├── metronome/
+│   │   └── settings/ # Settings modal body and shared setting controls
+│   ├── measures/     # Measure carousel, grid, and playback highlighting
+│   └── poison/       # Poison rhythm section with New/Reuse controls
+├── contexts/         # Difficulty, Theme (incl. mute prefs), Metronome
+├── hooks/            # usePoisonGame, metronome helpers
+├── lib/              # Rhythm generation, difficulty, tempo, theme/mute prefs
+│   └── __tests__/    # Bun unit tests for lib modules
+└── types/            # RhythmMeasure
+```
+
+### Settings
+
+- UI: `src/components/layout/settings/` — theme preference chips, metronome mute, and rhythm-sound mute (UI reserved; wiring later)
+- Lookups: `src/lib/theme-options.ts`, `src/lib/mute-preferences.ts`
+- Persistence: theme, subdivision, and mute flags in `localStorage` via `ThemeProvider`
+
 ## Tests
 
 Unit tests live in `__tests__/` folders next to the code they cover (currently `src/lib/__tests__/`). Run them with `bun run test`.
+
+Covered lib modules include rhythm generation, difficulty levels, metronome tempo/tap, subdivision playback, theme options, and mute preference storage.
 
 ## How to Play
 
@@ -51,4 +78,5 @@ Unit tests live in `__tests__/` folders next to the code they cover (currently `
 4. Use **Prev/Next** to step through measures and find which one matches the poison.
 5. Click **Reuse** to keep the same poison and regenerate measures.
 6. Use **Play** to hear the current measures with a count-in; open the footer **metronome** to set tempo or tap tempo.
-7. Use the header **note subdivision** control to adjust display density, and the footer **Settings** to pick a light, dark, or system theme.
+7. Use the header **note subdivision** control to adjust display density.
+8. Open the footer **Settings** to choose a light, dark, or system theme, and to mute or unmute the metronome (rhythm sounds mute is reserved for a future release).

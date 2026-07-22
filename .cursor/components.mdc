@@ -20,6 +20,7 @@ src/components/
 │   └── index.ts
 ├── layout/                # App chrome, overlays, metronome UI
 │   ├── AppTitle.tsx
+│   ├── about/               # About modal provider and trigger button
 │   ├── Body.tsx
 │   ├── ClickOutside.tsx
 │   ├── Copyright.tsx
@@ -36,6 +37,7 @@ src/components/
 │   ├── SkipLink.tsx
 │   ├── button/
 │   ├── metronome/
+│   ├── settings/          # Settings modal body and shared setting controls
 │   └── index.ts
 ├── measures/              # Measure carousel and grid
 │   ├── CurrentMeasureDisplay.tsx
@@ -109,12 +111,30 @@ src/components/
 - **Section**: Wrapper with title, optional `headerAction`, children; border, padding, gap
 - **SectionTitle**: Section heading used inside Section
 
+### Settings (layout/settings)
+
+- **SettingsOverlay**: Settings modal body; composes ThemeSetting and SoundSetting
+- **SettingsSection**: Titled settings group on a SettingsPanel surface
+- **SettingsSectionTitle**: Section heading with a gray rule under the title (parallel to SectionTitle)
+- **SettingsPanel**: Bordered surface utility for grouping settings controls
+- **ThemeSetting**: Theme preference chips plus caption
+- **SoundSetting**: Metronome / rhythm mute rows
+- **Fieldset**: Shared `<fieldset />` wrapper with `name`, optional `legend`, and a11y props
+- **SegmentedControl** / **SegmentButton**: Exclusive option chips (`aria-pressed`)
+- **SettingRow**: Label-left / control-right row
+- **IconToggle**: On/off icon chip built on SegmentButton
+- **MuteToggle**: SettingRow + IconToggle for mute state
+- **FieldCaption**: Described-by caption under a control
+- **Lookups**: `lib/theme-options.ts`, `lib/mute-preferences.ts`, `settings/theme-segments.ts`
+
 ## Guidelines
 
 - **TypeScript types**: Prefer `type` over `interface` for props
 - **Named exports**: Use `export function` or `export const` for components
 - **Props**: Define a single props type per component (e.g. `MeasureSliderProps`)
+- **Variants over className**: Do not accept `className` on shared components for styling customization. Use a `variant` prop for supported visual differences (e.g. `ControlButton`, `AboutPoisonRhythmButton`)
 - **Imports**: Use barrel imports where available; otherwise `@/lib/...`, `@/types/...`, `@/contexts/...`
+- **Type imports**: Keep `import type { ... }` on separate lines from component/value imports; do not mix inline `type` into value import statements
 
 ## Typography
 

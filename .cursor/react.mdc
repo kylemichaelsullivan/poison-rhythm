@@ -33,8 +33,8 @@ alwaysApply: false
 
 - **Game state hook**: `usePoisonGame` holds `poisonRhythm`, `measures`, and New/Reuse handlers; used by `App.tsx`
 - **Difficulty context**: `DifficultyProvider` / `useDifficulty` for difficulty 1–5
-- **Theme context**: `ThemeProvider` / `useTheme` for light/dark theme and note subdivision level
-- **Metronome context**: `MetronomeProvider` / `useMetronome` for tempo, metronome playback, and measure playback
+- **Theme context**: `ThemeProvider` / `useTheme` for light/dark/system theme, note subdivision level, and mute preferences (metronome + rhythm sounds)
+- **Metronome context**: `MetronomeProvider` / `useMetronome` for tempo, metronome playback, and measure playback; respects `muteMetronome` from theme context
 - **Local state**: Use `useState` and `useCallback` in hooks or parent components
 - **Composition**: `App` renders `Header`, `Body`, and `Footer`; `Body` composes game sections and play controls
 - **No global store required**: Current app is small; avoid adding Zustand or similar unless state grows significantly
@@ -61,6 +61,8 @@ alwaysApply: false
 - **rhythm-generator**: Use `generateRandomMeasure`, `QUARTER_NOTES` from `@/lib/rhythm-generator`
 - **rhythm-utils**: Use `rhythmsEqual` from `@/lib/rhythm-utils` to compare measures
 - **difficulty-levels**: Use `DIFFICULTY_LEVELS`, `hitRangeForLevel`, and help-text helpers from `@/lib/difficulty-levels`
+- **theme-options**: Use `THEME_OPTIONS` and `themeOptionFor` from `@/lib/theme-options`
+- **mute-preferences**: Use `readMutePreference` / `writeMutePreference` and storage keys from `@/lib/mute-preferences`
 
 ### Components
 
@@ -71,6 +73,7 @@ alwaysApply: false
 - **MeasuresSection**: Empty state or MeasureSlider carousel
 - **MeasureGrid / MeasureCell**: 16th-note grid with optional playback highlighting
 - **Metronome**: Footer corner modal for tempo, tap tempo, and metronome playback
+- **Settings**: Footer corner modal; `layout/settings` for theme chips and sound mute toggles
 
 ### Typography
 
@@ -89,6 +92,9 @@ src/
 ├── components/
 │   ├── controls/
 │   ├── layout/
+│   │   ├── button/
+│   │   ├── metronome/
+│   │   └── settings/
 │   ├── measures/
 │   └── poison/
 ├── contexts/
@@ -104,3 +110,14 @@ src/
 - Prefer barrel imports: `@/components/controls`, `@/components/layout`, `@/components/measures`, `@/components/poison`
 - Direct paths when needed: `@/lib/rhythm-generator`, `@/types/rhythm`, `@/contexts`
 - Tests live in sibling `__tests__/` folders and import modules under test via `@/`
+
+### Import Organization
+
+Follow the import order in `rules.mdc`:
+
+1. React value imports
+2. Third-party libraries
+3. Internal project value imports
+4. Type-only imports
+
+Keep type imports on separate lines from component/value imports. Do not use inline `type` in a mixed import statement.

@@ -36,12 +36,12 @@ src/
 ├── assets/svg/             # Local SVG icons imported via SVGR (`*.svg?react`)
 ├── components/
 │   ├── controls/           # Difficulty, New/Reuse, play/pause, carousel nav
-│   ├── layout/             # Chrome, modals, ShowNotes, metronome panel
+│   ├── layout/             # Chrome, modals, ShowNotes, metronome panel, settings
 │   ├── measures/           # Measure carousel, grid, and playback highlighting
 │   └── poison/             # Poison rhythm section with New/Reuse controls
 ├── contexts/               # Difficulty, Theme, Metronome
 ├── hooks/                  # usePoisonGame, metronome helpers
-├── lib/                    # Rhythm generation, difficulty, tempo, playback math
+├── lib/                    # Rhythm generation, difficulty, tempo, theme/mute prefs, playback math
 │   └── __tests__/          # Bun unit tests for lib modules
 └── types/                  # RhythmMeasure
 ```
@@ -52,6 +52,7 @@ src/
 - **Location**: Colocate suites in a sibling `__tests__/` folder (e.g. `src/lib/__tests__/`)
 - **Naming**: `*.test.ts` / `*.test.tsx` (or `*.spec.*`)
 - **Imports**: Use the `@/` alias for modules under test
+- **Lib coverage**: Prefer unit tests for pure helpers (`theme-options`, `mute-preferences`, rhythm/tempo/difficulty modules)
 
 ## Code Organization
 
@@ -59,35 +60,54 @@ src/
 
 - **Defined order**: Follow specific import order, then alphabetize within each group
 - **Import order**:
-  1. React imports (from 'react')
+  1. React value imports (from `'react'`)
   2. Third-party libraries (alphabetically by source)
-  3. Internal project imports (alphabetically by path, use `@/` alias)
-  4. Type imports (alphabetically by path)
+  3. Internal project value imports (alphabetically by path, use `@/` alias)
+  4. Type-only imports (alphabetically by path; React types from `'react'`, then `@/` paths)
+- **Separate type imports**: Do not mix type and value imports on one line. Use a dedicated `import type { ... } from '...'` line instead of inline `type` in a value import (e.g. avoid `import { Icon, type SvgIconComponent } from '...'`).
 - **Avoid React namespace**: Import React types directly, avoid `React.` prefix
 - **Named imports**: Use named imports for better tree-shaking
 
 #### Import Order Example
 
 ```tsx
-// 1. React imports
+// 1. React value imports
 import { useCallback, useState } from 'react';
-import type { ReactNode } from 'react';
 
 // 2. Third-party libraries (alphabetically by source)
 import clsx from 'clsx';
 
-// 3. Internal project imports (alphabetically by path)
+// 3. Internal project value imports (alphabetically by path)
 import { MeasureGrid } from '@/components/measures';
+import { Icon } from '@/components/layout/Icon';
 import { generateRandomMeasure } from '@/lib/rhythm-generator';
+
+// 4. Type-only imports (alphabetically by path)
+import type { ReactNode } from 'react';
+import type { SvgIconComponent } from '@/components/layout/Icon';
 import type { RhythmMeasure } from '@/types/rhythm';
+```
+
+#### Mixed Import Anti-Pattern
+
+```tsx
+// ❌ Avoid — type mixed with value/component imports
+import { Icon, type SvgIconComponent } from '@/components/layout/Icon';
+import { THEME_OPTIONS, type ThemePreference } from '@/lib';
+
+// ✅ Good — separate lines
+import { Icon } from '@/components/layout/Icon';
+import { THEME_OPTIONS } from '@/lib';
+import type { SvgIconComponent } from '@/components/layout/Icon';
+import type { ThemePreference } from '@/lib';
 ```
 
 ### File Structure
 
 ```tsx
 // Standard component file structure
-import type { ReactNode } from 'react';
 import clsx from 'clsx';
+import type { ReactNode } from 'react';
 
 type ComponentProps = {
 	title: string;
@@ -123,6 +143,7 @@ export function ComponentName({
 - **Avoid Tailwind margin/space classes**: Do not use margin or space classes in Tailwind
 - **No !important declarations**: Avoid using `!important` in CSS
 - **Tailwind**: Use Tailwind utilities; custom utilities live in `src/index.css` when needed
+- **Variants over className**: Do not accept `className` on shared components for styling customization. Use a `variant` prop for supported visual differences
 
 ### React Best Practices
 

@@ -31,12 +31,20 @@ className={clsx(
   'ComponentName base-classes',
   isActive && 'active-classes',
   isDisabled && 'disabled-classes',
-  className
 )}
 
-// Component props - use clsx
-className={clsx('ComponentName base-classes', className)}
+// Component variants - use a variant prop, not className passthrough
+type ComponentProps = {
+  variant?: 'default' | 'title';
+};
+
+className={clsx(
+  'ComponentName base-classes',
+  variant === 'title' && 'title-classes',
+)}
 ```
+
+- **No `className` props on components**: Do not accept `className` on shared components for styling customization. Encode supported visual differences as a `variant` prop (see `ControlButton`, `AboutPoisonRhythmButton`).
 
 ### JSX Attribute Order
 
