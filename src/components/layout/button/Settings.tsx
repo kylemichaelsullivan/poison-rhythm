@@ -1,5 +1,5 @@
 import { CornerModal } from '../CornerModal';
-import { SettingsOverlay } from './SettingsOverlay';
+import { SettingsOverlay } from '../settings';
 
 export function Settings() {
 	return (

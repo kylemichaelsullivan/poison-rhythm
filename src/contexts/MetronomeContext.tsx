@@ -64,7 +64,7 @@ function isEditableTarget(target: EventTarget | null) {
 }
 
 export function MetronomeProvider({ children }: MetronomeProviderProps) {
-	const { subdivisionLevel } = useTheme();
+	const { subdivisionLevel, muteMetronome } = useTheme();
 	const [tempo, setTempo] = useState(() => getInitialTempo(BPM_DEFAULT));
 	const [activeSource, setActiveSource] = useState<PlaybackSource | null>(null);
 	const [isCountingIn, setIsCountingIn] = useState(false);
@@ -73,6 +73,8 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 	const [measureCycle, setMeasureCycle] = useState(0);
 	const stepRef = useRef(0);
 	const audioContextRef = useRef<AudioContext | null>(null);
+	const muteMetronomeRef = useRef(muteMetronome);
+	muteMetronomeRef.current = muteMetronome;
 
 	const isRunning = activeSource !== null;
 	const isMetronomeRunning = activeSource === 'metronome';
@@ -129,6 +131,10 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 		};
 
 		const beep = () => {
+			if (muteMetronomeRef.current) {
+				return;
+			}
+
 			const context = getAudioContext();
 			const now = context.currentTime;
 			const duration = BEAT_FLASH_MS / 1000;

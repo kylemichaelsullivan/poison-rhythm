@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 /**
  * Shared control styles for small UI controls (buttons, popovers, etc.).
  */
@@ -51,3 +53,23 @@ export const roundPlayPauseButtonClassName =
 
 export const modifyTempoButtonClassName =
 	'absolute flex justify-center items-center border border-mid rounded bg-primary w-8 h-8 p-2 text-white transition hover:border-white hover:opacity-90 top-1/2 -translate-y-1/2 disabled:opacity-50';
+
+/** Segment / toggle chip used in settings and similar option rows. */
+export function segmentControlClassName(
+	isSelected: boolean,
+	{
+		disabled = false,
+		grow = true,
+	}: { disabled?: boolean; grow?: boolean } = {},
+): string {
+	return clsx(
+		'flex items-center justify-center rounded border p-2 text-sm transition-colors',
+		grow && 'flex-1',
+		focusVisibleRingClassName,
+		disabled && 'cursor-not-allowed opacity-50',
+		isSelected
+			? 'border-primary bg-primary text-white'
+			: 'border-mid bg-chrome text-white hover:bg-chrome-hover',
+		disabled && !isSelected && 'hover:bg-chrome',
+	);
+}

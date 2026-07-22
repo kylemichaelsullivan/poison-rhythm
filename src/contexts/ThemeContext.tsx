@@ -7,6 +7,12 @@ import {
 	useState,
 	useSyncExternalStore,
 } from 'react';
+import {
+	MUTE_METRONOME_STORAGE_KEY,
+	MUTE_RHYTHM_STORAGE_KEY,
+	readMutePreference,
+	writeMutePreference,
+} from '@/lib/mute-preferences';
 
 const THEME_STORAGE_KEY = 'poison-rhythm-theme';
 const SUBDIVISION_STORAGE_KEY = 'poison-rhythm-subdivision';
@@ -50,6 +56,10 @@ type ThemeContextValue = {
 	effectiveTheme: 'light' | 'dark';
 	subdivisionLevel: SubdivisionLevel;
 	setSubdivisionLevel: (level: SubdivisionLevel) => void;
+	muteMetronome: boolean;
+	setMuteMetronome: (muted: boolean) => void;
+	muteRhythmSounds: boolean;
+	setMuteRhythmSounds: (muted: boolean) => void;
 };
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
@@ -60,6 +70,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 	);
 	const [subdivisionLevel, setSubdivisionLevelState] =
 		useState<SubdivisionLevel>(getStoredSubdivision);
+	const [muteMetronome, setMuteMetronomeState] = useState(() =>
+		readMutePreference(MUTE_METRONOME_STORAGE_KEY),
+	);
+	const [muteRhythmSounds, setMuteRhythmSoundsState] = useState(() =>
+		readMutePreference(MUTE_RHYTHM_STORAGE_KEY),
+	);
 	const systemDark = useSyncExternalStore(
 		subscribeToSystemTheme,
 		getSystemDark,
@@ -78,6 +94,16 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 	const setSubdivisionLevel = useCallback((level: SubdivisionLevel) => {
 		setSubdivisionLevelState(level);
 		localStorage.setItem(SUBDIVISION_STORAGE_KEY, level);
+	}, []);
+
+	const setMuteMetronome = useCallback((muted: boolean) => {
+		setMuteMetronomeState(muted);
+		writeMutePreference(MUTE_METRONOME_STORAGE_KEY, muted);
+	}, []);
+
+	const setMuteRhythmSounds = useCallback((muted: boolean) => {
+		setMuteRhythmSoundsState(muted);
+		writeMutePreference(MUTE_RHYTHM_STORAGE_KEY, muted);
 	}, []);
 
 	const effectiveTheme: 'light' | 'dark' =
@@ -101,6 +127,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 		effectiveTheme,
 		subdivisionLevel,
 		setSubdivisionLevel,
+		muteMetronome,
+		setMuteMetronome,
+		muteRhythmSounds,
+		setMuteRhythmSounds,
 	};
 
 	return (
