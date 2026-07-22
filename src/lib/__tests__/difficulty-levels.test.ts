@@ -18,7 +18,7 @@ describe('difficulty-levels', () => {
 
 	test('formats help text with typographic en dash', () => {
 		expect(formatDifficultyHelpText(DIFFICULTY_LEVELS[0])).toBe(
-			'Fewest hits (2–4), only on the downbeats (1, 2, 3, 4).',
+			'Fewest hits (2–4), only on the downbeats.',
 		);
 	});
 });
