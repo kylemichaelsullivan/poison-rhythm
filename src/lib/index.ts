@@ -10,6 +10,12 @@ export {
 	formatDifficultyHelpText,
 	hitRangeForLevel,
 } from './difficulty-levels';
+export {
+	MUTE_METRONOME_STORAGE_KEY,
+	MUTE_RHYTHM_STORAGE_KEY,
+	readMutePreference,
+	writeMutePreference,
+} from './mute-preferences';
 export { generateRandomMeasure, QUARTER_NOTES } from './rhythm-generator';
 export { countHits, isValidRhythm, rhythmsEqual } from './rhythm-utils';
 export {
@@ -24,3 +30,5 @@ export {
 	subdivisionPulseDivisor,
 	subdivisionStepCount,
 } from './subdivision-playback';
+export type { ThemeOption, ThemePreference } from './theme-options';
+export { THEME_OPTIONS, themeOptionFor } from './theme-options';
