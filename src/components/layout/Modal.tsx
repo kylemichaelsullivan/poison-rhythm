@@ -1,6 +1,9 @@
 import clsx from 'clsx';
-import type { ReactNode } from 'react';
-import { useEffect, useId, useRef } from 'react';
+import { type ReactNode, useEffect, useId, useRef } from 'react';
+import {
+	modalPanelClassName,
+	modalScrimClassName,
+} from '@/lib/control-classes';
 
 type ModalProps = {
 	open: boolean;
@@ -106,32 +109,36 @@ export function Modal({
 		<div className='Modal fixed flex items-center justify-center p-4 inset-0 z-50'>
 			<button
 				type='button'
-				className='absolute bg-black/50 inset-0'
+				className={clsx('absolute inset-0', modalScrimClassName)}
 				aria-label='Close modal'
 				onClick={onClose}
 			/>
 			<div
 				className={clsx(
-					'relative flex flex-col gap-4 bg-white/80 backdrop-blur-md border border-mid shadow-lg w-full p-6',
+					'relative flex flex-col gap-4 w-full p-6',
+					modalPanelClassName,
 					fullWidth ? 'max-w-none rounded-none' : 'max-w-sm rounded-lg',
 				)}
 				role='dialog'
-				tabIndex={-1}
 				aria-modal='true'
 				aria-labelledby={title ? titleId : undefined}
 				aria-label={title ? undefined : (ariaLabel ?? 'Modal')}
+				tabIndex={-1}
 				ref={dialogRef}
 			>
 				<button
 					type='button'
-					className='absolute top-3 right-3 flex justify-center items-center w-8 h-8 text-xl font-semibold leading-none text-dark transition-colors hover:text-primary focus-visible:outline-none focus-visible:text-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2'
+					className='absolute top-3 right-3 flex justify-center items-center w-8 h-8 text-xl font-semibold leading-none text-dark transition-colors hover:text-primary focus-visible:outline-none focus-visible:text-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-white'
 					aria-label='Close modal'
 					onClick={onClose}
 				>
 					X
 				</button>
 				{title && (
-					<h2 className='text-lg font-semibold text-center' id={titleId}>
+					<h2
+						className='text-lg font-semibold text-black text-center'
+						id={titleId}
+					>
 						{title}
 					</h2>
 				)}

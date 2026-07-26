@@ -15,7 +15,7 @@ export function GameControls() {
 				headerAction={
 					<button
 						type='button'
-						className='flex justify-center items-center rounded-full border border-mid bg-dark size-6 text-sm font-semibold leading-none text-white transition-colors hover:border-white hover:bg-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-dark'
+						className='flex justify-center items-center rounded-full border border-mid bg-surface-muted size-6 text-sm font-semibold leading-none text-black transition-colors hover:border-primary hover:bg-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface'
 						title='Explain Difficulties'
 						aria-label='Explain Difficulty Levels'
 						onClick={() => setHelpOpen(true)}

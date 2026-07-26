@@ -25,12 +25,12 @@ export function MeasureCell({
 	return (
 		<div
 			className={clsx(
-				'MeasureCell aspect-square rounded-sm',
-				value ? 'bg-primary' : 'bg-dark',
+				'MeasureCell aspect-square rounded-sm border border-mid',
+				value ? 'bg-primary' : 'bg-surface-muted',
 				isBeatBoundaryLeft && 'border-l-2 border-mid',
 				isBeatBoundaryRight && 'border-r-2 border-mid',
 				isCurrentStep &&
-					'ring-2 ring-white shadow-[0_0_0.5rem_var(--color-secondary)]',
+					'ring-2 ring-black shadow-secondary-glow',
 				isCurrentStep && isLit && 'is-lit',
 			)}
 			title={value ? 'Hit' : 'Rest'}

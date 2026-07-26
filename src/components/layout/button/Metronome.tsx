@@ -18,7 +18,7 @@ export function Metronome() {
 					<span className='text-sm font-semibold tabular-nums tracking-tight'>
 						{tempo}
 					</span>
-					<span className='text-[0.65rem] font-medium uppercase tracking-widest text-white'>
+					<span className='hidden text-xs font-medium uppercase tracking-widest sm:inline'>
 						bpm
 					</span>
 				</span>

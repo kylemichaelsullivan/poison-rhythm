@@ -1,4 +1,6 @@
+import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
+import { inputSurfaceClassName } from '@/lib/control-classes';
 import { BPM_MAX, BPM_MIN } from '@/lib/metronome-defaults';
 import { clampTempo } from '@/lib/metronome-tempo';
 
@@ -61,7 +63,10 @@ export function MetronomeTempoInput({
 	return (
 		<input
 			type='text'
-			className='border border-mid rounded bg-white text-black tabular-nums text-center w-16 p-1 focus:outline-none focus:ring-2 focus:ring-primary'
+			className={clsx(
+				inputSurfaceClassName,
+				'MetronomeTempoInput tabular-nums text-center w-16 p-1 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-white',
+			)}
 			inputMode='numeric'
 			pattern='[0-9]*'
 			min={BPM_MIN}

@@ -1,5 +1,12 @@
-import { AboutPoisonRhythmProvider, Body, Footer, Header } from '@/components/layout';
+import clsx from 'clsx';
+import {
+	AboutPoisonRhythmProvider,
+	Body,
+	Footer,
+	Header,
+} from '@/components/layout';
 import { usePoisonGame } from '@/hooks';
+import { pageSurfaceClassName } from '@/lib/control-classes';
 
 function App() {
 	const { poisonRhythm, measures, handleNewPoison, handleReusePoison } =
@@ -7,7 +14,12 @@ function App() {
 
 	return (
 		<AboutPoisonRhythmProvider>
-			<div className='flex min-h-screen flex-col items-center gap-6 bg-white text-black'>
+			<div
+				className={clsx(
+					'flex min-h-dvh flex-col items-center gap-6',
+					pageSurfaceClassName,
+				)}
+			>
 				<Header />
 
 				<Body

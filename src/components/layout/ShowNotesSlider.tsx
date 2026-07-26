@@ -44,7 +44,7 @@ export function ShowNotesSlider({
 				onChange={(e) => onChange(Number(e.target.value))}
 				ref={inputRef}
 			/>
-			<div className='flex justify-between text-white text-xs pt-1'>
+			<div className='flex justify-between text-xs pt-1'>
 				{SUBDIVISION_LABELS.map((label) => (
 					<span key={label}>{label}</span>
 				))}

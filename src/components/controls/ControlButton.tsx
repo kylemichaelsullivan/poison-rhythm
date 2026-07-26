@@ -35,10 +35,10 @@ export function ControlButton({
 	const isSoftDisabled = disabled && onDisabledClick !== undefined;
 	const base = 'border rounded font-medium px-4 py-2 transition';
 	const styles = disabled
-		? 'border-dark bg-dark text-mid cursor-not-allowed'
+		? 'border-mid bg-surface-muted text-mid cursor-not-allowed'
 		: variant === 'primary'
 			? 'border-mid bg-primary text-white hover:border-white hover:opacity-90'
-			: 'border-mid bg-dark text-white hover:border-white hover:bg-mid';
+			: 'border-mid bg-surface-muted text-black hover:border-primary hover:bg-mid hover:text-black';
 
 	return (
 		<button

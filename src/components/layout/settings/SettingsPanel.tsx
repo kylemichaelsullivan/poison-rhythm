@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import type { ReactNode } from 'react';
+import { settingsPanelClassName } from '@/lib/control-classes';
 
 type SettingsPanelProps = {
 	children: ReactNode;
@@ -11,7 +12,8 @@ export function SettingsPanel({ children, className }: SettingsPanelProps) {
 	return (
 		<section
 			className={clsx(
-				'SettingsPanel flex flex-col gap-3 rounded-lg border border-mid bg-light/60 p-3',
+				'SettingsPanel flex flex-col gap-3 rounded-lg border border-mid p-3',
+				settingsPanelClassName,
 				className,
 			)}
 		>
