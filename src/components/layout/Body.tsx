@@ -58,6 +58,7 @@ export function Body({
 
 			<MeasuresSection
 				measures={measures}
+				poisonRhythm={poisonRhythm}
 				onEmptyClick={focusNewPoisonButton}
 			/>
 

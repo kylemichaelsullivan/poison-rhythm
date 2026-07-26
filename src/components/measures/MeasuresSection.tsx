@@ -4,11 +4,13 @@ import { MeasureSlider } from '.';
 
 type MeasuresSectionProps = {
 	measures: RhythmMeasure[];
+	poisonRhythm: RhythmMeasure | null;
 	onEmptyClick?: () => void;
 };
 
 export function MeasuresSection({
 	measures,
+	poisonRhythm,
 	onEmptyClick,
 }: MeasuresSectionProps) {
 	return (
@@ -16,7 +18,7 @@ export function MeasuresSection({
 			{measures.length === 0 ? (
 				<EmptyStartPrompt onClick={onEmptyClick} />
 			) : (
-				<MeasureSlider measures={measures} />
+				<MeasureSlider measures={measures} poisonRhythm={poisonRhythm} />
 			)}
 		</Section>
 	);

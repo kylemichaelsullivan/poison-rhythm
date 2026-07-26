@@ -9,7 +9,7 @@ export function SettingsOverlay() {
 		muteMetronome,
 		muteRhythmSounds,
 		setMuteMetronome,
-		// setMuteRhythmSounds,
+		setMuteRhythmSounds,
 	} = useTheme();
 
 	return (
@@ -19,8 +19,7 @@ export function SettingsOverlay() {
 				muteMetronome={muteMetronome}
 				muteRhythmSounds={muteRhythmSounds}
 				onMuteMetronomeChange={setMuteMetronome}
-				// onMuteRhythmSoundsChange={setMuteRhythmSounds}
-				rhythmSoundsDisabled
+				onMuteRhythmSoundsChange={setMuteRhythmSounds}
 			/>
 		</div>
 	);

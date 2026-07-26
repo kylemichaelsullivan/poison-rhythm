@@ -2,6 +2,7 @@ import { describe, expect, test } from 'bun:test';
 import {
 	cellToSubdivisionStep,
 	isQuarterDownbeat,
+	stepHasHit,
 	subdivisionPulseDivisor,
 	subdivisionStepCount,
 } from '../subdivision-playback';
@@ -20,5 +21,17 @@ describe('subdivision-playback', () => {
 		expect(cellToSubdivisionStep('eighths', 6)).toBe(3);
 		expect(isQuarterDownbeat('sixteenths', 8)).toBe(true);
 		expect(isQuarterDownbeat('eighths', 1)).toBe(false);
+	});
+
+	test('detects hits at the current subdivision step', () => {
+		const measure = Array.from({ length: 16 }, () => false);
+		measure[6] = true;
+		measure[4] = true;
+
+		expect(stepHasHit(measure, 'sixteenths', 6)).toBe(true);
+		expect(stepHasHit(measure, 'sixteenths', 5)).toBe(false);
+		expect(stepHasHit(measure, 'eighths', 3)).toBe(true);
+		expect(stepHasHit(measure, 'quarters', 1)).toBe(true);
+		expect(stepHasHit(measure, 'quarters', 0)).toBe(false);
 	});
 });

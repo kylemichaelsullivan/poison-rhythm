@@ -1,5 +1,5 @@
 import type { SubdivisionLevel } from '@/contexts';
-import { MEASURE_LENGTH } from '@/types';
+import { MEASURE_LENGTH, type RhythmMeasure } from '@/types';
 
 export function subdivisionStepCount(level: SubdivisionLevel): number {
 	switch (level) {
@@ -49,4 +49,17 @@ export function isQuarterDownbeat(
 		case 'sixteenths':
 			return stepIndex % 4 === 0;
 	}
+}
+
+export function stepHasHit(
+	measure: RhythmMeasure,
+	level: SubdivisionLevel,
+	stepIndex: number,
+): boolean {
+	for (let i = 0; i < measure.length; i++) {
+		if (cellToSubdivisionStep(level, i) === stepIndex && measure[i]) {
+			return true;
+		}
+	}
+	return false;
 }

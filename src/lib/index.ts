@@ -27,6 +27,7 @@ export {
 export {
 	cellToSubdivisionStep,
 	isQuarterDownbeat,
+	stepHasHit,
 	subdivisionPulseDivisor,
 	subdivisionStepCount,
 } from './subdivision-playback';

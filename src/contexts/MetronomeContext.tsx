@@ -19,9 +19,11 @@ import {
 import { clampTempo, getInitialTempo } from '@/lib/metronome-tempo';
 import {
 	isQuarterDownbeat,
+	stepHasHit,
 	subdivisionPulseDivisor,
 	subdivisionStepCount,
 } from '@/lib/subdivision-playback';
+import type { RhythmMeasure } from '@/types';
 import { useTheme } from './ThemeContext';
 
 export type PlaybackSource = 'metronome' | 'measures';
@@ -37,6 +39,7 @@ type MetronomeContextValue = {
 	isLit: boolean;
 	subdivisionIndex: number;
 	measureCycle: number;
+	setPlaybackMeasure: (measure: RhythmMeasure | null) => void;
 	toggleMetronome: () => void;
 	toggleMeasures: () => void;
 	startMetronome: () => void;
@@ -64,7 +67,7 @@ function isEditableTarget(target: EventTarget | null) {
 }
 
 export function MetronomeProvider({ children }: MetronomeProviderProps) {
-	const { subdivisionLevel, muteMetronome } = useTheme();
+	const { subdivisionLevel, muteMetronome, muteRhythmSounds } = useTheme();
 	const [tempo, setTempo] = useState(() => getInitialTempo(BPM_DEFAULT));
 	const [activeSource, setActiveSource] = useState<PlaybackSource | null>(null);
 	const [isCountingIn, setIsCountingIn] = useState(false);
@@ -73,8 +76,15 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 	const [measureCycle, setMeasureCycle] = useState(0);
 	const stepRef = useRef(0);
 	const audioContextRef = useRef<AudioContext | null>(null);
+	const playbackMeasureRef = useRef<RhythmMeasure | null>(null);
 	const muteMetronomeRef = useRef(muteMetronome);
+	const muteRhythmSoundsRef = useRef(muteRhythmSounds);
 	muteMetronomeRef.current = muteMetronome;
+	muteRhythmSoundsRef.current = muteRhythmSounds;
+
+	const setPlaybackMeasure = useCallback((measure: RhythmMeasure | null) => {
+		playbackMeasureRef.current = measure;
+	}, []);
 
 	const isRunning = activeSource !== null;
 	const isMetronomeRunning = activeSource === 'metronome';
@@ -151,6 +161,27 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 			oscillator.stop(now + duration + 0.01);
 		};
 
+		const rhythmHit = () => {
+			if (muteRhythmSoundsRef.current) {
+				return;
+			}
+
+			const context = getAudioContext();
+			const now = context.currentTime;
+			const duration = BEAT_FLASH_MS / 1000;
+			const oscillator = context.createOscillator();
+			const gain = context.createGain();
+			oscillator.type = 'triangle';
+			oscillator.frequency.setValueAtTime(660, now);
+			gain.gain.setValueAtTime(0, now);
+			gain.gain.linearRampToValueAtTime(0.28, now + 0.002);
+			gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+			oscillator.connect(gain);
+			gain.connect(context.destination);
+			oscillator.start(now);
+			oscillator.stop(now + duration + 0.01);
+		};
+
 		const flash = () => {
 			setIsLit(true);
 			setTimeout(() => {
@@ -179,6 +210,16 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 
 				if (step === stepCount - 1) {
 					setMeasureCycle((cycle) => cycle + 1);
+				}
+
+				if (activeSource === 'measures') {
+					const measure = playbackMeasureRef.current;
+					if (
+						measure &&
+						stepHasHit(measure, subdivisionLevel, step)
+					) {
+						rhythmHit();
+					}
 				}
 
 				if (isQuarterDownbeat(subdivisionLevel, step)) {
@@ -315,6 +356,7 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 		isLit,
 		subdivisionIndex,
 		measureCycle,
+		setPlaybackMeasure,
 		toggleMetronome,
 		toggleMeasures,
 		startMetronome,
