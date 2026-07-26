@@ -91,14 +91,14 @@ src/components/
 ### MeasuresSection
 
 - **Purpose**: Empty state or measure carousel
-- **Props**: `measures: RhythmMeasure[]`
+- **Props**: `measures: RhythmMeasure[]`, `poisonRhythm: RhythmMeasure | null`
 - **Uses**: Section, MeasureSlider
 
 ### MeasureSlider
 
-- **Purpose**: Carousel over measures; advances during measure playback
-- **Props**: `measures: RhythmMeasure[]`
-- **Uses**: CarouselNavButtons, CurrentMeasureDisplay, `useMetronome`
+- **Purpose**: Carousel over measures; advances during measure playback; stops when the poison rhythm completes
+- **Props**: `measures: RhythmMeasure[]`, `poisonRhythm: RhythmMeasure | null`
+- **Uses**: CarouselNavButtons, CurrentMeasureDisplay, `useMetronome` (`setPlaybackMeasure`, `measureCycle`, `stop`)
 
 ### MeasureGrid
 
@@ -118,7 +118,7 @@ src/components/
 - **SettingsSectionTitle**: Section heading with a gray rule under the title (parallel to SectionTitle)
 - **SettingsPanel**: Bordered surface utility for grouping settings controls
 - **ThemeSetting**: Theme preference chips plus caption
-- **SoundSetting**: Metronome / rhythm mute rows
+- **SoundSetting**: Metronome and rhythm-sound mute rows (both wired via `ThemeProvider`)
 - **Fieldset**: Shared `<fieldset />` wrapper with `name`, optional `legend`, and a11y props
 - **SegmentedControl** / **SegmentButton**: Exclusive option chips (`aria-pressed`)
 - **SettingRow**: Label-left / control-right row
@@ -144,4 +144,4 @@ src/components/
 
 - **Buttons**: Use `<button type='button'>` for actions; set `disabled` when not applicable
 - **Labels**: Use clear, descriptive text and `aria-label` for icon-only controls
-- **Contrast**: Use the project cyan/orange/stone palette consistently for readability
+- **Contrast**: Use theme color utility classes (`text-black` on `bg-surface`/`bg-surface-muted`/`bg-chrome`, `text-white` on `bg-primary`, `text-black` on page/modal surfaces, `text-dark`/`text-mid` for body copy) and shared helpers from `lib/control-classes.ts` — see `.cursor/styling.mdc`

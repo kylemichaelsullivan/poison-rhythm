@@ -33,8 +33,8 @@ alwaysApply: false
 
 - **Game state hook**: `usePoisonGame` holds `poisonRhythm`, `measures`, and New/Reuse handlers; used by `App.tsx`
 - **Difficulty context**: `DifficultyProvider` / `useDifficulty` for difficulty 1–5
-- **Theme context**: `ThemeProvider` / `useTheme` for light/dark/system theme, note subdivision level, and mute preferences (metronome + rhythm sounds)
-- **Metronome context**: `MetronomeProvider` / `useMetronome` for tempo, metronome playback, and measure playback; respects `muteMetronome` from theme context
+- **Theme context**: `ThemeProvider` / `useTheme` for light/dark/system theme, note subdivision level, and mute preferences (metronome + rhythm sounds). Style UI with semantic color utilities from `index.css` and surface helpers from `lib/control-classes.ts` (see `.cursor/styling.mdc`) — not hardcoded palette values.
+- **Metronome context**: `MetronomeProvider` / `useMetronome` for tempo, metronome playback, and measure playback; plays rhythm hit sounds during measure playback via `stepHasHit`; respects `muteMetronome` and `muteRhythmSounds` from theme context; exposes `setPlaybackMeasure` so the carousel syncs the active measure
 - **Local state**: Use `useState` and `useCallback` in hooks or parent components
 - **Composition**: `App` renders `Header`, `Body`, and `Footer`; `Body` composes game sections and play controls
 - **No global store required**: Current app is small; avoid adding Zustand or similar unless state grows significantly

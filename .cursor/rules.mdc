@@ -32,7 +32,7 @@ alwaysApply: true
 src/
 ├── App.tsx                 # Root shell: Header, Body, Footer
 ├── main.tsx                # ThemeProvider → MetronomeProvider → DifficultyProvider → App
-├── index.css               # Tailwind theme tokens, grid helpers, blink animation
+├── index.css               # Tailwind @theme color tokens, base html colors, grid helpers
 ├── assets/svg/             # Local SVG icons imported via SVGR (`*.svg?react`)
 ├── components/
 │   ├── controls/           # Difficulty, New/Reuse, play/pause, carousel nav
@@ -41,7 +41,7 @@ src/
 │   └── poison/             # Poison rhythm section with New/Reuse controls
 ├── contexts/               # Difficulty, Theme, Metronome
 ├── hooks/                  # usePoisonGame, metronome helpers
-├── lib/                    # Rhythm generation, difficulty, tempo, theme/mute prefs, playback math
+├── lib/                    # Rhythm generation, difficulty, tempo, theme/mute prefs, control-classes
 │   └── __tests__/          # Bun unit tests for lib modules
 └── types/                  # RhythmMeasure
 ```
@@ -143,6 +143,7 @@ export function ComponentName({
 - **Avoid Tailwind margin/space classes**: Do not use margin or space classes in Tailwind
 - **No !important declarations**: Avoid using `!important` in CSS
 - **Tailwind**: Use Tailwind utilities; custom utilities live in `src/index.css` when needed
+- **Theme color utilities**: Use semantic tokens from `@theme` (`primary`, `surface`, `surface-muted`, `chrome`, `white`, `black`, etc.) and shared surface helpers from `src/lib/control-classes.ts` — see `.cursor/styling.mdc`
 - **Variants over className**: Do not accept `className` on shared components for styling customization. Use a `variant` prop for supported visual differences
 
 ### React Best Practices

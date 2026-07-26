@@ -5,7 +5,7 @@ A rhythm game where you identify the hidden “poison” rhythm among randomly g
 ## Stack
 
 - **React** + **TypeScript** + **Vite**
-- **Tailwind CSS** for styling
+- **Tailwind CSS** for styling (semantic color tokens in `src/index.css`; shared surface classes in `src/lib/control-classes.ts`)
 - **Biome** for linting and formatting
 - **bun** for package management
 
@@ -53,14 +53,14 @@ src/
 │   └── poison/       # Poison rhythm section with New/Reuse controls
 ├── contexts/         # Difficulty, Theme (incl. mute prefs), Metronome
 ├── hooks/            # usePoisonGame, metronome helpers
-├── lib/              # Rhythm generation, difficulty, tempo, theme/mute prefs
+├── lib/              # Rhythm generation, difficulty, tempo, theme/mute prefs, control-classes
 │   └── __tests__/    # Bun unit tests for lib modules
 └── types/            # RhythmMeasure
 ```
 
 ### Settings
 
-- UI: `src/components/layout/settings/` — theme preference chips, metronome mute, and rhythm-sound mute (UI reserved; wiring later)
+- UI: `src/components/layout/settings/` — theme preference chips, metronome mute, and rhythm-sound mute
 - Lookups: `src/lib/theme-options.ts`, `src/lib/mute-preferences.ts`
 - Persistence: theme, subdivision, and mute flags in `localStorage` via `ThemeProvider`
 
@@ -77,6 +77,7 @@ Covered lib modules include rhythm generation, difficulty levels, metronome temp
 3. Click **+** to start: a new poison is chosen and measures are generated with it hidden among them.
 4. Use **Prev/Next** to step through measures and find which one matches the poison.
 5. Click **Reuse** to keep the same poison and regenerate measures.
-6. Use **Play** to hear the current measures with a count-in; open the footer **metronome** to set tempo or tap tempo.
-7. Use the header **note subdivision** control to adjust display density.
-8. Open the footer **Settings** to choose a light, dark, or system theme, and to mute or unmute the metronome (rhythm sounds mute is reserved for a future release).
+6. Use **Play** to hear the current measures with a count-in; hits play a distinct rhythm sound on each subdivision step. Playback stops automatically when the poison measure finishes.
+7. Open the footer **metronome** to set tempo or tap tempo.
+8. Use the header **note subdivision** control to adjust display density.
+9. Open the footer **Settings** to choose a light, dark, or system theme, and to mute or unmute the metronome and rhythm hit sounds.

@@ -14,17 +14,82 @@ alwaysApply: false
 ## Tailwind CSS
 
 - **Custom utilities**: Use or extend utilities from `src/index.css` (e.g. `.grid-cols-16`) when needed
+- **Theme color utilities**: Use the project’s defined color tokens for all UI colors — do not hardcode hex/rgb/oklch in components, reach for raw Tailwind palette names (`stone-*`, `cyan-*`, etc.), or apply opacity modifiers to color utilities (no `bg-light/60`, `bg-dark/50`, etc.)
+- **Shared surface classes**: Prefer the reusable `*ClassName` constants in `src/lib/control-classes.ts` for repeated background/foreground pairings
 - **Direct strings**: Use direct strings for simple cases without conditionals
 - **No margins**: Avoid using Tailwind margin classes (`m-*`, `mx-*`, `my-*`, `mt-*`, `mr-*`, `mb-*`, `ml-*`)
 - **No space utilities**: Avoid `space-x-*` or `space-y-*` utilities — they rely on margins
 - **Formatting**: Use Biome for formatting and linting (including class order where applicable)
 - **Utility function**: Use `clsx()` for conditional classes (not `cn()`)
 
+### Color & Theme
+
+Theme tokens are defined in `src/index.css` (`@theme`) and exposed as Tailwind utilities. They use `light-dark()` so light/dark/system mode stays consistent when `data-theme` changes.
+
+**Semantic tokens** (prefer these):
+
+| Token | Typical use |
+|-------|-------------|
+| `white` / `black` | Page and modal surfaces; invert between modes |
+| `surface` / `surface-muted` | Inset panels, measure cells, secondary controls |
+| `dark` / `light` / `mid` | Borders, settings panels, muted body text |
+| `scrim` | Modal backdrop overlay |
+| `primary` / `secondary` | Accents, active states, playback highlights |
+| `chrome` / `chrome-hover` | Header/footer controls, popovers, icon buttons |
+
+If a color needs translucency, define it in `@theme` (e.g. `--color-scrim`) — do not use Tailwind’s `/opacity` suffix on color utilities in components.
+
+**Shared surface helpers** (`src/lib/control-classes.ts`):
+
+| Constant | Use for |
+|----------|---------|
+| `pageSurfaceClassName` | App shell (`bg-white text-black`) |
+| `darkSurfaceClassName` | Sections, empty prompts (`bg-surface text-black`) |
+| `modalScrimClassName` / `modalPanelClassName` | Modal overlay (`bg-scrim`) and dialog panel |
+| `settingsPanelClassName` | Settings grouping panels (`bg-light text-dark`) |
+| `inputSurfaceClassName` | Text/number inputs on themed backgrounds |
+| `controlButtonBaseClassName` | Chrome icon/action buttons (`bg-chrome text-black`) |
+| `controlSurfaceBaseClassName` | Bordered chrome panels (ShowNotes popover, metronome bar) |
+
+**Pair foreground with background**:
+
+- Inset surfaces (`darkSurfaceClassName`, `bg-surface`): `text-black`
+- Muted interactive surfaces (`bg-surface-muted`): `text-black`
+- Chrome controls (`bg-chrome`, `controlButtonBaseClassName`): `text-black`
+- Page/modal surfaces (`pageSurfaceClassName`, `modalPanelClassName`): `text-black`
+- Settings-style panels (`settingsPanelClassName`, `bg-light`): `text-dark`
+- Primary/accent controls (`bg-primary`): `text-white`
+- Muted captions: `text-mid`
+- Borders and hovers: `border-mid`, `hover:border-primary`, `hover:bg-mid` or `hover:bg-chrome-hover`
+
+```tsx
+import clsx from 'clsx';
+import {
+	darkSurfaceClassName,
+	modalPanelClassName,
+	pageSurfaceClassName,
+} from '@/lib/control-classes';
+
+// Page shell
+className={clsx('App flex min-h-dvh flex-col', pageSurfaceClassName)}
+
+// Section panel
+className={clsx('Section flex flex-col gap-4 border border-mid rounded-lg p-4', darkSurfaceClassName)}
+
+// Modal dialog panel
+className={clsx('relative flex flex-col gap-4 p-6', modalPanelClassName)}
+
+// One-off accent control — still use theme tokens inline
+className='border border-mid bg-primary text-white hover:border-white'
+```
+
+Do **not** rely on inherited page text color inside dark panels or modals rendered outside the App shell — set the appropriate surface helper or explicit `text-*` token on the container.
+
 ### ClassName Patterns
 
 ```tsx
 // Component name should be first in className for debugging
-className='ComponentName bg-white rounded-lg border p-4'
+className={clsx('ComponentName rounded-lg border border-mid p-4', darkSurfaceClassName)}
 
 // Conditional cases - use clsx
 className={clsx(
@@ -64,7 +129,10 @@ Follow this specific order for JSX attributes:
 ```tsx
 <button
 	type='button'
-	className='Button rounded-lg border bg-white p-4'
+	className={clsx(
+		'Button rounded-lg border border-mid p-4',
+		darkSurfaceClassName,
+	)}
 	disabled={isDisabled}
 	title='Submit form'
 	onClick={handleClick}
@@ -128,6 +196,7 @@ className='flex items-center gap-1.5 sm:gap-2';
 
 ## CSS Best Practices
 
+- **Theme colors only**: Define palette values in `src/index.css` `@theme`; consume them via Tailwind utilities or `control-classes.ts` helpers in components
 - **No !important**: Avoid using `!important` declarations in CSS
 - **TypeScript**: Avoid using the `any` type in TypeScript code
 - **Semantic HTML**: Use semantic HTML elements for better accessibility
