@@ -1,13 +1,33 @@
 import clsx from 'clsx';
 
+/** Page shell surface (inverts with theme). */
+export const pageSurfaceClassName = 'bg-white text-black';
+
+/** Inset panels (sections, empty prompts). */
+export const darkSurfaceClassName = 'bg-surface text-black';
+
+/** Modal backdrop scrim. */
+export const modalScrimClassName = 'bg-scrim';
+
+/** Modal dialog panel surface. */
+export const modalPanelClassName =
+	'bg-white text-black backdrop-blur-md border border-mid shadow-lg';
+
+/** Settings grouping panel inside modals. */
+export const settingsPanelClassName = 'bg-light text-dark';
+
+/** Light input surface on themed backgrounds. */
+export const inputSurfaceClassName =
+	'border border-mid rounded bg-white text-black';
+
 /**
  * Shared control styles for small UI controls (buttons, popovers, etc.).
  */
 export const controlButtonBaseClassName =
-	'border border-mid rounded bg-chrome text-white transition-colors duration-200 ease-out hover:bg-chrome-hover';
+	'border border-mid rounded bg-chrome text-black transition-colors duration-200 ease-out hover:bg-chrome-hover';
 
 export const controlSurfaceBaseClassName =
-	'border border-mid rounded bg-chrome';
+	'border border-mid rounded bg-chrome text-black';
 
 /** In-flow corner icon buttons; use as children of a bar with `appChromeBarClassName`. */
 export const cornerControlButtonClassName =
@@ -69,7 +89,7 @@ export function segmentControlClassName(
 		disabled && 'cursor-not-allowed opacity-50',
 		isSelected
 			? 'border-primary bg-primary text-white'
-			: 'border-mid bg-chrome text-white hover:bg-chrome-hover',
+			: 'border-mid bg-chrome text-black hover:bg-chrome-hover',
 		disabled && !isSelected && 'hover:bg-chrome',
 	);
 }

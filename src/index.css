@@ -4,28 +4,43 @@
 	/* Raw palette (OKLCH) */
 	--color-cyan-600: oklch(60.9% 0.126 221.723);
 	--color-orange-400: oklch(75% 0.183 55.934);
-	--color-stone-50: oklch(98.5% 0.001 106.423);
-	--color-stone-200: oklch(92.3% 0.003 48.717);
+	--color-stone-50: oklch(99.2% 0.001 106.423);
+	--color-stone-100: oklch(97.2% 0.002 106.423);
+	--color-stone-200: oklch(94.5% 0.003 48.717);
+	--color-stone-300: oklch(88.5% 0.004 48.717);
 	--color-stone-400: oklch(70.9% 0.01 56.259);
+	--color-stone-600: oklch(52% 0.01 56.259);
 	--color-stone-700: oklch(37.4% 0.01 67.558);
-	--color-stone-950: oklch(14.7% 0.004 49.25);
+	--color-stone-800: oklch(26.5% 0.008 67.558);
+	--color-stone-900: oklch(18.5% 0.005 49.25);
+	--color-stone-950: oklch(10.5% 0.004 49.25);
 
 	/* Light theme */
 	--color-primary: light-dark(var(--color-cyan-600), var(--color-orange-400));
 	--color-secondary: light-dark(var(--color-orange-400), var(--color-cyan-600));
-	--color-light: light-dark(var(--color-stone-200), var(--color-stone-700));
-	--color-mid: var(--color-stone-400);
+	--color-light: light-dark(var(--color-stone-200), var(--color-stone-800));
+	--color-mid: light-dark(var(--color-stone-400), var(--color-stone-600));
 	--color-dark: light-dark(var(--color-stone-700), var(--color-stone-200));
+	--color-surface: light-dark(var(--color-stone-100), var(--color-stone-900));
+	--color-surface-muted: light-dark(
+		var(--color-stone-300),
+		var(--color-stone-800)
+	);
 	--color-chrome: light-dark(
-		color-mix(in oklch, var(--color-stone-700) 50%, var(--color-stone-50)),
-		color-mix(in oklch, var(--color-stone-200) 20%, var(--color-stone-50) 80%)
+		var(--color-stone-100),
+		color-mix(in oklch, var(--color-stone-800) 72%, var(--color-stone-950))
 	);
 	--color-chrome-hover: light-dark(
-		color-mix(in oklch, var(--color-stone-700) 92%, var(--color-stone-50)),
-		var(--color-mid)
+		var(--color-stone-200),
+		var(--color-stone-800)
 	);
 	--color-white: light-dark(var(--color-stone-50), var(--color-stone-950));
 	--color-black: light-dark(var(--color-stone-950), var(--color-stone-50));
+	--color-scrim: color-mix(in oklch, var(--color-black) 50%, transparent);
+	--color-brand-gradient-a: oklch(58% 0.24 312);
+	--color-brand-gradient-b: oklch(78% 0.16 155);
+
+	--shadow-secondary-glow: 0 0 0.5rem var(--color-secondary);
 }
 
 :root {
@@ -42,6 +57,10 @@
 }
 
 @layer base {
+	html {
+		@apply bg-white text-black;
+	}
+
 	button,
 	input {
 		cursor: pointer;
@@ -70,9 +89,9 @@
 	background-image: linear-gradient(
 		125deg,
 		var(--color-primary) 0%,
-		oklch(58% 0.24 312) 28%,
+		var(--color-brand-gradient-a) 28%,
 		var(--color-secondary) 52%,
-		oklch(78% 0.16 155) 76%,
+		var(--color-brand-gradient-b) 76%,
 		var(--color-primary) 100%
 	);
 	background-size: 240% 240%;
@@ -108,6 +127,11 @@
 		animation: none;
 		background-position: 40% 50%;
 	}
+}
+
+/* Viewport-inset width for full-width modal content (e.g. metronome) */
+.w-modal-inset {
+	width: 95vw;
 }
 
 /* 16-column grid for 4/4 measure with 16th-note subdivisions */
