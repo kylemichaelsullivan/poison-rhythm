@@ -10,7 +10,7 @@ export function DifficultySlider({ value, onChange }: DifficultySliderProps) {
 		<div className='DifficultySlider flex items-center gap-4'>
 			<input
 				type='range'
-				className='appearance-none accent-primary bg-white rounded-lg w-full h-2'
+				className='w-full'
 				min={DIFFICULTY_MIN}
 				max={DIFFICULTY_MAX}
 				step={1}
