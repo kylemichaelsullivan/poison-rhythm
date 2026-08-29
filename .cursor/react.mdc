@@ -8,12 +8,14 @@ alwaysApply: false
 
 ## Component Architecture
 
-### Single-Purpose Components
+### Single-Purpose / atomic layers
 
 - **One component per file**: Each file contains exactly one React component
-- **Bite-sized components**: Components should be focused and single-purpose (one thing == one component == one file)
+- **One root element**: Prefer a single HTML element per component (or a documented layout atom like `Stack` / `Row`)
+- **Compose upward**: atoms (`src/components/ui`) → molecules → feature composers; side effects in `src/hooks`
 - **Descriptive naming**: Use PascalCase with descriptive names indicating visual purpose
-- **Component suffixes**: Use appropriate suffixes (e.g., `Section`, `Grid`, `Slider`, `Controls`)
+- **Component suffixes**: Use appropriate suffixes (e.g., `Section`, `Grid`, `Slider`, `Controls`, `Modal`, `Frame`)
+- **No raw control markup in composers**: Prefer `Button` / `IconButton` / settings atoms over ad-hoc Tailwind buttons
 
 ### Component Guidelines
 
@@ -31,10 +33,25 @@ alwaysApply: false
 
 ## State Management
 
-- **Game state hook**: `usePoisonGame` holds `poisonRhythm`, `measures`, and New/Reuse handlers; used by `App.tsx`
-- **Difficulty context**: `DifficultyProvider` / `useDifficulty` for difficulty 1–5
-- **Theme context**: `ThemeProvider` / `useTheme` for light/dark/system theme, note subdivision level, and mute preferences (metronome + rhythm sounds). Style UI with semantic color utilities from `index.css` and surface helpers from `lib/control-classes.ts` (see `.cursor/styling.mdc`) — not hardcoded palette values.
-- **Metronome context**: `MetronomeProvider` / `useMetronome` for tempo, metronome playback, and measure playback; plays rhythm hit sounds during measure playback via `stepHasHit`; respects `muteMetronome` and `muteRhythmSounds` from theme context; exposes `setPlaybackMeasure` so the carousel syncs the active measure
+### Context modules
+
+Each context is split across two files so Vite Fast Refresh works (a module must export either React components or non-components, not both):
+
+- **`*Context.ts`** — `createContext`, types, and consumer hook
+- **`*Provider.tsx`** — provider component only
+
+Import hooks and providers from `@/contexts`.
+
+| Context | Hook(s) | Notes |
+|---------|---------|-------|
+| `GameContext` | `useGame` | Round, measures, poison, prefetch, visual hints; `GameProvider` in `App.tsx` |
+| `SettingsContext` | `useSettings` | Game modes, poison visibility, sticking, practice options; `poison-rhythm-settings-v1` |
+| `PreferencesContext` | `usePreferences`, `useDifficulty` | Difficulty, tempo, subdivision, mute/count-in prefs |
+| `MetronomeContext` | `useMetronome` | Tempo, playback, demo/student passes; `setPlaybackMeasure` syncs carousel |
+| `ThemeContext` | `useTheme` | Light/dark/system theme only |
+
+Provider tree in `main.tsx`: `ThemeProvider` → `SettingsProvider` → `PreferencesProvider` → `MetronomeProvider` → `App`. `App.tsx` wraps content in `GameProvider`.
+
 - **Local state**: Use `useState` and `useCallback` in hooks or parent components
 - **Composition**: `App` renders `Header`, `Body`, and `Footer`; `Body` composes game sections and play controls
 - **No global store required**: Current app is small; avoid adding Zustand or similar unless state grows significantly
@@ -55,30 +72,62 @@ alwaysApply: false
 
 ## Poison Rhythm–Specific Guidelines
 
-### Rhythm and Measures
+### Rhythm complexity
 
-- **RhythmMeasure**: Use the `RhythmMeasure` type from `@/types/rhythm` for measure data
-- **rhythm-generator**: Use `generateRandomMeasure`, `QUARTER_NOTES` from `@/lib/rhythm-generator`
-- **rhythm-utils**: Use `rhythmsEqual` from `@/lib/rhythm-utils` to compare measures
-- **difficulty-levels**: Use `DIFFICULTY_LEVELS`, `hitRangeForLevel`, and help-text helpers from `@/lib/difficulty-levels`
-- **theme-options**: Use `THEME_OPTIONS` and `themeOptionFor` from `@/lib/theme-options`
-- **mute-preferences**: Use `readMutePreference` / `writeMutePreference` and storage keys from `@/lib/mute-preferences`
+- **Difficulty (1–5)**: Hit count and placement bias — `useDifficulty()` / `PreferencesContext`
+- **Subdivision**: Header ShowNotes → `subdivisionLevel` — drives generation, display, and playback
+- **Do not** add Settings controls for density, syncopation, or subdivision
+
+### Rhythm types and generation
+
+- **RhythmMeasure**: Legacy `boolean[]` grid (`true` = hit); still used for display adapters
+- **RichRhythmMeasure**: `RhythmStep[]` with optional accent, sticking; used by the engine
+- **Round**: `{ measures, poisonIndex, seed, poisonMeasure }`
+- **Engine**: `generateMeasure` / `generateRound` from `@/lib/rhythm` — pass `difficulty`, `subdivisionLevel`, `settings`, `seed`
+- **Game modes**: `createRoundForMode`, `onMeasureCompleteForMode` from `@/lib/game-modes`
+- **Legacy**: `generateRandomMeasure` from `@/lib/rhythm-generator` (used by `usePoisonGame`)
+- **Utils**: `rhythmsEqual`, `richMeasuresEqual`, adapters in `@/types/rhythm`
+
+### Notation and display
+
+- **rhythmRenderMode**: `grid` | `notation` — set via Display Mode on Poison section (`DisplayModeModal`)
+- **Pipeline**: `@/lib/notation` — `measureToNotationEvents` → beaming → `measureToNotationSteps` → `MeasureNotation`
+- **Font**: MusiSync served from `/fonts/MusiSync.*`; preload via `loadMusiSyncFont` / `useMusiSyncFont`
+- **Scroll mode**: `scrollDirection` / `scrollSpeed` in settings schema; UI Coming Soon
+
+### Preferences and settings
+
+- **preference-schemas** / **preference-storage**: Theme, subdivision, difficulty, tempo, mute flags
+- **settings-schema**: GameSettings (game modes, poison visibility, sticking, practice, endless batch sizes)
+- **theme-options**: `THEME_OPTIONS`, `themeOptionFor`
+- **difficulty-levels**: `DIFFICULTY_LEVELS`, `hitRangeForLevel`, help-text helpers
+
+### Audio and feedback
+
+- **audio/audio-engine**: `createAudioEngine`, `scheduleClick`, `scheduleHit`, `shouldPlayRhythmAudio`, `shouldShowVisualFeedback`
+- **playback-clock** / **lookahead-scheduler**: Continuous audio-clock timeline for count-in → playback (no wall-clock join gap)
+- **feedbackMode** (Settings): Gates visual blinker, poison overlay, and rhythm hit sounds
+- **Demo before play**: MetronomeContext runs demo pass then student pass; `muteOnStudentPass` suppresses rhythm audio on pass 2
+- **Count-in**: Optional one-bar quarter-note lead-in; status label “Counting In” (`<output aria-live>`)
 
 ### Components
 
-- **App**: Uses `usePoisonGame`; renders Header, Body, Footer
-- **Body**: Renders GameControls, PoisonSection, MeasuresSection, PlayControls
-- **GameControls**: Difficulty slider and difficulty help modal
-- **PoisonSection**: Current poison rhythm plus New/Reuse controls
-- **MeasuresSection**: Empty state or MeasureSlider carousel
-- **MeasureGrid / MeasureCell**: 16th-note grid with optional playback highlighting
+- **App**: Wraps `GameProvider`; renders Header, Body, Footer
+- **Body**: Composer; soft-disable focus via `useSoftDisableFocus`
+- **ui/**: Elemental atoms (`Button`, `IconButton`, `Caption`, `Stack`, `Row`)
+- **GameControls**: Composer over difficulty + play-mode / help / regen modals (`usePendingDifficulty`)
+- **PoisonSection**: Composer; `PoisonMeasureContent` / `PoisonMeasureFrame` for reference visibility
+- **MeasuresSection / MeasureSlider**: Carousel chrome + `useMeasurePlaybackSync`
+- **ShowNotes**: Subdivision popover; `useHoverPinPopover` + `ShowNotesTrigger`
+- **MeasureGrid / MeasureCell**: Grid or notation (MusiSync) with accent, sticking, poison overlays; `useMusiSyncFont` + `useSmoothNotationCursor` for notation mode
 - **Metronome**: Footer corner modal for tempo, tap tempo, and metronome playback
-- **Settings**: Footer corner modal; `layout/settings` for theme chips and sound mute toggles
+- **Settings**: Footer corner modal with Mode / Sound / Appearance tabs
 
 ### Typography
 
 - **Typographic apostrophe**: Use ’ instead of ' in all user-facing text
-- **Consistent spacing**: Follow established flex/gap spacing patterns
+- **Title Case**: Prefer Title Case for titles, labels, `title`/`alt`, and short accessible names; sentence case for body copy and hints
+- **Consistent spacing**: Prefer `Stack` / `Row` or flex/gap patterns
 
 ## File Organization
 
@@ -90,6 +139,7 @@ src/
 ├── main.tsx
 ├── index.css
 ├── components/
+│   ├── ui/                     # elemental shared primitives
 │   ├── controls/
 │   ├── layout/
 │   │   ├── button/
@@ -97,19 +147,23 @@ src/
 │   │   └── settings/
 │   ├── measures/
 │   └── poison/
-├── contexts/
+├── contexts/               # *Context.ts (hook + context) and *Provider.tsx (component)
 ├── hooks/
 ├── lib/
-│   └── __tests__/          # Bun unit tests for lib modules
+│   ├── audio/
+│   ├── game-modes/
+│   ├── notation/
+│   ├── rhythm/
+│   └── __tests__/
 └── types/
 ```
 
 ### Import Paths
 
 - Use the `@/` alias for imports under `src/`
-- Prefer barrel imports: `@/components/controls`, `@/components/layout`, `@/components/measures`, `@/components/poison`
-- Direct paths when needed: `@/lib/rhythm-generator`, `@/types/rhythm`, `@/contexts`
-- Tests live in sibling `__tests__/` folders and import modules under test via `@/`
+- Prefer barrel imports: `@/components/ui`, `@/components/controls`, `@/components/layout`, `@/contexts`, `@/lib/rhythm`
+- Direct paths when needed: `@/lib/settings-schema`, `@/types/rhythm`
+- Tests live in `src/lib/__tests__/` and import modules under test via `@/`
 
 ### Import Organization
 

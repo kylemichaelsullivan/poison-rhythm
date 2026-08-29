@@ -12,6 +12,7 @@ alwaysApply: true
 - Use **TypeScript** with strict configuration
 - Follow **Vite + React** architecture
 - Use typographic apostrophe ’ instead of straight apostrophe ' in ALL user-facing text
+- Prefer Title Case for titles, labels, `title`/`alt`, and short accessible names; sentence case for body copy and hints
 
 ## Package Management
 
@@ -22,37 +23,65 @@ alwaysApply: true
 
 ## Development Scripts
 
-- **Format / lint**: `bun run check` (Biome check --write)
-- **Lint only**: `bun run lint`
+- **Format**: `bun run format` (Biome format --write)
+- **Lint only**: `bun run lint` (Biome lint)
+- **Format + lint writes**: `bun run check` (Biome check --write)
+- **CI lint + tests**: `bun run ci` (Biome ci, no writes, then Bun tests)
 - **Preview build**: `bun run preview`
+- **Unit/integration**: `bun run test`
+- **E2E / a11y**: `bun run test:e2e` / `bun run test:a11y`
+- **Everything**: `bun run test:all`
 
 ## Project Structure
 
 ```
 src/
-├── App.tsx                 # Root shell: Header, Body, Footer
-├── main.tsx                # ThemeProvider → MetronomeProvider → DifficultyProvider → App
-├── index.css               # Tailwind @theme color tokens, base html colors, grid helpers
+├── App.tsx                 # GameProvider shell: Header, Body, Footer
+├── main.tsx                # ThemeProvider → SettingsProvider → PreferencesProvider → MetronomeProvider → App
+├── index.css               # Tailwind @theme color tokens, grid helpers, scroll utilities
 ├── assets/svg/             # Local SVG icons imported via SVGR (`*.svg?react`)
 ├── components/
-│   ├── controls/           # Difficulty, New/Reuse, play/pause, carousel nav
+│   ├── ui/                 # Elemental atoms (Button, IconButton, Caption, Stack, Row)
+│   ├── controls/           # Difficulty, play modes, New/Reuse, play/pause, carousel
 │   ├── layout/             # Chrome, modals, ShowNotes, metronome panel, settings
-│   ├── measures/           # Measure carousel, grid, and playback highlighting
-│   └── poison/             # Poison rhythm section with New/Reuse controls
-├── contexts/               # Difficulty, Theme, Metronome
-├── hooks/                  # usePoisonGame, metronome helpers
-├── lib/                    # Rhythm generation, difficulty, tempo, theme/mute prefs, control-classes
-│   └── __tests__/          # Bun unit tests for lib modules
-└── types/                  # RhythmMeasure
+│   ├── measures/           # Measure carousel chrome, grid, playback highlighting
+│   └── poison/             # Poison rhythm section layers + New/Reuse
+├── contexts/               # *Context.ts (hook + context) and *Provider.tsx (component)
+├── hooks/                  # Playback sync, popovers, soft-disable focus, game loop, …
+├── lib/
+│   ├── audio/              # Web Audio engine, feedback gating
+│   ├── game-modes/         # Per-mode round creation and completion logic
+│   ├── notation/           # MusiSync glyph pipeline (events → beaming → display)
+│   ├── rhythm/             # Modular rhythm generation engine
+│   ├── playback-clock.ts / lookahead-scheduler.ts
+│   ├── __tests__/          # Bun unit tests (lib, rhythm/, game-modes/, integration/)
+│   ├── settings-schema.ts  # GameSettings (Zod + localStorage)
+│   ├── preference-schemas.ts / preference-storage.ts
+│   └── …                   # difficulty, tempo, subdivision, theme, storage
+└── types/                  # RhythmMeasure, RichRhythmMeasure, Round, GameState
+e2e/                        # Playwright e2e + axe a11y
 ```
+
+Compose UI as atoms → molecules → composers; put side effects in hooks. See `.cursor/components.mdc` and `documentation/ARCHITECTURE.md`.
+
+## Rhythm Complexity
+
+Do **not** add Settings dials for density, syncopation, or subdivision. Complexity is owned by:
+
+- **Difficulty slider (1–5)** — hit count and placement bias (`PreferencesContext`)
+- **Header ShowNotes subdivision** — generation/display/playback grid (`subdivisionLevel` in prefs)
+
+Settings may shape accents, rests, sticking, phrase length, and poison visibility — not duplicate the above.
 
 ## Testing
 
-- **Runner**: Bun (`bun run test`)
-- **Location**: Colocate suites in a sibling `__tests__/` folder (e.g. `src/lib/__tests__/`)
-- **Naming**: `*.test.ts` / `*.test.tsx` (or `*.spec.*`)
+- **Runner**: Bun (`bun run test`) for unit + integration; Playwright for e2e/a11y
+- **Location**: Colocate suites in `src/lib/__tests__/` (including `rhythm/`, `notation/`, `game-modes/`, `integration/`)
+- **E2E**: `e2e/*.spec.ts` with shared `e2e/helpers.ts`
+- **Naming**: `*.test.ts` / `*.test.tsx` (Bun); `*.spec.ts` (Playwright)
 - **Imports**: Use the `@/` alias for modules under test
-- **Lib coverage**: Prefer unit tests for pure helpers (`theme-options`, `mute-preferences`, rhythm/tempo/difficulty modules)
+- **Lib coverage**: Prefer unit tests for pure helpers (settings schema, rhythm engine, playback clock / look-ahead, game modes, tempo/difficulty/subdivision)
+- **Lint**: Biome (`bun run lint` / `bun run ci`); recommended editor extension `biomejs.biome`
 
 ## Code Organization
 
@@ -78,14 +107,15 @@ import { useCallback, useState } from 'react';
 import clsx from 'clsx';
 
 // 3. Internal project value imports (alphabetically by path)
-import { MeasureGrid } from '@/components/measures';
 import { Icon } from '@/components/layout/Icon';
-import { generateRandomMeasure } from '@/lib/rhythm-generator';
+import { MeasureGrid } from '@/components/measures';
+import { Button, Stack } from '@/components/ui';
+import { generateMeasure } from '@/lib/rhythm';
 
 // 4. Type-only imports (alphabetically by path)
 import type { ReactNode } from 'react';
 import type { SvgIconComponent } from '@/components/layout/Icon';
-import type { RhythmMeasure } from '@/types/rhythm';
+import type { RichRhythmMeasure } from '@/types/rhythm';
 ```
 
 #### Mixed Import Anti-Pattern
@@ -143,11 +173,12 @@ export function ComponentName({
 - **Avoid Tailwind margin/space classes**: Do not use margin or space classes in Tailwind
 - **No !important declarations**: Avoid using `!important` in CSS
 - **Tailwind**: Use Tailwind utilities; custom utilities live in `src/index.css` when needed
-- **Theme color utilities**: Use semantic tokens from `@theme` (`primary`, `surface`, `surface-muted`, `chrome`, `white`, `black`, etc.) and shared surface helpers from `src/lib/control-classes.ts` — see `.cursor/styling.mdc`
+- **Theme color utilities**: Use semantic tokens from `@theme` (`primary`, `surface`, `poison`, `accent`, `muted`, etc.) and shared surface helpers from `src/lib/control-classes.ts` — see `.cursor/styling.mdc`
 - **Variants over className**: Do not accept `className` on shared components for styling customization. Use a `variant` prop for supported visual differences
 
 ### React Best Practices
 
+- **Atomic UI**: One concern per file; prefer one root element; compose `@/components/ui` atoms into molecules and composers (see `.cursor/components.mdc`)
 - **TypeScript**: Avoid using `any` type, prefer proper typing
 - **Component optimization**: Use `memo`, `useCallback`, `useMemo` when appropriate for performance
 

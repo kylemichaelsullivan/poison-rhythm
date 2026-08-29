@@ -4,51 +4,36 @@ alwaysApply: false
 ---
 # Poison Rhythm Component Standards
 
+## Atomic layers (Photoshop-style)
+
+Compose UI from small layers. Prefer **one root HTML element per component** (or a documented layout role). Larger screens are **composers** that stack atoms and molecules; side effects live in hooks.
+
+```
+atoms (ui/)     → one element: Button, IconButton, Caption, Stack, Row
+molecules       → compose atoms: PlayModeOptionCard, ModalActions, MeasureCarouselChrome
+composers       → wire context + hooks: GameControls, MeasureSlider, ShowNotes, Body
+hooks           → interaction / playback: usePendingDifficulty, useMeasurePlaybackSync, …
+```
+
+- **Do not** invent raw `<button className=…>` in feature composers — use `@/components/ui` or existing control atoms
+- **Variants over className** on shared components
+- **No superfluous wrappers**: an atom must own a real element or an intentional layout role (`Stack` / `Row` with `gap`)
+- Context stays on composers; atoms/molecules take explicit props
+
 ## File Organization
 
 ```
 src/components/
-├── controls/              # Game controls and playback triggers
-│   ├── CarouselNavButton.tsx
-│   ├── CarouselNavButtons.tsx
-│   ├── ControlButton.tsx
-│   ├── ControlButtons.tsx
-│   ├── DifficultySlider.tsx
-│   ├── GameControls.tsx
-│   ├── PlayControls.tsx
-│   ├── RoundPlayPauseButton.tsx
-│   └── index.ts
+├── ui/                    # Elemental shared primitives (Button, IconButton, Caption, Stack, Row)
+├── controls/              # Game controls, play modes, difficulty molecules + GameControls composer
 ├── layout/                # App chrome, overlays, metronome UI
-│   ├── AppTitle.tsx
-│   ├── about/               # About modal provider and trigger button
-│   ├── Body.tsx
-│   ├── ClickOutside.tsx
-│   ├── Copyright.tsx
-│   ├── CornerButton.tsx
-│   ├── CornerModal.tsx
-│   ├── Footer.tsx
-│   ├── Header.tsx
-│   ├── Icon.tsx
-│   ├── Modal.tsx
-│   ├── Section.tsx
-│   ├── SectionTitle.tsx
-│   ├── ShowNotes.tsx
-│   ├── ShowNotesSlider.tsx
-│   ├── SkipLink.tsx
+│   ├── about/
 │   ├── button/
 │   ├── metronome/
-│   ├── settings/          # Settings modal body and shared setting controls
-│   └── index.ts
-├── measures/              # Measure carousel and grid
-│   ├── CurrentMeasureDisplay.tsx
-│   ├── MeasureCell.tsx
-│   ├── MeasureGrid.tsx
-│   ├── MeasureSlider.tsx
-│   ├── MeasuresSection.tsx
-│   └── index.ts
-└── poison/                # Poison rhythm section
-    ├── PoisonSection.tsx
-    └── index.ts
+│   ├── settings/          # Settings panels + setting atoms (EnableToggle, When, …)
+│   └── …
+├── measures/              # Measure carousel atoms + MeasureSlider / MeasuresSection composers
+└── poison/                # Poison section layers + PoisonSection composer
 ```
 
 ## Component Structure Guidelines
@@ -57,91 +42,94 @@ src/components/
 
 - **Remove unnecessary wrapper divs**: Don't create wrapper divs that add DOM complexity without benefit
 - **Simplify component structure**: Remove redundant nesting when possible
-- **Keep meaningful wrappers**: Retain wrappers that serve styling, semantic, or layout purposes
+- **Keep meaningful wrappers**: Retain wrappers that serve styling, semantic, or layout purposes (`Stack`, `Row`, `Section`, `PoisonMeasureFrame`)
 
 ### Spacing Guidelines
 
 - **Avoid `space-*` utilities**: Don't use `space-x-*` or `space-y-*` — they rely on margin-based spacing
-- **Use flex/gap spacing**: Use `flex flex-col gap-*` for vertical spacing and `flex items-center gap-*` for horizontal spacing
+- **Use flex/gap spacing**: Prefer `Stack` / `Row` atoms, or `flex flex-col gap-*` / `flex items-center gap-*`
 - **Maintain visual consistency**: Spacing changes should preserve the intended layout
 
 ## Core Components
 
 ### App (root)
 
-- **Uses**: `usePoisonGame`; renders Header, Body, Footer
-- **State**: Lifted via `usePoisonGame`: poisonRhythm, measures, New/Reuse handlers
+- **Uses**: `GameProvider`; renders Header, Body, Footer
+- **State**: Round and measures via `useGame` in child sections
 
 ### Body
 
-- **Purpose**: Main game composition and soft-disabled focus guidance for New
-- **Renders**: GameControls, PoisonSection, MeasuresSection, PlayControls
+- **Purpose**: Main game composition
+- **Uses**: `useSoftDisableFocus` for New → Play focus guidance; renders GameControls, PoisonSection, MeasuresSection, PlayControls
+- **No props**: Reads game state from context
 
-### GameControls
+### GameControls (composer)
 
-- **Purpose**: Difficulty slider and help modal
-- **Uses**: Section, DifficultySlider, Modal, difficulty-level helpers
+- **Purpose**: Difficulty section + play-mode / help / regen modals
+- **Uses**: `InfoGlyphButton`, `ModeBadgeTrigger`, `DifficultySlider`, `PlayModesModal`, `DifficultyHelpModal`, `ConfirmRegenModal`, `usePendingDifficulty`
+- **Note**: Difficulty is the primary complexity control on the main page (along with header subdivision)
 
-### PoisonSection
+### ui/ atoms
 
-- **Purpose**: Show the current poison rhythm and New/Reuse controls
+- **Button**: text actions (`primary` | `secondary` | `ghost`)
+- **IconButton**: glyph/icon-only (`info` | `bare`)
+- **Caption**: muted helper `<p>` (`xs` | `sm`)
+- **Stack** / **Row**: vertical / horizontal flex+gap layout layers
+
+### PoisonSection (composer)
+
+- **Purpose**: Poison rhythm and New/Reuse controls
 - **Props**: `poisonRhythm`, `onNewPoison`, `onReusePoison`, optional soft-disable focus helpers
-- **Uses**: Section, MeasureGrid, ControlButtons
+- **Header**: `PoisonVisibilityToggle` (Eye) in `headerLeading`; `DisplayModeTrigger` → `DisplayModeModal` in `headerAction`
+- **Uses**: `PoisonMeasureContent` / `PoisonMeasureFrame`, Section, MeasureGrid, ControlButtons
+- **Display Mode**: Grid / notation + optional Scroll (Guitar Hero–style); controls in `DisplayModeControls`
 
-### MeasuresSection
+### MeasuresSection / MeasureSlider
 
-- **Purpose**: Empty state or measure carousel
-- **Props**: `measures: RhythmMeasure[]`, `poisonRhythm: RhythmMeasure | null`
-- **Uses**: Section, MeasureSlider
+- **MeasuresSection**: Empty state or carousel; shared spacer via `MeasureCarouselChrome`
+- **MeasureSlider**: Presentational carousel; playback side effects in `useMeasurePlaybackSync`
+- **Layers**: `NextMeasurePreview`, `CurrentMeasureDisplay`, `CarouselNavButtons`
 
-### MeasureSlider
+### MeasureGrid / MeasureCell
 
-- **Purpose**: Carousel over measures; advances during measure playback; stops when the poison rhythm completes
-- **Props**: `measures: RhythmMeasure[]`, `poisonRhythm: RhythmMeasure | null`
-- **Uses**: CarouselNavButtons, CurrentMeasureDisplay, `useMetronome` (`setPlaybackMeasure`, `measureCycle`, `stop`)
-
-### MeasureGrid
-
-- **Purpose**: Render one measure (16th-note grid) with optional playback highlighting
-- **Props**: `measure: RhythmMeasure`, `playback?: boolean`
-- **Uses**: MeasureCell; `.grid-cols-16` from `src/index.css`
+- **Purpose**: 16th-note grid with accent, sticking (L/R), poison overlay, and playback highlighting
+- **Props**: `measure`, optional `richMeasure`, `playback`, `hidden`
+- **Render modes**: `grid` or `notation` (MusiSync via `rhythmRenderMode`)
+- **Overlays**: `RhythmAccentMark` / `RhythmAccentOverlay`; `RhythmStickingOverlay`
 
 ### Section / SectionTitle
 
-- **Section**: Wrapper with title, optional `headerAction`, children; border, padding, gap
+- **Section**: Wrapper with title, optional `headerLeading` / `headerAction`, children
 - **SectionTitle**: Section heading used inside Section
 
 ### Settings (layout/settings)
 
-- **SettingsOverlay**: Settings modal body; composes ThemeSetting and SoundSetting
-- **SettingsSection**: Titled settings group on a SettingsPanel surface
-- **SettingsSectionTitle**: Section heading with a gray rule under the title (parallel to SectionTitle)
-- **SettingsPanel**: Bordered surface utility for grouping settings controls
-- **ThemeSetting**: Theme preference chips plus caption
-- **SoundSetting**: Metronome and rhythm-sound mute rows (both wired via `ThemeProvider`)
-- **Fieldset**: Shared `<fieldset />` wrapper with `name`, optional `legend`, and a11y props
-- **SegmentedControl** / **SegmentButton**: Exclusive option chips (`aria-pressed`)
-- **SettingRow**: Label-left / control-right row
-- **IconToggle**: On/off icon chip built on SegmentButton
-- **MuteToggle**: SettingRow + IconToggle for mute state
-- **FieldCaption**: Described-by caption under a control
-- **Lookups**: `lib/theme-options.ts`, `lib/mute-preferences.ts`, `settings/theme-segments.ts`
+- **SettingsOverlay**: Three tabs — Mode, Sound, Appearance (`SettingsTabs`)
+- **AppearanceSettingsPanel** / **GameSettingsPanel** / **SoundSettingsPanel**: compose setting atoms only (Display Mode lives on Poison section, not Appearance)
+- **SettingsGroup** / **ConditionalSettingsGroup**: Section dividers inside a tab
+- **Setting utilities**: `NumberSetting`, `OnOffSetting`, `SelectSetting`, `SegmentedControl`, `When`, `useUpdateSetting`
+- **ThemeSetting**, **Fieldset**, **SegmentButton**, **SettingRow**, **EnableToggle** / **IconToggle**, **FieldCaption**
+- **Canonical grouping**: `SettingsGroup` (do not revive removed `SettingsSection` / `SettingsPanel`)
+
+**Not in Settings:** density, syncopation, or subdivision — difficulty slider and header ShowNotes.
 
 ## Guidelines
 
 - **TypeScript types**: Prefer `type` over `interface` for props
 - **Named exports**: Use `export function` or `export const` for components
-- **Props**: Define a single props type per component (e.g. `MeasureSliderProps`)
-- **Variants over className**: Do not accept `className` on shared components for styling customization. Use a `variant` prop for supported visual differences (e.g. `ControlButton`, `AboutPoisonRhythmButton`)
-- **Imports**: Use barrel imports where available; otherwise `@/lib/...`, `@/types/...`, `@/contexts/...`
-- **Type imports**: Keep `import type { ... }` on separate lines from component/value imports; do not mix inline `type` into value import statements
+- **Props**: Define a single props type per component when props are needed
+- **Context over prop drilling**: Prefer `useGame` / `useSettings` in composers where state is global
+- **Variants over className**: Do not accept `className` on shared components for styling customization
+- **Imports**: Use barrel imports where available (`@/components/ui`, `@/components/controls`, …)
+- **Type imports**: Keep `import type { ... }` on separate lines from component/value imports
 
 ## Typography
 
 - **Typographic apostrophe**: Use ’ instead of ' in all user-facing text
+- **Title Case**: Prefer Title Case for titles, control labels, `title`/`alt`, and short `aria-label` names; sentence case for descriptions and hints
 
 ## Accessibility
 
 - **Buttons**: Use `<button type='button'>` for actions; set `disabled` when not applicable
 - **Labels**: Use clear, descriptive text and `aria-label` for icon-only controls
-- **Contrast**: Use theme color utility classes (`text-black` on `bg-surface`/`bg-surface-muted`/`bg-chrome`, `text-white` on `bg-primary`, `text-black` on page/modal surfaces, `text-dark`/`text-mid` for body copy) and shared helpers from `lib/control-classes.ts` — see `.cursor/styling.mdc`
+- **Contrast**: Use theme color utility classes and shared helpers from `lib/control-classes.ts` — see `.cursor/styling.mdc`

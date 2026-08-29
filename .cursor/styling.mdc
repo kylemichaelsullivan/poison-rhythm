@@ -9,6 +9,7 @@ alwaysApply: false
 ## Typography
 
 - **Apostrophes**: ALL user-facing text MUST use the typographic apostrophe ’ instead of the straight apostrophe '
+- **Titles & alt text**: Prefer Title Case for titles, section headings, control labels, `title`, `alt`, and short `aria-label` / accessible names (e.g. `Show Next Measure`, `Visual Feedback`). Leave short prepositions lowercase when they sit mid-phrase (`Tap for Tempo`, `Click to Generate`). Body copy, captions, hints, and descriptions stay sentence case.
 - **Consistency**: Maintain consistent typography throughout the application
 
 ## Tailwind CSS
@@ -19,7 +20,7 @@ alwaysApply: false
 - **Direct strings**: Use direct strings for simple cases without conditionals
 - **No margins**: Avoid using Tailwind margin classes (`m-*`, `mx-*`, `my-*`, `mt-*`, `mr-*`, `mb-*`, `ml-*`)
 - **No space utilities**: Avoid `space-x-*` or `space-y-*` utilities — they rely on margins
-- **Formatting**: Use Biome for formatting and linting (including class order where applicable)
+- **Formatting**: Use Biome for formatting and linting (`bun run lint` / `bun run check` / `bun run ci`; VS Code: install recommended `biomejs.biome`)
 - **Utility function**: Use `clsx()` for conditional classes (not `cn()`)
 
 ### Color & Theme
@@ -35,6 +36,8 @@ Theme tokens are defined in `src/index.css` (`@theme`) and exposed as Tailwind u
 | `dark` / `light` / `mid` | Borders, settings panels, muted body text |
 | `scrim` | Modal backdrop overlay |
 | `primary` / `secondary` | Accents, active states, playback highlights |
+| `accent` | Accent mark above hits |
+| `muted` | Secondary captions and helper text |
 | `chrome` / `chrome-hover` | Header/footer controls, popovers, icon buttons |
 
 If a color needs translucency, define it in `@theme` (e.g. `--color-scrim`) — do not use Tailwind’s `/opacity` suffix on color utilities in components.
@@ -109,7 +112,7 @@ className={clsx(
 )}
 ```
 
-- **No `className` props on components**: Do not accept `className` on shared components for styling customization. Encode supported visual differences as a `variant` prop (see `ControlButton`, `AboutPoisonRhythmButton`).
+- **No `className` props on components**: Do not accept `className` on shared components for styling customization. Encode supported visual differences as a `variant` prop (see `Button`, `IconButton`, `ControlButton`, `AboutPoisonRhythmButton`). Prefer composing `@/components/ui` atoms instead of inventing one-off button class strings in feature composers.
 
 ### JSX Attribute Order
 
@@ -134,10 +137,10 @@ Follow this specific order for JSX attributes:
 		darkSurfaceClassName,
 	)}
 	disabled={isDisabled}
-	title='Submit form'
+	title='Submit Form'
 	onClick={handleClick}
 	onKeyDown={handleKeyDown}
-	aria-label='Submit form'
+	aria-label='Submit Form'
 	aria-describedby='submit-help'
 	data-testid='submit-button'
 	ref={buttonRef}
@@ -150,33 +153,34 @@ Follow this specific order for JSX attributes:
 ### Layout Principles
 
 - **Flexbox/Grid**: Use Flexbox and Grid for layouts
+- **Prefer layout atoms**: Use `Stack` / `Row` from `@/components/ui` when the wrapper’s only job is flex+gap
 - **Avoid margins**: Don't use CSS margins except for printing and where flex/grid won't work
 - **Avoid space- utilities**: Don't use `space-x-*` or `space-y-*` — they rely on margins
-- **Use flex/gap**: Use `flex flex-col gap-*` for vertical spacing and `flex items-center gap-*` for horizontal spacing
+- **Use flex/gap**: Use `Stack`/`Row` or `flex flex-col gap-*` / `flex items-center gap-*`
 - **Consistent spacing**: Use Tailwind's spacing scale
 
 ### Spacing Patterns
 
 ```tsx
-// Vertical spacing
+import { Row, Stack } from '@/components/ui';
+
+// Prefer layout atoms for intentional spacing layers
+<Stack gap='4'>…</Stack>
+<Row gap='2' align='center'>…</Row>
+
+// Or equivalent utility classes when an atom is not warranted
 className='flex flex-col gap-2';   // Small gaps
 className='flex flex-col gap-4';   // Medium gaps
 className='flex flex-col gap-6';   // Large gaps
-
-// Horizontal spacing
 className='flex items-center gap-2';
-className='flex justify-between';
-
-// Responsive spacing
-className='flex flex-col gap-3 sm:gap-4';
-className='flex items-center gap-1.5 sm:gap-2';
 ```
 
 ### Component Structure
 
+- **Atomic layers**: Prefer one root element per component; compose upward (see `.cursor/components.mdc`)
 - **Avoid superfluous wrappers**: Don't create unnecessary wrapper divs that add DOM complexity
 - **Simplify nesting**: Remove redundant wrapper elements when possible
-- **Keep meaningful wrappers**: Retain wrappers that serve styling, semantic, or organizational purposes
+- **Keep meaningful wrappers**: Retain wrappers that serve styling, semantic, or organizational purposes (`Stack`, `Row`, `Section`, `PoisonMeasureFrame`)
 
 #### Wrapper Removal Examples
 
