@@ -17,6 +17,7 @@
 
 	/* Light theme */
 	--color-primary: light-dark(var(--color-cyan-600), var(--color-orange-400));
+	--color-on-primary: light-dark(var(--color-stone-50), var(--color-stone-950));
 	--color-secondary: light-dark(var(--color-orange-400), var(--color-cyan-600));
 	--color-light: light-dark(var(--color-stone-200), var(--color-stone-800));
 	--color-mid: light-dark(var(--color-stone-400), var(--color-stone-600));
@@ -39,8 +40,22 @@
 	--color-scrim: color-mix(in oklch, var(--color-black) 50%, transparent);
 	--color-brand-gradient-a: oklch(58% 0.24 312);
 	--color-brand-gradient-b: oklch(78% 0.16 155);
+	--color-accent: light-dark(oklch(70% 0.18 85), oklch(75% 0.16 85));
+	--color-muted: light-dark(var(--color-stone-800), var(--color-stone-300));
+
+	--font-musisync: "MusiSync", ui-monospace, monospace;
 
 	--shadow-secondary-glow: 0 0 0.5rem var(--color-secondary);
+}
+
+@font-face {
+	font-family: "MusiSync";
+	src:
+		url("/fonts/MusiSync.woff2") format("woff2"),
+		url("/fonts/MusiSync.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
 }
 
 :root {
@@ -69,17 +84,49 @@
 	*:disabled {
 		cursor: not-allowed;
 	}
-}
 
-/* Metronome blinker (from bad-metronome) */
-.Blinker.is-lit,
-.MeasureCell.is-lit {
-	animation: metronome-blink 0.095s linear 1;
-}
+	input[type="range"] {
+		appearance: none;
+		width: 100%;
+		height: 0.5rem;
+		border-radius: 9999px;
+		background: var(--color-surface-muted);
+		border: 1px solid var(--color-mid);
+		accent-color: var(--color-primary);
+	}
 
-@keyframes metronome-blink {
-	50% {
-		opacity: 0.5;
+	input[type="range"]::-webkit-slider-runnable-track {
+		height: 0.5rem;
+		border-radius: 9999px;
+		background: var(--color-surface-muted);
+		border: 1px solid var(--color-mid);
+	}
+
+	input[type="range"]::-webkit-slider-thumb {
+		appearance: none;
+		width: 1rem;
+		height: 1rem;
+		margin-top: calc((0.5rem - 1rem) / 2 - 1px);
+		border-radius: 9999px;
+		border: 2px solid var(--color-primary);
+		background: var(--color-white);
+		box-shadow: 0 0 0 1px color-mix(in oklch, var(--color-mid) 40%, transparent);
+	}
+
+	input[type="range"]::-moz-range-track {
+		height: 0.5rem;
+		border-radius: 9999px;
+		background: var(--color-surface-muted);
+		border: 1px solid var(--color-mid);
+	}
+
+	input[type="range"]::-moz-range-thumb {
+		width: 1rem;
+		height: 1rem;
+		border-radius: 9999px;
+		border: 2px solid var(--color-primary);
+		background: var(--color-white);
+		box-shadow: 0 0 0 1px color-mix(in oklch, var(--color-mid) 40%, transparent);
 	}
 }
 
@@ -166,4 +213,108 @@
 		aspect-ratio: 2 / 1;
 		grid-column: span 2;
 	}
+}
+
+@utility text-muted {
+	color: var(--color-muted);
+}
+
+@utility ring-accent {
+	--tw-ring-color: var(--color-accent);
+}
+
+/* MusiSync notation — static files in public/fonts; preload in index.html */
+.MusiSync {
+	font-family: "MusiSync", ui-monospace, monospace;
+}
+
+.MeasureNotationLine {
+	--notation-font-size: clamp(2.5rem, 1.5rem + 5vw, 5.5rem);
+	--notation-line-height: 1.35;
+	font-size: var(--notation-font-size);
+	line-height: var(--notation-line-height);
+	min-height: calc(var(--notation-font-size) * var(--notation-line-height));
+	display: flex;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-items: center;
+	gap: 0.4em;
+	letter-spacing: normal;
+	overflow-x: auto;
+	overflow-y: hidden;
+}
+
+.MeasureNotationGlyph {
+	letter-spacing: 0;
+	flex: none;
+	line-height: 1;
+}
+
+/* Tuck augmentation dots against the note/rest head (MusiSync `.` has a wide advance). */
+.MeasureNotationGlyph--dotted {
+	letter-spacing: -0.42em;
+	padding-inline-end: 0.42em;
+}
+
+.MeasureNotation {
+	--notation-font-size: clamp(2.5rem, 1.5rem + 5vw, 5.5rem);
+	--notation-line-height: 1.35;
+	min-height: calc(
+		2rem +
+		var(--notation-font-size) *
+		var(--notation-line-height)
+	);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.MeasureNotation .MeasureNotationLine {
+	width: 100%;
+}
+
+.NotationPlaybackCursor {
+	z-index: 1;
+}
+
+.RhythmStickingOverlay {
+	padding-inline: 0.75rem;
+}
+
+.scroll-left {
+	transition: transform 0.5s ease;
+}
+
+.scroll-right {
+	transition: transform 0.5s ease;
+}
+
+.scroll-up {
+	transition: transform 0.5s ease;
+}
+
+.scroll-down {
+	transition: transform 0.5s ease;
+}
+
+.PlayModeIcon__glyph {
+	transition:
+		filter 200ms ease,
+		opacity 200ms ease;
+}
+
+.PlayModeIcon__glyph--muted {
+	filter: grayscale(1) saturate(0);
+	opacity: 0.45;
+}
+
+.PlayModeIcon__glyph--poison.PlayModeIcon__glyph--muted {
+	opacity: 0.42;
+}
+
+.PlayModeBucketIcon__path--active {
+	filter: drop-shadow(
+		0 1px 1px
+			color-mix(in oklch, var(--color-brand-gradient-a) 45%, transparent)
+	);
 }
