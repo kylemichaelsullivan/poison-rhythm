@@ -1,7 +1,18 @@
-export { DifficultyProvider, useDifficulty } from './DifficultyContext';
-export { MetronomeProvider, useMetronome } from './MetronomeContext';
+export { useGame } from './GameContext';
+export { GameProvider } from './GameProvider';
+export {
+	type PlaybackPass,
+	type PlaybackSource,
+	useMetronome,
+} from './MetronomeContext';
+export { MetronomeProvider } from './MetronomeProvider';
 export {
 	type SubdivisionLevel,
-	ThemeProvider,
-	useTheme,
-} from './ThemeContext';
+	useDifficulty,
+	usePreferences,
+} from './PreferencesContext';
+export { PreferencesProvider } from './PreferencesProvider';
+export { useSettings } from './SettingsContext';
+export { SettingsProvider } from './SettingsProvider';
+export { type ThemeSetting, useTheme } from './ThemeContext';
+export { ThemeProvider } from './ThemeProvider';
