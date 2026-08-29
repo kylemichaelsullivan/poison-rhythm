@@ -109,7 +109,7 @@ export const DEFAULT_SETTINGS: GameSettings = {
 	rests: 'off',
 	phraseLength: 1,
 	sticking: 'off',
-	poisonMode: 'hidden',
+	poisonMode: 'visible',
 	gameMode: 'default',
 	rhythmRenderMode: 'grid',
 	showNextMeasure: false,
