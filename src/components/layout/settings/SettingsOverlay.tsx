@@ -1,26 +1,19 @@
-import { useTheme } from '@/contexts';
-import { SoundSetting } from './SoundSetting';
-import { ThemeSetting } from './ThemeSetting';
+import { useState } from 'react';
+import { AppearanceSettingsPanel } from './AppearanceSettingsPanel';
+import { GameSettingsPanel } from './GameSettingsPanel';
+import { type SettingsTabId, SettingsTabs } from './SettingsTabs';
+import { SoundSettingsPanel } from './SoundSettingsPanel';
 
 export function SettingsOverlay() {
-	const {
-		theme,
-		setTheme,
-		muteMetronome,
-		muteRhythmSounds,
-		setMuteMetronome,
-		setMuteRhythmSounds,
-	} = useTheme();
+	const [activeTab, setActiveTab] = useState<SettingsTabId>('mode');
 
 	return (
-		<div className='SettingsOverlay flex w-full flex-col gap-5'>
-			<ThemeSetting value={theme} onChange={setTheme} />
-			<SoundSetting
-				muteMetronome={muteMetronome}
-				muteRhythmSounds={muteRhythmSounds}
-				onMuteMetronomeChange={setMuteMetronome}
-				onMuteRhythmSoundsChange={setMuteRhythmSounds}
-			/>
+		<div className='SettingsOverlay flex min-h-0 w-full flex-1 flex-col'>
+			<SettingsTabs activeTab={activeTab} onTabChange={setActiveTab}>
+				{activeTab === 'mode' && <GameSettingsPanel />}
+				{activeTab === 'sound' && <SoundSettingsPanel />}
+				{activeTab === 'appearance' && <AppearanceSettingsPanel />}
+			</SettingsTabs>
 		</div>
 	);
 }

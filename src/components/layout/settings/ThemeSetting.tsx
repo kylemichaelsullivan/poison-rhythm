@@ -2,7 +2,6 @@ import { useId } from 'react';
 import { type ThemePreference, themeOptionFor } from '@/lib';
 import { FieldCaption } from './FieldCaption';
 import { SegmentedControl } from './SegmentedControl';
-import { SettingsSection } from './SettingsSection';
 import { THEME_SEGMENTS } from './theme-segments';
 
 type ThemeSettingProps = {
@@ -15,7 +14,7 @@ export function ThemeSetting({ value, onChange }: ThemeSettingProps) {
 	const selected = themeOptionFor(value);
 
 	return (
-		<SettingsSection title='Theme'>
+		<div className='ThemeSetting flex flex-col gap-2'>
 			<SegmentedControl
 				options={THEME_SEGMENTS}
 				value={value}
@@ -24,6 +23,6 @@ export function ThemeSetting({ value, onChange }: ThemeSettingProps) {
 				describedBy={captionId}
 			/>
 			<FieldCaption id={captionId}>{selected.caption}</FieldCaption>
-		</SettingsSection>
+		</div>
 	);
 }

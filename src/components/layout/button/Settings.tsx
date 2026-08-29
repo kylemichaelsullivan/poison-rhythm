@@ -1,10 +1,18 @@
+import { lazy, Suspense } from 'react';
 import { CornerModal } from '../CornerModal';
-import { SettingsOverlay } from '../settings';
+
+const SettingsOverlay = lazy(() =>
+	import('../settings/SettingsOverlay').then((module) => ({
+		default: module.SettingsOverlay,
+	})),
+);
 
 export function Settings() {
 	return (
-		<CornerModal label='Settings' title='Settings'>
-			<SettingsOverlay />
+		<CornerModal label='Settings' title='Settings' size='xl' lazy>
+			<Suspense fallback={null}>
+				<SettingsOverlay />
+			</Suspense>
 		</CornerModal>
 	);
 }
