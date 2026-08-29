@@ -6,7 +6,15 @@
 		"useIgnoreFile": true
 	},
 	"files": {
-		"includes": ["**", "!!**/dist"]
+		"includes": [
+			"**",
+			"!!**/dist",
+			"!!**/.tmp-glyphs",
+			"!!**/test-results",
+			"!!**/playwright-report",
+			"!!**/blob-report",
+			"!!**/.vscode"
+		]
 	},
 	"formatter": {
 		"enabled": true,

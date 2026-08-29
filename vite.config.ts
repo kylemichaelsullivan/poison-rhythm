@@ -18,4 +18,34 @@ export default defineConfig({
 			'@': path.resolve(__dirname, './src'),
 		},
 	},
+	build: {
+		modulePreload: false,
+		rollupOptions: {
+			output: {
+				manualChunks(id) {
+					if (
+						id.includes('node_modules/react-dom') ||
+						id.includes('node_modules/react/')
+					) {
+						return 'vendor-react';
+					}
+					if (
+						id.includes('/src/lib/game-modes/') ||
+						id.includes('/src/lib/rhythm/')
+					) {
+						return 'game-engine';
+					}
+					if (id.includes('/src/components/layout/settings/')) {
+						return 'settings-ui';
+					}
+					if (
+						id.includes('/src/lib/notation/') ||
+						id.includes('/src/components/measures/MeasureNotation')
+					) {
+						return 'notation';
+					}
+				},
+			},
+		},
+	},
 });
