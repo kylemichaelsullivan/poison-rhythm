@@ -1,5 +1,48 @@
-import type { SubdivisionLevel } from '@/contexts';
 import { MEASURE_LENGTH, type RhythmMeasure } from '@/types';
+import type { SubdivisionLevel } from './preference-schemas';
+
+/** Horizontal position (0–100) for a subdivision step within the measure. */
+export function subdivisionPositionPercent(
+	stepIndex: number,
+	level: SubdivisionLevel,
+): number {
+	const stepCount = subdivisionStepCount(level);
+	return ((stepIndex + 0.5) / stepCount) * 100;
+}
+
+/** Seconds between subdivision pulses at the given tempo. */
+export function subdivisionPulseSec(
+	tempo: number,
+	level: SubdivisionLevel,
+): number {
+	return 60 / tempo / subdivisionPulseDivisor(level);
+}
+
+/** Milliseconds between subdivision pulses at the given tempo. */
+export function subdivisionPulseMs(
+	tempo: number,
+	level: SubdivisionLevel,
+): number {
+	return subdivisionPulseSec(tempo, level) * 1000;
+}
+
+/** Smooth playhead position (0–100) for a fractional subdivision step. */
+export function smoothSubdivisionPositionPercent(
+	step: number,
+	level: SubdivisionLevel,
+): number {
+	const stepCount = subdivisionStepCount(level);
+	const clamped = Math.min(Math.max(step, 0), stepCount - 0.5);
+	return ((clamped + 0.5) / stepCount) * 100;
+}
+
+/** Horizontal position (0–100) for a grid cell within the measure. */
+export function cellPositionPercent(
+	cellIndex: number,
+	spanCells: number = MEASURE_LENGTH,
+): number {
+	return ((cellIndex + 0.5) / spanCells) * 100;
+}
 
 export function subdivisionStepCount(level: SubdivisionLevel): number {
 	switch (level) {

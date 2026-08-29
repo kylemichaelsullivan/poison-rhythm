@@ -2,8 +2,12 @@ import { describe, expect, test } from 'bun:test';
 import {
 	cellToSubdivisionStep,
 	isQuarterDownbeat,
+	smoothSubdivisionPositionPercent,
 	stepHasHit,
+	subdivisionPositionPercent,
 	subdivisionPulseDivisor,
+	subdivisionPulseMs,
+	subdivisionPulseSec,
 	subdivisionStepCount,
 } from '../subdivision-playback';
 
@@ -21,6 +25,26 @@ describe('subdivision-playback', () => {
 		expect(cellToSubdivisionStep('eighths', 6)).toBe(3);
 		expect(isQuarterDownbeat('sixteenths', 8)).toBe(true);
 		expect(isQuarterDownbeat('eighths', 1)).toBe(false);
+	});
+
+	test('computes pulse duration and smooth playhead positions', () => {
+		expect(subdivisionPulseMs(120, 'quarters')).toBe(500);
+		expect(subdivisionPulseMs(120, 'eighths')).toBe(250);
+		expect(subdivisionPulseMs(120, 'sixteenths')).toBe(125);
+		expect(subdivisionPulseSec(120, 'sixteenths')).toBe(0.125);
+
+		expect(smoothSubdivisionPositionPercent(0, 'eighths')).toBe(
+			subdivisionPositionPercent(0, 'eighths'),
+		);
+		expect(smoothSubdivisionPositionPercent(4.5, 'eighths')).toBe(
+			subdivisionPositionPercent(4, 'eighths') +
+				(subdivisionPositionPercent(5, 'eighths') -
+					subdivisionPositionPercent(4, 'eighths')) /
+					2,
+		);
+		expect(smoothSubdivisionPositionPercent(7, 'eighths')).toBe(
+			subdivisionPositionPercent(7, 'eighths'),
+		);
 	});
 
 	test('detects hits at the current subdivision step', () => {

@@ -5,6 +5,7 @@ import {
 	DIFFICULTY_MIN,
 	formatDifficultyHelpText,
 	hitRangeForLevel,
+	scaleHitRange,
 } from '../difficulty-levels';
 
 describe('difficulty-levels', () => {
@@ -16,9 +17,16 @@ describe('difficulty-levels', () => {
 		expect(hitRangeForLevel(99)).toEqual([10, 14]);
 	});
 
+	test('scales hit ranges onto eighth and quarter grids', () => {
+		expect(hitRangeForLevel(5, 8)).toEqual([5, 7]);
+		expect(hitRangeForLevel(1, 8)).toEqual([1, 2]);
+		expect(hitRangeForLevel(5, 4)).toEqual([3, 4]);
+		expect(scaleHitRange([8, 10], 8)).toEqual([4, 5]);
+	});
+
 	test('formats help text with typographic en dash', () => {
 		expect(formatDifficultyHelpText(DIFFICULTY_LEVELS[0])).toBe(
-			'Fewest hits (2–4), only on the downbeats.',
+			'Fewest hits (2–4 on 1/16; scales with subdivision), only on the downbeats.',
 		);
 	});
 });

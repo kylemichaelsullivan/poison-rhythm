@@ -1,8 +1,15 @@
-import type { RhythmMeasure } from '@/types';
-import { MEASURE_LENGTH } from '@/types';
+import type { SubdivisionLevel } from '@/lib/preference-schemas';
+import type { GameSettings } from '@/lib/settings-schema';
+import type { LegacyRhythmMeasure, RichRhythmMeasure } from '@/types';
+import {
+	legacyToRichMeasure,
+	MEASURE_LENGTH,
+	richToLegacyMeasure,
+} from '@/types';
 import { hitRangeForLevel } from './difficulty-levels';
+import { generateMeasure as generateRichMeasure } from './rhythm/generate-measure';
 
-export const QUARTER_NOTES: RhythmMeasure = [
+export const QUARTER_NOTES: LegacyRhythmMeasure = [
 	true,
 	false,
 	true,
@@ -36,8 +43,8 @@ function pickRandom<T>(arr: readonly T[], count: number): T[] {
 	return copy.slice(0, count);
 }
 
-function measureWithHitsAt(indices: number[]): RhythmMeasure {
-	const m = new Array(MEASURE_LENGTH).fill(false) as RhythmMeasure;
+function measureWithHitsAt(indices: number[]): LegacyRhythmMeasure {
+	const m = new Array(MEASURE_LENGTH).fill(false) as LegacyRhythmMeasure;
 	for (const i of indices) m[i] = true;
 	return m;
 }
@@ -57,8 +64,35 @@ function pickIndices(difficulty: number, hits: number): number[] {
 	];
 }
 
-export function generateRandomMeasure(difficulty = 3): RhythmMeasure {
+/** Legacy generator; prefer generateMeasure from rhythm engine for rich measures. */
+export function generateRandomMeasure(difficulty = 3): LegacyRhythmMeasure {
 	const [minHits, maxHits] = hitRangeForLevel(difficulty);
 	const hits = rand(minHits, maxHits);
 	return measureWithHitsAt(pickIndices(difficulty, hits));
+}
+
+export function generateRandomRichMeasure(
+	difficulty: number,
+	subdivisionLevel: SubdivisionLevel,
+	settings: GameSettings,
+	seed?: number,
+): RichRhythmMeasure {
+	return generateRichMeasure({
+		difficulty,
+		subdivisionLevel,
+		settings,
+		seed: seed ?? Math.floor(Math.random() * 2 ** 31),
+	});
+}
+
+export function richMeasureToLegacy(
+	measure: RichRhythmMeasure,
+): LegacyRhythmMeasure {
+	return richToLegacyMeasure(measure);
+}
+
+export function legacyMeasureToRich(
+	measure: LegacyRhythmMeasure,
+): RichRhythmMeasure {
+	return legacyToRichMeasure(measure);
 }

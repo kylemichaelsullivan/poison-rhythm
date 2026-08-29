@@ -1,4 +1,4 @@
-import type { SubdivisionLevel } from '@/contexts';
+import type { SubdivisionLevel } from './preference-schemas';
 
 export const SUBDIVISION_LEVELS: SubdivisionLevel[] = [
 	'quarters',
