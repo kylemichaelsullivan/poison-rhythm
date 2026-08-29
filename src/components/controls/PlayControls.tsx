@@ -15,7 +15,14 @@ export function PlayControls({
 	onDisabledClick,
 	playButtonRef,
 }: PlayControlsProps) {
-	const { isMeasuresRunning, isLit, toggleMeasures, stop } = useMetronome();
+	const {
+		isMeasuresRunning,
+		isMeasuresPlaying,
+		isCountingIn,
+		isLit,
+		toggleMeasures,
+		stop,
+	} = useMetronome();
 
 	useEffect(() => {
 		if (disabled && isMeasuresRunning) {
@@ -24,12 +31,18 @@ export function PlayControls({
 	}, [disabled, isMeasuresRunning, stop]);
 
 	return (
-		<div className='PlayControls flex justify-center w-full'>
+		<div
+			className='PlayControls flex justify-center w-full'
+			data-testid='play-controls'
+			data-counting-in={isCountingIn ? 'true' : 'false'}
+			data-measures-playing={isMeasuresPlaying ? 'true' : 'false'}
+		>
 			<RoundPlayPauseButton
 				className={clsx(
-					'PlayControlsButton',
-					'Blinker',
-					isMeasuresRunning && isLit && 'is-lit',
+					'PlayControlsButton transition-[opacity,box-shadow] duration-100',
+					isCountingIn && !isLit && 'opacity-55',
+					isCountingIn && isLit && 'opacity-100 ring-2 ring-black',
+					!isCountingIn && isMeasuresRunning && isLit && 'ring-2 ring-black',
 				)}
 				isPlaying={isMeasuresRunning}
 				title={disabled ? 'Click + Start' : undefined}

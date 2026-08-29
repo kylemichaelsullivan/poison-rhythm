@@ -11,6 +11,7 @@ type CornerModalProps = {
 	detail?: ReactNode;
 	title?: string;
 	fullWidth?: boolean;
+	size?: 'sm' | 'md' | 'lg' | 'xl';
 	/** Mount modal body only while open. */
 	lazy?: boolean;
 	children?: ReactNode;
@@ -23,6 +24,7 @@ export function CornerModal({
 	detail,
 	title,
 	fullWidth,
+	size,
 	lazy = false,
 	children,
 }: CornerModalProps) {
@@ -42,6 +44,7 @@ export function CornerModal({
 				open={open}
 				title={title}
 				fullWidth={fullWidth}
+				size={size}
 				onClose={() => setOpen(false)}
 			>
 				{lazy ? (open ? children : null) : children}

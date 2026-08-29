@@ -5,11 +5,19 @@ import { SectionTitle } from '.';
 
 type SectionProps = {
 	title: string;
+	/** Content immediately after the title (left cluster). */
+	headerLeading?: ReactNode;
+	/** Content aligned to the trailing edge of the header. */
 	headerAction?: ReactNode;
 	children: ReactNode;
 };
 
-export function Section({ title, headerAction, children }: SectionProps) {
+export function Section({
+	title,
+	headerLeading,
+	headerAction,
+	children,
+}: SectionProps) {
 	return (
 		<section
 			className={clsx(
@@ -17,8 +25,11 @@ export function Section({ title, headerAction, children }: SectionProps) {
 				darkSurfaceClassName,
 			)}
 		>
-			<div className='flex items-center justify-start gap-2'>
-				<SectionTitle>{title}</SectionTitle>
+			<div className='flex w-full items-center justify-between gap-3'>
+				<div className='flex min-w-0 items-center gap-2'>
+					<SectionTitle>{title}</SectionTitle>
+					{headerLeading}
+				</div>
 				{headerAction}
 			</div>
 			{children}

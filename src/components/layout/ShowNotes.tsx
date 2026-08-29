@@ -1,7 +1,6 @@
-import clsx from 'clsx';
-import { useEffect, useRef, useState } from 'react';
-import { useTheme } from '@/contexts';
-import { controlButtonBaseClassName } from '@/lib/control-classes';
+import { useEffect } from 'react';
+import { usePreferences } from '@/contexts';
+import { useHoverPinPopover } from '@/hooks/useHoverPinPopover';
 import {
 	indexToLevel,
 	levelToIndex,
@@ -9,31 +8,22 @@ import {
 } from '@/lib/subdivision-levels';
 import { ClickOutside } from './ClickOutside';
 import { ShowNotesSlider } from './ShowNotesSlider';
+import { ShowNotesTrigger } from './ShowNotesTrigger';
 
 export function ShowNotes() {
-	const { subdivisionLevel, setSubdivisionLevel } = useTheme();
-	const [open, setOpen] = useState(false);
-	const pinnedRef = useRef(false);
-	const closeTimerRef = useRef<number | undefined>(undefined);
-	const focusSliderOnOpenRef = useRef(false);
-	const sliderInputRef = useRef<HTMLInputElement>(null);
-	const wrapperRef = useRef<HTMLDivElement>(null);
+	const { subdivisionLevel, setSubdivisionLevel } = usePreferences();
+	const {
+		open,
+		wrapperRef,
+		focusTargetRef,
+		handleHoverOpen,
+		handleMouseLeave,
+		handleButtonClick,
+		handleClickOutside,
+		handleBlur,
+		handleFocus,
+	} = useHoverPinPopover();
 	const value = levelToIndex(subdivisionLevel);
-
-	useEffect(() => {
-		return () => {
-			if (closeTimerRef.current !== undefined) {
-				clearTimeout(closeTimerRef.current);
-			}
-		};
-	}, []);
-
-	useEffect(() => {
-		if (open && focusSliderOnOpenRef.current) {
-			focusSliderOnOpenRef.current = false;
-			sliderInputRef.current?.focus();
-		}
-	}, [open]);
 
 	useEffect(() => {
 		if (!open) return;
@@ -63,83 +53,17 @@ export function ShowNotes() {
 		};
 	}, [open, value, setSubdivisionLevel]);
 
-	function clearCloseTimer() {
-		if (closeTimerRef.current !== undefined) {
-			clearTimeout(closeTimerRef.current);
-			closeTimerRef.current = undefined;
-		}
-	}
-
-	function handleHoverOpen() {
-		clearCloseTimer();
-		setOpen(true);
-	}
-
-	function scheduleClose() {
-		clearCloseTimer();
-		closeTimerRef.current = window.setTimeout(() => {
-			if (!pinnedRef.current) {
-				setOpen(false);
-			}
-		}, 150);
-	}
-
-	function handleClickOutside(e: MouseEvent) {
-		if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
-			clearCloseTimer();
-			pinnedRef.current = false;
-			setOpen(false);
-		}
-	}
-
-	function handleButtonClick() {
-		clearCloseTimer();
-
-		if (open && pinnedRef.current) {
-			pinnedRef.current = false;
-			setOpen(false);
-			return;
-		}
-
-		pinnedRef.current = true;
-		focusSliderOnOpenRef.current = true;
-		setOpen(true);
-	}
-
-	function handleMouseLeave() {
-		if (!pinnedRef.current) {
-			scheduleClose();
-		}
-	}
-
 	return (
 		<div className='ShowNotes relative' ref={wrapperRef}>
-			<button
-				type='button'
-				className={clsx(
-					controlButtonBaseClassName,
-					'flex items-center justify-center text-sm text-center w-10 h-10',
-					open && 'ring-2 ring-primary',
-				)}
-				title='Note Subdivisions'
+			<ShowNotesTrigger
+				label={SUBDIVISION_LABELS[value]}
+				open={open}
 				onMouseEnter={handleHoverOpen}
 				onMouseLeave={handleMouseLeave}
-				onFocus={() => setOpen(true)}
-				onBlur={(e) => {
-					if (
-						!pinnedRef.current &&
-						!wrapperRef.current?.contains(e.relatedTarget as Node | null)
-					) {
-						setOpen(false);
-					}
-				}}
+				onFocus={handleFocus}
+				onBlur={handleBlur}
 				onClick={handleButtonClick}
-				aria-expanded={open}
-				aria-haspopup='dialog'
-				aria-label='Choose which note subdivisions to show'
-			>
-				{SUBDIVISION_LABELS[value]}
-			</button>
+			/>
 			{open && (
 				<>
 					<ShowNotesSlider
@@ -147,7 +71,7 @@ export function ShowNotes() {
 						onMouseEnter={handleHoverOpen}
 						onMouseLeave={handleMouseLeave}
 						onChange={(i) => setSubdivisionLevel(indexToLevel(i))}
-						inputRef={sliderInputRef}
+						inputRef={focusTargetRef}
 					/>
 					<ClickOutside
 						wrapperRef={wrapperRef}

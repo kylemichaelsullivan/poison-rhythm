@@ -1,41 +1,19 @@
 import clsx from 'clsx';
-import { useCallback, useRef } from 'react';
 import { GameControls, PlayControls } from '@/components/controls';
 import { MeasuresSection } from '@/components/measures';
 import { PoisonSection } from '@/components/poison';
-import { useTheme } from '@/contexts';
-import { focusWithForcedRing } from '@/lib/control-classes';
-import type { RhythmMeasure } from '@/types';
+import { useGame, usePreferences, useSettings } from '@/contexts';
+import { useSoftDisableFocus } from '@/hooks/useSoftDisableFocus';
+import { isBucketTrainerMode } from '@/lib/settings-schema';
 
-type BodyProps = {
-	poisonRhythm: RhythmMeasure | null;
-	measures: RhythmMeasure[];
-	onNewPoison: () => void;
-	onReusePoison: () => void;
-};
-
-export function Body({
-	poisonRhythm,
-	measures,
-	onNewPoison,
-	onReusePoison,
-}: BodyProps) {
-	const { subdivisionLevel } = useTheme();
-	const newPoisonButtonRef = useRef<HTMLButtonElement>(null);
-	const playButtonRef = useRef<HTMLButtonElement>(null);
-
-	const focusNewPoisonButton = useCallback(() => {
-		focusWithForcedRing(newPoisonButtonRef.current);
-	}, []);
-
-	const focusPlayButton = useCallback(() => {
-		focusWithForcedRing(playButtonRef.current);
-	}, []);
-
-	const handleNewPoison = useCallback(() => {
-		onNewPoison();
-		focusPlayButton();
-	}, [onNewPoison, focusPlayButton]);
+export function Body() {
+	const { subdivisionLevel } = usePreferences();
+	const { settings } = useSettings();
+	const { poisonRhythm, measures, handleNewRound, handleReuseRound } =
+		useGame();
+	const { playButtonRef, handleNewPoison } =
+		useSoftDisableFocus(handleNewRound);
+	const bucketMode = isBucketTrainerMode(settings);
 
 	return (
 		<main
@@ -47,24 +25,20 @@ export function Body({
 		>
 			<GameControls />
 
-			<PoisonSection
-				poisonRhythm={poisonRhythm}
-				onNewPoison={handleNewPoison}
-				onReusePoison={onReusePoison}
-				onReuseDisabledClick={focusNewPoisonButton}
-				onEmptyClick={focusNewPoisonButton}
-				newButtonRef={newPoisonButtonRef}
-			/>
+			{!bucketMode ? (
+				<PoisonSection
+					poisonRhythm={poisonRhythm}
+					onNewPoison={handleNewPoison}
+					onReusePoison={handleReuseRound}
+					onReuseDisabledClick={handleNewPoison}
+				/>
+			) : null}
 
-			<MeasuresSection
-				measures={measures}
-				poisonRhythm={poisonRhythm}
-				onEmptyClick={focusNewPoisonButton}
-			/>
+			<MeasuresSection onNewPoison={handleNewPoison} />
 
 			<PlayControls
 				disabled={measures.length === 0}
-				onDisabledClick={focusNewPoisonButton}
+				onDisabledClick={handleNewPoison}
 				playButtonRef={playButtonRef}
 			/>
 		</main>

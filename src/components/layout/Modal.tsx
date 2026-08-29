@@ -8,6 +8,7 @@ import {
 type ModalProps = {
 	open: boolean;
 	fullWidth?: boolean;
+	size?: 'sm' | 'md' | 'lg' | 'xl';
 	title?: string;
 	/** Used when `title` is omitted so the dialog still has an accessible name. */
 	ariaLabel?: string;
@@ -27,6 +28,7 @@ const FOCUSABLE_SELECTOR = [
 export function Modal({
 	open,
 	fullWidth = false,
+	size = 'sm',
 	title,
 	ariaLabel,
 	onClose,
@@ -105,19 +107,31 @@ export function Modal({
 		return null;
 	}
 
+	const sizeClassName =
+		size === 'xl'
+			? 'h-[80vh] max-h-[80vh] w-[80vw] max-w-none'
+			: size === 'lg'
+				? 'max-w-lg'
+				: size === 'md'
+					? 'max-w-md'
+					: 'max-w-sm';
+
 	return (
 		<div className='Modal fixed flex items-center justify-center p-4 inset-0 z-50'>
 			<button
 				type='button'
 				className={clsx('absolute inset-0', modalScrimClassName)}
-				aria-label='Close modal'
+				aria-label='Close Modal'
 				onClick={onClose}
 			/>
 			<div
 				className={clsx(
-					'relative flex flex-col gap-4 w-full p-6',
+					'relative flex min-h-0 flex-col gap-4 w-full p-6',
+					size === 'xl' ? 'max-h-[80vh]' : 'max-h-[min(90vh,40rem)]',
 					modalPanelClassName,
-					fullWidth ? 'max-w-none rounded-none' : 'max-w-sm rounded-lg',
+					fullWidth
+						? 'max-w-none rounded-none'
+						: clsx(sizeClassName, 'rounded-lg'),
 				)}
 				role='dialog'
 				aria-modal='true'
@@ -129,20 +143,20 @@ export function Modal({
 				<button
 					type='button'
 					className='absolute top-3 right-3 flex justify-center items-center w-8 h-8 text-xl font-semibold leading-none text-dark transition-colors hover:text-primary focus-visible:outline-none focus-visible:text-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-white'
-					aria-label='Close modal'
+					aria-label='Close Modal'
 					onClick={onClose}
 				>
 					X
 				</button>
 				{title && (
 					<h2
-						className='text-lg font-semibold text-black text-center'
+						className='shrink-0 text-lg font-semibold text-black text-center'
 						id={titleId}
 					>
 						{title}
 					</h2>
 				)}
-				{children}
+				<div className='flex min-h-0 flex-1 flex-col'>{children}</div>
 			</div>
 		</div>
 	);

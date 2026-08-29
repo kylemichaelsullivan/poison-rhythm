@@ -25,18 +25,18 @@ export function ShowNotesSlider({
 				controlSurfaceBaseClassName,
 			)}
 			role='dialog'
-			aria-label='Note subdivisions'
+			aria-label='Note Subdivisions'
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
 		>
 			<input
 				type='range'
-				className='slider w-full accent-primary'
+				className='w-full'
 				min={0}
 				max={2}
 				step={1}
 				value={value}
-				aria-label='Note subdivisions'
+				aria-label='Note Subdivisions'
 				aria-valuemin={0}
 				aria-valuemax={2}
 				aria-valuenow={value}

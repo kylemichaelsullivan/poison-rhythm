@@ -10,12 +10,13 @@ export function EmptyStartPrompt({ onClick }: EmptyStartPromptProps) {
 		<button
 			type='button'
 			className={clsx(
-				'EmptyStartPrompt border border-mid rounded-lg border-dashed text-center p-8 w-full transition hover:border-primary',
+				'EmptyStartPrompt flex items-center justify-center border border-mid rounded-lg border-dashed text-center p-4 w-full h-full min-h-0 transition hover:border-primary',
 				darkSurfaceClassName,
 			)}
+			title='Click to Generate'
 			onClick={onClick}
 		>
-			Click <b>+</b> to Start
+			Click to Generate
 		</button>
 	);
 }

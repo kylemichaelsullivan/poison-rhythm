@@ -5,32 +5,30 @@ import {
 	Footer,
 	Header,
 } from '@/components/layout';
-import { usePoisonGame } from '@/hooks';
+import { GameProvider } from '@/contexts';
 import { pageSurfaceClassName } from '@/lib/control-classes';
 
-function App() {
-	const { poisonRhythm, measures, handleNewPoison, handleReusePoison } =
-		usePoisonGame();
+function AppContent() {
+	return (
+		<div
+			className={clsx(
+				'flex min-h-dvh flex-col items-center gap-6 overflow-x-clip',
+				pageSurfaceClassName,
+			)}
+		>
+			<Header />
+			<Body />
+			<Footer />
+		</div>
+	);
+}
 
+function App() {
 	return (
 		<AboutPoisonRhythmProvider>
-			<div
-				className={clsx(
-					'flex min-h-dvh flex-col items-center gap-6',
-					pageSurfaceClassName,
-				)}
-			>
-				<Header />
-
-				<Body
-					poisonRhythm={poisonRhythm}
-					measures={measures}
-					onNewPoison={handleNewPoison}
-					onReusePoison={handleReusePoison}
-				/>
-
-				<Footer />
-			</div>
+			<GameProvider>
+				<AppContent />
+			</GameProvider>
 		</AboutPoisonRhythmProvider>
 	);
 }

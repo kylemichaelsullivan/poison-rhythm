@@ -1,4 +1,3 @@
-import type { Ref } from 'react';
 import PlusIcon from '@/assets/svg/plus.svg?react';
 import RepeatIcon from '@/assets/svg/repeat.svg?react';
 import { ControlButton } from './ControlButton';
@@ -8,7 +7,6 @@ type ControlButtonsProps = {
 	onReusePoison: () => void;
 	reuseDisabled?: boolean;
 	onReuseDisabledClick?: () => void;
-	newButtonRef?: Ref<HTMLButtonElement>;
 };
 
 export function ControlButtons({
@@ -16,7 +14,6 @@ export function ControlButtons({
 	onReusePoison,
 	reuseDisabled = false,
 	onReuseDisabledClick,
-	newButtonRef,
 }: ControlButtonsProps) {
 	return (
 		<div className='ControlButtons flex flex-wrap justify-between gap-3 items-center'>
@@ -26,7 +23,6 @@ export function ControlButtons({
 				icon={PlusIcon}
 				title='New Poison Rhythm, New Measures'
 				onClick={onNewPoison}
-				ref={newButtonRef}
 			/>
 			<ControlButton
 				label='Reuse'
