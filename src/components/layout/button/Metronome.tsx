@@ -1,7 +1,13 @@
+import { lazy, Suspense } from 'react';
 import MetronomeIcon from '@/assets/svg/metronome.svg?react';
 import { useMetronome } from '@/contexts';
 import { CornerModal } from '../CornerModal';
-import { Metronome as MetronomeContent } from '../metronome/Metronome';
+
+const MetronomeContent = lazy(() =>
+	import('../metronome/Metronome').then((module) => ({
+		default: module.Metronome,
+	})),
+);
 
 export function Metronome() {
 	const { tempo } = useMetronome();
@@ -26,7 +32,9 @@ export function Metronome() {
 			fullWidth
 			lazy
 		>
-			<MetronomeContent />
+			<Suspense fallback={null}>
+				<MetronomeContent />
+			</Suspense>
 		</CornerModal>
 	);
 }

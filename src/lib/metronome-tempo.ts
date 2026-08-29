@@ -1,9 +1,4 @@
-import {
-	BPM_BUTTON_STEP,
-	BPM_DEFAULT,
-	BPM_MAX,
-	BPM_MIN,
-} from './metronome-defaults';
+import { BPM_BUTTON_STEP, BPM_MAX, BPM_MIN } from './metronome-defaults';
 
 export function clampTempo(value: number) {
 	return Math.min(BPM_MAX, Math.max(BPM_MIN, value));
@@ -25,17 +20,4 @@ export function incrementTempoByStep(current: number) {
 	return Math.ceil(current / BPM_BUTTON_STEP) * BPM_BUTTON_STEP;
 }
 
-export function getInitialTempo(defaultTempo = BPM_DEFAULT) {
-	const param = new URLSearchParams(window.location.search).get('bpm');
-
-	if (!param) {
-		return defaultTempo;
-	}
-
-	const parsed = parseFloat(param);
-	if (!Number.isFinite(parsed)) {
-		return defaultTempo;
-	}
-
-	return clampTempo(parsed);
-}
+export { resolveInitialTempo as getInitialTempo } from './preference-storage';

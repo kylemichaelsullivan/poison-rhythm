@@ -72,7 +72,7 @@ export function MetronomeTempoInput({
 			min={BPM_MIN}
 			max={BPM_MAX}
 			title='Set Tempo'
-			aria-label='Beats per minute'
+			aria-label='Beats per Minute'
 			value={inputValue}
 			onFocus={(e) => {
 				isEditingRef.current = true;

@@ -14,14 +14,14 @@ export function MetronomeTempoSlider({
 		<div className='Tempo flex gap-2 items-center w-full'>
 			<input
 				type='range'
-				className='cursor-pointer flex-auto accent-primary'
+				className='cursor-pointer flex-auto'
 				min={BPM_MIN}
 				max={BPM_MAX}
 				step={BPM_INPUT_STEP}
 				title='Set Tempo'
 				value={tempo}
 				onChange={(e) => onTempoChange(Number(e.target.value))}
-				aria-label='Beats per minute'
+				aria-label='Beats per Minute'
 				aria-valuemin={BPM_MIN}
 				aria-valuemax={BPM_MAX}
 				aria-valuenow={tempo}
