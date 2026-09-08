@@ -3,8 +3,8 @@ import type { SubdivisionLevel } from '@/lib/preference-schemas';
 /**
  * Conventional MusiSync v5 duration keys (Allgeyer mnemonic):
  * notes = lowercase w/h/q/e/s, rests = uppercase W/H/Q/E/S.
- * Dotted values compose base glyph + augmentation dot (`.`), except dotted
- * half note which has a dedicated `d` glyph.
+ * Dotted notes use dedicated glyphs (`i` / `j` / `d`). Dotted rests compose
+ * base rest + augmentation dot (`.`).
  */
 export type NotationDuration =
 	| 'whole'
@@ -24,13 +24,15 @@ export const MUSISYNC_GLYPH = {
 	dottedHalfNote: 'd',
 	halfNote: 'h',
 	halfRest: 'W',
+	dottedQuarterNote: 'j',
 	quarterNote: 'q',
 	quarterRest: 'Q',
+	dottedEighthNote: 'i',
 	eighthNote: 'e',
 	eighthRest: 'E',
 	sixteenthNote: 's',
 	sixteenthRest: 'S',
-	/** Augmentation dot (compose after a base duration glyph). */
+	/** Augmentation dot (compose after a rest glyph). */
 	augmentationDot: '.',
 } as const;
 
@@ -38,9 +40,9 @@ const NOTE_BY_DURATION: Record<NotationDuration, string> = {
 	whole: MUSISYNC_GLYPH.wholeNote,
 	dottedHalf: MUSISYNC_GLYPH.dottedHalfNote,
 	half: MUSISYNC_GLYPH.halfNote,
-	dottedQuarter: `${MUSISYNC_GLYPH.quarterNote}${MUSISYNC_GLYPH.augmentationDot}`,
+	dottedQuarter: MUSISYNC_GLYPH.dottedQuarterNote,
 	quarter: MUSISYNC_GLYPH.quarterNote,
-	dottedEighth: `${MUSISYNC_GLYPH.eighthNote}${MUSISYNC_GLYPH.augmentationDot}`,
+	dottedEighth: MUSISYNC_GLYPH.dottedEighthNote,
 	eighth: MUSISYNC_GLYPH.eighthNote,
 	sixteenth: MUSISYNC_GLYPH.sixteenthNote,
 };

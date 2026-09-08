@@ -254,6 +254,15 @@ describe('measureToNotationEvents', () => {
 		expect(eventsToMusiSyncString(events).startsWith('m')).toBe(true);
 	});
 
+	test('sixteenth rest + three sixteenths beams as S³', () => {
+		const events = measureToNotationEvents(
+			hits(1, 2, 3),
+			undefined,
+			'sixteenths',
+		);
+		expect(eventsToMusiSyncString(events).startsWith('S³')).toBe(true);
+	});
+
 	test('preserves accent and sticking on onset only', () => {
 		const measure = hits(0, 8);
 		const rich = measure.map((hit, index) => ({

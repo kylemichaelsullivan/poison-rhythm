@@ -1,4 +1,4 @@
-import { beamedGlyphForDurations } from './beam-glyphs';
+import { resolveBeamedGlyph } from './beam-glyphs';
 import { beatIndex, CELLS_PER_BEAT } from './duration-units';
 import { musisyncGlyphFor } from './musisync-glyphs';
 import type { NotationEvent } from './notation-events';
@@ -48,9 +48,7 @@ export function tryBeamNotes(notes: NotationEvent[]): BeamAttempt {
 		return { ok: false, notes };
 	}
 
-	const glyph = beamedGlyphForDurations(
-		notes.map((note) => note.durationCells),
-	);
+	const glyph = resolveBeamedGlyph(notes);
 	if (!glyph) {
 		return { ok: false, notes };
 	}
@@ -67,7 +65,10 @@ export function collectBeamRuns(events: NotationEvent[]): NotationEvent[][] {
 	let i = 0;
 
 	while (i < events.length) {
-		const event = events[i]!;
+		const event = events[i];
+		if (!event) {
+			break;
+		}
 		if (!isBeamableNote(event)) {
 			runs.push([event]);
 			i += 1;
@@ -77,11 +78,15 @@ export function collectBeamRuns(events: NotationEvent[]): NotationEvent[][] {
 		const run: NotationEvent[] = [event];
 		let j = i + 1;
 		while (j < events.length) {
-			const next = events[j]!;
-			const prev = run[run.length - 1]!;
+			const next = events[j];
+			const prev = run[run.length - 1];
+			const runStart = run[0];
 			if (
+				!next ||
+				!prev ||
+				!runStart ||
 				!isBeamableNote(next) ||
-				!notesShareBeat([run[0]!, next]) ||
+				!notesShareBeat([runStart, next]) ||
 				!notesAreContiguous([prev, next])
 			) {
 				break;
@@ -123,7 +128,10 @@ export function beamNotesForDisplay(
 				offset += chunked.notes.length;
 				continue;
 			}
-			const single = remaining[0]!;
+			const single = remaining[0];
+			if (!single) {
+				break;
+			}
 			tokens.push({
 				glyph: musisyncGlyphFor(single.kind, single.duration),
 				events: [single],
@@ -147,17 +155,21 @@ function tryBeamLongestPrefix(notes: NotationEvent[]): BeamAttempt {
 }
 
 function notesShareBeat(notes: BeamableNote[]): boolean {
-	if (notes.length === 0) {
+	const first = notes[0];
+	if (!first) {
 		return true;
 	}
-	const beat = beatIndex(notes[0]!.startCell);
+	const beat = beatIndex(first.startCell);
 	return notes.every((note) => beatIndex(note.startCell) === beat);
 }
 
 function notesAreContiguous(notes: BeamableNote[]): boolean {
 	for (let i = 1; i < notes.length; i += 1) {
-		const prev = notes[i - 1]!;
-		const next = notes[i]!;
+		const prev = notes[i - 1];
+		const next = notes[i];
+		if (!prev || !next) {
+			return false;
+		}
 		if (next.startCell !== prev.startCell + prev.durationCells) {
 			return false;
 		}

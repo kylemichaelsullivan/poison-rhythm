@@ -55,7 +55,10 @@ export function collectOnsetCells(
 export function onsetSpans(onsets: number[]): OnsetSpan[] {
 	const spans: OnsetSpan[] = [];
 	for (let i = 0; i < onsets.length; i += 1) {
-		const startCell = onsets[i]!;
+		const startCell = onsets[i];
+		if (startCell === undefined) {
+			continue;
+		}
 		const endCell = onsets[i + 1] ?? MEASURE_LENGTH;
 		spans.push({
 			startCell,

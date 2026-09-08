@@ -1,6 +1,7 @@
 export {
 	beamedGlyphForDurations,
 	MUSISYNC_BEAMED,
+	resolveBeamedGlyph,
 } from './beam-glyphs';
 export { assignBeamGroups } from './beam-groups';
 export {

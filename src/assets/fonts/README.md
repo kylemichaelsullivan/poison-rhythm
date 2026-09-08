@@ -2,9 +2,9 @@
 
 Poison Rhythm uses [MusiSync](https://www.fontspace.com/musisync-font-f3723) by Robert Allgeyer (SIL Open Font License 1.1) for **Notation** render mode.
 
-Duration keys follow Allgeyer’s conventional mnemonic (`musisyncGlyphFor` in `src/lib/notation/musisync-glyphs.ts`): notes `w`/`h`/`q`/`e`/`s`, rests `H`/`W`/`Q`/`E`/`S`. Dotted values use `e.` / `q.` / dedicated `d` (dotted half), or rest + `.`. Digits are not duration glyphs.
+Duration keys follow Allgeyer’s conventional mnemonic (`musisyncGlyphFor` in `src/lib/notation/musisync-glyphs.ts`): notes `w`/`h`/`q`/`e`/`s`, rests `H`/`W`/`Q`/`E`/`S`. Dotted notes use dedicated glyphs `i` / `j` / `d` (eighth / quarter / half); dotted rests compose rest + `.`. Digits are not duration glyphs.
 
-Beamed groups (see `beam-glyphs.ts`): `n` = two eighths, `y` = four sixteenths, `m` = eighth + two sixteenths, `M` = two sixteenths + eighth, `¾` = sixteenth + eighth + sixteenth, `o` = dotted eighth + sixteenth, `§` = three eighths, `Y` = four eighths.
+Beamed groups (see `beam-glyphs.ts`): `n` = two eighths, `y` = four sixteenths, `³` = three sixteenths, `m` = eighth + two sixteenths, `M` = two sixteenths + eighth, `¾` = sixteenth + eighth + sixteenth, `o` = dotted eighth + sixteenth, `O` = sixteenth + dotted eighth, `§` = three eighths, `Y` = four eighths.
 
 ## Canonical source (this folder)
 

@@ -1,8 +1,7 @@
 import clsx from 'clsx';
-import { useEffect } from 'react';
 import { usePreferences, useSettings } from '@/contexts';
+import { useMusiSyncFont } from '@/hooks/useMusiSyncFont';
 import {
-	loadMusiSyncFont,
 	measureToNotationSteps,
 	notationStepsToGlyphString,
 } from '@/lib/notation';
@@ -28,35 +27,38 @@ export function MeasureNotation({
 }: MeasureNotationProps) {
 	const { subdivisionLevel } = usePreferences();
 	const { settings } = useSettings();
+	const fontReady = useMusiSyncFont();
 	const steps = measureToNotationSteps(measure, richMeasure, subdivisionLevel);
 	const glyphString = notationStepsToGlyphString(steps);
 	const stepCount = Math.max(steps.length, 1);
-	const showAccents = shouldShowAccents(settings);
-	const showSticking = shouldShowSticking(settings);
-
-	useEffect(() => {
-		void loadMusiSyncFont();
-	}, []);
+	const accentsEnabled = shouldShowAccents(settings);
+	const stickingEnabled = shouldShowSticking(settings);
 
 	return (
 		<div
 			className={clsx(
 				'MeasureNotation relative w-full border border-mid rounded-lg px-3 py-4',
-				showSticking && 'pb-4',
-				showAccents && 'pt-6',
+				stickingEnabled && 'pb-4',
+				accentsEnabled && 'pt-6',
 				hidden && 'opacity-0',
 			)}
 		>
 			<RhythmAccentOverlay
 				steps={steps}
 				stepCount={stepCount}
-				show={showAccents}
+				show={accentsEnabled && fontReady}
 			/>
 			<div className='relative w-full'>
-				<NotationPlaybackCursor playback={playback} hidden={hidden} />
+				<NotationPlaybackCursor
+					playback={playback}
+					hidden={hidden || !fontReady}
+				/>
 				<div
 					role='img'
-					className='MeasureNotationLine MusiSync text-current'
+					className={clsx(
+						'MeasureNotationLine MusiSync text-current',
+						!fontReady && 'invisible',
+					)}
 					aria-label='Rhythm Notation'
 					data-glyphs={glyphString}
 				>
@@ -65,7 +67,10 @@ export function MeasureNotation({
 					))}
 				</div>
 			</div>
-			<RhythmStickingOverlay steps={steps} show={showSticking} />
+			<RhythmStickingOverlay
+				steps={steps}
+				show={stickingEnabled && fontReady}
+			/>
 		</div>
 	);
 }

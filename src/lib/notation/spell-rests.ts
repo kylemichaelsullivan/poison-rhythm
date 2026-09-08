@@ -39,11 +39,18 @@ function mergeOccupied(spans: OccupiedSpan[]): OccupiedSpan[] {
 		return [];
 	}
 	const sorted = [...spans].sort((a, b) => a.startCell - b.startCell);
+	const first = sorted[0];
+	if (!first) {
+		return [];
+	}
 	const merged: OccupiedSpan[] = [];
-	let current = { ...sorted[0]! };
+	let current = { ...first };
 
 	for (let i = 1; i < sorted.length; i += 1) {
-		const next = sorted[i]!;
+		const next = sorted[i];
+		if (!next) {
+			continue;
+		}
 		const currentEnd = current.startCell + current.durationCells;
 		if (next.startCell <= currentEnd) {
 			const nextEnd = next.startCell + next.durationCells;

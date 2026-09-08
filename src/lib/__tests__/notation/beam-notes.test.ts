@@ -31,11 +31,17 @@ function note(
 }
 
 function rest(startCell: number, durationCells: number): NotationEvent {
+	const duration =
+		durationCells === 1
+			? 'sixteenth'
+			: durationCells === 2
+				? 'eighth'
+				: 'quarter';
 	return {
 		startCell,
 		durationCells,
 		kind: 'rest',
-		duration: durationCells === 2 ? 'eighth' : 'quarter',
+		duration,
 	};
 }
 
@@ -67,6 +73,18 @@ describe('tryBeamNotes', () => {
 
 	test('rejects unmatched patterns', () => {
 		expect(tryBeamNotes([note(0, 1), note(1, 1)]).ok).toBe(false);
+	});
+
+	test('beams three sixteenths in one beat', () => {
+		const attempt = tryBeamNotes([note(1, 1), note(2, 1), note(3, 1)]);
+		expect(attempt.ok).toBe(true);
+		if (attempt.ok) {
+			expect(attempt.glyph).toBe(MUSISYNC_BEAMED.threeSixteenths);
+		}
+	});
+
+	test('does not beam sixteenth + eighth [1,2] as dotted O', () => {
+		expect(tryBeamNotes([note(5, 1), note(6, 2)]).ok).toBe(false);
 	});
 });
 
@@ -102,5 +120,18 @@ describe('beamNotesForDisplay', () => {
 	test('falls back to flagged glyphs when beaming is not conventional', () => {
 		const tokens = beamNotesForDisplay([note(0, 2), rest(2, 2)]);
 		expect(tokens.map((t) => t.glyph).join('')).toBe('eE');
+	});
+
+	test('beams three sixteenths after a sixteenth rest in the beat', () => {
+		const tokens = beamNotesForDisplay([
+			rest(0, 1),
+			note(1, 1),
+			note(2, 1),
+			note(3, 1),
+		]);
+		expect(tokens.map((t) => t.glyph).join('')).toBe(
+			`S${MUSISYNC_BEAMED.threeSixteenths}`,
+		);
+		expect(tokens[1]?.events).toHaveLength(3);
 	});
 });

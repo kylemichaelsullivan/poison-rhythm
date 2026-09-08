@@ -250,10 +250,10 @@
 	line-height: 1;
 }
 
-/* Tuck augmentation dots against the note/rest head (MusiSync `.` has a wide advance). */
+/* Tuck rest augmentation dots slightly (MusiSync `.` advance is a bit wide). */
 .MeasureNotationGlyph--dotted {
-	letter-spacing: -0.42em;
-	padding-inline-end: 0.42em;
+	letter-spacing: -0.08em;
+	padding-inline-end: 0.08em;
 }
 
 .MeasureNotation {

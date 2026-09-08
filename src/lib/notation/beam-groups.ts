@@ -12,23 +12,28 @@ export function assignBeamGroups(segments: NoteSegment[]): Map<number, number> {
 	let nextId = 0;
 
 	const beamable: { index: number; segment: NoteSegment }[] = [];
-	for (let i = 0; i < segments.length; i += 1) {
-		const segment = segments[i]!;
+	for (const [index, segment] of segments.entries()) {
 		if (segment.tieContinuation || segment.durationCells >= QUARTER_CELLS) {
 			continue;
 		}
-		beamable.push({ index: i, segment });
+		beamable.push({ index, segment });
 	}
 
 	let runStart = 0;
 	while (runStart < beamable.length) {
-		const first = beamable[runStart]!;
+		const first = beamable[runStart];
+		if (!first) {
+			break;
+		}
 		const beat = Math.floor(first.segment.startCell / QUARTER_CELLS);
 		let runEnd = runStart + 1;
 
 		while (runEnd < beamable.length) {
-			const prev = beamable[runEnd - 1]!;
-			const next = beamable[runEnd]!;
+			const prev = beamable[runEnd - 1];
+			const next = beamable[runEnd];
+			if (!prev || !next) {
+				break;
+			}
 			const nextBeat = Math.floor(next.segment.startCell / QUARTER_CELLS);
 			const contiguous =
 				next.segment.startCell ===
@@ -44,7 +49,10 @@ export function assignBeamGroups(segments: NoteSegment[]): Map<number, number> {
 			const id = nextId;
 			nextId += 1;
 			for (let i = runStart; i < runEnd; i += 1) {
-				beamByIndex.set(beamable[i]!.index, id);
+				const item = beamable[i];
+				if (item) {
+					beamByIndex.set(item.index, id);
+				}
 			}
 		}
 

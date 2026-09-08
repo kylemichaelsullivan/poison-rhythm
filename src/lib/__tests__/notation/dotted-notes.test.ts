@@ -28,10 +28,10 @@ describe('dotted notes', () => {
 
 	test('MusiSync glyphs for dotted values', () => {
 		expect(musisyncGlyphFor('note', 'dottedEighth')).toBe(
-			`${MUSISYNC_GLYPH.eighthNote}${MUSISYNC_GLYPH.augmentationDot}`,
+			MUSISYNC_GLYPH.dottedEighthNote,
 		);
 		expect(musisyncGlyphFor('note', 'dottedQuarter')).toBe(
-			`${MUSISYNC_GLYPH.quarterNote}${MUSISYNC_GLYPH.augmentationDot}`,
+			MUSISYNC_GLYPH.dottedQuarterNote,
 		);
 		expect(musisyncGlyphFor('note', 'dottedHalf')).toBe(
 			MUSISYNC_GLYPH.dottedHalfNote,
@@ -61,6 +61,25 @@ describe('dotted notes', () => {
 		);
 		expect(eventsToMusiSyncString(events).startsWith('O')).toBe(true);
 		expect(eventsToAbcBody(events).startsWith('c c3')).toBe(true);
+	});
+
+	test('sixteenth on “e” + eighth on “&” stays flagged (no O alias)', () => {
+		const events = measureToNotationEvents(
+			hits(0, 5, 6, 8, 12, 14),
+			undefined,
+			'sixteenths',
+		);
+		// [1,2] has no MusiSync beamed glyph; do not fake dotted O
+		expect(eventsToMusiSyncString(events)).toBe('qSseqn');
+	});
+
+	test('repeated e+& syncopation stays flagged until a full-beat pattern', () => {
+		const events = measureToNotationEvents(
+			hits(1, 2, 5, 6, 9, 10, 12, 13, 14, 15),
+			undefined,
+			'sixteenths',
+		);
+		expect(eventsToMusiSyncString(events)).toBe('SseSseSsey');
 	});
 
 	test('isolated dotted eighth then rest within a beat', () => {

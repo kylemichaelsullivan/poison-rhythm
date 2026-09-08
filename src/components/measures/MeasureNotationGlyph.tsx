@@ -5,7 +5,7 @@ type MeasureNotationGlyphProps = {
 	glyph: string;
 };
 
-/** One MusiSync glyph token; keeps augmentation dots tucked against noteheads. */
+/** One MusiSync glyph token; tucks composed rest augmentation dots. */
 export function MeasureNotationGlyph({ glyph }: MeasureNotationGlyphProps) {
 	const dotted = glyph.includes(MUSISYNC_GLYPH.augmentationDot);
 

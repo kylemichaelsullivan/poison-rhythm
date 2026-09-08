@@ -34,15 +34,15 @@ export function measureToNotationSteps(
 		const onset = token.events.find(
 			(event) => event.kind === 'note' && !event.tieContinuation,
 		);
-		const primary = onset ?? token.events[0]!;
+		const primary = onset ?? token.events[0];
 		return {
 			stepIndex,
 			hit: Boolean(onset),
 			accent: onset?.accent,
 			sticking: onset?.sticking,
 			glyph: token.glyph,
-			startCell: primary.startCell,
-			tieContinuation: primary.tieContinuation,
+			startCell: primary?.startCell,
+			tieContinuation: primary?.tieContinuation,
 			beamGroupId: onset?.beamGroupId,
 		};
 	});
