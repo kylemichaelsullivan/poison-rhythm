@@ -4,7 +4,7 @@ import { generateMeasure } from '@/lib/rhythm/generate-measure';
 import { createPRNG } from '@/lib/rhythm/prng';
 import { countHits } from '@/lib/rhythm-utils';
 import { DEFAULT_SETTINGS } from '@/lib/settings-schema';
-import { richToLegacyMeasure } from '@/types';
+import { richToRhythmMeasure } from '@/types';
 
 describe('rhythm hit count', () => {
 	test('higher difficulty produces more hits on average', () => {
@@ -50,8 +50,8 @@ describe('generateMeasure', () => {
 			settings: DEFAULT_SETTINGS,
 			seed: 100,
 		});
-		const legacy = richToLegacyMeasure(measure);
-		const hits = countHits(legacy);
+		const rhythm = richToRhythmMeasure(measure);
+		const hits = countHits(rhythm);
 		expect(hits).toBeGreaterThanOrEqual(2);
 		expect(hits).toBeLessThanOrEqual(4);
 	});
@@ -65,7 +65,7 @@ describe('generateMeasure', () => {
 				settings: DEFAULT_SETTINGS,
 				seed,
 			});
-			const hits = countHits(richToLegacyMeasure(measure));
+			const hits = countHits(richToRhythmMeasure(measure));
 			expect(hits).toBeLessThan(8);
 			hitCounts.add(hits);
 		}

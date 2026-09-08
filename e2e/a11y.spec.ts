@@ -37,10 +37,10 @@ async function expectNoA11yViolations(
 }
 
 test.describe('accessibility', () => {
-	test('empty start screen has no axe violations', async ({ page }) => {
+	test('start screen has no axe violations', async ({ page }) => {
 		await page.goto('/');
-		await expect(page.getByTitle('Click to Generate').first()).toBeVisible();
-		await expectNoA11yViolations(page, 'empty start');
+		await expect(page.getByTestId('measure-slider')).toBeVisible();
+		await expectNoA11yViolations(page, 'start screen');
 	});
 
 	test('generated round has no axe violations', async ({ page }) => {

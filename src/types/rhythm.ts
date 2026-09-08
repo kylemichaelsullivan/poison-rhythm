@@ -1,10 +1,7 @@
 export const MEASURE_LENGTH = 16;
 
-/** Legacy boolean grid: true = hit, false = rest. */
-export type LegacyRhythmMeasure = boolean[];
-
-/** @deprecated Use RhythmMeasure (RhythmStep[]) for new code. */
-export type RhythmMeasure = LegacyRhythmMeasure;
+/** Hit/rest grid (16 cells): true = hit, false = rest. Used by grid/roll display and playback. */
+export type RhythmMeasure = boolean[];
 
 export type StickingHand = 'L' | 'R';
 
@@ -37,7 +34,7 @@ export type GameState = {
 };
 
 /** All rests; used for layout spacers and placeholders. */
-export const REST_MEASURE: LegacyRhythmMeasure = Array.from(
+export const REST_MEASURE: RhythmMeasure = Array.from(
 	{ length: MEASURE_LENGTH },
 	() => false,
 );
@@ -49,15 +46,11 @@ export function createEmptyRichMeasure(): RichRhythmMeasure {
 	}));
 }
 
-export function legacyToRichMeasure(
-	measure: LegacyRhythmMeasure,
-): RichRhythmMeasure {
+export function rhythmToRichMeasure(measure: RhythmMeasure): RichRhythmMeasure {
 	return measure.map((hit, index) => ({ index, hit }));
 }
 
-export function richToLegacyMeasure(
-	measure: RichRhythmMeasure,
-): LegacyRhythmMeasure {
+export function richToRhythmMeasure(measure: RichRhythmMeasure): RhythmMeasure {
 	return measure.map((step) => step.hit);
 }
 

@@ -78,8 +78,8 @@ export async function seedPlaybackPrefs(
 	);
 }
 
+/** Wait for the auto-seeded first round (or after New) to be ready for play. */
 export async function generateRound(page: Page) {
-	await page.getByTitle('Click to Generate').first().click();
 	await expect(page.getByTestId('measure-slider')).toBeVisible();
 	const playButton = page
 		.getByTestId('play-controls')

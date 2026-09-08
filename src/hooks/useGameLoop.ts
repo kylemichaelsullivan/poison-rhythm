@@ -4,7 +4,7 @@ import { useSettings } from '@/contexts/SettingsContext';
 import { generateAppendBatch, generateRound } from '@/lib/rhythm';
 import { isEndlessMode } from '@/lib/settings-schema';
 import type { RhythmMeasure, RichRhythmMeasure, Round } from '@/types';
-import { richToLegacyMeasure } from '@/types';
+import { richToRhythmMeasure } from '@/types';
 
 export function useGameLoop() {
 	const { difficulty, subdivisionLevel } = usePreferences();
@@ -13,11 +13,11 @@ export function useGameLoop() {
 	const [currentIndex, setCurrentIndex] = useState(0);
 
 	const measures: RhythmMeasure[] = round
-		? round.measures.map(richToLegacyMeasure)
+		? round.measures.map(richToRhythmMeasure)
 		: [];
 
 	const poisonRhythm: RhythmMeasure | null = round
-		? richToLegacyMeasure(round.poisonMeasure)
+		? richToRhythmMeasure(round.poisonMeasure)
 		: null;
 
 	const handleNewRound = useCallback(() => {

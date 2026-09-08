@@ -6,11 +6,6 @@ async function switchToNotation(page: import('@playwright/test').Page) {
 	await page.keyboard.press('Escape');
 }
 
-async function generateRound(page: import('@playwright/test').Page) {
-	await page.getByTitle('Click to Generate').first().click();
-	await expect(page.getByTestId('measure-slider')).toBeVisible();
-}
-
 function inspectNotationBoxes(page: import('@playwright/test').Page) {
 	return page.evaluate(() => {
 		const roots = [
@@ -36,12 +31,11 @@ test.describe('notation scroll overflow', () => {
 		page,
 	}) => {
 		await page.goto('/');
+		await expect(page.getByTestId('measure-slider')).toBeVisible();
 		await switchToNotation(page);
 
 		for (let round = 0; round < 8; round += 1) {
-			if (round === 0) {
-				await generateRound(page);
-			} else {
+			if (round > 0) {
 				await page.getByRole('button', { name: 'New' }).click();
 				await expect(page.getByTestId('measure-slider')).toBeVisible();
 			}

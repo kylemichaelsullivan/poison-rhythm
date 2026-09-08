@@ -1,8 +1,6 @@
 export {
 	createEmptyRichMeasure,
 	type GameState,
-	type LegacyRhythmMeasure,
-	legacyToRichMeasure,
 	MEASURE_LENGTH,
 	type PoisonMeta,
 	REST_MEASURE,
@@ -10,7 +8,8 @@ export {
 	type RhythmStep,
 	type RichRhythmMeasure,
 	type Round,
+	rhythmToRichMeasure,
 	richMeasuresEqual,
-	richToLegacyMeasure,
+	richToRhythmMeasure,
 	type StickingHand,
 } from './rhythm';

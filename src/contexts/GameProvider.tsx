@@ -3,21 +3,18 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { GameContext } from '@/contexts/GameContext';
 import { usePreferences } from '@/contexts/PreferencesContext';
 import { useSettings } from '@/contexts/SettingsContext';
-import type { VisualHint } from '@/lib/game-modes';
+import {
+	createRoundForMode,
+	onMeasureCompleteForMode,
+	type VisualHint,
+} from '@/lib/game-modes';
 import { isEndlessMode } from '@/lib/settings-schema';
 import type { RhythmMeasure, Round } from '@/types';
-import { richToLegacyMeasure } from '@/types';
+import { richToRhythmMeasure } from '@/types';
 
-type GameModesModule = typeof import('@/lib/game-modes');
 type RhythmModule = typeof import('@/lib/rhythm');
 
-function preloadGameEngine(
-	gameModesRef: MutableRefObject<GameModesModule | null>,
-	rhythmRef: MutableRefObject<RhythmModule | null>,
-) {
-	void import('@/lib/game-modes').then((module) => {
-		gameModesRef.current = module;
-	});
+function preloadRhythm(rhythmRef: MutableRefObject<RhythmModule | null>) {
 	void import('@/lib/rhythm').then((module) => {
 		rhythmRef.current = module;
 	});
@@ -26,11 +23,19 @@ function preloadGameEngine(
 export function GameProvider({ children }: { children: ReactNode }) {
 	const { difficulty, subdivisionLevel } = usePreferences();
 	const { settings } = useSettings();
-	const [round, setRound] = useState<Round | null>(null);
+	// Sync seed from storage-hydrated settings so first paint already has a round
+	// (avoids empty prompt → MIDI roll flash from async init).
+	const [round, setRound] = useState<Round | null>(() =>
+		createRoundForMode({
+			difficulty,
+			subdivisionLevel,
+			settings,
+			roundNumber: 1,
+		}),
+	);
 	const [currentIndex, setCurrentIndexState] = useState(0);
-	const [roundNumber, setRoundNumber] = useState(0);
+	const [roundNumber, setRoundNumber] = useState(1);
 	const [visualHints, setVisualHints] = useState<VisualHint[]>([]);
-	const gameModesRef = useRef<GameModesModule | null>(null);
 	const rhythmRef = useRef<RhythmModule | null>(null);
 
 	useEffect(() => {
@@ -38,7 +43,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
 		const run = () => {
 			if (!cancelled) {
-				preloadGameEngine(gameModesRef, rhythmRef);
+				preloadRhythm(rhythmRef);
 			}
 		};
 
@@ -58,57 +63,47 @@ export function GameProvider({ children }: { children: ReactNode }) {
 	}, []);
 
 	const measures: RhythmMeasure[] = useMemo(
-		() => (round ? round.measures.map(richToLegacyMeasure) : []),
+		() => (round ? round.measures.map(richToRhythmMeasure) : []),
 		[round],
 	);
 
 	const poisonRhythm: RhythmMeasure | null = useMemo(
-		() => (round ? richToLegacyMeasure(round.poisonMeasure) : null),
+		() => (round ? richToRhythmMeasure(round.poisonMeasure) : null),
 		[round],
 	);
 
 	const handleNewRound = useCallback(
 		(overrides?: { difficulty?: number }) => {
-			void (async () => {
-				const gameModes =
-					gameModesRef.current ?? (await import('@/lib/game-modes'));
-				gameModesRef.current = gameModes;
-				const nextRoundNumber = roundNumber + 1;
-				const newRound = gameModes.createRoundForMode({
-					difficulty: overrides?.difficulty ?? difficulty,
-					subdivisionLevel,
-					settings,
-					roundNumber: nextRoundNumber,
-				});
-				setRound(newRound);
-				setCurrentIndexState(0);
-				setRoundNumber(nextRoundNumber);
-				setVisualHints([]);
-			})();
+			const nextRoundNumber = roundNumber + 1;
+			const newRound = createRoundForMode({
+				difficulty: overrides?.difficulty ?? difficulty,
+				subdivisionLevel,
+				settings,
+				roundNumber: nextRoundNumber,
+			});
+			setRound(newRound);
+			setCurrentIndexState(0);
+			setRoundNumber(nextRoundNumber);
+			setVisualHints([]);
 		},
 		[difficulty, subdivisionLevel, settings, roundNumber],
 	);
 
 	const handleReuseRound = useCallback(() => {
 		if (!round) return;
-		void (async () => {
-			const gameModes =
-				gameModesRef.current ?? (await import('@/lib/game-modes'));
-			gameModesRef.current = gameModes;
-			const newRound = gameModes.createRoundForMode({
-				difficulty,
-				subdivisionLevel,
-				settings,
-				roundNumber,
-			});
-			setRound({
-				...newRound,
-				poisonMeasure: round.poisonMeasure,
-				seed: round.seed,
-			});
-			setCurrentIndexState(0);
-			setVisualHints([]);
-		})();
+		const newRound = createRoundForMode({
+			difficulty,
+			subdivisionLevel,
+			settings,
+			roundNumber,
+		});
+		setRound({
+			...newRound,
+			poisonMeasure: round.poisonMeasure,
+			seed: round.seed,
+		});
+		setCurrentIndexState(0);
+		setVisualHints([]);
 	}, [difficulty, subdivisionLevel, settings, round, roundNumber]);
 
 	const setCurrentIndex = useCallback(
@@ -146,10 +141,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
 		(measureIndex: number): boolean => {
 			if (!round) return true;
 
-			const gameModes = gameModesRef.current;
-			if (!gameModes) return false;
-
-			const result = gameModes.onMeasureCompleteForMode(
+			const result = onMeasureCompleteForMode(
 				{ difficulty, subdivisionLevel, settings, roundNumber },
 				round,
 				measureIndex,
