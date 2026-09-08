@@ -90,13 +90,6 @@ export {
 	generateMeasure,
 	generateRound,
 } from './rhythm';
-export {
-	generateRandomMeasure,
-	generateRandomRichMeasure,
-	legacyMeasureToRich,
-	QUARTER_NOTES,
-	richMeasureToLegacy,
-} from './rhythm-generator';
 export { countHits, isValidRhythm, rhythmsEqual } from './rhythm-utils';
 export {
 	scrollAnimationClass,

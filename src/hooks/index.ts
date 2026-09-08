@@ -5,7 +5,6 @@ export { useMeasurePlaybackSync } from './useMeasurePlaybackSync';
 export { useMetronomeBeat } from './useMetronomeBeat';
 export { useMusiSyncFont } from './useMusiSyncFont';
 export { usePendingDifficulty } from './usePendingDifficulty';
-export { usePoisonGame } from './usePoisonGame';
 export { useSmoothNotationCursor } from './useSmoothNotationCursor';
 export { useSoftDisableFocus } from './useSoftDisableFocus';
 export { useTapTempo } from './useTapTempo';

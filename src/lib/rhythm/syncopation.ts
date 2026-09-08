@@ -1,7 +1,7 @@
 import { DOWN_BEATS, WEAK_BEATS } from './grid';
 import type { PRNG } from './prng';
 
-/** Placement bias driven by difficulty only (matches pre-spec rhythm-generator). */
+/** Placement bias driven by difficulty only. */
 export function pickHitIndices(
 	allowed: number[],
 	hits: number,
