@@ -1,16 +1,18 @@
 import clsx from 'clsx';
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { useSettings } from '@/contexts';
+import { loadMusiSyncFont } from '@/lib/notation';
 import type { RhythmRenderMode } from '@/lib/settings-schema';
 import { shouldShowSticking } from '@/lib/settings-schema';
 import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
 import { MeasureCell } from '.';
 
-const MeasureNotation = lazy(() =>
+const measureNotationImport = () =>
 	import('./MeasureNotation').then((module) => ({
 		default: module.MeasureNotation,
-	})),
-);
+	}));
+
+const MeasureNotation = lazy(measureNotationImport);
 
 type MeasureGridProps = {
 	measure: RhythmMeasure;
@@ -55,19 +57,19 @@ function MeasureCellGrid({
 	);
 }
 
-function NotationFallback({
-	measure,
-	richMeasure,
-	playback = false,
-	hidden = false,
-}: MeasureGridProps) {
+/** Notation-shaped shell shown while the lazy notation chunk loads. */
+function NotationFallback({ hidden = false }: { hidden?: boolean }) {
 	return (
-		<MeasureCellGrid
-			measure={measure}
-			richMeasure={richMeasure}
-			playback={playback}
-			hidden={hidden}
-		/>
+		<output
+			className={clsx(
+				'MeasureNotation relative flex w-full items-center justify-center border border-mid rounded-lg px-3 py-4',
+				hidden && 'opacity-0',
+			)}
+			aria-live='polite'
+			aria-busy='true'
+		>
+			<span className='text-sm text-muted'>Loading Rhythm…</span>
+		</output>
 	);
 }
 
@@ -81,18 +83,15 @@ export function MeasureGrid({
 	const { settings } = useSettings();
 	const renderMode = renderModeProp ?? settings.rhythmRenderMode;
 
+	useEffect(() => {
+		if (renderMode !== 'notation') return;
+		void measureNotationImport();
+		void loadMusiSyncFont();
+	}, [renderMode]);
+
 	if (renderMode === 'notation') {
 		return (
-			<Suspense
-				fallback={
-					<NotationFallback
-						measure={measure}
-						richMeasure={richMeasure}
-						playback={playback}
-						hidden={hidden}
-					/>
-				}
-			>
+			<Suspense fallback={<NotationFallback hidden={hidden} />}>
 				<MeasureNotation
 					measure={measure}
 					richMeasure={richMeasure}
