@@ -80,12 +80,11 @@ Provider tree in `main.tsx`: `ThemeProvider` → `SettingsProvider` → `Prefere
 
 ### Rhythm types and generation
 
-- **RhythmMeasure**: Legacy `boolean[]` grid (`true` = hit); still used for display adapters
-- **RichRhythmMeasure**: `RhythmStep[]` with optional accent, sticking; used by the engine
+- **RhythmMeasure**: Hit/rest `boolean[]` grid (`true` = hit) — piano-roll / playback projection
+- **RichRhythmMeasure**: `RhythmStep[]` with optional accent, sticking — engine + notation metadata
 - **Round**: `{ measures, poisonIndex, seed, poisonMeasure }`
 - **Engine**: `generateMeasure` / `generateRound` from `@/lib/rhythm` — pass `difficulty`, `subdivisionLevel`, `settings`, `seed`
 - **Game modes**: `createRoundForMode`, `onMeasureCompleteForMode` from `@/lib/game-modes`
-- **Legacy**: `generateRandomMeasure` from `@/lib/rhythm-generator` (used by `usePoisonGame`)
 - **Utils**: `rhythmsEqual`, `richMeasuresEqual`, adapters in `@/types/rhythm`
 
 ### Notation and display

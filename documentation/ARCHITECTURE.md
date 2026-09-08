@@ -207,12 +207,12 @@ Playback cursor: `useSmoothNotationCursor` interpolates position across `Notatio
 
 | Type | Description |
 |------|-------------|
-| `RhythmMeasure` | Legacy `boolean[]` (16 cells) |
+| `RhythmMeasure` | Hit/rest `boolean[]` (16 cells) for grid/roll and playback |
 | `RichRhythmMeasure` | `RhythmStep[]` with accent/sticking metadata |
 | `Round` | Generated round with seed and poison index |
 | `GameState` | Round + index + active game mode |
 
-Adapters: `legacyToRichMeasure`, `richToLegacyMeasure` in `src/types/rhythm.ts`.
+Adapters: `rhythmToRichMeasure`, `richToRhythmMeasure` in `src/types/rhythm.ts`.
 
 ## Tests
 

@@ -198,7 +198,7 @@ Modules under `src/lib/rhythm/`:
 - `prng.ts` — seeded generation for reproducibility
 - `generate-measure.ts`, `generate-round.ts` — orchestrators
 
-Legacy `boolean[]` grids remain as `RhythmMeasure`; rich data uses `RichRhythmMeasure` (`RhythmStep[]`). Adapters live in `src/types/rhythm.ts`.
+`RhythmMeasure` is the hit/rest `boolean[]` grid (piano-roll / playback). `RichRhythmMeasure` (`RhythmStep[]`) adds accent and sticking for generation and notation. Adapters live in `src/types/rhythm.ts`.
 
 ### Notation display
 
