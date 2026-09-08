@@ -27,7 +27,7 @@ export function PoisonMeasureFrame({
 			{hidden && hiddenLabel ? (
 				<output className='absolute inset-0 flex items-center justify-center rounded-lg border border-dashed border-mid text-mid'>
 					<Row gap='2' align='center'>
-						<Icon svg={EyeIcon} size='sm' inline />
+						<Icon svg={EyeIcon} size='md' inline />
 						<span className='text-sm'>{hiddenLabel}</span>
 					</Row>
 				</output>

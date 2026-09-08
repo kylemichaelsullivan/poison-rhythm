@@ -55,6 +55,8 @@ export function MeasuresSection({ onNewPoison }: MeasuresSectionProps) {
 			pressed={showNext}
 			pressedIcon={EyeIcon}
 			unpressedIcon={EyeIcon}
+			variant='header'
+			grow={false}
 			onPressedChange={(visible) =>
 				updateSettings({ showNextMeasure: visible })
 			}
@@ -73,7 +75,7 @@ export function MeasuresSection({ onNewPoison }: MeasuresSectionProps) {
 			>
 				<Section
 					title='Measures'
-					headerLeading={bucketMode ? nextMeasureToggle : undefined}
+					headerLeading={nextMeasureToggle}
 					headerAction={
 						bucketMode ? (
 							<DisplayModeTrigger
@@ -81,9 +83,7 @@ export function MeasuresSection({ onNewPoison }: MeasuresSectionProps) {
 								scrollEnabled={scrollEnabled}
 								onClick={() => setDisplayOpen(true)}
 							/>
-						) : (
-							nextMeasureToggle
-						)
+						) : undefined
 					}
 				>
 					<StableContentFrame

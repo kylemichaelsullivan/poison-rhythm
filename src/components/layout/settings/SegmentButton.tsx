@@ -52,7 +52,7 @@ export function SegmentButton({
 				))}
 			</span>
 		) : icon ? (
-			<Icon svg={icon} />
+			<Icon svg={icon} size={variant === 'header' ? 'md' : 'sm'} />
 		) : variant === 'checkbox' ? (
 			<span aria-hidden='true' className='block aspect-square w-5 h-5' />
 		) : (

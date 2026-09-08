@@ -74,7 +74,7 @@ export const roundPlayPauseButtonClassName =
 export const modifyTempoButtonClassName =
 	'absolute flex justify-center items-center border border-mid rounded bg-primary w-8 h-8 p-2 text-white transition hover:border-white hover:opacity-90 top-1/2 -translate-y-1/2 disabled:opacity-50';
 
-export type SegmentControlVariant = 'segment' | 'checkbox';
+export type SegmentControlVariant = 'segment' | 'checkbox' | 'header';
 
 /** Segment / toggle chip used in settings and similar option rows. */
 export function segmentControlClassName(
@@ -94,20 +94,27 @@ export function segmentControlClassName(
 ): string {
 	return clsx(
 		'flex items-center justify-center rounded border p-2 text-sm transition-colors',
+		variant === 'header' && 'size-9 shrink-0 p-1.5',
 		grow === true && 'flex-1',
 		grow === 'auto' && 'flex-auto',
 		className,
 		focusVisibleRingClassName,
 		disabled && 'cursor-not-allowed opacity-50',
 		isSelected
-			? 'border-primary bg-primary text-white'
+			? variant === 'header'
+				? 'border-primary bg-chrome text-black'
+				: 'border-primary bg-primary text-white'
 			: variant === 'checkbox'
 				? 'border-mid bg-light hover:border-primary hover:bg-surface-muted'
-				: 'border-mid bg-surface-muted text-muted hover:bg-chrome-hover hover:text-black',
+				: variant === 'header'
+					? 'border-mid bg-chrome text-mid hover:border-primary hover:text-black'
+					: 'border-mid bg-surface-muted text-muted hover:bg-chrome-hover hover:text-black',
 		disabled &&
 			!isSelected &&
 			(variant === 'checkbox'
 				? 'hover:border-mid hover:bg-light'
-				: 'hover:bg-surface-muted hover:text-muted'),
+				: variant === 'header'
+					? 'hover:border-mid hover:text-mid'
+					: 'hover:bg-surface-muted hover:text-muted'),
 	);
 }

@@ -27,6 +27,8 @@ export function PoisonVisibilityToggle({
 			unpressedIcon={EyeIcon}
 			title={actionLabel}
 			disabled={disabled}
+			variant={showLabel ? 'segment' : 'header'}
+			grow={showLabel}
 			onPressedChange={onChange}
 		/>
 	);
