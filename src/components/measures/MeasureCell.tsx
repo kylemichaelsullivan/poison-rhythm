@@ -27,8 +27,6 @@ export function MeasureCell({
 	const { subdivisionLevel } = usePreferences();
 	const { settings } = useSettings();
 	const { isMeasuresPlaying, subdivisionIndex } = useMetronome();
-	const isBeatBoundaryLeft = index % 4 === 0 && index > 0;
-	const isBeatBoundaryRight = (index + 1) % 4 === 0 && index < 15;
 	const showVisual = shouldShowVisualFeedback(settings.feedbackMode) && !hidden;
 	const isCurrentStep = shouldHighlightPlaybackStep({
 		playbackEnabled: playback,
@@ -44,12 +42,10 @@ export function MeasureCell({
 	return (
 		<div
 			className={clsx(
-				'MeasureCell relative aspect-square rounded-sm border border-mid',
-				value ? 'bg-primary' : 'bg-surface-muted',
-				isBeatBoundaryLeft && 'border-l-2 border-mid',
-				isBeatBoundaryRight && 'border-r-2 border-mid',
+				'MeasureCell relative aspect-square rounded-[3px]',
+				value ? 'bg-primary shadow-soft' : 'bg-surface-muted',
 				showStepHighlight &&
-					'ring-2 ring-black transition-[box-shadow] duration-200',
+					'ring-2 ring-primary ring-inset transition-shadow duration-200',
 				hidden && value && 'opacity-0',
 			)}
 			title={value ? (accent ? 'Accent Hit' : 'Hit') : 'Rest'}

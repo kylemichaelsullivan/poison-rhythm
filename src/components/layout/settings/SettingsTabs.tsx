@@ -46,8 +46,8 @@ export function SettingsTabs({
 								'SettingsTab px-1.5 py-2.5 text-sm font-medium transition-colors sm:px-2',
 								focusVisibleRingClassName,
 								isActive
-									? 'border-b-2 border-primary text-black'
-									: 'text-muted hover:text-dark',
+									? 'border-b-2 border-primary text-primary'
+									: 'text-muted hover:text-primary',
 							)}
 							role='tab'
 							aria-selected={isActive}

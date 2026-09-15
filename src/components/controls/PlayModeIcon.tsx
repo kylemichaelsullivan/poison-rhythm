@@ -7,7 +7,7 @@ type PlayModeBucketIconProps = {
 	className?: string;
 };
 
-/** Bucket glyph with favicon-adjacent mint + purple gradient when active. */
+/** Bucket glyph with favicon mint → purple gradient when active. */
 export function PlayModeBucketIcon({
 	active,
 	className,
@@ -30,10 +30,10 @@ export function PlayModeBucketIcon({
 					y2='88'
 					gradientUnits='userSpaceOnUse'
 				>
-					<stop offset='0%' stopColor='oklch(84% 0.1 155)' />
-					<stop offset='38%' stopColor='oklch(78% 0.12 165)' />
-					<stop offset='52%' stopColor='oklch(58% 0.24 312)' />
-					<stop offset='100%' stopColor='oklch(46% 0.22 295)' />
+					<stop offset='0%' stopColor='var(--color-brand-mint-bright)' />
+					<stop offset='38%' stopColor='var(--color-brand-mint)' />
+					<stop offset='62%' stopColor='var(--color-brand-purple)' />
+					<stop offset='100%' stopColor='var(--color-brand-purple-deep)' />
 				</linearGradient>
 			</defs>
 			<path

@@ -6,7 +6,10 @@ import { ActionButton } from './button';
 export function Header() {
 	return (
 		<header
-			className={clsx('Header border-b border-mid', appChromeBarClassName)}
+			className={clsx(
+				'Header border-b-2 border-primary/35',
+				appChromeBarClassName,
+			)}
 		>
 			<ShowNotes />
 			<AppTitle />

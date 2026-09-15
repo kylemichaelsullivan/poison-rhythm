@@ -32,25 +32,39 @@ function MeasureCellGrid({
 	const { settings } = useSettings();
 	const showSticking = shouldShowSticking(settings);
 
+	const beats = [0, 1, 2, 3] as const;
+
 	return (
 		<div
 			className={clsx(
-				'MeasureCellGrid grid grid-cols-16 gap-1 w-full border border-mid rounded-lg p-2',
+				'MeasureCellGrid grid grid-cols-4 gap-2 w-full border-2 border-primary/25 rounded-lg p-2 bg-primary/5 shadow-soft sm:gap-2.5',
 				showSticking && 'pb-4',
 			)}
 		>
-			{measure.map((cell, i) => {
-				const step = richMeasure?.[i];
+			{beats.map((beat) => {
+				const start = beat * 4;
 				return (
-					<MeasureCell
-						value={cell}
-						playback={playback}
-						index={i}
-						accent={step?.accent}
-						sticking={step?.sticking}
-						hidden={hidden}
-						key={`${i}-${cell}`}
-					/>
+					<div
+						className='MeasureBeatGroup grid grid-cols-4 gap-px overflow-hidden rounded-md border border-primary/30 bg-surface p-px'
+						data-beat={beat + 1}
+						key={beat}
+					>
+						{measure.slice(start, start + 4).map((cell, offset) => {
+							const i = start + offset;
+							const step = richMeasure?.[i];
+							return (
+								<MeasureCell
+									value={cell}
+									playback={playback}
+									index={i}
+									accent={step?.accent}
+									sticking={step?.sticking}
+									hidden={hidden}
+									key={`${i}-${cell}`}
+								/>
+							);
+						})}
+					</div>
 				);
 			})}
 		</div>
@@ -62,7 +76,7 @@ function NotationFallback({ hidden = false }: { hidden?: boolean }) {
 	return (
 		<output
 			className={clsx(
-				'MeasureNotation relative flex w-full items-center justify-center border border-mid rounded-lg px-3 py-4',
+				'MeasureNotation relative flex w-full items-center justify-center border-2 border-primary/30 rounded-lg px-3 py-4 bg-primary/5 shadow-soft',
 				hidden && 'opacity-0',
 			)}
 			aria-live='polite'

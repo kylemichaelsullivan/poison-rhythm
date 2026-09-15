@@ -1,51 +1,171 @@
 @import "tailwindcss";
 
 @theme {
-	/* Raw palette (OKLCH) */
-	--color-cyan-600: oklch(60.9% 0.126 221.723);
-	--color-orange-400: oklch(75% 0.183 55.934);
-	--color-stone-50: oklch(99.2% 0.001 106.423);
-	--color-stone-100: oklch(97.2% 0.002 106.423);
-	--color-stone-200: oklch(94.5% 0.003 48.717);
-	--color-stone-300: oklch(88.5% 0.004 48.717);
-	--color-stone-400: oklch(70.9% 0.01 56.259);
-	--color-stone-600: oklch(52% 0.01 56.259);
-	--color-stone-700: oklch(37.4% 0.01 67.558);
-	--color-stone-800: oklch(26.5% 0.008 67.558);
-	--color-stone-900: oklch(18.5% 0.005 49.25);
-	--color-stone-950: oklch(10.5% 0.004 49.25);
+	/*
+	 * Brand palette from the Poison favicon (potion bottle):
+	 * purple liquid + mint glass accents on near-neutral light / purple-ink dark.
+	 * Mint is for borders/accents — not page washes.
+	 * Each token: hex first (old browsers / Safari), then oklch when supported.
+	 */
 
-	/* Light theme */
-	--color-primary: light-dark(var(--color-cyan-600), var(--color-orange-400));
-	--color-on-primary: light-dark(var(--color-stone-50), var(--color-stone-950));
-	--color-secondary: light-dark(var(--color-orange-400), var(--color-cyan-600));
-	--color-light: light-dark(var(--color-stone-200), var(--color-stone-800));
-	--color-mid: light-dark(var(--color-stone-400), var(--color-stone-600));
-	--color-dark: light-dark(var(--color-stone-700), var(--color-stone-200));
-	--color-surface: light-dark(var(--color-stone-100), var(--color-stone-900));
+	/* Favicon-hued brand (chroma lifted vs raw samples for screen use) */
+	--color-brand-purple: #914893;
+	--color-brand-purple: oklch(52% 0.14 326);
+	--color-brand-purple-deep: #783b82;
+	--color-brand-purple-deep: oklch(46% 0.13 322);
+	--color-brand-purple-bright: #c17ac3;
+	--color-brand-purple-bright: oklch(68% 0.13 326);
+	--color-brand-mint: #6eba66;
+	--color-brand-mint: oklch(72% 0.14 142);
+	--color-brand-mint-deep: #509a51;
+	--color-brand-mint-deep: oklch(62% 0.13 144);
+	--color-brand-mint-bright: #96d88f;
+	--color-brand-mint-bright: oklch(82% 0.12 142);
+	--color-brand-cork: #ab7b49;
+	--color-brand-cork: oklch(62% 0.09 66);
+
+	/* Near-neutral light inks (tiny purple whisper) / purple-ink dark */
+	--color-ink-50: #faf9fc;
+	--color-ink-50: oklch(98.5% 0.004 300);
+	--color-ink-100: #f2f1f5;
+	--color-ink-100: oklch(96% 0.006 300);
+	--color-ink-200: #e5e3e9;
+	--color-ink-200: oklch(92% 0.008 300);
+	--color-ink-300: #d2d0d7;
+	--color-ink-300: oklch(86% 0.01 300);
+	--color-ink-400: #9f9da5;
+	--color-ink-400: oklch(70% 0.012 300);
+	--color-ink-600: #5f5c65;
+	--color-ink-600: oklch(48% 0.015 300);
+	--color-ink-700: #434149;
+	--color-ink-700: oklch(38% 0.015 300);
+	--color-ink-800: #2a1f2c;
+	--color-ink-800: oklch(25% 0.03 326);
+	--color-ink-900: #1a121c;
+	--color-ink-900: oklch(18% 0.025 326);
+	--color-ink-950: #0d090e;
+	--color-ink-950: oklch(12% 0.02 326);
+
+	/*
+	 * Semantic tokens: hex light values first, then light-dark() when supported.
+	 * (Unsupported light-dark() drops the whole declaration → hex fallback remains.)
+	 */
+	--color-primary: var(--color-brand-purple-deep);
+	--color-primary: light-dark(
+		var(--color-brand-purple-deep),
+		var(--color-brand-purple-bright)
+	);
+	--color-on-primary: var(--color-ink-50);
+	/* Favicon mint is the natural complement border for purple fills */
+	--color-primary-border: var(--color-brand-mint);
+	--color-primary-border: light-dark(
+		var(--color-brand-mint),
+		var(--color-brand-mint-bright)
+	);
+
+	--color-secondary: var(--color-brand-mint);
+	--color-secondary: light-dark(
+		var(--color-brand-mint-deep),
+		var(--color-brand-mint-bright)
+	);
+	--color-on-secondary: var(--color-ink-950);
+	--color-on-secondary: light-dark(var(--color-ink-950), var(--color-ink-950));
+	/* Purple complement border for mint fills */
+	--color-secondary-border: var(--color-brand-purple);
+	--color-secondary-border: light-dark(
+		var(--color-brand-purple-deep),
+		var(--color-brand-purple-bright)
+	);
+
+	--color-light: var(--color-ink-200);
+	--color-light: light-dark(var(--color-ink-200), var(--color-ink-800));
+	--color-mid: var(--color-ink-400);
+	--color-mid: light-dark(
+		var(--color-ink-400),
+		color-mix(
+			in oklch,
+			var(--color-brand-purple-bright) 45%,
+			var(--color-ink-800)
+		)
+	);
+	--color-dark: var(--color-ink-700);
+	--color-dark: light-dark(var(--color-ink-700), var(--color-ink-200));
+	--color-surface: var(--color-ink-100);
+	--color-surface: light-dark(var(--color-ink-100), var(--color-ink-900));
+	--color-surface-muted: var(--color-ink-300);
 	--color-surface-muted: light-dark(
-		var(--color-stone-300),
-		var(--color-stone-800)
+		var(--color-ink-300),
+		color-mix(in oklch, var(--color-brand-purple) 28%, var(--color-ink-800))
 	);
+
+	--color-chrome: var(--color-ink-100);
 	--color-chrome: light-dark(
-		var(--color-stone-100),
-		color-mix(in oklch, var(--color-stone-800) 72%, var(--color-stone-950))
+		var(--color-ink-100),
+		color-mix(in oklch, var(--color-brand-purple) 18%, var(--color-ink-900))
 	);
+	--color-chrome-hover: var(--color-ink-200);
 	--color-chrome-hover: light-dark(
-		var(--color-stone-200),
-		var(--color-stone-800)
+		var(--color-ink-200),
+		color-mix(
+			in oklch,
+			var(--color-brand-purple-bright) 24%,
+			var(--color-ink-800)
+		)
 	);
-	--color-white: light-dark(var(--color-stone-50), var(--color-stone-950));
-	--color-black: light-dark(var(--color-stone-950), var(--color-stone-50));
-	--color-scrim: color-mix(in oklch, var(--color-black) 50%, transparent);
-	--color-brand-gradient-a: oklch(58% 0.24 312);
-	--color-brand-gradient-b: oklch(78% 0.16 155);
-	--color-accent: light-dark(oklch(70% 0.18 85), oklch(75% 0.16 85));
-	--color-muted: light-dark(var(--color-stone-800), var(--color-stone-300));
+	--color-white: var(--color-ink-50);
+	--color-white: light-dark(var(--color-ink-50), var(--color-ink-950));
+	--color-black: var(--color-ink-950);
+	--color-black: light-dark(var(--color-ink-950), var(--color-ink-50));
+
+	--color-scrim: rgba(13, 9, 14, 0.55);
+	--color-scrim: color-mix(
+		in oklch,
+		var(--color-brand-purple-deep) 55%,
+		transparent
+	);
+
+	--color-brand-gradient-a: var(--color-brand-purple);
+	--color-brand-gradient-b: var(--color-brand-mint);
+	--color-accent: var(--color-brand-cork);
+	--color-accent: light-dark(
+		var(--color-brand-cork),
+		var(--color-brand-mint-bright)
+	);
+	--color-muted: var(--color-ink-700);
+	--color-muted: light-dark(var(--color-ink-700), var(--color-ink-300));
 
 	--font-musisync: "MusiSync", ui-monospace, monospace;
 
+	/*
+	 * Elevation: short, low-opacity, slightly purple-tinted — not stacked black.
+	 * Shadow *colors* use light-dark(); full shadow stacks are composed from them
+	 * (light-dark() cannot wrap comma-separated box-shadow lists).
+	 */
+	--shadow-color: rgba(13, 9, 14, 0.08);
+	--shadow-color: light-dark(
+		color-mix(in oklch, var(--color-ink-950) 9%, transparent),
+		color-mix(in oklch, black 48%, transparent)
+	);
+	--shadow-accent-color: rgba(120, 59, 130, 0.1);
+	--shadow-accent-color: light-dark(
+		color-mix(in oklch, var(--color-brand-purple) 12%, transparent),
+		color-mix(in oklch, var(--color-brand-purple-bright) 18%, transparent)
+	);
+
+	--shadow-soft:
+		0 1px 2px var(--shadow-color), 0 1px 3px var(--shadow-accent-color);
+	--shadow-raised:
+		0 2px 4px var(--shadow-color), 0 6px 16px var(--shadow-accent-color);
+	--shadow-overlay:
+		0 10px 28px var(--shadow-color), 0 4px 14px var(--shadow-accent-color);
+	--shadow-control: 0 1px 2px var(--shadow-color);
+
 	--shadow-secondary-glow: 0 0 0.5rem var(--color-secondary);
+	--shadow-primary-glow:
+		0 1px 2px var(--shadow-color), 0 0 0.65rem rgba(120, 59, 130, 0.35);
+	--shadow-primary-glow:
+		0 1px 2px var(--shadow-color),
+		0 0 0.65rem color-mix(in oklch, var(--color-primary) 42%, transparent);
 }
 
 @font-face {
@@ -73,7 +193,20 @@
 
 @layer base {
 	html {
-		@apply bg-white text-black;
+		background-color: var(--color-white);
+		color: var(--color-black);
+		background-image:
+			radial-gradient(
+				110% 75% at 100% 0%,
+				color-mix(in oklch, var(--color-brand-purple) 14%, transparent),
+				transparent 55%
+			),
+			radial-gradient(
+				90% 55% at 0% 100%,
+				color-mix(in oklch, var(--color-brand-cork) 10%, transparent),
+				transparent 50%
+			);
+		background-attachment: fixed;
 	}
 
 	button,
@@ -130,26 +263,47 @@
 	}
 }
 
-/* Brand title: slow lava-lamp gradient clipped to glyphs (modal always, triggers on hover) */
+/*
+ * Brand title: slow lava-lamp gradient clipped to glyphs
+ * (modal always; header/footer triggers on hover / focus-visible).
+ * Solid primary color first — Safari / old browsers without background-clip:text.
+ */
 .AppTitleBrand,
-.AppTitleBrandTrigger:hover {
-	background-image: linear-gradient(
-		125deg,
-		var(--color-primary) 0%,
-		var(--color-brand-gradient-a) 28%,
-		var(--color-secondary) 52%,
-		var(--color-brand-gradient-b) 76%,
-		var(--color-primary) 100%
-	);
-	background-size: 240% 240%;
-	background-position: 0% 50%;
-	-webkit-background-clip: text;
-	background-clip: text;
-	color: transparent;
-	filter: drop-shadow(
-		0 0 0.45rem color-mix(in oklch, var(--color-primary) 40%, transparent)
-	);
-	animation: app-title-brand-lava 22s ease-in-out infinite;
+.AppTitleBrandTrigger:hover,
+.AppTitleBrandTrigger:focus-visible {
+	color: var(--color-primary);
+	filter: drop-shadow(0 0 0.45rem rgba(145, 72, 147, 0.35));
+}
+
+@supports (color: color-mix(in oklch, red, blue)) {
+	.AppTitleBrand,
+	.AppTitleBrandTrigger:hover,
+	.AppTitleBrandTrigger:focus-visible {
+		filter: drop-shadow(
+			0 0 0.45rem color-mix(in oklch, var(--color-primary) 35%, transparent)
+		);
+	}
+}
+
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+	.AppTitleBrand,
+	.AppTitleBrandTrigger:hover,
+	.AppTitleBrandTrigger:focus-visible {
+		background-image: linear-gradient(
+			125deg,
+			var(--color-primary) 0%,
+			var(--color-brand-gradient-a) 28%,
+			var(--color-brand-cork) 52%,
+			var(--color-brand-gradient-b) 76%,
+			var(--color-primary) 100%
+		);
+		background-size: 240% 240%;
+		background-position: 0% 50%;
+		-webkit-background-clip: text;
+		background-clip: text;
+		color: transparent;
+		animation: app-title-brand-lava 22s ease-in-out infinite;
+	}
 }
 
 @keyframes app-title-brand-lava {
@@ -170,7 +324,8 @@
 
 @media (prefers-reduced-motion: reduce) {
 	.AppTitleBrand,
-	.AppTitleBrandTrigger:hover {
+	.AppTitleBrandTrigger:hover,
+	.AppTitleBrandTrigger:focus-visible {
 		animation: none;
 		background-position: 40% 50%;
 	}
@@ -181,12 +336,9 @@
 	width: 95vw;
 }
 
-/* 16-column grid for 4/4 measure with 16th-note subdivisions */
-.grid-cols-16 {
-	grid-template-columns: repeat(16, minmax(0, 1fr));
-}
+/* Beat groups hold 4 sixteenth-cells; subdivision modes hide/span within each group */
 
-/* Quarters only: show 1st, 5th, 9th, 13th cells (4n+1); each spans 4, aspect 4/1 */
+/* Quarters only: show 1st cell in each beat group; span full beat */
 .grid-quarters .MeasureCell:not(:nth-child(4n + 1)) {
 	display: none;
 }
@@ -195,7 +347,7 @@
 	grid-column: span 4;
 }
 
-/* Eighths: show odd cells; each spans 2, aspect 2/1 */
+/* Eighths: show odd cells in each beat group; each spans half a beat */
 .grid-eighths .MeasureCell:nth-child(even) {
 	display: none;
 }
@@ -213,14 +365,6 @@
 		aspect-ratio: 2 / 1;
 		grid-column: span 2;
 	}
-}
-
-@utility text-muted {
-	color: var(--color-muted);
-}
-
-@utility ring-accent {
-	--tw-ring-color: var(--color-accent);
 }
 
 /* MusiSync notation — static files in public/fonts; preload in index.html */

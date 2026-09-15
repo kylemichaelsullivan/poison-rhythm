@@ -21,7 +21,7 @@ export function Section({
 	return (
 		<section
 			className={clsx(
-				'Section flex flex-col gap-4 border border-mid rounded-lg w-full p-4',
+				'Section flex flex-col gap-4 border-2 border-primary/25 rounded-lg w-full p-4',
 				darkSurfaceClassName,
 			)}
 		>

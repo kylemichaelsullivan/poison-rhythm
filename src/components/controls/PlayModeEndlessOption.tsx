@@ -12,12 +12,12 @@ export function PlayModeEndlessOption({
 	onChange,
 }: PlayModeEndlessOptionProps) {
 	return (
-		<label className='PlayModeEndlessOption flex cursor-pointer gap-3 rounded-md border border-mid bg-white px-3 py-2.5'>
+		<label className='PlayModeEndlessOption flex cursor-pointer gap-3 rounded-md border border-mid bg-white px-3 py-2.5 shadow-soft'>
 			<span
 				className={clsx(
 					'mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-colors',
 					endless
-						? 'border-primary bg-primary text-white'
+						? 'border-primary-border bg-primary text-on-primary'
 						: 'border-mid bg-surface text-dark',
 				)}
 				aria-hidden

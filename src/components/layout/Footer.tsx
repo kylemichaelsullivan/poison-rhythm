@@ -6,7 +6,10 @@ import { Copyright } from './Copyright';
 export function Footer() {
 	return (
 		<footer
-			className={clsx('Footer border-t border-mid', appChromeBarClassName)}
+			className={clsx(
+				'Footer border-t-2 border-primary/30',
+				appChromeBarClassName,
+			)}
 		>
 			<Metronome />
 			<Copyright />

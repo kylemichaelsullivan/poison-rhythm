@@ -37,7 +37,7 @@ export function MeasureNotation({
 	return (
 		<div
 			className={clsx(
-				'MeasureNotation relative w-full border border-mid rounded-lg px-3 py-4',
+				'MeasureNotation relative w-full border-2 border-primary/30 rounded-lg px-3 py-4 bg-primary/5 shadow-soft',
 				stickingEnabled && 'pb-4',
 				accentsEnabled && 'pt-6',
 				hidden && 'opacity-0',

@@ -109,7 +109,7 @@ export function Modal({
 
 	const sizeClassName =
 		size === 'xl'
-			? 'h-[80vh] max-h-[80vh] w-[80vw] max-w-none'
+			? 'h-[80vh] max-h-[80vh] w-[80vw] max-w-3xl'
 			: size === 'lg'
 				? 'max-w-lg'
 				: size === 'md'

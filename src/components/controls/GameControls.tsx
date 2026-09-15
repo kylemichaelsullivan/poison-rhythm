@@ -14,8 +14,8 @@ import { InfoGlyphButton } from './InfoGlyphButton';
 import { ModeBadgeTrigger } from './ModeBadgeTrigger';
 import { PlayModesModal } from './PlayModesModal';
 
-const CLASSIC_BADGE: GameModeHudBadge = {
-	label: 'CLASSIC',
+const POISON_BADGE: GameModeHudBadge = {
+	label: 'POISON',
 	tone: 'classic',
 };
 
@@ -31,7 +31,7 @@ export function GameControls() {
 	const [helpOpen, setHelpOpen] = useState(false);
 	const [modesOpen, setModesOpen] = useState(false);
 
-	const modeBadge = gameModeHudBadge(settings) ?? CLASSIC_BADGE;
+	const modeBadge = gameModeHudBadge(settings) ?? POISON_BADGE;
 
 	function onSelectMode(value: GameMode) {
 		updateSettings({ gameMode: value });

@@ -29,7 +29,7 @@ export function CurrentMeasureDisplay({
 		<div
 			className={clsx(
 				'CurrentMeasureDisplay w-full',
-				highlight && 'ring-1 ring-primary/30 rounded-lg',
+				highlight && 'ring-2 ring-primary/50 rounded-lg shadow-soft',
 			)}
 			data-counting-in={countingIn ? 'true' : 'false'}
 		>

@@ -23,7 +23,7 @@ export function NotationPlaybackCursor({
 
 	return (
 		<div
-			className='NotationPlaybackCursor pointer-events-none absolute inset-y-0 w-0.5 bg-black/70'
+			className='NotationPlaybackCursor pointer-events-none absolute inset-y-0 w-0.5 bg-primary shadow-[0_0_0.4rem_var(--color-primary)]'
 			style={{ left: `${leftPct}%`, transform: 'translateX(-50%)' }}
 			aria-hidden
 		/>

@@ -21,7 +21,7 @@ export function ShowNotesSlider({
 	return (
 		<div
 			className={clsx(
-				'ShowNotesSlider absolute shadow-lg w-40 left-0 top-full z-10 px-3 py-3 translate-y-1',
+				'ShowNotesSlider absolute shadow-overlay w-40 left-0 top-full z-10 px-3 py-3 translate-y-1',
 				controlSurfaceBaseClassName,
 			)}
 			role='dialog'

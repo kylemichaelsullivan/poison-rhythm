@@ -20,7 +20,7 @@ export function ConfirmRegenModal({
 					Difficulty changed. Regenerate pattern to apply new settings?
 				</Caption>
 				<ModalActions>
-					<Button variant='secondary' onClick={onCancel}>
+					<Button variant='ghost' onClick={onCancel}>
 						Cancel
 					</Button>
 					<Button variant='primary' modalInitialFocus onClick={onConfirm}>

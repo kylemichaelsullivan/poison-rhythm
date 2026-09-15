@@ -36,8 +36,8 @@ export function DescribedOptionCard<T extends string>({
 			className={clsx(
 				'DescribedOptionCard overflow-hidden rounded-lg border-2 transition-colors',
 				selected
-					? 'border-primary bg-surface shadow-sm'
-					: 'border-mid/80 bg-surface-muted hover:border-mid hover:bg-chrome',
+					? 'border-primary bg-primary/10 shadow-raised'
+					: 'border-mid/80 bg-surface-muted shadow-soft hover:border-primary/45 hover:bg-chrome hover:shadow-raised',
 			)}
 		>
 			<label
@@ -73,7 +73,7 @@ export function DescribedOptionCard<T extends string>({
 				</div>
 			</label>
 			{selected && selectedFooter ? (
-				<div className='border-t border-mid/80 bg-surface-muted/50 px-4 pb-4 pt-3'>
+				<div className='border-t border-mid/80 bg-surface-muted/60 px-4 pb-4 pt-3'>
 					{selectedFooter}
 				</div>
 			) : null}

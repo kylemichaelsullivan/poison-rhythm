@@ -17,14 +17,11 @@ type IconButtonProps = {
 
 const variantClassName: Record<IconButtonVariant, string> = {
 	info: clsx(
-		'flex size-6 shrink-0 items-center justify-center rounded-full border border-mid bg-surface-muted text-sm font-semibold leading-none text-black transition-colors',
-		'hover:border-primary hover:bg-mid',
+		'flex size-6 shrink-0 items-center justify-center rounded-full border border-mid bg-surface-muted text-sm font-semibold leading-none text-dark shadow-control transition-[colors,box-shadow]',
+		'hover:border-primary hover:bg-primary/10 hover:text-primary hover:shadow-soft',
 		'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface',
 	),
-	bare: clsx(
-		'rounded transition-opacity hover:opacity-80',
-		focusVisibleRingClassName,
-	),
+	bare: clsx('group rounded transition-colors', focusVisibleRingClassName),
 };
 
 export function IconButton({

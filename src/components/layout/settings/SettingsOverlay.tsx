@@ -8,7 +8,7 @@ export function SettingsOverlay() {
 	const [activeTab, setActiveTab] = useState<SettingsTabId>('mode');
 
 	return (
-		<div className='SettingsOverlay flex min-h-0 w-full flex-1 flex-col'>
+		<div className='SettingsOverlay mx-auto flex min-h-0 w-full max-w-xl flex-1 flex-col'>
 			<SettingsTabs activeTab={activeTab} onTabChange={setActiveTab}>
 				{activeTab === 'mode' && <GameSettingsPanel />}
 				{activeTab === 'sound' && <SoundSettingsPanel />}

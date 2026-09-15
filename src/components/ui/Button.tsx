@@ -17,11 +17,11 @@ type ButtonProps = {
 
 const variantClassName: Record<ButtonVariant, string> = {
 	primary:
-		'rounded border border-primary bg-primary px-3 py-1.5 text-sm text-white transition-opacity hover:opacity-90',
+		'rounded border-2 border-primary-border bg-primary px-3 py-1.5 text-sm text-on-primary shadow-primary-glow transition-[opacity,box-shadow] hover:opacity-90 hover:shadow-raised',
 	secondary:
-		'rounded border border-mid bg-surface-muted px-3 py-1.5 text-sm text-black transition-colors hover:bg-mid',
+		'rounded border border-mid bg-surface-muted px-3 py-1.5 text-sm text-black shadow-control transition-[colors,box-shadow] hover:border-primary hover:bg-primary/10 hover:text-primary hover:shadow-soft',
 	ghost:
-		'rounded border border-transparent bg-transparent px-3 py-1.5 text-sm text-black transition-colors hover:bg-mid',
+		'rounded border border-transparent bg-transparent px-3 py-1.5 text-sm text-dark transition-colors hover:bg-primary/10 hover:text-primary',
 };
 
 export function Button({
