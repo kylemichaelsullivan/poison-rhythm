@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>Poison Rhythm — Student Record</title>
+		<style>
+			@page {
+				size: letter;
+				margin: 0.55in;
+			}
+
+			* {
+				box-sizing: border-box;
+			}
+
+			body {
+				margin: 0;
+				color: #111;
+				font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia,
+					'Times New Roman', serif;
+				font-size: 11pt;
+				line-height: 1.35;
+			}
+
+			h1 {
+				margin: 0 0 0.15rem;
+				font-size: 18pt;
+				letter-spacing: 0.02em;
+			}
+
+			.subtitle {
+				margin: 0 0 0.85rem;
+				color: #444;
+				font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+				font-size: 9.5pt;
+			}
+
+			.meta {
+				display: grid;
+				grid-template-columns: 1.4fr 1fr 0.9fr;
+				gap: 0.55rem 0.75rem;
+				margin-bottom: 0.9rem;
+			}
+
+			.label {
+				display: block;
+				margin-bottom: 0.2rem;
+				font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+				font-size: 8pt;
+				font-weight: 600;
+				letter-spacing: 0.04em;
+				text-transform: uppercase;
+				color: #555;
+			}
+
+			.line {
+				min-height: 1.35rem;
+				border-bottom: 1px solid #222;
+			}
+
+			section {
+				margin-bottom: 0.85rem;
+			}
+
+			h2 {
+				margin: 0 0 0.4rem;
+				padding-bottom: 0.2rem;
+				border-bottom: 2px solid #111;
+				font-size: 11pt;
+				font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+				letter-spacing: 0.03em;
+				text-transform: uppercase;
+			}
+
+			table {
+				width: 100%;
+				border-collapse: collapse;
+				font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+				font-size: 8.5pt;
+			}
+
+			th,
+			td {
+				border: 1px solid #333;
+				padding: 0.28rem 0.3rem;
+				vertical-align: middle;
+			}
+
+			th {
+				background: #f2f2f2;
+				font-weight: 650;
+				text-align: left;
+			}
+
+			td.blank {
+				height: 1.45rem;
+			}
+
+			.checks {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 0.35rem 1rem;
+				font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+				font-size: 9.5pt;
+			}
+
+			.check {
+				display: flex;
+				align-items: center;
+				gap: 0.4rem;
+			}
+
+			.box {
+				display: inline-block;
+				width: 0.85rem;
+				height: 0.85rem;
+				border: 1.25px solid #222;
+				flex: 0 0 auto;
+			}
+
+			.notes {
+				min-height: 3.6rem;
+				border: 1px solid #333;
+				padding: 0.4rem;
+			}
+
+			.notes-lines {
+				height: 100%;
+				background-image: repeating-linear-gradient(
+					to bottom,
+					transparent 0,
+					transparent 1.15rem,
+					#ccc 1.15rem,
+					#ccc calc(1.15rem + 1px)
+				);
+			}
+
+			.footer {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 1rem;
+				margin-top: 0.9rem;
+				font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+				font-size: 9pt;
+			}
+
+			.small {
+				margin-top: 0.65rem;
+				color: #555;
+				font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+				font-size: 8pt;
+			}
+		</style>
+	</head>
+	<body>
+		<header>
+			<h1>Poison Rhythm — Student Record</h1>
+			<p class="subtitle">
+				Practice log for rhythm discrimination (poison pattern among decoys).
+			</p>
+		</header>
+
+		<div class="meta">
+			<div>
+				<span class="label">Student Name</span>
+				<div class="line"></div>
+			</div>
+			<div>
+				<span class="label">Class / Ensemble</span>
+				<div class="line"></div>
+			</div>
+			<div>
+				<span class="label">School Year</span>
+				<div class="line"></div>
+			</div>
+		</div>
+
+		<section>
+			<h2>Session Log</h2>
+			<table>
+				<thead>
+					<tr>
+						<th style="width: 12%">Date</th>
+						<th style="width: 9%">Diff. 1–5</th>
+						<th style="width: 11%">Subdivision</th>
+						<th style="width: 14%">Play Mode</th>
+						<th style="width: 11%">Display</th>
+						<th style="width: 9%">Tempo</th>
+						<th style="width: 12%">Found Poison?</th>
+						<th>Teacher Notes</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+					</tr>
+					<tr>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+					</tr>
+					<tr>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+					</tr>
+					<tr>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+					</tr>
+					<tr>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+					</tr>
+					<tr>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+					</tr>
+					<tr>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+					</tr>
+					<tr>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+					</tr>
+					<tr>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+					</tr>
+					<tr>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+						<td class="blank"></td>
+					</tr>
+				</tbody>
+			</table>
+			<p class="small">
+				Subdivision: 1/4 · 1/8 · 1/16 &nbsp;|&nbsp; Play mode: Poison Rhythm ·
+				Bucket · Endless &nbsp;|&nbsp; Display: Grid · Notation &nbsp;|&nbsp;
+				Found poison: Y / N / n/a
+			</p>
+		</section>
+
+		<section>
+			<h2>Skills Observed</h2>
+			<div class="checks">
+				<div class="check"><span class="box"></span> Steady pulse with the metronome</div>
+				<div class="check"><span class="box"></span> Reads / tracks subdivision grid</div>
+				<div class="check"><span class="box"></span> Matches poison by eye</div>
+				<div class="check"><span class="box"></span> Matches poison by ear</div>
+				<div class="check"><span class="box"></span> Succeeds with poison hidden in playback</div>
+				<div class="check"><span class="box"></span> Uses Listening → Playing (preview) well</div>
+				<div class="check"><span class="box"></span> Comfortable in Notation display</div>
+				<div class="check"><span class="box"></span> Ready to raise difficulty or subdivision</div>
+			</div>
+		</section>
+
+		<section>
+			<h2>Teacher Comments</h2>
+			<div class="notes"><div class="notes-lines"></div></div>
+		</section>
+
+		<div class="footer">
+			<div>
+				<span class="label">Teacher Signature</span>
+				<div class="line"></div>
+			</div>
+			<div>
+				<span class="label">Date</span>
+				<div class="line"></div>
+			</div>
+		</div>
+	</body>
+</html>

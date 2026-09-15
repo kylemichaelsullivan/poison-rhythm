@@ -1,6 +1,6 @@
 # Architecture
 
-Overview of Poison Rhythm’s engine, state, settings, and UI composition. See [README.md](../README.md) for getting started. Cursor conventions: [`.cursor/components.mdc`](../.cursor/components.mdc), [`.cursor/react.mdc`](../.cursor/react.mdc).
+Overview of Poison Rhythm’s engine, state, settings, and UI composition. See [README.md](../README.md) for getting started, [AGENTS.md](../AGENTS.md) for agent gotchas, and [TESTING.md](TESTING.md) for test suites. Cursor conventions: [`.cursor/components.mdc`](../.cursor/components.mdc), [`.cursor/react.mdc`](../.cursor/react.mdc).
 
 ## UI composition
 
@@ -36,7 +36,7 @@ flowchart TB
 | Atoms | `src/components/ui/` | `Button`, `IconButton`, `Caption`, `Stack`, `Row` |
 | Molecules | domain folders | `PlayModeOptionCard`, `ModalActions`, `MeasureCarouselChrome`, settings `EnableToggle` |
 | Composers | domain folders | `GameControls`, `MeasureSlider`, `ShowNotes`, `PoisonSection`, `Body` |
-| Hooks | `src/hooks/` | `usePendingDifficulty`, `useMeasurePlaybackSync`, `useHoverPinPopover`, `useSoftDisableFocus`, `useMusiSyncFont`, `useSmoothNotationCursor`, `useGameLoop` |
+| Hooks | `src/hooks/` | `usePendingDifficulty`, `useMeasurePlaybackSync`, `useHoverPinPopover`, `useSoftDisableFocus`, `useMusiSyncFont`, `useSmoothNotationCursor` |
 
 Rules of thumb:
 
@@ -55,7 +55,7 @@ Main page shell: `Header` → `Body` (`GameControls`, `PoisonSection`, `Measures
 | `PoisonSection` | `PoisonMeasureContent`, `PoisonMeasureFrame`, `DisplayModeModal` / `DisplayModeControls` |
 | `Body` | `useSoftDisableFocus` |
 
-Settings tab panels (`Mode`, `Sound`, `Appearance`) remain composition-only over `layout/settings/` atoms (`SettingsGroup`, `EnableToggle`, `When`, …). Play mode picking lives on the main page (mode badge → `PlayModesModal`). Display mode (grid / notation; scroll Coming Soon) lives on the Poison Rhythm section badge → `DisplayModeModal`.
+Settings shell: footer **Settings** → lazy `SettingsOverlay` → tabs `Mode` / `Sound` / `Appearance` over `layout/settings/` atoms (`SettingsGroup`, `EnableToggle`, `When`, …). Play mode picking lives on the main page (mode badge → `PlayModesModal`). Display mode (grid / notation; scroll Coming Soon) lives on the Poison Rhythm section badge → `DisplayModeModal`.
 
 ## State flow
 
@@ -96,6 +96,8 @@ flowchart TB
   engine --> round
   round --> measures
 ```
+
+`GameProvider` **sync-seeds** the first round in its `useState` initializer (`createRoundForMode`) so first paint already has measures (avoids empty prompt → flash). `EmptyStartPrompt` remains as a fallback if `round === null`, but normal play never clears the round to null. Prefer extending `GameProvider` over the unused `useGameLoop` hook.
 
 ## Complexity model
 
@@ -181,12 +183,15 @@ flowchart LR
 | `notation-events.ts` | Boolean grid → timed note/rest events |
 | `spell-onsets.ts` / `spell-rests.ts` | Contemporary duration spelling per subdivision level |
 | `duration-units.ts` | Cell ↔ duration mapping |
-| `beam-groups.ts` / `beam-notes.ts` / `beam-glyphs.ts` | Beamed eighth/sixteenth groups |
+| `beam-groups.ts` / `beam-notes.ts` / `beam-glyphs.ts` | Beamed eighth/sixteenth groups (exact patterns; `[1,2]` → derived U+E001, not stock `O`) |
+| `musisync-glyphs.ts` | Duration keys; dotted notes `i`/`j`/`d`; dotted rests = rest + `.` |
 | `events-to-musisync.ts` | Events → MusiSync glyph string |
 | `measure-to-notation.ts` | Flat `NotationStep[]` for overlays and playback cursor |
 | `load-musisync-font.ts` | `@font-face` preload; `useMusiSyncFont` in UI |
 
 Font assets: canonical copies in `src/assets/fonts/`; served from `public/fonts/` as static `/fonts/MusiSync.*` URLs. See [`src/assets/fonts/README.md`](../src/assets/fonts/README.md) for glyph keys and refresh steps.
+
+`MeasureGrid` lazy-loads `MeasureNotation` and prefetches the chunk + MusiSync font when `rhythmRenderMode === 'notation'` (notation-shaped loading shell instead of flashing the cell grid).
 
 Playback cursor: `useSmoothNotationCursor` interpolates position across `NotationStep` indices; `NotationPlaybackCursor` highlights the active glyph during demo/student passes.
 
@@ -216,26 +221,7 @@ Adapters: `rhythmToRichMeasure`, `richToRhythmMeasure` in `src/types/rhythm.ts`.
 
 ## Tests
 
-Unit and integration under `src/lib/__tests__/`:
-
-- `playback-clock.test.ts` / `lookahead-scheduler.test.ts` — continuous count-in → playback timeline
-- `playback-state.test.ts` — count-in / preview pass gating for cell highlight; `nextPassAfterBar`
-- `integration/playback-flow.test.ts` — count-in → preview/student → advance + audio-clock join
-- `count-in-schedule.test.ts` — `planCountIn` matches the playback clock
-- `settings-schema.test.ts`
-- `prng.test.ts`
-- `rhythm/` — density, syncopation (placement), poison, sticking
-- `notation/` — duration spelling, beaming, MusiSync glyph mapping, ABC export
-- `game-modes/` — endless, demo-playback
-- `audio-engine.test.ts` — click/hit scheduling
-- Plus existing preference, difficulty, subdivision, tempo, theme suites
-
-Playwright under `e2e/` (production preview via `vite preview`):
-
-- `playback.spec.ts` — generate round, count-in highlight gating, demo pass
-- `a11y.spec.ts` — axe (empty, round, settings/Sound, metronome, modals, count-in)
-- `notation-scroll.spec.ts` — MusiSync overflow
-- `helpers.ts` — shared localStorage seeding
+Full inventory, helper semantics, and count-in UI contracts: [TESTING.md](TESTING.md).
 
 | Command | Suite |
 |---------|--------|

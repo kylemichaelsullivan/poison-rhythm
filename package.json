@@ -17,7 +17,8 @@
 		"test:integration": "bun test src/lib/__tests__/integration",
 		"test:e2e": "playwright test",
 		"test:a11y": "playwright test e2e/a11y.spec.ts",
-		"test:all": "biome ci . && bun test src/lib/__tests__ && playwright test"
+		"test:all": "biome ci . && bun test src/lib/__tests__ && playwright test",
+		"printables:student-record": "bun run scripts/generate-student-record-pdf.ts"
 	},
 	"dependencies": {
 		"clsx": "^2.1.1",

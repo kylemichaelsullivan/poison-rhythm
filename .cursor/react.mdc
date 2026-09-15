@@ -44,7 +44,7 @@ Import hooks and providers from `@/contexts`.
 
 | Context | Hook(s) | Notes |
 |---------|---------|-------|
-| `GameContext` | `useGame` | Round, measures, poison, prefetch, visual hints; `GameProvider` in `App.tsx` |
+| `GameContext` | `useGame` | Round, measures, poison, prefetch, visual hints; **sync-seeds** first round in `GameProvider`; provider in `App.tsx` |
 | `SettingsContext` | `useSettings` | Game modes, poison visibility, sticking, practice options; `poison-rhythm-settings-v1` |
 | `PreferencesContext` | `usePreferences`, `useDifficulty` | Difficulty, tempo, subdivision, mute/count-in prefs |
 | `MetronomeContext` | `useMetronome` | Tempo, playback, demo/student passes; `setPlaybackMeasure` syncs carousel |
@@ -84,14 +84,15 @@ Provider tree in `main.tsx`: `ThemeProvider` → `SettingsProvider` → `Prefere
 - **RichRhythmMeasure**: `RhythmStep[]` with optional accent, sticking — engine + notation metadata
 - **Round**: `{ measures, poisonIndex, seed, poisonMeasure }`
 - **Engine**: `generateMeasure` / `generateRound` from `@/lib/rhythm` — pass `difficulty`, `subdivisionLevel`, `settings`, `seed`
-- **Game modes**: `createRoundForMode`, `onMeasureCompleteForMode` from `@/lib/game-modes`
-- **Utils**: `rhythmsEqual`, `richMeasuresEqual`, adapters in `@/types/rhythm`
+- **Game modes**: `createRoundForMode`, `onMeasureCompleteForMode` from `@/lib/game-modes` (used synchronously from `GameProvider`; do not assume empty first paint)
+- **Adapters**: `rhythmToRichMeasure`, `richToRhythmMeasure` in `@/types/rhythm`
 
 ### Notation and display
 
 - **rhythmRenderMode**: `grid` | `notation` — set via Display Mode on Poison section (`DisplayModeModal`)
 - **Pipeline**: `@/lib/notation` — `measureToNotationEvents` → beaming → `measureToNotationSteps` → `MeasureNotation`
-- **Font**: MusiSync served from `/fonts/MusiSync.*`; preload via `loadMusiSyncFont` / `useMusiSyncFont`
+- **Font**: MusiSync served from `/fonts/MusiSync.*`; preload via `loadMusiSyncFont` / `useMusiSyncFont`; `MeasureGrid` prefetches notation chunk + font when mode is notation
+- **Glyphs**: dotted notes `i`/`j`/`d`; beams include `³` / `O` / `o` — see `src/assets/fonts/README.md`; never alias unmatched patterns
 - **Scroll mode**: `scrollDirection` / `scrollSpeed` in settings schema; UI Coming Soon
 
 ### Preferences and settings
@@ -107,7 +108,7 @@ Provider tree in `main.tsx`: `ThemeProvider` → `SettingsProvider` → `Prefere
 - **playback-clock** / **lookahead-scheduler**: Continuous audio-clock timeline for count-in → playback (no wall-clock join gap)
 - **feedbackMode** (Settings): Gates visual blinker, poison overlay, and rhythm hit sounds
 - **Demo before play**: MetronomeContext runs demo pass then student pass; `muteOnStudentPass` suppresses rhythm audio on pass 2
-- **Count-in**: Optional one-bar quarter-note lead-in; status label “Counting In” (`<output aria-live>`)
+- **Count-in**: Optional one-bar quarter-note lead-in; status “Counting In”; Play control exposes `data-count-in-beat` / `data-counting-in`
 
 ### Components
 
@@ -120,7 +121,8 @@ Provider tree in `main.tsx`: `ThemeProvider` → `SettingsProvider` → `Prefere
 - **ShowNotes**: Subdivision popover; `useHoverPinPopover` + `ShowNotesTrigger`
 - **MeasureGrid / MeasureCell**: Grid or notation (MusiSync) with accent, sticking, poison overlays; `useMusiSyncFont` + `useSmoothNotationCursor` for notation mode
 - **Metronome**: Footer corner modal for tempo, tap tempo, and metronome playback
-- **Settings**: Footer corner modal with Mode / Sound / Appearance tabs
+- **Settings**: Footer corner modal → lazy `SettingsOverlay` with Mode / Sound / Appearance tabs
+- **Entrypoint docs**: Prefer `AGENTS.md` for gotchas; `documentation/TESTING.md` for e2e helper semantics
 
 ### Typography
 

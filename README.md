@@ -2,6 +2,8 @@
 
 A rhythm training game where you identify the hidden “poison” rhythm among randomly generated measures.
 
+**Teachers:** see [`documentation/TEACHERS.md`](documentation/TEACHERS.md) for classroom start, modes, and lesson arcs.
+
 ## Stack
 
 - **React** + **TypeScript** + **Vite**
@@ -64,6 +66,7 @@ bun run test:all
 | `bun run test:e2e` | Playwright e2e (incl. playback) |
 | `bun run test:a11y` | Playwright axe a11y suite |
 | `bun run test:all` | Biome ci, Bun tests, then Playwright |
+| `bun run printables:student-record` | Regenerate teacher student-record PDF |
 | `bun run preview` | Preview production build |
 
 ## Project Structure
@@ -73,14 +76,15 @@ src/
 ├── components/
 │   ├── ui/           # Elemental atoms (Button, IconButton, Caption, Stack, Row)
 │   ├── controls/     # Difficulty, play modes, New/Reuse, play/pause, carousel nav
-│   ├── layout/       # Chrome, modals, ShowNotes, metronome, settings
+│   ├── layout/       # Chrome, modals, ShowNotes, metronome, settings, about
+│   │   ├── about/    # About modal content
 │   │   ├── button/   # Footer corner triggers (Settings, Metronome, Account)
 │   │   ├── metronome/
-│   │   └── settings/ # Settings panels and shared setting atoms
-│   ├── measures/     # Measure carousel chrome, grid, playback highlighting
+│   │   └── settings/ # SettingsOverlay + Mode / Sound / Appearance panels
+│   ├── measures/     # Measure carousel chrome, grid, notation, playback highlighting
 │   └── poison/       # Poison rhythm section layers + New/Reuse
 ├── contexts/         # React context modules (see Context modules below)
-├── hooks/            # Playback sync, popovers, soft-disable focus, game loop, …
+├── hooks/            # Playback sync, popovers, soft-disable focus, MusiSync font, …
 ├── lib/
 │   ├── audio/        # Web Audio scheduling, feedback gating
 │   ├── game-modes/   # default, bucket trainer (+ endless stream)
@@ -122,7 +126,7 @@ Import from the barrel: `@/contexts`.
 
 | Module | Hook(s) | Provider | Role |
 |--------|---------|----------|------|
-| `GameContext` | `useGame` | `GameProvider` | Round state, measures, poison index, endless prefetch, visual hints |
+| `GameContext` | `useGame` | `GameProvider` | Sync-seeded round on first paint, measures, poison index, endless prefetch, visual hints |
 | `SettingsContext` | `useSettings` | `SettingsProvider` | Game modes, poison/sticking, practice options (`localStorage`) |
 | `PreferencesContext` | `usePreferences`, `useDifficulty` | `PreferencesProvider` | Difficulty, tempo, subdivision, mute/count-in prefs |
 | `MetronomeContext` | `useMetronome` | `MetronomeProvider` | Tempo, metronome/measure playback, demo-before-play passes |
@@ -229,24 +233,30 @@ Coverage includes:
 - Playback clock / look-ahead (count-in → playback join with no timer gap)
 - Difficulty levels, subdivision playback, metronome tempo/tap
 - Theme options and preference storage
-- Playwright: generate round, count-in highlight gating, demo pass, notation overflow
-- Axe: empty start, generated round, settings (incl. Sound), metronome, modals, count-in (WCAG 2 A/AA + best-practice)
+- Playwright: seeded round ready, count-in highlight gating, count-in beats on Play, demo pass, notation overflow
+- Axe: start screen (seeded round), generated round, settings (incl. Sound), metronome, modals, count-in (WCAG 2.2 A/AA + best-practice)
+
+Details: [`documentation/TESTING.md`](documentation/TESTING.md).
 
 ## How to Play
 
-1. Use the **difficulty slider** (1–5) to set complexity. Open the **i** help control for level details.
-2. Use the header **note subdivision** control (1/4, 1/8, 1/16) to set grid density for generation, display, and playback.
-3. Note the **poison rhythm** in the Poison Rhythm section (hidden when poison mode is off or set to hidden).
-4. Click **+** to start: a new poison is chosen and measures are generated with it hidden among them.
-5. Use **Prev/Next** to step through measures and find which one matches the poison.
-6. Click **Reuse** to keep the same poison and regenerate measures.
-7. Use **Play** to hear measures with a count-in. With **Preview Before Play** enabled (Settings → Mode), the current measure plays once as a demo (Listening), then again as the student pass (Playing; optionally muted).
+1. On load, a **round is already generated** (no empty “Click to Generate” step). Measures and poison appear immediately.
+2. Use the **difficulty slider** (1–5) to set complexity. Open the **i** help control for level details.
+3. Use the header **note subdivision** control (1/4, 1/8, 1/16) to set grid density for generation, display, and playback.
+4. Note the **poison rhythm** in the Poison Rhythm section (hidden when poison mode is off or set to hidden).
+5. Click **New (+)** for a fresh poison and measures, or **Reuse** to keep the same poison and regenerate measures.
+6. Use **Prev/Next** to step through measures and find which one matches the poison.
+7. Use **Play** to hear measures (optional count-in shows beat numbers on the Play control). With **Preview Before Play** enabled (Settings → Mode), the current measure plays once as a demo (Listening), then again as the student pass (Playing; optionally muted).
 8. Open the footer **metronome** to set tempo or tap tempo.
 9. Open the footer **Settings** for theme, sound mutes, practice features (show next measure, demo pass), and upcoming rhythm options (accents, sticking). Change **play mode** from the mode badge on the Difficulty section. Change **display mode** (grid / notation; scroll Coming Soon) from the badge on the Poison Rhythm section.
 
 ## Documentation
 
+- [`AGENTS.md`](AGENTS.md) — agent/contributor entrypoint (gotchas, key paths, scripts)
+- [`documentation/TEACHERS.md`](documentation/TEACHERS.md) — classroom guide for music teachers
+- [`documentation/printables/student-record.pdf`](documentation/printables/student-record.pdf) — printable student practice log
 - [`documentation/ARCHITECTURE.md`](documentation/ARCHITECTURE.md) — engine, state, settings, notation, UI composition
+- [`documentation/TESTING.md`](documentation/TESTING.md) — unit, integration, and Playwright guidance
 - [`documentation/GIT_COMMITS.md`](documentation/GIT_COMMITS.md) — commit message conventions
 - [`src/assets/fonts/README.md`](src/assets/fonts/README.md) — MusiSync font assets and glyph keys
 - [`.cursor/rules.mdc`](.cursor/rules.mdc) — project rules for Cursor

@@ -62,7 +62,7 @@ src/
 e2e/                        # Playwright e2e + axe a11y
 ```
 
-Compose UI as atoms → molecules → composers; put side effects in hooks. See `.cursor/components.mdc` and `documentation/ARCHITECTURE.md`.
+Compose UI as atoms → molecules → composers; put side effects in hooks. See `.cursor/components.mdc`, `documentation/ARCHITECTURE.md`, and `AGENTS.md`.
 
 ## Rhythm Complexity
 
@@ -77,11 +77,12 @@ Settings may shape accents, rests, sticking, phrase length, and poison visibilit
 
 - **Runner**: Bun (`bun run test`) for unit + integration; Playwright for e2e/a11y
 - **Location**: Colocate suites in `src/lib/__tests__/` (including `rhythm/`, `notation/`, `game-modes/`, `integration/`)
-- **E2E**: `e2e/*.spec.ts` with shared `e2e/helpers.ts`
+- **E2E**: `e2e/*.spec.ts` with shared `e2e/helpers.ts` (`generateRound` waits for seeded `measure-slider`; does not click EmptyStartPrompt)
 - **Naming**: `*.test.ts` / `*.test.tsx` (Bun); `*.spec.ts` (Playwright)
 - **Imports**: Use the `@/` alias for modules under test
 - **Lib coverage**: Prefer unit tests for pure helpers (settings schema, rhythm engine, playback clock / look-ahead, game modes, tempo/difficulty/subdivision)
 - **Lint**: Biome (`bun run lint` / `bun run ci`); recommended editor extension `biomejs.biome`
+- **Docs**: `documentation/TESTING.md`, `AGENTS.md`
 
 ## Code Organization
 
