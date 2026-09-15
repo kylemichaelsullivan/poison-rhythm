@@ -38,6 +38,38 @@ test.describe('measure playback', () => {
 		await clickPause(page);
 	});
 
+	test('shows count-in beats on the play button', async ({ page }) => {
+		await seedPlaybackPrefs(page, {
+			countIn: true,
+			demoBeforePlay: false,
+			tempo: 60,
+		});
+		await page.goto('/');
+		await generateRound(page);
+
+		const playControls = page.getByTestId('play-controls');
+
+		await clickPlay(page);
+		await expect(playControls).toHaveAttribute('data-counting-in', 'true');
+
+		const pauseButton = playControls.getByRole('button', {
+			name: 'Pause',
+			exact: true,
+		});
+
+		await expect(playControls).toHaveAttribute('data-count-in-beat', '1', {
+			timeout: 3_000,
+		});
+		await expect(pauseButton).toHaveAttribute('data-count-beat', '1');
+
+		await expect(playControls).toHaveAttribute('data-count-in-beat', '2', {
+			timeout: 2_000,
+		});
+		await expect(pauseButton).toHaveAttribute('data-count-beat', '2');
+
+		await clickPause(page);
+	});
+
 	test('highlights notes after count-in when playback starts', async ({
 		page,
 	}) => {

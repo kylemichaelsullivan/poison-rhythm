@@ -56,6 +56,7 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 	const { settings } = useSettings();
 	const [activeSource, setActiveSource] = useState<PlaybackSource | null>(null);
 	const [isCountingIn, setIsCountingIn] = useState(false);
+	const [countInBeat, setCountInBeat] = useState<number | null>(null);
 	const [playbackPass, setPlaybackPass] = useState<PlaybackPass | null>(null);
 	const [isLit, setIsLit] = useState(false);
 	const [subdivisionIndex, setSubdivisionIndex] = useState(0);
@@ -96,6 +97,7 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 	const stop = useCallback(() => {
 		setActiveSource(null);
 		setPlaybackPass(null);
+		setCountInBeat(null);
 	}, []);
 
 	const toggleMetronome = useCallback(() => {
@@ -110,6 +112,7 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 			// Enter count-in immediately so the first cell never lights before the pass starts.
 			if (countInEnabledRef.current) {
 				setIsCountingIn(true);
+				setCountInBeat(null);
 				setPlaybackPass(null);
 			}
 			return 'measures';
@@ -137,6 +140,7 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 	useEffect(() => {
 		if (!isRunning || activeSource === null) {
 			setIsCountingIn(false);
+			setCountInBeat(null);
 			setPlaybackPass(null);
 			setSubdivisionIndex(0);
 			setMeasureCycle(0);
@@ -200,7 +204,10 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 				if (!muteMetronomeRef.current) {
 					engine.scheduleClick(event.audioTime);
 				}
-				scheduleUi(event.audioTime, flash);
+				scheduleUi(event.audioTime, () => {
+					setCountInBeat(event.index + 1);
+					flash();
+				});
 				return false;
 			}
 
@@ -247,6 +254,7 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 				if (!playbackUi.started) {
 					playbackUi.started = true;
 					setIsCountingIn(false);
+					setCountInBeat(null);
 					setPlaybackPass(passForEvent);
 				}
 				setSubdivisionIndex(step);
@@ -273,9 +281,11 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 
 			if (withCountIn) {
 				setIsCountingIn(true);
+				setCountInBeat(null);
 				setPlaybackPass(null);
 			} else {
 				setIsCountingIn(false);
+				setCountInBeat(null);
 			}
 
 			setSubdivisionIndex(0);
@@ -336,6 +346,7 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 					}
 					if (countInEnabledRef.current) {
 						setIsCountingIn(true);
+						setCountInBeat(null);
 						setPlaybackPass(null);
 					}
 					return 'measures';
@@ -383,6 +394,7 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 		isMetronomeRunning,
 		isMeasuresRunning,
 		isCountingIn,
+		countInBeat,
 		isMeasuresPlaying,
 		isDemoPass,
 		isStudentPass,

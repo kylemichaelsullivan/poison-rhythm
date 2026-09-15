@@ -19,6 +19,7 @@ export function PlayControls({
 		isMeasuresRunning,
 		isMeasuresPlaying,
 		isCountingIn,
+		countInBeat,
 		isLit,
 		toggleMeasures,
 		stop,
@@ -35,16 +36,18 @@ export function PlayControls({
 			className='PlayControls flex justify-center w-full'
 			data-testid='play-controls'
 			data-counting-in={isCountingIn ? 'true' : 'false'}
+			data-count-in-beat={countInBeat != null ? String(countInBeat) : ''}
 			data-measures-playing={isMeasuresPlaying ? 'true' : 'false'}
 		>
 			<RoundPlayPauseButton
 				className={clsx(
 					'PlayControlsButton transition-[opacity,box-shadow] duration-100',
 					isCountingIn && !isLit && 'opacity-55',
-					isCountingIn && isLit && 'opacity-100 ring-2 ring-black',
-					!isCountingIn && isMeasuresRunning && isLit && 'ring-2 ring-black',
+					isCountingIn && isLit && 'opacity-100 ring-2 ring-primary',
+					!isCountingIn && isMeasuresRunning && isLit && 'ring-2 ring-primary',
 				)}
 				isPlaying={isMeasuresRunning}
+				countBeat={isCountingIn ? countInBeat : null}
 				title={disabled ? 'Click + Start' : undefined}
 				disabled={disabled}
 				onClick={toggleMeasures}

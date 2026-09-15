@@ -16,6 +16,11 @@ type RoundPlayPauseButtonProps = {
 	label?: string;
 	/** Tooltip hint; defaults to the label. */
 	title?: string;
+	/**
+	 * When set, replaces the play/pause icon with this digit (count-in beat).
+	 * Accessible name stays Play/Pause so the control still reads as a toggle.
+	 */
+	countBeat?: number | null;
 	className?: string;
 	disabled?: boolean;
 	/**
@@ -31,6 +36,7 @@ export function RoundPlayPauseButton({
 	onClick,
 	label,
 	title,
+	countBeat = null,
 	className,
 	disabled = false,
 	onDisabledClick,
@@ -38,6 +44,7 @@ export function RoundPlayPauseButton({
 }: RoundPlayPauseButtonProps) {
 	const accessibleName = label ?? (isPlaying ? 'Pause' : 'Play');
 	const isSoftDisabled = disabled && onDisabledClick !== undefined;
+	const showCount = countBeat != null;
 
 	return (
 		<button
@@ -54,9 +61,19 @@ export function RoundPlayPauseButton({
 			onClick={disabled ? onDisabledClick : onClick}
 			aria-disabled={disabled || undefined}
 			aria-label={accessibleName}
+			data-count-beat={showCount ? String(countBeat) : undefined}
 			ref={ref}
 		>
-			<Icon svg={isPlaying ? PauseIcon : PlayIcon} size='md' />
+			{showCount ? (
+				<span
+					aria-hidden='true'
+					className='text-xl font-bold leading-none tabular-nums'
+				>
+					{countBeat}
+				</span>
+			) : (
+				<Icon svg={isPlaying ? PauseIcon : PlayIcon} size='md' />
+			)}
 		</button>
 	);
 }

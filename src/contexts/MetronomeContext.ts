@@ -12,6 +12,8 @@ export type MetronomeContextValue = {
 	isMetronomeRunning: boolean;
 	isMeasuresRunning: boolean;
 	isCountingIn: boolean;
+	/** 1-based count-in beat shown on the play button; null when not counting in. */
+	countInBeat: number | null;
 	isMeasuresPlaying: boolean;
 	isDemoPass: boolean;
 	isStudentPass: boolean;
