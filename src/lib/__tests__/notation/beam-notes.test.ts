@@ -83,8 +83,13 @@ describe('tryBeamNotes', () => {
 		}
 	});
 
-	test('does not beam sixteenth + eighth [1,2] as dotted O', () => {
-		expect(tryBeamNotes([note(5, 1), note(6, 2)]).ok).toBe(false);
+	test('beams sixteenth + eighth [1,2] without aliasing to dotted O', () => {
+		const attempt = tryBeamNotes([note(5, 1), note(6, 2)]);
+		expect(attempt.ok).toBe(true);
+		if (attempt.ok) {
+			expect(attempt.glyph).toBe(MUSISYNC_BEAMED.sixteenthEighth);
+			expect(attempt.glyph).not.toBe(MUSISYNC_BEAMED.sixteenthDottedEighth);
+		}
 	});
 });
 
@@ -133,5 +138,13 @@ describe('beamNotesForDisplay', () => {
 			`S${MUSISYNC_BEAMED.threeSixteenths}`,
 		);
 		expect(tokens[1]?.events).toHaveLength(3);
+	});
+
+	test('beams sixteenth + eighth after a sixteenth rest in the beat', () => {
+		const tokens = beamNotesForDisplay([rest(0, 1), note(1, 1), note(2, 2)]);
+		expect(tokens.map((t) => t.glyph).join('')).toBe(
+			`S${MUSISYNC_BEAMED.sixteenthEighth}`,
+		);
+		expect(tokens[1]?.events).toHaveLength(2);
 	});
 });

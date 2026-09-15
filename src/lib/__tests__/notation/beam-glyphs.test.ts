@@ -29,6 +29,9 @@ describe('beamedGlyphForDurations', () => {
 		expect(beamedGlyphForDurations([1, 3])).toBe(
 			MUSISYNC_BEAMED.sixteenthDottedEighth,
 		);
+		expect(beamedGlyphForDurations([1, 2])).toBe(
+			MUSISYNC_BEAMED.sixteenthEighth,
+		);
 		expect(beamedGlyphForDurations([2, 2, 2])).toBe(
 			MUSISYNC_BEAMED.threeEighths,
 		);
@@ -65,20 +68,21 @@ describe('resolveBeamedGlyph', () => {
 		).toBe(MUSISYNC_BEAMED.sixteenthDottedEighth);
 	});
 
-	test('does not alias sixteenth + eighth [1,2] to dotted O', () => {
-		// Metric spelling of “e” + “&” is [1, 2]; MusiSync has no beamed glyph
-		// for that pattern. Aliasing to O (1+3) misreads the duration.
+	test('beams sixteenth + eighth [1,2] with derived undotted O, not stock O', () => {
 		expect(
 			resolveBeamedGlyph([
 				{ startCell: 5, durationCells: 1 },
 				{ startCell: 6, durationCells: 2 },
 			]),
-		).toBeUndefined();
+		).toBe(MUSISYNC_BEAMED.sixteenthEighth);
+		expect(MUSISYNC_BEAMED.sixteenthEighth).not.toBe(
+			MUSISYNC_BEAMED.sixteenthDottedEighth,
+		);
 		expect(
 			resolveBeamedGlyph([
 				{ startCell: 6, durationCells: 1 },
 				{ startCell: 7, durationCells: 2 },
 			]),
-		).toBeUndefined();
+		).toBe(MUSISYNC_BEAMED.sixteenthEighth);
 	});
 });

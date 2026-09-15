@@ -20,6 +20,12 @@ export const MUSISYNC_BEAMED = {
 	dottedEighthSixteenth: 'o',
 	/** Sixteenth + dotted eighth */
 	sixteenthDottedEighth: 'O',
+	/**
+	 * Sixteenth + eighth (derived MusiSync PUA: undotted `O`).
+	 * Stock MusiSync has no precomposed [1,2]; U+E001 is `O` without the
+	 * augmentation-dot contour so beat spacing matches rest + [1,2].
+	 */
+	sixteenthEighth: '\uE001',
 	/** Three beamed eighths */
 	threeEighths: '§',
 	/** Four beamed eighths */
@@ -35,6 +41,7 @@ const PATTERN_TO_GLYPH: Record<string, string> = {
 	'1,2,1': MUSISYNC_BEAMED.sixteenthEighthSixteenth,
 	'3,1': MUSISYNC_BEAMED.dottedEighthSixteenth,
 	'1,3': MUSISYNC_BEAMED.sixteenthDottedEighth,
+	'1,2': MUSISYNC_BEAMED.sixteenthEighth,
 	'2,2,2': MUSISYNC_BEAMED.threeEighths,
 	'2,2,2,2': MUSISYNC_BEAMED.fourEighths,
 };
@@ -55,9 +62,8 @@ export function beamedGlyphForDurations(
 
 /**
  * Map a contiguous beam run to a MusiSync beamed glyph.
- * Only exact duration patterns are beamed — e.g. `[1, 2]` (sixteenth + eighth)
- * has no precomposed glyph and must stay flagged rather than aliasing to `O`
- * (sixteenth + dotted eighth), which would misread the rhythm.
+ * Exact duration patterns only — `[1, 2]` uses the derived undotted-`O`
+ * glyph (`sixteenthEighth`), never stock `O` (`[1, 3]`).
  */
 export function resolveBeamedGlyph(
 	notes: readonly BeamedNoteSlice[],

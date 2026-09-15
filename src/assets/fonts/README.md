@@ -4,7 +4,7 @@ Poison Rhythm uses [MusiSync](https://www.fontspace.com/musisync-font-f3723) by 
 
 Duration keys follow Allgeyer’s conventional mnemonic (`musisyncGlyphFor` in `src/lib/notation/musisync-glyphs.ts`): notes `w`/`h`/`q`/`e`/`s`, rests `H`/`W`/`Q`/`E`/`S`. Dotted notes use dedicated glyphs `i` / `j` / `d` (eighth / quarter / half); dotted rests compose rest + `.`. Digits are not duration glyphs.
 
-Beamed groups (see `beam-glyphs.ts`): `n` = two eighths, `y` = four sixteenths, `³` = three sixteenths, `m` = eighth + two sixteenths, `M` = two sixteenths + eighth, `¾` = sixteenth + eighth + sixteenth, `o` = dotted eighth + sixteenth, `O` = sixteenth + dotted eighth, `§` = three eighths, `Y` = four eighths.
+Beamed groups (see `beam-glyphs.ts`): `n` = two eighths, `y` = four sixteenths, `³` = three sixteenths, `m` = eighth + two sixteenths, `M` = two sixteenths + eighth, `¾` = sixteenth + eighth + sixteenth, `o` = dotted eighth + sixteenth, `O` = sixteenth + dotted eighth, U+E001 = sixteenth + eighth (derived undotted `O`; stock MusiSync has no `[1,2]`), `§` = three eighths, `Y` = four eighths.
 
 ## Canonical source (this folder)
 
@@ -17,6 +17,15 @@ Beamed groups (see `beam-glyphs.ts`): `n` = two eighths, `y` = four sixteenths, 
 **Served copies** live in [`public/fonts/`](../../../public/fonts/) so the browser loads them as static `/fonts/MusiSync.*` URLs (CSS `@font-face` in `src/index.css`). Do **not** import font files through Vite JS (`new URL` / `?url`) — that creates virtual `?import` modules and fragile hashed URLs.
 
 When updating the font, replace files here **and** copy into `public/fonts/`.
+
+### Derived beam glyph (U+E001)
+
+Stock MusiSync has `O` (sixteenth + dotted eighth) but no sixteenth + eighth. Poison Rhythm’s copies add Private Use **U+E001** (`uniE001`): the `O` outline with the augmentation-dot contour removed, advance 1536 (so `S` + U+E001 = one beat). After replacing the upstream TTF, restore the derived glyph:
+
+```bash
+python3 -m venv .tmp-venv && .tmp-venv/bin/pip install fonttools brotli
+.tmp-venv/bin/python scripts/derive-musisync-e001.py
+```
 
 ## Refresh the woff2
 
