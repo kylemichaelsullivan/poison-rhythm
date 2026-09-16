@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { sideGutterControlClassName } from '@/lib/control-classes';
 import { CarouselNavButton } from './CarouselNavButton';
 
 type CarouselNavButtonsProps = {
@@ -9,7 +10,10 @@ type CarouselNavButtonsProps = {
 	canGoNext: boolean;
 };
 
-/** Prev/next controls sit in the page gutters outside the body column. */
+/**
+ * Prev/next sit in the page gutters beside the body column.
+ * Below ~63rem (no lateral gutter), they drop to the bottom corners.
+ */
 export function CarouselNavButtons({
 	children,
 	onPrev,
@@ -19,7 +23,11 @@ export function CarouselNavButtons({
 }: CarouselNavButtonsProps) {
 	return (
 		<div className='CarouselNavButtons relative w-full'>
-			<div className='absolute top-1/2 right-full z-10 mr-3 -translate-y-1/2 max-[63rem]:right-auto max-[63rem]:left-2 max-[63rem]:mr-0'>
+			<div
+				className={sideGutterControlClassName('start', {
+					collapseBelowGutter: true,
+				})}
+			>
 				<CarouselNavButton
 					direction='prev'
 					onClick={onPrev}
@@ -27,7 +35,11 @@ export function CarouselNavButtons({
 				/>
 			</div>
 			{children}
-			<div className='absolute top-1/2 left-full z-10 ml-3 -translate-y-1/2 max-[63rem]:left-auto max-[63rem]:right-2 max-[63rem]:ml-0'>
+			<div
+				className={sideGutterControlClassName('end', {
+					collapseBelowGutter: true,
+				})}
+			>
 				<CarouselNavButton
 					direction='next'
 					onClick={onNext}

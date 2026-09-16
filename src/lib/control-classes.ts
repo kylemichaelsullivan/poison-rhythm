@@ -81,7 +81,26 @@ export const roundPlayPauseButtonClassName =
 	'flex justify-center items-center rounded-full border-2 border-primary-border bg-primary w-12 h-12 p-3 text-on-primary shadow-primary-glow transition-[opacity,box-shadow] hover:opacity-90 hover:shadow-raised disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 aria-disabled:hover:opacity-50';
 
 export const modifyTempoButtonClassName =
-	'absolute flex justify-center items-center border-2 border-primary-border rounded bg-primary w-8 h-8 p-2 text-on-primary shadow-control transition hover:opacity-90 hover:shadow-soft top-1/2 -translate-y-1/2 disabled:opacity-50';
+	'flex justify-center items-center border-2 border-primary-border rounded bg-primary w-8 h-8 p-2 text-on-primary shadow-control transition hover:opacity-90 hover:shadow-soft disabled:opacity-50';
+
+/**
+ * Sit a control just outside a `relative` parent’s left (`start`) or right
+ * (`end`) edge, with a 1rem gutter. Optional collapse drops to the bottom
+ * corners when the page has no lateral gutter (below ~63rem).
+ */
+export function sideGutterControlClassName(
+	side: 'start' | 'end',
+	{ collapseBelowGutter = false }: { collapseBelowGutter?: boolean } = {},
+): string {
+	return clsx(
+		'absolute top-1/2 z-10 -translate-y-1/2',
+		side === 'start' ? 'right-[calc(100%+1rem)]' : 'left-[calc(100%+1rem)]',
+		collapseBelowGutter &&
+			(side === 'start'
+				? 'max-[63rem]:top-[calc(100%+0.75rem)] max-[63rem]:right-auto max-[63rem]:left-2 max-[63rem]:translate-y-0'
+				: 'max-[63rem]:top-[calc(100%+0.75rem)] max-[63rem]:left-auto max-[63rem]:right-2 max-[63rem]:translate-y-0'),
+	);
+}
 
 export type SegmentControlVariant = 'segment' | 'checkbox' | 'header';
 

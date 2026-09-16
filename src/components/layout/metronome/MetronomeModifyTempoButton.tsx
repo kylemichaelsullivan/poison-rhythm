@@ -5,6 +5,7 @@ import { Icon } from '@/components/layout/Icon';
 import {
 	focusVisibleRingClassName,
 	modifyTempoButtonClassName,
+	sideGutterControlClassName,
 } from '@/lib/control-classes';
 import { BPM_MAX, BPM_MIN } from '@/lib/metronome-defaults';
 import {
@@ -32,8 +33,8 @@ export function MetronomeModifyTempoButton({
 			className={clsx(
 				'ModifyTempoButton',
 				modifyTempoButtonClassName,
+				sideGutterControlClassName(isDecrease ? 'start' : 'end'),
 				focusVisibleRingClassName,
-				isDecrease ? '-left-4' : '-right-4',
 			)}
 			title={label}
 			disabled={isDecrease ? tempo <= BPM_MIN : tempo >= BPM_MAX}
