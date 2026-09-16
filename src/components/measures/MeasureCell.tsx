@@ -45,7 +45,7 @@ export function MeasureCell({
 				'MeasureCell relative aspect-square rounded-[3px]',
 				value ? 'bg-primary shadow-soft' : 'bg-surface-muted',
 				showStepHighlight &&
-					'ring-2 ring-primary ring-inset transition-shadow duration-200',
+					'ring-2 ring-secondary ring-inset transition-shadow duration-200',
 				hidden && value && 'opacity-0',
 			)}
 			title={value ? (accent ? 'Accent Hit' : 'Hit') : 'Rest'}
