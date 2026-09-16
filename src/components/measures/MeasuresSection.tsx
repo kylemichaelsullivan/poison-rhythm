@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import EyeIcon from '@/assets/svg/eye.svg?react';
-import { CarouselNavButtons } from '@/components/controls';
+import {
+	CarouselNavButtons,
+	PlaybackVolumeButton,
+} from '@/components/controls';
 import {
 	EmptyStartPrompt,
 	Section,
@@ -8,6 +11,7 @@ import {
 } from '@/components/layout';
 import { IconToggle } from '@/components/layout/settings';
 import { DisplayModeModal, DisplayModeTrigger } from '@/components/poison';
+import { Row } from '@/components/ui';
 import { useGame, useSettings } from '@/contexts';
 import { useMeasurePlaybackSync } from '@/hooks/useMeasurePlaybackSync';
 import { isBucketTrainerMode } from '@/lib/settings-schema';
@@ -77,13 +81,16 @@ export function MeasuresSection({ onNewPoison }: MeasuresSectionProps) {
 					title='Measures'
 					headerLeading={nextMeasureToggle}
 					headerAction={
-						bucketMode ? (
-							<DisplayModeTrigger
-								renderMode={settings.rhythmRenderMode}
-								scrollEnabled={scrollEnabled}
-								onClick={() => setDisplayOpen(true)}
-							/>
-						) : undefined
+						<Row gap='2' align='center'>
+							<PlaybackVolumeButton />
+							{bucketMode ? (
+								<DisplayModeTrigger
+									renderMode={settings.rhythmRenderMode}
+									scrollEnabled={scrollEnabled}
+									onClick={() => setDisplayOpen(true)}
+								/>
+							) : null}
+						</Row>
 					}
 				>
 					<StableContentFrame

@@ -12,6 +12,7 @@ export { InfoGlyphButton } from './InfoGlyphButton';
 export { ModalActions } from './ModalActions';
 export { ModeBadge } from './ModeBadge';
 export { ModeBadgeTrigger } from './ModeBadgeTrigger';
+export { PlaybackVolumeButton } from './PlaybackVolumeButton';
 export { PlayControls } from './PlayControls';
 export { PlayModeOptionList } from './PlayModeOptionList';
 export { PlayModesModal } from './PlayModesModal';
