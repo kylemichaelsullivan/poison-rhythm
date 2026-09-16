@@ -6,13 +6,25 @@ import type { PRNG } from './prng';
 /** Base per-measure rate before difficulty scaling (former “normal” frequency). */
 const BASE_POISON_RATE = 0.16;
 
+function clampDifficulty(difficulty: number): number {
+	return Math.max(1, Math.min(5, Math.round(difficulty)));
+}
+
 /**
  * Higher difficulty → lower poison chance (busier decoys already stress timing).
  * Difficulty 1 ≈ 1.0, difficulty 5 ≈ 0.36.
  */
 export function difficultyPoisonScale(difficulty: number): number {
-	const level = Math.max(1, Math.min(5, Math.round(difficulty)));
+	const level = clampDifficulty(difficulty);
 	return Math.max(0.3, 1.15 - level * 0.16);
+}
+
+/**
+ * Classic ramp: skip this many early measures before poison can appear.
+ * Difficulty 1 → 0, difficulty 5 → 4 (first possible poison at index === difficulty).
+ */
+export function poisonRampDelay(difficulty: number): number {
+	return clampDifficulty(difficulty) - 1;
 }
 
 export function poisonBaseRate(difficulty: number): number {
@@ -21,6 +33,8 @@ export function poisonBaseRate(difficulty: number): number {
 
 /**
  * Classic mode: cumulative chance that rises with index (until first poison).
+ * Higher difficulty delays the ramp and lowers the base rate so rounds tend to
+ * play longer before the poison measure.
  * Endless / stationary: constant per-measure rate (does not grow with stream length).
  */
 export function poisonProbability(
@@ -32,8 +46,9 @@ export function poisonProbability(
 	if (options?.stationary) {
 		return base;
 	}
-	if (measureIndex <= 0) return 0;
-	return 1 - (1 - base) ** measureIndex;
+	const effectiveIndex = measureIndex - poisonRampDelay(difficulty);
+	if (effectiveIndex <= 0) return 0;
+	return 1 - (1 - base) ** effectiveIndex;
 }
 
 /** Always show the poison reference (Visible). Hidden conceals it during playback. */

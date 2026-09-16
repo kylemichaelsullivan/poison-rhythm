@@ -25,6 +25,7 @@ export {
 	isPoisonVisible,
 	poisonBaseRate,
 	poisonProbability,
+	poisonRampDelay,
 	shouldHidePoisonDuringPlayback,
 	shouldInjectPoison,
 } from './poison';
