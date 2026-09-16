@@ -257,7 +257,7 @@ Details: [`documentation/TESTING.md`](documentation/TESTING.md).
 - [`documentation/printables/student-record.pdf`](documentation/printables/student-record.pdf) — printable student practice log
 - [`documentation/ARCHITECTURE.md`](documentation/ARCHITECTURE.md) — engine, state, settings, notation, UI composition
 - [`documentation/TESTING.md`](documentation/TESTING.md) — unit, integration, and Playwright guidance
-- [`documentation/GIT_COMMITS.md`](documentation/GIT_COMMITS.md) — commit message conventions
+- [`.cursor/skills/git-commits/SKILL.md`](.cursor/skills/git-commits/SKILL.md) — commit message conventions (`/git-commits`)
 - [`src/assets/fonts/README.md`](src/assets/fonts/README.md) — MusiSync font assets and glyph keys
 - [`.cursor/rules.mdc`](.cursor/rules.mdc) — project rules for Cursor
 - [`.cursor/react.mdc`](.cursor/react.mdc) — React, contexts, atomic component standards

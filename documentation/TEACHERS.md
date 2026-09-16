@@ -112,4 +112,4 @@ bun run printables:student-record
 ## What this guide is not
 
 - It does not replace your curriculum sequence (stickings, accents, and multi-bar phrases are Coming Soon in Settings).
-- It does not document commit messages, architecture, or test commands — see [GIT_COMMITS.md](GIT_COMMITS.md), [ARCHITECTURE.md](ARCHITECTURE.md), and [TESTING.md](TESTING.md).
+- It does not document commit messages, architecture, or test commands — see [`/git-commits`](../.cursor/skills/git-commits/SKILL.md), [ARCHITECTURE.md](ARCHITECTURE.md), and [TESTING.md](TESTING.md).

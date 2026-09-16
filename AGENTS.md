@@ -14,7 +14,7 @@ Package manager is **bun**, not npm/yarn/pnpm.
 
 ## Commit messages
 
-Follow [`documentation/GIT_COMMITS.md`](documentation/GIT_COMMITS.md):
+Follow the `/git-commits` skill ([`.cursor/skills/git-commits/SKILL.md`](.cursor/skills/git-commits/SKILL.md)):
 
 ```
 TYPE: Commit Message in Title Case
@@ -52,7 +52,7 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 | `e2e/helpers.ts` | Pref seeding + round-ready wait |
 | `documentation/ARCHITECTURE.md` | Engine, state, UI layers |
 | `documentation/TESTING.md` | Test layout, commands, e2e notes |
-| `documentation/GIT_COMMITS.md` | Commit format |
+| `.cursor/skills/git-commits/` | Commit format (`/git-commits`) |
 | `src/assets/fonts/README.md` | MusiSync assets and glyph keys |
 | `.cursor/*.mdc` | Cursor rules (components, React, styling, project) |
 
@@ -66,7 +66,7 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 | [`AGENTS.md`](AGENTS.md) | Agents + contributors: gotchas and pointers |
 | [`documentation/ARCHITECTURE.md`](documentation/ARCHITECTURE.md) | System design |
 | [`documentation/TESTING.md`](documentation/TESTING.md) | How to run and extend tests |
-| [`documentation/GIT_COMMITS.md`](documentation/GIT_COMMITS.md) | Commit conventions |
+| [`/git-commits`](.cursor/skills/git-commits/SKILL.md) | Commit conventions |
 | [`src/assets/fonts/README.md`](src/assets/fonts/README.md) | Notation font |
 | [`.cursor/rules.mdc`](.cursor/rules.mdc) | Always-on project rules |
 | [`.cursor/react.mdc`](.cursor/react.mdc) | React / contexts / domain |
