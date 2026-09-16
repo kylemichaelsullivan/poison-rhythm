@@ -1,6 +1,6 @@
 import { lazy, Suspense } from 'react';
 import MetronomeIcon from '@/assets/svg/metronome.svg?react';
-import { useMetronome } from '@/contexts';
+import { useMetronome, usePreferences } from '@/contexts';
 import { CornerModal } from '../CornerModal';
 
 const MetronomeContent = lazy(() =>
@@ -11,11 +11,16 @@ const MetronomeContent = lazy(() =>
 
 export function Metronome() {
 	const { tempo } = useMetronome();
+	const { muteMetronome, setMuteMetronome } = usePreferences();
+	const muteAction = muteMetronome ? 'Unmute' : 'Mute';
 
 	return (
 		<CornerModal
 			icon={MetronomeIcon}
 			label={`Change Tempo (${tempo} BPM)`}
+			buttonTitle={`Change Tempo (${tempo} BPM). Double-Click to ${muteAction} Metronome`}
+			buttonClassName={muteMetronome ? 'border-dashed text-mid' : undefined}
+			onDoubleClick={() => setMuteMetronome(!muteMetronome)}
 			detail={
 				<span
 					className='MetronomeBpm flex items-baseline gap-1 pr-0.5 leading-none'

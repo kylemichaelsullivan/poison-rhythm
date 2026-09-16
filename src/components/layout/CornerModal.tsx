@@ -1,7 +1,9 @@
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
 import { CornerButton } from './CornerButton';
 import type { SvgIconComponent } from './Icon';
 import { Modal } from './Modal';
+
+const DOUBLE_CLICK_MS = 280;
 
 type CornerModalProps = {
 	label: string;
@@ -14,6 +16,15 @@ type CornerModalProps = {
 	size?: 'sm' | 'md' | 'lg' | 'xl';
 	/** Mount modal body only while open. */
 	lazy?: boolean;
+	/** Extra classes on the trigger (e.g. muted metronome). */
+	buttonClassName?: string;
+	/** Tooltip on the trigger; defaults to `label`. */
+	buttonTitle?: string;
+	/**
+	 * When set, a single click opens after a short delay; a double-click runs
+	 * this instead and does not open the modal.
+	 */
+	onDoubleClick?: () => void;
 	children?: ReactNode;
 };
 
@@ -26,9 +37,40 @@ export function CornerModal({
 	fullWidth,
 	size,
 	lazy = false,
+	buttonClassName,
+	buttonTitle,
+	onDoubleClick,
 	children,
 }: CornerModalProps) {
 	const [open, setOpen] = useState(false);
+	const clickTimerRef = useRef<number | undefined>(undefined);
+
+	useEffect(() => {
+		return () => {
+			if (clickTimerRef.current !== undefined) {
+				clearTimeout(clickTimerRef.current);
+			}
+		};
+	}, []);
+
+	function handleClick() {
+		if (!onDoubleClick) {
+			setOpen(true);
+			return;
+		}
+
+		if (clickTimerRef.current !== undefined) {
+			clearTimeout(clickTimerRef.current);
+			clickTimerRef.current = undefined;
+			onDoubleClick();
+			return;
+		}
+
+		clickTimerRef.current = window.setTimeout(() => {
+			clickTimerRef.current = undefined;
+			setOpen(true);
+		}, DOUBLE_CLICK_MS);
+	}
 
 	return (
 		<>
@@ -36,7 +78,9 @@ export function CornerModal({
 				label={label}
 				icon={icon}
 				expanded={expanded}
-				onClick={() => setOpen(true)}
+				className={buttonClassName}
+				title={buttonTitle}
+				onClick={handleClick}
 			>
 				{detail}
 			</CornerButton>

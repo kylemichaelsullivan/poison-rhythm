@@ -13,6 +13,9 @@ type CornerButtonProps = {
 	/** Wider layout for icon + trailing content. Inferred when `children` are set. */
 	expanded?: boolean;
 	onClick?: () => void;
+	className?: string;
+	/** Tooltip; defaults to `label`. */
+	title?: string;
 	/** Trailing content beside the icon (e.g. tempo readout). */
 	children?: ReactNode;
 };
@@ -22,6 +25,8 @@ export function CornerButton({
 	icon: IconSvg = SettingsIcon,
 	expanded,
 	onClick,
+	className,
+	title,
 	children,
 }: CornerButtonProps) {
 	const isExpanded = expanded ?? children != null;
@@ -33,8 +38,9 @@ export function CornerButton({
 				cornerControlButtonClassName,
 				controlButtonBaseClassName,
 				isExpanded && 'gap-2 px-2.5 w-auto',
+				className,
 			)}
-			title={label}
+			title={title ?? label}
 			aria-label={label}
 			onClick={onClick}
 		>
