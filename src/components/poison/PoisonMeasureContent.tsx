@@ -13,7 +13,7 @@ type PoisonMeasureContentProps = {
 export function PoisonMeasureContent({
 	poisonRhythm,
 }: PoisonMeasureContentProps) {
-	const { settings } = useSettings();
+	const { settings, updateSettings } = useSettings();
 	const { poisonMeasure, round } = useGame();
 	const { isMeasuresPlaying, isDemoPass } = useMetronome();
 
@@ -34,6 +34,11 @@ export function PoisonMeasureContent({
 			<PoisonMeasureFrame
 				hidden={hidePoisonReference}
 				hiddenLabel={hidePoisonReference ? 'Hidden During Playback' : undefined}
+				onHiddenClick={
+					hidePoisonReference
+						? () => updateSettings({ poisonMode: 'visible' })
+						: undefined
+				}
 			>
 				<MeasureGrid
 					measure={poisonRhythm}
