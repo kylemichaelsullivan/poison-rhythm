@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { useCallback, useEffect, useSyncExternalStore } from 'react';
+import { useCallback, useEffect, useMemo, useSyncExternalStore } from 'react';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import {
@@ -59,11 +59,14 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 		[setTheme],
 	);
 
-	const value = {
-		theme,
-		setTheme: setThemePreference,
-		effectiveTheme,
-	};
+	const value = useMemo(
+		() => ({
+			theme,
+			setTheme: setThemePreference,
+			effectiveTheme,
+		}),
+		[theme, setThemePreference, effectiveTheme],
+	);
 
 	return (
 		<ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>

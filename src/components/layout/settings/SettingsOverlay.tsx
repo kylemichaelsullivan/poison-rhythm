@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { AppearanceSettingsPanel } from './AppearanceSettingsPanel';
 import { GameSettingsPanel } from './GameSettingsPanel';
+import { LookSettingsPanel } from './LookSettingsPanel';
 import { type SettingsTabId, SettingsTabs } from './SettingsTabs';
 import { SoundSettingsPanel } from './SoundSettingsPanel';
 
@@ -12,7 +12,7 @@ export function SettingsOverlay() {
 			<SettingsTabs activeTab={activeTab} onTabChange={setActiveTab}>
 				{activeTab === 'mode' && <GameSettingsPanel />}
 				{activeTab === 'sound' && <SoundSettingsPanel />}
-				{activeTab === 'appearance' && <AppearanceSettingsPanel />}
+				{activeTab === 'look' && <LookSettingsPanel />}
 			</SettingsTabs>
 		</div>
 	);

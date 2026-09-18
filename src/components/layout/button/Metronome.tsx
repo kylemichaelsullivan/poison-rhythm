@@ -1,6 +1,6 @@
 import { lazy, Suspense } from 'react';
 import MetronomeIcon from '@/assets/svg/metronome.svg?react';
-import { useMetronome, usePreferences } from '@/contexts';
+import { useMetronome, usePlaybackPreferences } from '@/contexts';
 import { CornerModal } from '../CornerModal';
 
 const MetronomeContent = lazy(() =>
@@ -11,7 +11,7 @@ const MetronomeContent = lazy(() =>
 
 export function Metronome() {
 	const { tempo } = useMetronome();
-	const { muteMetronome, setMuteMetronome } = usePreferences();
+	const { muteMetronome, setMuteMetronome } = usePlaybackPreferences();
 	const muteAction = muteMetronome ? 'Unmute' : 'Mute';
 
 	return (

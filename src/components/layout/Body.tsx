@@ -1,13 +1,13 @@
 import clsx from 'clsx';
-import { GameControls, PlayControls } from '@/components/controls';
+import { PlayControls } from '@/components/controls';
 import { MeasuresSection } from '@/components/measures';
 import { PoisonSection } from '@/components/poison';
-import { useGame, usePreferences, useSettings } from '@/contexts';
+import { useGame, useSettings, useSubdivision } from '@/contexts';
 import { useSoftDisableFocus } from '@/hooks/useSoftDisableFocus';
 import { isBucketTrainerMode } from '@/lib/settings-schema';
 
 export function Body() {
-	const { subdivisionLevel } = usePreferences();
+	const { subdivisionLevel } = useSubdivision();
 	const { settings } = useSettings();
 	const { poisonRhythm, measures, handleNewRound, handleReuseRound } =
 		useGame();
@@ -23,8 +23,6 @@ export function Body() {
 				subdivisionLevel === 'eighths' && 'grid-eighths',
 			)}
 		>
-			<GameControls />
-
 			{!bucketMode ? (
 				<PoisonSection
 					poisonRhythm={poisonRhythm}

@@ -10,17 +10,17 @@ export const THEME_OPTIONS = [
 	{
 		value: null,
 		label: 'System',
-		caption: 'Follows your device’s appearance setting.',
+		caption: 'Matches your device’s light or dark appearance.',
 	},
 	{
 		value: 'light',
 		label: 'Light',
-		caption: 'Light, no matter your device’s appearance.',
+		caption: 'Always light, ignoring your device’s appearance.',
 	},
 	{
 		value: 'dark',
 		label: 'Dark',
-		caption: 'Dark, no matter your device’s appearance.',
+		caption: 'Always dark, ignoring your device’s appearance.',
 	},
 ] as const satisfies readonly ThemeOption[];
 

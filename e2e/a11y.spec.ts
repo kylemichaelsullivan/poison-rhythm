@@ -80,6 +80,13 @@ test.describe('accessibility', () => {
 	}) => {
 		await page.goto('/');
 		await page
+			.getByRole('banner')
+			.getByRole('button', { name: 'Poison Rhythm' })
+			.click();
+		await expect(
+			page.getByRole('dialog', { name: 'About Poison Rhythm' }),
+		).toBeVisible();
+		await page
 			.getByRole('button', { name: 'Explain Difficulty Levels' })
 			.click();
 		await expect(

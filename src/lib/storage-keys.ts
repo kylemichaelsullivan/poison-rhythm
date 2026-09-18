@@ -11,6 +11,8 @@ const STUDENT_KEYS = {
 	countInEnabled: 'poison-rhythm-count-in-enabled',
 	difficulty: 'poison-rhythm-difficulty',
 	tempo: 'poison-rhythm-tempo',
+	dominantColor: 'poison-rhythm-dominant-color',
+	secondaryColor: 'poison-rhythm-secondary-color',
 	gameSettings: 'poison-rhythm-settings-v1',
 } as const;
 
@@ -36,6 +38,8 @@ export const STORAGE_KEYS = {
 	countInEnabled: preferenceStorageKey('countInEnabled'),
 	difficulty: preferenceStorageKey('difficulty'),
 	tempo: preferenceStorageKey('tempo'),
+	dominantColor: preferenceStorageKey('dominantColor'),
+	secondaryColor: preferenceStorageKey('secondaryColor'),
 	gameSettings: preferenceStorageKey('gameSettings'),
 } as const;
 

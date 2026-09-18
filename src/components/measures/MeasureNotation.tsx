@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { usePreferences, useSettings } from '@/contexts';
+import { useSettings, useSubdivision } from '@/contexts';
 import { useMusiSyncFont } from '@/hooks/useMusiSyncFont';
 import {
 	measureToNotationSteps,
@@ -25,7 +25,7 @@ export function MeasureNotation({
 	playback = false,
 	hidden = false,
 }: MeasureNotationProps) {
-	const { subdivisionLevel } = usePreferences();
+	const { subdivisionLevel } = useSubdivision();
 	const { settings } = useSettings();
 	const fontReady = useMusiSyncFont();
 	const steps = measureToNotationSteps(measure, richMeasure, subdivisionLevel);

@@ -52,12 +52,14 @@ export {
 	shouldRunCountIn,
 } from './playback-state';
 export type {
+	ColorPreference,
 	SubdivisionLevel,
 	ThemeSetting,
 } from './preference-schemas';
 export {
 	DEFAULT_DIFFICULTY,
 	DEFAULT_SUBDIVISION_LEVEL,
+	serializeColorPreference,
 	serializeCountInEnabled,
 	serializeDifficulty,
 	serializeExplicitTrue,
@@ -68,9 +70,11 @@ export {
 export {
 	readCountInEnabled,
 	readDifficulty,
+	readDominantColor,
 	readMuteMetronome,
 	readMutePreference,
 	readMuteRhythmSounds,
+	readSecondaryColor,
 	readStoredTempo,
 	readSubdivisionLevel,
 	readThemeSetting,
@@ -78,9 +82,11 @@ export {
 	stripBpmSearchParam,
 	writeCountInEnabled,
 	writeDifficulty,
+	writeDominantColor,
 	writeMuteMetronome,
 	writeMutePreference,
 	writeMuteRhythmSounds,
+	writeSecondaryColor,
 	writeStoredTempo,
 	writeSubdivisionLevel,
 	writeThemeSetting,

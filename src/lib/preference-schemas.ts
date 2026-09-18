@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { CRAYON_IDS, type CrayonId, isCrayonId } from './colors/crayola-64';
 import { DIFFICULTY_MAX, DIFFICULTY_MIN } from './difficulty-levels';
 import { BPM_DEFAULT, BPM_MAX, BPM_MIN } from './metronome-defaults';
 import type { ThemePreference } from './theme-options';
@@ -131,4 +132,29 @@ export function serializeExplicitTrue(enabled: boolean): string | null {
 
 export function serializeCountInEnabled(enabled: boolean): string | null {
 	return enabled ? null : 'false';
+}
+
+/** null = Poison Rhythm brand accent (CSS @theme defaults). */
+export type ColorPreference = CrayonId | null;
+
+export const crayonIdSchema = z.enum(
+	CRAYON_IDS as unknown as [CrayonId, ...CrayonId[]],
+);
+
+export function parseColorPreference(raw: string | null): ColorPreference {
+	if (raw === null) {
+		return null;
+	}
+
+	return isCrayonId(raw) ? raw : null;
+}
+
+export function serializeColorPreference(
+	value: ColorPreference,
+): string | null {
+	if (value === null) {
+		return null;
+	}
+
+	return crayonIdSchema.parse(value);
 }

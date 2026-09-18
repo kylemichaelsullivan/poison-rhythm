@@ -1,4 +1,5 @@
 import { lazy, Suspense } from 'react';
+import { usePendingDifficulty } from '@/contexts';
 import { CornerModal } from '../CornerModal';
 
 const SettingsOverlay = lazy(() =>
@@ -8,8 +9,16 @@ const SettingsOverlay = lazy(() =>
 );
 
 export function Settings() {
+	const { onHostModalClosed } = usePendingDifficulty();
+
 	return (
-		<CornerModal label='Settings' title='Settings' size='xl' lazy>
+		<CornerModal
+			label='Settings'
+			title='Settings'
+			size='xl'
+			lazy
+			onClose={onHostModalClosed}
+		>
 			<Suspense fallback={null}>
 				<SettingsOverlay />
 			</Suspense>

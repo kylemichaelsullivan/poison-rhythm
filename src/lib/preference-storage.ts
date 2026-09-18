@@ -1,5 +1,7 @@
 import { BPM_DEFAULT } from './metronome-defaults';
 import {
+	type ColorPreference,
+	parseColorPreference,
 	parseCountInEnabled,
 	parseDifficulty,
 	parseExplicitTrue,
@@ -7,6 +9,7 @@ import {
 	parseTempo,
 	parseThemeSetting,
 	type SubdivisionLevel,
+	serializeColorPreference,
 	serializeCountInEnabled,
 	serializeDifficulty,
 	serializeExplicitTrue,
@@ -22,10 +25,15 @@ import {
 } from './storage';
 import { LEGACY_STORAGE_KEYS, STORAGE_KEYS } from './storage-keys';
 
-export type { SubdivisionLevel, ThemeSetting } from './preference-schemas';
+export type {
+	ColorPreference,
+	SubdivisionLevel,
+	ThemeSetting,
+} from './preference-schemas';
 export {
 	DEFAULT_DIFFICULTY,
 	DEFAULT_SUBDIVISION_LEVEL,
+	parseColorPreference,
 	parseCountInEnabled,
 	parseDifficulty,
 	parseExplicitTrue,
@@ -132,6 +140,22 @@ export function readStoredTempo(): number | null {
 
 export function writeStoredTempo(value: number): void {
 	writePreference(STORAGE_KEYS.tempo, serializeTempo(value));
+}
+
+export function readDominantColor(): ColorPreference {
+	return readPreference(STORAGE_KEYS.dominantColor, parseColorPreference);
+}
+
+export function writeDominantColor(value: ColorPreference): void {
+	writePreference(STORAGE_KEYS.dominantColor, serializeColorPreference(value));
+}
+
+export function readSecondaryColor(): ColorPreference {
+	return readPreference(STORAGE_KEYS.secondaryColor, parseColorPreference);
+}
+
+export function writeSecondaryColor(value: ColorPreference): void {
+	writePreference(STORAGE_KEYS.secondaryColor, serializeColorPreference(value));
 }
 
 function readTempoFromSearchParams(search: string): number | null {

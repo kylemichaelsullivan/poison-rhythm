@@ -25,6 +25,8 @@ type CornerModalProps = {
 	 * this instead and does not open the modal.
 	 */
 	onDoubleClick?: () => void;
+	/** Called after the modal closes (X, scrim, or Escape). */
+	onClose?: () => void;
 	children?: ReactNode;
 };
 
@@ -40,6 +42,7 @@ export function CornerModal({
 	buttonClassName,
 	buttonTitle,
 	onDoubleClick,
+	onClose,
 	children,
 }: CornerModalProps) {
 	const [open, setOpen] = useState(false);
@@ -72,6 +75,11 @@ export function CornerModal({
 		}, DOUBLE_CLICK_MS);
 	}
 
+	function handleClose() {
+		setOpen(false);
+		onClose?.();
+	}
+
 	return (
 		<>
 			<CornerButton
@@ -89,7 +97,7 @@ export function CornerModal({
 				title={title}
 				fullWidth={fullWidth}
 				size={size}
-				onClose={() => setOpen(false)}
+				onClose={handleClose}
 			>
 				{lazy ? (open ? children : null) : children}
 			</Modal>

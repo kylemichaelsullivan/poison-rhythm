@@ -4,7 +4,6 @@ export { useLocalStorage } from './useLocalStorage';
 export { useMeasurePlaybackSync } from './useMeasurePlaybackSync';
 export { useMetronomeBeat } from './useMetronomeBeat';
 export { useMusiSyncFont } from './useMusiSyncFont';
-export { usePendingDifficulty } from './usePendingDifficulty';
 export { useSmoothNotationCursor } from './useSmoothNotationCursor';
 export { useSoftDisableFocus } from './useSoftDisableFocus';
 export { useTapTempo } from './useTapTempo';

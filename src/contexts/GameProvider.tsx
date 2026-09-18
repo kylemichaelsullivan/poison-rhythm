@@ -1,7 +1,7 @@
 import type { MutableRefObject, ReactNode } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { GameContext } from '@/contexts/GameContext';
-import { usePreferences } from '@/contexts/PreferencesContext';
+import { useComplexityPreferences } from '@/contexts/PreferencesContext';
 import { useSettings } from '@/contexts/SettingsContext';
 import {
 	createRoundForMode,
@@ -21,7 +21,7 @@ function preloadRhythm(rhythmRef: MutableRefObject<RhythmModule | null>) {
 }
 
 export function GameProvider({ children }: { children: ReactNode }) {
-	const { difficulty, subdivisionLevel } = usePreferences();
+	const { difficulty, subdivisionLevel } = useComplexityPreferences();
 	const { settings } = useSettings();
 	// Sync seed from storage-hydrated settings so first paint already has a round
 	// (avoids empty prompt → MIDI roll flash from async init).

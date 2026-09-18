@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import type { ReactNode } from 'react';
 import { focusVisibleRingClassName } from '@/lib/control-classes';
 
-export type SettingsTabId = 'mode' | 'sound' | 'appearance';
+export type SettingsTabId = 'mode' | 'sound' | 'look';
 
 export type SettingsTabDefinition = {
 	id: SettingsTabId;
@@ -12,7 +12,7 @@ export type SettingsTabDefinition = {
 export const SETTINGS_TABS: SettingsTabDefinition[] = [
 	{ id: 'mode', label: 'Mode' },
 	{ id: 'sound', label: 'Sound' },
-	{ id: 'appearance', label: 'Appearance' },
+	{ id: 'look', label: 'Look' },
 ];
 
 type SettingsTabsProps = {
@@ -43,7 +43,7 @@ export function SettingsTabs({
 							type='button'
 							id={`settings-tab-${tab.id}`}
 							className={clsx(
-								'SettingsTab px-1.5 py-2.5 text-sm font-medium transition-colors sm:px-2',
+								'SettingsTab px-2 py-2.5 text-sm font-medium transition-colors',
 								focusVisibleRingClassName,
 								isActive
 									? 'border-b-2 border-primary text-primary'
@@ -61,7 +61,7 @@ export function SettingsTabs({
 				})}
 			</div>
 			<div
-				className='SettingsTabPanel flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto py-4'
+				className='SettingsTabPanel flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto py-4 pe-4'
 				id={activePanelId}
 				role='tabpanel'
 				aria-labelledby={`settings-tab-${activeTab}`}

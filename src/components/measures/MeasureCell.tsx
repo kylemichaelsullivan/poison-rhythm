@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useMetronome, usePreferences, useSettings } from '@/contexts';
+import { useMetronome, useSettings, useSubdivision } from '@/contexts';
 import { cellToSubdivisionStep } from '@/lib';
 import { shouldShowVisualFeedback } from '@/lib/audio';
 import { shouldHighlightPlaybackStep } from '@/lib/playback-state';
@@ -24,7 +24,7 @@ export function MeasureCell({
 	sticking,
 	hidden = false,
 }: MeasureCellProps) {
-	const { subdivisionLevel } = usePreferences();
+	const { subdivisionLevel } = useSubdivision();
 	const { settings } = useSettings();
 	const { isMeasuresPlaying, subdivisionIndex } = useMetronome();
 	const showVisual = shouldShowVisualFeedback(settings.feedbackMode) && !hidden;

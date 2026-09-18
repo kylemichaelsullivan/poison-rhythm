@@ -1,14 +1,15 @@
 import clsx from 'clsx';
+import { memo } from 'react';
 import {
 	AboutPoisonRhythmProvider,
 	Body,
 	Footer,
 	Header,
 } from '@/components/layout';
-import { GameProvider } from '@/contexts';
+import { GameProvider, PendingDifficultyProvider } from '@/contexts';
 import { pageSurfaceClassName } from '@/lib/control-classes';
 
-function AppContent() {
+const AppContent = memo(function AppContent() {
 	return (
 		<div
 			className={clsx(
@@ -21,15 +22,17 @@ function AppContent() {
 			<Footer />
 		</div>
 	);
-}
+});
 
 function App() {
 	return (
-		<AboutPoisonRhythmProvider>
-			<GameProvider>
-				<AppContent />
-			</GameProvider>
-		</AboutPoisonRhythmProvider>
+		<GameProvider>
+			<PendingDifficultyProvider>
+				<AboutPoisonRhythmProvider>
+					<AppContent />
+				</AboutPoisonRhythmProvider>
+			</PendingDifficultyProvider>
+		</GameProvider>
 	);
 }
 

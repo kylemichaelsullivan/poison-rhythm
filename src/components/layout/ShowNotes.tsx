@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { usePreferences } from '@/contexts';
+import { useSubdivision } from '@/contexts';
 import { useHoverPinPopover } from '@/hooks/useHoverPinPopover';
 import {
 	indexToLevel,
@@ -11,7 +11,7 @@ import { ShowNotesSlider } from './ShowNotesSlider';
 import { ShowNotesTrigger } from './ShowNotesTrigger';
 
 export function ShowNotes() {
-	const { subdivisionLevel, setSubdivisionLevel } = usePreferences();
+	const { subdivisionLevel, setSubdivisionLevel } = useSubdivision();
 	const {
 		open,
 		wrapperRef,

@@ -1,6 +1,9 @@
 import type { ReactNode } from 'react';
 import { useCallback, useMemo } from 'react';
-import { PreferencesContext } from '@/contexts/PreferencesContext';
+import {
+	ComplexityPreferencesContext,
+	PlaybackPreferencesContext,
+} from '@/contexts/PreferencesContext';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { clampTempo } from '@/lib/metronome-tempo';
 import {
@@ -83,40 +86,44 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
 		[setTempoState, tempo],
 	);
 
-	const value = useMemo(
+	const complexityValue = useMemo(
 		() => ({
 			subdivisionLevel,
 			setSubdivisionLevel,
+			difficulty,
+			setDifficulty,
+		}),
+		[subdivisionLevel, setSubdivisionLevel, difficulty, setDifficulty],
+	);
+
+	const playbackValue = useMemo(
+		() => ({
 			muteMetronome,
 			setMuteMetronome,
 			countInEnabled,
 			setCountInEnabled,
 			muteRhythmSounds,
 			setMuteRhythmSounds,
-			difficulty,
-			setDifficulty,
 			tempo,
 			setTempo,
 		}),
 		[
-			subdivisionLevel,
-			setSubdivisionLevel,
 			muteMetronome,
 			setMuteMetronome,
 			countInEnabled,
 			setCountInEnabled,
 			muteRhythmSounds,
 			setMuteRhythmSounds,
-			difficulty,
-			setDifficulty,
 			tempo,
 			setTempo,
 		],
 	);
 
 	return (
-		<PreferencesContext.Provider value={value}>
-			{children}
-		</PreferencesContext.Provider>
+		<ComplexityPreferencesContext.Provider value={complexityValue}>
+			<PlaybackPreferencesContext.Provider value={playbackValue}>
+				{children}
+			</PlaybackPreferencesContext.Provider>
+		</ComplexityPreferencesContext.Provider>
 	);
 }

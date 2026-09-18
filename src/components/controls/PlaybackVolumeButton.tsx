@@ -1,11 +1,11 @@
 import FullVolumeIcon from '@/assets/svg/full-volume.svg?react';
 import MuteIcon from '@/assets/svg/mute.svg?react';
 import { IconToggle } from '@/components/layout/settings';
-import { usePreferences } from '@/contexts';
+import { usePlaybackPreferences } from '@/contexts';
 
 /** Toggles rhythm-hit mute — same pref as Settings → Sound → Rhythm Hits. */
 export function PlaybackVolumeButton() {
-	const { muteRhythmSounds, setMuteRhythmSounds } = usePreferences();
+	const { muteRhythmSounds, setMuteRhythmSounds } = usePlaybackPreferences();
 	const actionLabel = muteRhythmSounds ? 'Unmute' : 'Mute';
 
 	return (

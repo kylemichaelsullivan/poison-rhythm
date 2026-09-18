@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type {
 	MetronomeContextValue,
 	PlaybackPass,
@@ -387,30 +387,57 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 		return () => window.removeEventListener('keyup', handleKeyUp);
 	}, [tempo, handleTempoChange, stop]);
 
-	const value: MetronomeContextValue = {
-		tempo,
-		activeSource,
-		isRunning,
-		isMetronomeRunning,
-		isMeasuresRunning,
-		isCountingIn,
-		countInBeat,
-		isMeasuresPlaying,
-		isDemoPass,
-		isStudentPass,
-		playbackPass,
-		isLit,
-		subdivisionIndex,
-		measureCycle,
-		setPlaybackMeasure,
-		setPreviewMeasure,
-		toggleMetronome,
-		toggleMeasures,
-		startMetronome,
-		stop,
-		handleTempoChange,
-		setTempo,
-	};
+	const value = useMemo(
+		() =>
+			({
+				tempo,
+				activeSource,
+				isRunning,
+				isMetronomeRunning,
+				isMeasuresRunning,
+				isCountingIn,
+				countInBeat,
+				isMeasuresPlaying,
+				isDemoPass,
+				isStudentPass,
+				playbackPass,
+				isLit,
+				subdivisionIndex,
+				measureCycle,
+				setPlaybackMeasure,
+				setPreviewMeasure,
+				toggleMetronome,
+				toggleMeasures,
+				startMetronome,
+				stop,
+				handleTempoChange,
+				setTempo,
+			}) satisfies MetronomeContextValue,
+		[
+			tempo,
+			activeSource,
+			isRunning,
+			isMetronomeRunning,
+			isMeasuresRunning,
+			isCountingIn,
+			countInBeat,
+			isMeasuresPlaying,
+			isDemoPass,
+			isStudentPass,
+			playbackPass,
+			isLit,
+			subdivisionIndex,
+			measureCycle,
+			setPlaybackMeasure,
+			setPreviewMeasure,
+			toggleMetronome,
+			toggleMeasures,
+			startMetronome,
+			stop,
+			handleTempoChange,
+			setTempo,
+		],
+	);
 
 	return (
 		<MetronomeContext.Provider value={value}>

@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { usePreferences } from '@/contexts';
+import { useComplexityPreferences } from '@/contexts';
 import { useSettings } from '@/contexts/SettingsContext';
 import { generateAppendBatch, generateRound } from '@/lib/rhythm';
 import { isEndlessMode } from '@/lib/settings-schema';
@@ -7,7 +7,7 @@ import type { RhythmMeasure, RichRhythmMeasure, Round } from '@/types';
 import { richToRhythmMeasure } from '@/types';
 
 export function useGameLoop() {
-	const { difficulty, subdivisionLevel } = usePreferences();
+	const { difficulty, subdivisionLevel } = useComplexityPreferences();
 	const { settings } = useSettings();
 	const [round, setRound] = useState<Round | null>(null);
 	const [currentIndex, setCurrentIndex] = useState(0);

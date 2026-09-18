@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useMetronome, usePreferences } from '@/contexts';
+import { useMetronome, useSubdivision } from '@/contexts';
 import {
 	smoothSubdivisionPositionPercent,
 	subdivisionPositionPercent,
@@ -9,7 +9,7 @@ import {
 /** Tempo-synced playhead position (0–100) that glides across the notation line. */
 export function useSmoothNotationCursor(active: boolean): number {
 	const { subdivisionIndex, tempo } = useMetronome();
-	const { subdivisionLevel } = usePreferences();
+	const { subdivisionLevel } = useSubdivision();
 	const pulseMs = subdivisionPulseMs(tempo, subdivisionLevel);
 	const beatStartRef = useRef(performance.now());
 	const [leftPct, setLeftPct] = useState(() =>

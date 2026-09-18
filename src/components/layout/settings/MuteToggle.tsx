@@ -27,6 +27,7 @@ export function MuteToggle({
 				unpressedIcon={FullVolumeIcon}
 				title={`Click to ${actionLabel}`}
 				disabled={disabled}
+				variant='checkbox'
 				onPressedChange={onChange}
 				selectedWhenPressed={false}
 			/>
