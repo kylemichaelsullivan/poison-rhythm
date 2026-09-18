@@ -11,8 +11,8 @@ Compose UI from small layers. Prefer **one root HTML element per component** (or
 ```
 atoms (ui/)     → one element: Button, IconButton, Caption, Stack, Row
 molecules       → compose atoms: PlayModeOptionCard, ModalActions, MeasureCarouselChrome
-composers       → wire context + hooks: GameControls, MeasureSlider, ShowNotes, Body
-hooks           → interaction / playback: usePendingDifficulty, useMeasurePlaybackSync, …
+composers       → wire context + hooks: DifficultyControls, MeasureSlider, ShowNotes, Body
+hooks           → interaction / playback: useMeasurePlaybackSync, useHoverPinPopover, …
 ```
 
 - **Do not** invent raw `<button className=…>` in feature composers — use `@/components/ui` or existing control atoms
@@ -25,7 +25,7 @@ hooks           → interaction / playback: usePendingDifficulty, useMeasurePlay
 ```
 src/components/
 ├── ui/                    # Elemental shared primitives (Button, IconButton, Caption, Stack, Row)
-├── controls/              # Game controls, play modes, difficulty molecules + GameControls composer
+├── controls/              # Play modes, difficulty molecules + DifficultyControls composer
 ├── layout/                # App chrome, overlays, metronome UI
 │   ├── about/
 │   ├── button/
@@ -60,14 +60,15 @@ src/components/
 ### Body
 
 - **Purpose**: Main game composition
-- **Uses**: `useSoftDisableFocus` for New → Play focus guidance; renders GameControls, PoisonSection, MeasuresSection, PlayControls
+- **Uses**: `useSoftDisableFocus` for New → Play focus guidance; renders PoisonSection, MeasuresSection, PlayControls
 - **No props**: Reads game state from context
 
-### GameControls (composer)
+### DifficultyControls (composer)
 
-- **Purpose**: Difficulty section + play-mode / help / regen modals
-- **Uses**: `InfoGlyphButton`, `ModeBadgeTrigger`, `DifficultySlider`, `PlayModesModal`, `DifficultyHelpModal`, `ConfirmRegenModal`, `usePendingDifficulty`
-- **Note**: Difficulty is the primary complexity control on the main page (along with header subdivision)
+- **Purpose**: Difficulty section with play-mode badge + help / regen / Play Modes modals
+- **Uses**: `InfoGlyphButton`, `ModeBadgeTrigger`, `DifficultySlider`, `DifficultyHelpModal`, `PlayModesModal`, `usePendingDifficulty`
+- **Variants**: `framed` (About section box with mode badge) vs compact Settings block (`framed={false}`)
+- **Note**: Lives in the title About modal and Settings → Mode; header ShowNotes remains the quick subdivision control. `ConfirmRegenModal` is owned by `PendingDifficultyProvider` and only opens after the host modal closes if difficulty changed.
 
 ### ui/ atoms
 
@@ -104,14 +105,14 @@ src/components/
 
 ### Settings (layout/settings)
 
-- **SettingsOverlay**: Three tabs — Mode, Sound, Appearance (`SettingsTabs`)
-- **AppearanceSettingsPanel** / **GameSettingsPanel** / **SoundSettingsPanel**: compose setting atoms only (Display Mode lives on Poison section, not Appearance)
+- **SettingsOverlay**: Three tabs — Mode, Sound, Look (`SettingsTabs`)
+- **GameSettingsPanel** / **SoundSettingsPanel** / **LookSettingsPanel**: compose setting atoms (`Look` includes theme, display, feedback, and `ColorAccentSettings`)
 - **SettingsGroup** / **ConditionalSettingsGroup**: Section dividers inside a tab
 - **Setting utilities**: `NumberSetting`, `OnOffSetting`, `SelectSetting`, `SegmentedControl`, `When`, `useUpdateSetting`
 - **ThemeSetting**, **Fieldset**, **SegmentButton**, **SettingRow**, **EnableToggle** / **IconToggle**, **FieldCaption**
 - **Canonical grouping**: `SettingsGroup` (do not revive removed `SettingsSection` / `SettingsPanel`)
 
-**Not in Settings:** density, syncopation, or subdivision — difficulty slider and header ShowNotes.
+**Not in Settings as separate dials:** density or syncopation. Subdivision is mirrored (header ShowNotes + Settings → Mode).
 
 ## Guidelines
 

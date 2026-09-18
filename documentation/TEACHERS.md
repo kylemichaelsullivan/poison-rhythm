@@ -18,8 +18,8 @@ It is not a full notation curriculum. **Grid** mode is a piano-roll view; **Nota
 ## Five-minute classroom start
 
 1. Open the app — a round is already generated (measures + poison appear immediately).
-2. Set **Difficulty** (1–5) with the slider; open the **i** control for level plain-language help.
-3. Set **subdivision** in the header (1/4, 1/8, or 1/16) to match what students are ready to see and hear.
+2. Set **Difficulty** (1–5) from the title **About** modal (click the Poison Rhythm title) or **Settings → Mode**; open the **i** control for level plain-language help.
+3. Set **subdivision** in the header ShowNotes control (or Settings → Mode) to 1/4, 1/8, or 1/16 to match what students are ready to see and hear.
 4. Point to the **Poison Rhythm** box so everyone knows the target pattern.
 5. Use **Prev / Next** to walk measures together, or **Play** so the class hears them (count-in beats appear on the Play control when count-in is on).
 6. Click **New** for a fresh poison and set of measures, or **Reuse** to keep the same poison and regenerate decoys.
@@ -40,7 +40,7 @@ Tip: raise **subdivision** before maxing difficulty if students struggle to *see
 
 ## Play modes
 
-Change mode from the mode badge on the Difficulty section.
+Change mode from the **Difficulty** section badge in the title About modal (click Poison Rhythm), or under **Settings → Mode → Play Mode**.
 
 | Mode | Use when… |
 |------|-----------|
@@ -50,7 +50,7 @@ Change mode from the mode badge on the Difficulty section.
 
 ## Poison visibility (Eye toggle)
 
-On the Poison Rhythm section:
+On the Poison Rhythm section (also **Show Poison?** under **Settings → Mode → Practice**):
 
 - **Visible** — students can see the poison while they search and while measures play.
 - **Hidden during playback** — poison is concealed while playing (memory / recall challenge). Generation still uses a poison when Poison Rhythm mode has poison enabled.
@@ -69,7 +69,7 @@ Optional **Count-In Before Play** is under **Settings → Sound**. During count-
 
 ## Display mode (grid vs notation)
 
-From the badge on the Poison Rhythm section:
+From the badge on the Poison Rhythm section, or **Settings → Look → Display**:
 
 | Mode | Teacher note |
 |------|----------------|
@@ -85,7 +85,7 @@ From the badge on the Poison Rhythm section:
 
 **Memory challenge** — Same as above, but Eye → hidden during playback. Preview Before Play on; mute the Playing pass so students must internalize the Listening pass.
 
-**Bucket groove** — Bucket Drumming mode, raise difficulty gradually; use metronome tempo from the footer.
+**Bucket groove** — Bucket Drumming mode, raise difficulty gradually; set tempo from the footer metronome or **Settings → Sound**.
 
 **Notation bridge** — Switch Display Mode to Notation after students can find the poison in Grid; keep subdivision fixed so only the visual language changes.
 
@@ -93,8 +93,9 @@ From the badge on the Poison Rhythm section:
 
 - Prefer a larger window or projected display; section titles and the poison box are the visual anchors.
 - Count-in and “Counting In” status help shared listening.
-- Theme (light/dark/system) is under **Settings → Appearance**.
-- Feedback toggles (visual / audio) live under Appearance if the room setup needs quieter or less flashy play.
+- Theme (light/dark/system) is under **Settings → Look**.
+- Colors (dominant / secondary) are under **Settings → Look** — prefer the **Poison Rhythm** pairing for shared classrooms; low-contrast crayons show a bypassable warning modal. See [`COLORS.md`](COLORS.md).
+- Feedback toggles (visual / audio) live under Look if the room setup needs quieter or less flashy play.
 
 ## Student records (printable PDF)
 

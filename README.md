@@ -80,7 +80,7 @@ src/
 │   │   ├── about/    # About modal content
 │   │   ├── button/   # Footer corner triggers (Settings, Metronome, Account)
 │   │   ├── metronome/
-│   │   └── settings/ # SettingsOverlay + Mode / Sound / Appearance panels
+│   │   └── settings/ # SettingsOverlay + Mode / Sound / Look panels
 │   ├── measures/     # Measure carousel chrome, grid, notation, playback highlighting
 │   └── poison/       # Poison rhythm section layers + New/Reuse
 ├── contexts/         # React context modules (see Context modules below)
@@ -110,8 +110,8 @@ UI is composed like stacked layers (one concern per file; prefer one root DOM el
 |-------|----------|------|
 | **Atoms** | `src/components/ui/` | Single-element primitives (`Button`, `IconButton`, `Caption`, `Stack`, `Row`) |
 | **Molecules** | `controls/`, `measures/`, `layout/settings/` | Composed pieces (`PlayModeOptionCard`, `MeasureCarouselChrome`, `EnableToggle`) |
-| **Composers** | feature folders | Wire context + hooks (`GameControls`, `MeasureSlider`, `ShowNotes`, `Body`) |
-| **Hooks** | `src/hooks/` | Side effects out of JSX (`usePendingDifficulty`, `useMeasurePlaybackSync`, `useHoverPinPopover`, `useSoftDisableFocus`, `useMusiSyncFont`, `useSmoothNotationCursor`) |
+| **Composers** | feature folders | Wire context + hooks (`DifficultyControls`, `MeasureSlider`, `ShowNotes`, `Body`) |
+| **Hooks** | `src/hooks/` | Side effects out of JSX (`useMeasurePlaybackSync`, `useHoverPinPopover`, `useSoftDisableFocus`, `useMusiSyncFont`, `useSmoothNotationCursor`) |
 
 Feature composers should import `@/components/ui` (or existing settings atoms) instead of inventing raw `<button className=…>` markup. Details: [`.cursor/components.mdc`](.cursor/components.mdc), [`documentation/ARCHITECTURE.md`](documentation/ARCHITECTURE.md).
 
@@ -128,11 +128,11 @@ Import from the barrel: `@/contexts`.
 |--------|---------|----------|------|
 | `GameContext` | `useGame` | `GameProvider` | Sync-seeded round on first paint, measures, poison index, endless prefetch, visual hints |
 | `SettingsContext` | `useSettings` | `SettingsProvider` | Game modes, poison/sticking, practice options (`localStorage`) |
-| `PreferencesContext` | `usePreferences`, `useDifficulty` | `PreferencesProvider` | Difficulty, tempo, subdivision, mute/count-in prefs |
+| `PreferencesContext` | `usePreferences`, `useComplexityPreferences`, `usePlaybackPreferences`, `useDifficulty`, `useSubdivision` | `PreferencesProvider` | Complexity (difficulty, subdivision) and playback (tempo, mutes, count-in) slices |
 | `MetronomeContext` | `useMetronome` | `MetronomeProvider` | Tempo, metronome/measure playback, demo-before-play passes |
 | `ThemeContext` | `useTheme` | `ThemeProvider` | Light/dark/system theme |
 
-Provider tree: `main.tsx` wraps `ThemeProvider` → `SettingsProvider` → `PreferencesProvider` → `MetronomeProvider`; `App.tsx` adds `GameProvider`.
+Provider tree: `main.tsx` wraps `ThemeProvider` → `ColorPreferencesProvider` → `SettingsProvider` → `PreferencesProvider` → `MetronomeProvider`; `App.tsx` adds `GameProvider` → `AboutPoisonRhythmProvider`.
 
 ### Playback timing
 
@@ -145,33 +145,31 @@ Count-in and measure playback share one **audio-clock** timeline (`createPlaybac
 
 ### Rhythm complexity
 
-Complexity is controlled by **two existing main-page controls** — not duplicated in Settings:
+Complexity is controlled by **difficulty** and **subdivision** (not separate density/syncopation dials):
 
 | Control | Location | Effect |
 |---------|----------|--------|
-| **Difficulty slider (1–5)** | Main page | Hit count range and placement bias (downbeats at level 1, full 16th grid at level 5) |
-| **Subdivision (1/4, 1/8, 1/16)** | Header ShowNotes | Which grid positions can receive hits during generation, display, and playback |
+| **Difficulty slider (1–5)** | Title About modal + Settings → Mode | Hit count range and placement bias (downbeats at level 1, full 16th grid at level 5) |
+| **Subdivision (1/4, 1/8, 1/16)** | Header ShowNotes + Settings → Mode | Which grid positions can receive hits during generation, display, and playback |
 
-The rhythm engine (`src/lib/rhythm/`) accepts both `difficulty` and `subdivisionLevel` when generating measures. Settings may add accents and sticking on top — but not separate density, syncopation, or subdivision dials.
+The rhythm engine (`src/lib/rhythm/`) accepts both `difficulty` and `subdivisionLevel` when generating measures. Settings may add accents and sticking on top — but not separate density or syncopation dials.
 
 ### Settings
 
-**UI:** `src/components/layout/settings/` (atomic rows/toggles) plus main-page **Play Modes** modal in `src/components/controls/`
+**UI:** `src/components/layout/settings/` (atomic rows/toggles). Main-page shortcuts (Display Mode modal, ShowNotes, metronome) stay available; difficulty + play mode live in the title About modal. Settings mirrors those adjustable prefs.
 
 | Area | Controls |
 |------|----------|
-| Mode | Practice toggles; accents & sticking (Coming Soon) |
-| Appearance | Theme, feedback (visual / audio toggles) |
-| Sound | Metronome mute, rhythm mute, count-in |
-| Display Mode (Poison section) | Grid / notation; scroll (Coming Soon) |
-| Play modes (main page) | Classic, Bucket Drumming; **Endless** checkbox |
-| Poison visibility | Eye toggle on Poison Rhythm — hide during playback vs always show |
+| Mode | Play mode + Endless, complexity (difficulty, subdivision), practice (Show Poison?, show next, preview pass, mute on pass) |
+| Sound | Tempo, metronome mute, rhythm mute, count-in |
+| Look | Theme, display mode (grid / notation), feedback, color accents (Crayola tray); see [`documentation/COLORS.md`](documentation/COLORS.md) |
+| Main-page shortcuts | Poison Display Mode badge, header ShowNotes, footer metronome |
 
-Settings modal tabs: **Mode**, **Sound**, **Appearance** (`SettingsTabs`). Display mode is **not** in Settings — use the badge on the Poison Rhythm section.
+Settings modal tabs: **Mode**, **Sound**, **Look** (`SettingsTabs`).
 
 **Persistence:**
 
-- Theme, difficulty, tempo, subdivision, mute flags → `PreferencesProvider` (`poison-rhythm-*` keys)
+- Theme, color accents, difficulty, tempo, subdivision, mute flags → preference keys (`poison-rhythm-*`; color via `ColorPreferencesProvider`)
 - Game settings → `SettingsProvider` (`poison-rhythm-settings-v1`)
 - Schemas: `src/lib/preference-schemas.ts`, `src/lib/settings-schema.ts`
 
@@ -248,12 +246,13 @@ Details: [`documentation/TESTING.md`](documentation/TESTING.md).
 6. Use **Prev/Next** to step through measures and find which one matches the poison.
 7. Use **Play** to hear measures (optional count-in shows beat numbers on the Play control). With **Preview Before Play** enabled (Settings → Mode), the current measure plays once as a demo (Listening), then again as the student pass (Playing; optionally muted).
 8. Open the footer **metronome** to set tempo or tap tempo.
-9. Open the footer **Settings** for theme, sound mutes, practice features (show next measure, demo pass), and upcoming rhythm options (accents, sticking). Change **play mode** from the mode badge on the Difficulty section. Change **display mode** (grid / notation; scroll Coming Soon) from the badge on the Poison Rhythm section.
+9. Open the footer **Settings** for theme, colors, sound (including tempo), complexity, play/display mode, poison visibility, and practice features (show next measure, demo pass). Difficulty + play mode are in the title **About** modal; other main-page shortcuts remain: Poison **Display Mode** badge, header ShowNotes, footer metronome.
 
 ## Documentation
 
 - [`AGENTS.md`](AGENTS.md) — agent/contributor entrypoint (gotchas, key paths, scripts)
 - [`documentation/TEACHERS.md`](documentation/TEACHERS.md) — classroom guide for music teachers
+- [`documentation/COLORS.md`](documentation/COLORS.md) — color accents, Crayola tray, contrast guidance
 - [`documentation/printables/student-record.pdf`](documentation/printables/student-record.pdf) — printable student practice log
 - [`documentation/ARCHITECTURE.md`](documentation/ARCHITECTURE.md) — engine, state, settings, notation, UI composition
 - [`documentation/TESTING.md`](documentation/TESTING.md) — unit, integration, and Playwright guidance

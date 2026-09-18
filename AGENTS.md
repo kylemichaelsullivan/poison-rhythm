@@ -27,12 +27,14 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 1. **First paint already has a round.** `GameProvider` sync-seeds via `createRoundForMode` in `useState` initializer so the carousel is never empty on load. Do not write e2e or UX that waits for `title="Click to Generate"` as the happy path.
 2. **`EmptyStartPrompt` is fallback only.** Still rendered when `round === null`, but round is not cleared to `null` after mount in normal flow.
 3. **`e2e/helpers.ts` `generateRound` does not click New.** It waits for `data-testid="measure-slider"` and an enabled Play button (auto-seeded round).
-4. **Complexity lives on the main page**, not Settings: difficulty (1–5) + ShowNotes subdivision. Do not add Settings dials for density, syncopation, or subdivision.
-5. **Display mode is not in Settings.** Grid / notation is the Poison section badge → `DisplayModeModal`.
-6. **Play modes are not in Settings.** Mode badge → `PlayModesModal` (Classic / Bucket Drumming + Endless).
-7. **User-facing copy** uses typographic apostrophe `’` (not `'`). Prefer Title Case for labels/titles; sentence case for body hints.
-8. **Do not commit `.tmp-glyphs/`.** Local glyph audit screenshots; gitignored and Biome-ignored.
-9. **Round logic lives in `GameProvider`.** `useGameLoop` exists but is unused by the app shell — prefer extending `GameProvider` / `@/lib/game-modes` / `@/lib/rhythm`.
+4. **Complexity is available from the title About modal and Settings → Mode** (difficulty 1–5 + subdivision). Header ShowNotes remains a quick control. Do not add Settings dials for density or syncopation as separate fields.
+5. **Display mode** is on the Poison section badge → `DisplayModeModal`, and also under **Settings → Look → Display**.
+6. **Play modes** are on the Difficulty section badge in the title About modal → `PlayModesModal`, and also under **Settings → Mode → Play Mode** (Classic / Bucket Drumming + Endless).
+7. **Color accents are preference keys**, not the game-settings blob — `ColorPreferencesProvider` + `poison-rhythm-dominant-color` / `poison-rhythm-secondary-color` (null = brand). See [`documentation/COLORS.md`](documentation/COLORS.md).
+8. **User-facing copy** uses typographic apostrophe `’` (not `'`). Prefer Title Case for labels/titles; sentence case for body hints.
+9. **Do not commit `.tmp-glyphs/`.** Local glyph audit screenshots; gitignored and Biome-ignored.
+10. **Round logic lives in `GameProvider`.** `useGameLoop` exists but is unused by the app shell — prefer extending `GameProvider` / `@/lib/game-modes` / `@/lib/rhythm`.
+11. **Difficulty slider** lives at the bottom of the title About modal (and Settings → Mode). Regenerate confirm (`ConfirmRegenModal`) only appears after that host modal closes, and only if difficulty changed from the committed value while a round is active (`PendingDifficultyProvider`).
 
 ## Key paths
 
@@ -40,7 +42,7 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 |------|------|
 | `src/contexts/GameProvider.tsx` | Sync-seeded round, New/Reuse, endless append |
 | `src/contexts/MetronomeProvider.tsx` | Audio clock, count-in, demo/student passes, `countInBeat` |
-| `src/components/layout/settings/` | Settings modal (`SettingsOverlay` → Mode / Sound / Appearance) |
+| `src/components/layout/settings/` | Settings modal (`SettingsOverlay` → Mode / Sound / Look) |
 | `src/components/controls/PlayControls.tsx` | Play/Pause; `data-count-in-beat` during count-in |
 | `src/components/measures/MeasureGrid.tsx` | Grid vs lazy notation; prefetches chunk + MusiSync font |
 | `src/lib/rhythm/` | Measure/round generation |
@@ -62,6 +64,7 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 |-----|----------|
 | [`README.md`](README.md) | Humans: setup, play, structure |
 | [`documentation/TEACHERS.md`](documentation/TEACHERS.md) | Music teachers: classroom arcs and settings |
+| [`documentation/COLORS.md`](documentation/COLORS.md) | Color prefs, Crayola tray, contrast guidance |
 | [`documentation/printables/student-record.pdf`](documentation/printables/student-record.pdf) | Printable student practice log (regen: `bun run printables:student-record`) |
 | [`AGENTS.md`](AGENTS.md) | Agents + contributors: gotchas and pointers |
 | [`documentation/ARCHITECTURE.md`](documentation/ARCHITECTURE.md) | System design |

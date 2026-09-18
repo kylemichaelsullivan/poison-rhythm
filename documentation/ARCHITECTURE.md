@@ -21,7 +21,7 @@ flowchart TB
     EnableToggle
   end
   subgraph composers [composers]
-    GameControls
+    DifficultyControls
     MeasureSlider
     ShowNotes
     Body
@@ -35,8 +35,8 @@ flowchart TB
 |-------|------|----------|
 | Atoms | `src/components/ui/` | `Button`, `IconButton`, `Caption`, `Stack`, `Row` |
 | Molecules | domain folders | `PlayModeOptionCard`, `ModalActions`, `MeasureCarouselChrome`, settings `EnableToggle` |
-| Composers | domain folders | `GameControls`, `MeasureSlider`, `ShowNotes`, `PoisonSection`, `Body` |
-| Hooks | `src/hooks/` | `usePendingDifficulty`, `useMeasurePlaybackSync`, `useHoverPinPopover`, `useSoftDisableFocus`, `useMusiSyncFont`, `useSmoothNotationCursor` |
+| Composers | domain folders | `DifficultyControls`, `MeasureSlider`, `ShowNotes`, `PoisonSection`, `Body` |
+| Hooks | `src/hooks/` | `useMeasurePlaybackSync`, `useHoverPinPopover`, `useSoftDisableFocus`, `useMusiSyncFont`, `useSmoothNotationCursor` |
 
 Rules of thumb:
 
@@ -45,23 +45,23 @@ Rules of thumb:
 - Do not add raw `<button className=…>` in composers — use `@/components/ui` or settings atoms
 - **Variants over `className`** on shared components
 
-Main page shell: `Header` → `Body` (`GameControls`, `PoisonSection`, `MeasuresSection`, `PlayControls`) → `Footer`.
+Main page shell: `Header` → `Body` (`PoisonSection`, `MeasuresSection`, `PlayControls`) → `Footer`.
 
 | Composer | Notable layers / hooks |
 |----------|------------------------|
-| `GameControls` | `PlayModesModal`, `DifficultyHelpModal`, `ConfirmRegenModal`, `usePendingDifficulty` |
+| `DifficultyControls` | `DifficultySlider`, `ModeBadgeTrigger`, `DifficultyHelpModal`, `PlayModesModal`; regen confirm via `PendingDifficultyProvider` (About modal + Settings → Mode) |
 | `MeasureSlider` | `MeasureCarouselChrome`, `NextMeasurePreview`, `useMeasurePlaybackSync` |
 | `ShowNotes` | `ShowNotesTrigger`, `ShowNotesSlider`, `useHoverPinPopover` |
 | `PoisonSection` | `PoisonMeasureContent`, `PoisonMeasureFrame`, `DisplayModeModal` / `DisplayModeControls` |
 | `Body` | `useSoftDisableFocus` |
 
-Settings shell: footer **Settings** → lazy `SettingsOverlay` → tabs `Mode` / `Sound` / `Appearance` over `layout/settings/` atoms (`SettingsGroup`, `EnableToggle`, `When`, …). Play mode picking lives on the main page (mode badge → `PlayModesModal`). Display mode (grid / notation; scroll Coming Soon) lives on the Poison Rhythm section badge → `DisplayModeModal`.
+Settings shell: footer **Settings** → lazy `SettingsOverlay` → tabs `Mode` / `Sound` / `Look` over `layout/settings/` atoms (`SettingsGroup`, `EnableToggle`, `When`, …). Color accents persist via `ColorPreferencesProvider` (student-scoped preference keys; null = brand). Main-UI shortcuts remain: Poison badge → `DisplayModeModal`; header ShowNotes; footer metronome for tempo. Mirrored in Settings: play mode + complexity + practice under Mode; tempo under Sound; theme, display, feedback, and colors under Look. Difficulty + play-mode badge also live in the title About modal. See [`COLORS.md`](COLORS.md).
 
 ## State flow
 
 ```mermaid
 flowchart TB
-  subgraph mainPage [Main page controls]
+  subgraph mainPage [Main page / About / Settings]
     DifficultySlider
     ShowNotes
   end
@@ -103,12 +103,12 @@ flowchart TB
 
 | Input | Source | Generation effect |
 |-------|--------|-------------------|
-| Difficulty 1–5 | Main page slider | Hit count range; placement bias (downbeats → full 16th grid) |
-| Subdivision 1/4–1/16 | Header ShowNotes | Allowed grid positions; display and playback grid |
+| Difficulty 1–5 | Title About modal + Settings → Mode | Hit count range; placement bias (downbeats → full 16th grid) |
+| Subdivision 1/4–1/16 | Header ShowNotes + Settings → Mode | Allowed grid positions; display and playback grid |
 | Accents / phrase | Settings → Rhythm (Coming Soon) | Optional accent marks, multi-bar phrases |
 | Sticking | Settings → Rhythm (Coming Soon) | L/R assignment on hits |
 
-Density, syncopation, and subdivision are **not** separate Settings fields.
+Density and syncopation are **not** separate Settings fields; subdivision is mirrored (header + Settings), not a third independent dial.
 
 ## Game settings schema
 
@@ -119,9 +119,9 @@ Defined in `src/lib/settings-schema.ts`, persisted as `poison-rhythm-settings-v1
 | General | `players`, `feedbackMode`; `scrollDirection` / `scrollSpeed` (Coming Soon in Display Mode) |
 | Practice | `showNextMeasure`, `demoBeforePlay`, `muteOnStudentPass` |
 | Rhythm | `accents`, `sticking`, `phraseLength` (Coming Soon in Settings); `rests` (unused; always off) |
-| Poison | `poisonMode` (Eye toggle on Poison section) |
+| Poison | `poisonMode` (Eye toggle on Poison section + Settings → Mode → Practice) |
 | Game mode | `gameMode` |
-| Endless | `endless` toggle (Play Modes); batch sizes (`endlessInitialBatch`, `endlessAppendBatch`, `endlessPrefetchRemaining`) use schema defaults — not exposed in the Settings modal |
+| Endless | `endless` toggle (Play Modes / Settings → Mode); batch sizes (`endlessInitialBatch`, `endlessAppendBatch`, `endlessPrefetchRemaining`) use schema defaults — not exposed in the Settings modal |
 
 ## Playback passes
 
