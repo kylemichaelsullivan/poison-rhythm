@@ -90,11 +90,11 @@ Provider tree in `main.tsx`: `ThemeProvider` → `ColorPreferencesProvider` → 
 
 ### Notation and display
 
-- **rhythmRenderMode**: `grid` | `notation` — Poison/Measures badges open Body-owned `DisplayModeModal`; also Settings → Mode → Display; badge text is GRID / NOTATION only
+- **rhythmRenderMode**: `grid` | `notation` | `scroll` — Poison/Measures badges open Body-owned `DisplayModeModal`; also Settings → Mode → Display; badge text is GRID / NOTATION / SCROLL
 - **Pipeline**: `@/lib/notation` — `measureToNotationEvents` → beaming → `measureToNotationSteps` → `MeasureNotation`
 - **Font**: MusiSync served from `/fonts/MusiSync.*`; preload via `loadMusiSyncFont` / `useMusiSyncFont`; `useNotationPrefetch` from `MeasureGrid` when mode is notation
 - **Glyphs**: dotted notes `i`/`j`/`d`; beams include `³` / `O` / `o` — see `src/assets/fonts/README.md`; never alias unmatched patterns
-- **Scroll mode**: `scrollDirection` / `scrollSpeed` remain in settings schema and `scroll-animation.ts`, but are **not wired** in the UI (Coming Soon). Do not re-enable on main ahead of the `display-scroll` branch.
+- **Scroll mode**: exclusive display mode; `scrollDirection` picks highway axis; beat-synced gems follow tempo (`ScrollHighway`)
 
 ### Preferences and settings
 

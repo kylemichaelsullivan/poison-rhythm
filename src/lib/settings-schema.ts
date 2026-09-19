@@ -74,8 +74,12 @@ const LEGACY_GAME_MODE_MAP: Record<string, GameMode> = {
 /** Former Memory play mode → Classic + hide poison during playback. */
 const MEMORY_LIKE_GAME_MODES = new Set(['memory', 'mirror']);
 
-export const rhythmRenderModeSchema = z.enum(['grid', 'notation']);
+export const rhythmRenderModeSchema = z.enum(['grid', 'notation', 'scroll']);
 export type RhythmRenderMode = z.infer<typeof rhythmRenderModeSchema>;
+
+export function isScrollDisplayMode(mode: RhythmRenderMode): boolean {
+	return mode === 'scroll';
+}
 
 export const gameSettingsSchema = z.object({
 	players: playersSchema,
@@ -145,15 +149,20 @@ function migrateRawGameSettings(value: unknown): unknown {
 	if (record.poisonMode === 'persistent') {
 		record.poisonMode = 'visible';
 	}
-	// Former third render mode; scroll is now scrollDirection, not rhythmRenderMode.
-	if (record.rhythmRenderMode === 'scroll') {
-		record.rhythmRenderMode = 'grid';
-		if (
-			record.scrollDirection === undefined ||
-			record.scrollDirection === 'none'
-		) {
-			record.scrollDirection = 'down';
-		}
+	// Orthogonal scroll overlay → exclusive Scroll display mode.
+	if (
+		record.rhythmRenderMode !== 'scroll' &&
+		typeof record.scrollDirection === 'string' &&
+		record.scrollDirection !== 'none'
+	) {
+		record.rhythmRenderMode = 'scroll';
+	}
+	// Scroll mode always needs a concrete highway direction.
+	if (
+		record.rhythmRenderMode === 'scroll' &&
+		(record.scrollDirection === undefined || record.scrollDirection === 'none')
+	) {
+		record.scrollDirection = 'down';
 	}
 	// Focus modes / poison frequency removed; strip so stored values don’t fail.
 	delete record.focusMode;
@@ -173,6 +182,13 @@ export function sanitizeGameSettings(
 	merged.phraseLength = 1;
 	// Rests toggle is unused; density already leaves gaps.
 	merged.rests = 'off';
+	if (merged.rhythmRenderMode === 'scroll') {
+		if (merged.scrollDirection === 'none') {
+			merged.scrollDirection = 'down';
+		}
+	} else {
+		merged.scrollDirection = 'none';
+	}
 	return gameSettingsSchema.parse(merged);
 }
 

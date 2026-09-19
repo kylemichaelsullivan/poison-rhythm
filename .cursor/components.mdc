@@ -94,7 +94,7 @@ src/components/
 - **Purpose**: Poison rhythm and New/Reuse controls
 - **Props**: `poisonRhythm`, `onNewPoison`, `onReusePoison`, `onOpenDisplayMode`, optional soft-disable focus helpers
 - **Header**: `PoisonSectionHeader` (`slot: 'leading' | 'action'`) → visibility toggle / display trigger
-- **Display Mode**: Grid / Notation only on the badge; modal owned by `Body` (not this section). Scroll is Coming Soon in `DisplayModeControls` (schema fields dormant — do not re-wire on main)
+- **Display Mode**: Grid / Notation / Scroll on the badge; modal owned by `Body` (not this section). Scroll is Guitar Hero–style highway (`ScrollHighway`); direction in `DisplayModeControls`
 - **Uses**: `PoisonMeasureContent` / `PoisonMeasureFrame` / `HiddenPoisonOverlay`, Section, MeasureGrid, ControlButtons
 
 ### MeasuresSection / MeasureSlider
@@ -107,9 +107,9 @@ src/components/
 
 - **Purpose**: 16th-note grid with accent, sticking (L/R), poison overlay, and playback highlighting
 - **Composer**: Section composers (`MeasuresSection`, `PoisonMeasureContent`) call `useMeasureDisplayOptions` and pass `display: MeasureDisplayOptions` into `MeasureGrid` / `CurrentMeasureDisplay` / `MeasureHeightReserve`
-- **Leaves**: `MeasureGrid` switches grid vs notation; `MeasureCellGrid` / `MeasureCell` / `MeasureNotation` / `NotationPlaybackCursor` take explicit props (no context)
+- **Leaves**: `MeasureGrid` switches grid vs notation; `MeasureCellGrid` / `MeasureCell` / `MeasureNotation` / `NotationPlaybackCursor` take explicit props (no context); scroll mode uses `ScrollHighway` from `MeasureSlider`
 - **Props**: `measure`, optional `richMeasure`, `playback`, `hidden`, `display` (render mode, subdivision, feedback/accent/sticking flags, metronome step)
-- **Render modes**: `grid` or `notation` (MusiSync via `display.renderMode`)
+- **Render modes**: `grid`, `notation`, or `scroll` (MusiSync via `display.renderMode`; scroll uses `ScrollHighway`)
 - **Layout**: Four pedagogical beats; wraps to **2×2** beat groups below `sm`
 - **Overlays**: `RhythmAccentMark` / `RhythmAccentOverlay`; `RhythmStickingOverlay`
 

@@ -8,6 +8,7 @@ type DisplayModeBadgeProps = {
 const RENDER_LABEL: Record<RhythmRenderMode, string> = {
 	grid: 'GRID',
 	notation: 'NOTATION',
+	scroll: 'SCROLL',
 };
 
 export function DisplayModeBadge({ renderMode }: DisplayModeBadgeProps) {

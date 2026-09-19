@@ -123,7 +123,7 @@ Defined in `src/lib/settings-schema.ts`, persisted as `poison-rhythm-settings-v1
 
 | Category | Fields |
 |----------|--------|
-| General | `players`, `feedbackMode`; `scrollDirection` / `scrollSpeed` (schema + helpers retained; **not wired** in UI — Display Mode shows Coming Soon) |
+| General | `players`, `feedbackMode`; `rhythmRenderMode` (`grid` \| `notation` \| `scroll`); `scrollDirection` when mode is Scroll; `scrollSpeed` (schema retained) |
 | Practice | `showNextMeasure`, `demoBeforePlay`, `muteOnStudentPass` |
 | Rhythm | `accents`, `sticking`, `phraseLength` (Coming Soon in Settings); `rests` (unused; always off) |
 | Poison | `poisonMode` (Eye toggle on Poison section + Settings → Mode → Practice) |
@@ -214,7 +214,7 @@ Playback cursor: `useSmoothNotationCursor` interpolates position across `Notatio
 | `count-in-schedule.ts` | `planCountIn` helper over the playback clock |
 | `measure-playback.ts` | Measure-level step indexing for carousel sync |
 | `playback-state.ts` | Count-in / demo / student pass gating for cell highlight |
-| `scroll-animation.ts` | Scroll-mode animation helpers (dormant; Coming Soon in Display Mode — keep for eventual highway mode) |
+| `scroll-animation.ts` | Beat-synced scroll highway math (`highwayProgress`, lane insets) |
 | `MetronomeProvider` | Schedules clicks/hits on the audio clock; UI updates via delayed timeouts; **Escape** stops playback (keydown; ignored in inputs/dialogs) |
 
 ## Types
