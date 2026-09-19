@@ -83,7 +83,7 @@ src/components/
 - **Props**: `poisonRhythm`, `onNewPoison`, `onReusePoison`, optional soft-disable focus helpers
 - **Header**: `PoisonVisibilityToggle` (Eye) in `headerLeading`; `DisplayModeTrigger` → `DisplayModeModal` in `headerAction`
 - **Uses**: `PoisonMeasureContent` / `PoisonMeasureFrame`, Section, MeasureGrid, ControlButtons
-- **Display Mode**: Grid / notation + optional Scroll (Guitar Hero–style); controls in `DisplayModeControls`
+- **Display Mode**: Grid / Notation / Scroll (exclusive); Scroll shows Guitar Hero–style highway; controls in `DisplayModeControls`
 
 ### MeasuresSection / MeasureSlider
 
@@ -95,7 +95,7 @@ src/components/
 
 - **Purpose**: 16th-note grid with accent, sticking (L/R), poison overlay, and playback highlighting
 - **Props**: `measure`, optional `richMeasure`, `playback`, `hidden`
-- **Render modes**: `grid` or `notation` (MusiSync via `rhythmRenderMode`)
+- **Render modes**: `grid`, `notation`, or `scroll` (MusiSync via `rhythmRenderMode`; scroll uses `ScrollHighway`)
 - **Overlays**: `RhythmAccentMark` / `RhythmAccentOverlay`; `RhythmStickingOverlay`
 
 ### Section / SectionTitle

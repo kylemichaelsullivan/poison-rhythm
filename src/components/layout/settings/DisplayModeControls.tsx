@@ -1,21 +1,42 @@
 import { Stack } from '@/components/ui';
+import type { ScrollDirection } from '@/lib/settings-schema';
+import { isScrollDisplayMode } from '@/lib/settings-schema';
 import { SegmentedControl } from './SegmentedControl';
-import { SettingRow } from './SettingRow';
-import { RENDER_MODE_OPTIONS } from './settings-options';
+import {
+	RENDER_MODE_OPTIONS,
+	SCROLL_DIRECTION_OPTIONS,
+} from './settings-options';
 import { useUpdateSetting } from './useUpdateSetting';
+import { When } from './When';
 
-/** Grid / notation; scroll highway is Coming Soon. */
+/** Exclusive display mode: Grid, Notation, or Scroll (Guitar Hero–style highway). */
 export function DisplayModeControls() {
-	const { settings, set } = useUpdateSetting();
+	const { settings, set, updateSettings } = useUpdateSetting();
+	const scrollMode = isScrollDisplayMode(settings.rhythmRenderMode);
+	const direction: Exclude<ScrollDirection, 'none'> =
+		settings.scrollDirection === 'none' ? 'down' : settings.scrollDirection;
 
 	return (
 		<Stack gap='4'>
 			<SegmentedControl
-				ariaLabel='Rhythm Render Mode'
+				ariaLabel='Display Mode'
 				options={RENDER_MODE_OPTIONS}
 				value={settings.rhythmRenderMode}
 				onChange={(value) => {
-					set('rhythmRenderMode', value);
+					if (value === 'scroll') {
+						updateSettings({
+							rhythmRenderMode: 'scroll',
+							scrollDirection:
+								settings.scrollDirection === 'none'
+									? 'down'
+									: settings.scrollDirection,
+						});
+						return;
+					}
+					updateSettings({
+						rhythmRenderMode: value,
+						scrollDirection: 'none',
+					});
 					if (value === 'notation') {
 						void import('@/lib/notation').then((module) =>
 							module.loadMusiSyncFont(),
@@ -23,9 +44,14 @@ export function DisplayModeControls() {
 					}
 				}}
 			/>
-			<SettingRow label='Scroll'>
-				<span className='text-sm text-muted'>Coming Soon</span>
-			</SettingRow>
+			<When condition={scrollMode}>
+				<SegmentedControl
+					legend='Direction'
+					options={SCROLL_DIRECTION_OPTIONS}
+					value={direction}
+					onChange={(value) => set('scrollDirection', value)}
+				/>
+			</When>
 		</Stack>
 	);
 }

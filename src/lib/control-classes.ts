@@ -131,8 +131,9 @@ export function segmentControlClassName(
 		!disabled && [hoverRingClassName, 'hover:border-mid'],
 		isSelected
 			? variant === 'header'
-				? 'border-primary-border bg-primary/15 text-primary shadow-soft'
-				: 'border-primary-border bg-primary text-on-primary shadow-primary-glow'
+				? 'border-primary bg-primary/15 text-primary shadow-soft'
+				: // Same-hue border (not mint primary-border): avoids speckled AA on rounded chips.
+					'border-primary bg-primary text-on-primary shadow-soft'
 			: variant === 'checkbox'
 				? clsx(
 						'border-mid bg-light shadow-control',
@@ -142,7 +143,7 @@ export function segmentControlClassName(
 					? 'border-mid bg-chrome text-mid shadow-control'
 					: clsx(
 							'border-mid bg-surface-muted text-muted shadow-control',
-							!disabled && 'hover:bg-chrome-hover hover:border-primary/50',
+							!disabled && 'hover:bg-chrome-hover hover:border-primary',
 						),
 	);
 }

@@ -6,3 +6,5 @@ export { MeasureHeightReserve } from './MeasureHeightReserve';
 export { MeasureSlider } from './MeasureSlider';
 export { MeasuresSection } from './MeasuresSection';
 export { NextMeasurePreview } from './NextMeasurePreview';
+export { ScrollHighway } from './ScrollHighway';
+export { ScrollHighwayNote } from './ScrollHighwayNote';

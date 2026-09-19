@@ -67,7 +67,7 @@ In **Settings → Mode**:
 
 Optional **Count-In Before Play** is under **Settings → Sound**. During count-in, beat numbers show on the Play button.
 
-## Display mode (grid vs notation)
+## Display mode
 
 From the badge on the Poison Rhythm section, or **Settings → Look → Display**:
 
@@ -75,7 +75,7 @@ From the badge on the Poison Rhythm section, or **Settings → Look → Display*
 |------|----------------|
 | **Grid** | Clearest for counting cells and subdivisions; great for beginners. |
 | **Notation** | MusiSync note/rest glyphs; better once students can map duration shapes. |
-| **Scroll** | Coming Soon |
+| **Scroll** | Guitar Hero–style highway; individual hit gems approach a judgment line during playback. |
 
 ## Suggested lesson arcs
 

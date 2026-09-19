@@ -98,8 +98,16 @@ export {
 } from './rhythm';
 export { countHits, isValidRhythm, rhythmsEqual } from './rhythm-utils';
 export {
+	collectHighwayNotes,
+	countInHighwayProgress,
+	HIGHWAY_LOOKAHEAD_MEASURES,
+	HIGHWAY_PX_PER_MEASURE,
+	highwayNoteOffsetPx,
+	highwayNoteTrackInset,
+	highwayProgress,
+	highwayTrackTransform,
+	measureProgressFraction,
 	scrollAnimationClass,
-	scrollTransitionDuration,
 } from './scroll-animation';
 export {
 	DEFAULT_SETTINGS,

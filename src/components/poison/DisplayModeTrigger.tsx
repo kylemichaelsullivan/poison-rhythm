@@ -4,13 +4,11 @@ import { DisplayModeBadge } from './DisplayModeBadge';
 
 type DisplayModeTriggerProps = {
 	renderMode: RhythmRenderMode;
-	scrollEnabled: boolean;
 	onClick: () => void;
 };
 
 export function DisplayModeTrigger({
 	renderMode,
-	scrollEnabled,
 	onClick,
 }: DisplayModeTriggerProps) {
 	return (
@@ -21,7 +19,7 @@ export function DisplayModeTrigger({
 			popup='dialog'
 			onClick={onClick}
 		>
-			<DisplayModeBadge renderMode={renderMode} scrollEnabled={scrollEnabled} />
+			<DisplayModeBadge renderMode={renderMode} />
 		</IconButton>
 	);
 }

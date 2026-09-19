@@ -90,11 +90,11 @@ Provider tree in `main.tsx`: `ThemeProvider` → `ColorPreferencesProvider` → 
 
 ### Notation and display
 
-- **rhythmRenderMode**: `grid` | `notation` — Poison section badge (`DisplayModeModal`) and Settings → Look → Display
+- **rhythmRenderMode**: `grid` | `notation` | `scroll` — Poison section badge (`DisplayModeModal`) and Settings → Look → Display
 - **Pipeline**: `@/lib/notation` — `measureToNotationEvents` → beaming → `measureToNotationSteps` → `MeasureNotation`
 - **Font**: MusiSync served from `/fonts/MusiSync.*`; preload via `loadMusiSyncFont` / `useMusiSyncFont`; `MeasureGrid` prefetches notation chunk + font when mode is notation
 - **Glyphs**: dotted notes `i`/`j`/`d`; beams include `³` / `O` / `o` — see `src/assets/fonts/README.md`; never alias unmatched patterns
-- **Scroll mode**: `scrollDirection` / `scrollSpeed` in settings schema; UI Coming Soon
+- **Scroll mode**: exclusive display mode; `scrollDirection` picks highway axis; beat-synced gems follow tempo (`ScrollHighway`)
 
 ### Preferences and settings
 

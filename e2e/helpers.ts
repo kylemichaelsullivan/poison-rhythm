@@ -10,6 +10,8 @@ export type PlaybackSeedOptions = {
 	demoBeforePlay: boolean;
 	tempo?: number;
 	subdivision?: 'quarters' | 'eighths' | 'sixteenths';
+	rhythmRenderMode?: 'grid' | 'notation' | 'scroll';
+	scrollDirection?: 'none' | 'left' | 'right' | 'up' | 'down';
 };
 
 export async function seedPlaybackPrefs(
@@ -22,6 +24,8 @@ export async function seedPlaybackPrefs(
 			demoBeforePlay,
 			tempo,
 			subdivision,
+			rhythmRenderMode,
+			scrollDirection,
 			countInKey,
 			settingsKey,
 			tempoKey,
@@ -46,7 +50,7 @@ export async function seedPlaybackPrefs(
 				JSON.stringify({
 					players: 1,
 					feedbackMode: 'both',
-					scrollDirection: 'none',
+					scrollDirection,
 					scrollSpeed: 'medium',
 					accents: 'off',
 					rests: 'off',
@@ -55,7 +59,7 @@ export async function seedPlaybackPrefs(
 					poisonMode: 'visible',
 					gameMode: 'default',
 					endless: false,
-					rhythmRenderMode: 'grid',
+					rhythmRenderMode,
 					showNextMeasure: true,
 					demoBeforePlay,
 					muteOnStudentPass: false,
@@ -70,6 +74,8 @@ export async function seedPlaybackPrefs(
 			demoBeforePlay: options.demoBeforePlay,
 			tempo: options.tempo,
 			subdivision: options.subdivision,
+			rhythmRenderMode: options.rhythmRenderMode ?? 'grid',
+			scrollDirection: options.scrollDirection ?? 'none',
 			countInKey: COUNT_IN_KEY,
 			settingsKey: SETTINGS_KEY,
 			tempoKey: TEMPO_KEY,

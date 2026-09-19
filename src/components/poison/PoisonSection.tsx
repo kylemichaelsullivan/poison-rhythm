@@ -32,7 +32,6 @@ export function PoisonSection({
 	const { round } = useGame();
 	const [displayOpen, setDisplayOpen] = useState(false);
 	const bucketMode = isBucketTrainerMode(settings);
-	const scrollEnabled = settings.scrollDirection !== 'none';
 
 	return (
 		<>
@@ -53,7 +52,6 @@ export function PoisonSection({
 				headerAction={
 					<DisplayModeTrigger
 						renderMode={settings.rhythmRenderMode}
-						scrollEnabled={scrollEnabled}
 						onClick={() => setDisplayOpen(true)}
 					/>
 				}

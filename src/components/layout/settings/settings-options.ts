@@ -6,7 +6,6 @@ import type {
 	GameMode,
 	RhythmRenderMode,
 	ScrollDirection,
-	ScrollSpeed,
 	StickingMode,
 } from '@/lib/settings-schema';
 import type { SegmentOption } from './SegmentButton';
@@ -20,15 +19,10 @@ export const SCROLL_DIRECTION_OPTIONS: SegmentOption<
 	{ label: 'Left', value: 'left', icon: ArrowLeftIcon },
 ];
 
-export const SCROLL_SPEED_OPTIONS: SegmentOption<ScrollSpeed>[] = [
-	{ label: 'Slow', value: 'slow' },
-	{ label: 'Medium', value: 'medium' },
-	{ label: 'Fast', value: 'fast' },
-];
-
 export const RENDER_MODE_OPTIONS: SegmentOption<RhythmRenderMode>[] = [
 	{ label: 'Grid', value: 'grid' },
 	{ label: 'Notation', value: 'notation' },
+	{ label: 'Scroll', value: 'scroll' },
 ];
 
 export const STICKING_OPTIONS: SegmentOption<StickingMode>[] = [

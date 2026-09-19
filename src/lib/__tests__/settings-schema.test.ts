@@ -128,7 +128,7 @@ describe('settings-schema', () => {
 		expect(result.rests).toBe('off');
 	});
 
-	test('migrates legacy rhythmRenderMode scroll to grid with scroll direction', () => {
+	test('keeps rhythmRenderMode scroll and fills a default direction', () => {
 		const legacy = JSON.stringify({
 			...DEFAULT_SETTINGS,
 			rhythmRenderMode: 'scroll',
@@ -137,10 +137,21 @@ describe('settings-schema', () => {
 			muteOnStudentPass: true,
 		});
 		const parsed = parseGameSettings(legacy);
-		expect(parsed.rhythmRenderMode).toBe('grid');
+		expect(parsed.rhythmRenderMode).toBe('scroll');
 		expect(parsed.scrollDirection).toBe('down');
 		expect(parsed.demoBeforePlay).toBe(true);
 		expect(parsed.muteOnStudentPass).toBe(true);
+	});
+
+	test('migrates orthogonal scrollDirection overlay into scroll mode', () => {
+		const legacy = JSON.stringify({
+			...DEFAULT_SETTINGS,
+			rhythmRenderMode: 'notation',
+			scrollDirection: 'left',
+		});
+		const parsed = parseGameSettings(legacy);
+		expect(parsed.rhythmRenderMode).toBe('scroll');
+		expect(parsed.scrollDirection).toBe('left');
 	});
 
 	test('parseGameSettings preserves demoBeforePlay when other keys are partial', () => {
