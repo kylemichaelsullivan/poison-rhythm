@@ -32,15 +32,31 @@ type MetronomeProviderProps = {
 	children: ReactNode;
 };
 
-function isEditableTarget(target: EventTarget | null) {
+function isTextInputTarget(target: EventTarget | null) {
 	return (
 		target instanceof HTMLElement &&
 		(target.tagName === 'INPUT' ||
 			target.tagName === 'TEXTAREA' ||
 			target.tagName === 'SELECT' ||
-			target.isContentEditable ||
+			target.isContentEditable)
+	);
+}
+
+/** Space/Enter/arrows should not fire while focus is on controls or dialogs. */
+function isEditableTarget(target: EventTarget | null) {
+	return (
+		isTextInputTarget(target) ||
+		(target instanceof HTMLElement &&
 			target.closest('button, a[href], [role="button"], [role="dialog"]') !==
 				null)
+	);
+}
+
+/** Escape still stops playback when a control is focused; leave inputs/dialogs alone. */
+function shouldIgnoreEscapeStop(target: EventTarget | null) {
+	return (
+		isTextInputTarget(target) ||
+		(target instanceof Element && target.closest('[role="dialog"]') !== null)
 	);
 }
 
@@ -336,6 +352,12 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 	}, [isRunning, activeSource, tempo, subdivisionLevel]);
 
 	useEffect(() => {
+		function handleKeyDown(e: KeyboardEvent) {
+			if (e.key !== 'Escape') return;
+			if (shouldIgnoreEscapeStop(e.target)) return;
+			stop();
+		}
+
 		function handleKeyUp(e: KeyboardEvent) {
 			if (isEditableTarget(e.target)) return;
 
@@ -351,11 +373,6 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 					}
 					return 'measures';
 				});
-				return;
-			}
-
-			if (e.key === 'Escape') {
-				stop();
 				return;
 			}
 
@@ -383,8 +400,12 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 			handleTempoChange(nextTempo);
 		}
 
+		window.addEventListener('keydown', handleKeyDown);
 		window.addEventListener('keyup', handleKeyUp);
-		return () => window.removeEventListener('keyup', handleKeyUp);
+		return () => {
+			window.removeEventListener('keydown', handleKeyDown);
+			window.removeEventListener('keyup', handleKeyUp);
+		};
 	}, [tempo, handleTempoChange, stop]);
 
 	const value = useMemo(

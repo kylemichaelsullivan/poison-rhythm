@@ -119,4 +119,34 @@ test.describe('measure playback', () => {
 
 		await clickPause(page);
 	});
+
+	test('Escape stops playback while Play/Pause is focused', async ({
+		page,
+	}) => {
+		await seedPlaybackPrefs(page, {
+			countIn: true,
+			demoBeforePlay: false,
+			tempo: 60,
+		});
+		await page.goto('/');
+		await generateRound(page);
+
+		const playControls = page.getByTestId('play-controls');
+		await clickPlay(page);
+		await expect(playControls).toHaveAttribute('data-counting-in', 'true');
+		await expect(
+			playControls.getByRole('button', { name: 'Pause', exact: true }),
+		).toBeFocused();
+
+		await page.keyboard.press('Escape');
+
+		await expect(playControls).toHaveAttribute('data-counting-in', 'false');
+		await expect(playControls).toHaveAttribute(
+			'data-measures-playing',
+			'false',
+		);
+		await expect(
+			playControls.getByRole('button', { name: 'Play', exact: true }),
+		).toBeVisible();
+	});
 });
