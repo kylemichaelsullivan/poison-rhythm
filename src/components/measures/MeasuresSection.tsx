@@ -30,7 +30,6 @@ export function MeasuresSection({ onNewPoison }: MeasuresSectionProps) {
 	const [displayOpen, setDisplayOpen] = useState(false);
 	const bucketMode = isBucketTrainerMode(settings);
 	const showNext = settings.showNextMeasure;
-	const scrollEnabled = settings.scrollDirection !== 'none';
 	const {
 		safeIndex,
 		displayMeasure,
@@ -42,8 +41,6 @@ export function MeasuresSection({ onNewPoison }: MeasuresSectionProps) {
 		isCountingIn,
 		measuresLength,
 		setCurrentIndex,
-		scrollDirection,
-		scrollSpeed,
 	} = useMeasurePlaybackSync();
 
 	const hasMeasures = measures.length > 0;
@@ -86,7 +83,6 @@ export function MeasuresSection({ onNewPoison }: MeasuresSectionProps) {
 							{bucketMode ? (
 								<DisplayModeTrigger
 									renderMode={settings.rhythmRenderMode}
-									scrollEnabled={scrollEnabled}
 									onClick={() => setDisplayOpen(true)}
 								/>
 							) : null}
@@ -124,8 +120,6 @@ export function MeasuresSection({ onNewPoison }: MeasuresSectionProps) {
 								demoBeforePlay={demoBeforePlay}
 								isDemoPass={isDemoPass}
 								isCountingIn={isCountingIn}
-								scrollDirection={scrollDirection}
-								scrollSpeed={scrollSpeed}
 							/>
 						)}
 					</StableContentFrame>

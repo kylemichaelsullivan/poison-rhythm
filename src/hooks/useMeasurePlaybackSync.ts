@@ -5,7 +5,6 @@ import {
 	rhythmsEqual,
 	shouldProcessMeasureCycle,
 } from '@/lib';
-import type { ScrollDirection, ScrollSpeed } from '@/lib/settings-schema';
 import { isEndlessMode } from '@/lib/settings-schema';
 import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
 
@@ -23,8 +22,6 @@ type UseMeasurePlaybackSyncResult = {
 	isCountingIn: boolean;
 	measuresLength: number;
 	setCurrentIndex: (index: number) => void;
-	scrollDirection: ScrollDirection;
-	scrollSpeed: ScrollSpeed;
 };
 
 export function useMeasurePlaybackSync(): UseMeasurePlaybackSyncResult {
@@ -148,7 +145,5 @@ export function useMeasurePlaybackSync(): UseMeasurePlaybackSyncResult {
 		isCountingIn,
 		measuresLength: measures.length,
 		setCurrentIndex,
-		scrollDirection: settings.scrollDirection,
-		scrollSpeed: settings.scrollSpeed,
 	};
 }

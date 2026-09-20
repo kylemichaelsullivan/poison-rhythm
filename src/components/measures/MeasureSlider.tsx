@@ -1,4 +1,3 @@
-import type { ScrollDirection, ScrollSpeed } from '@/lib/settings-schema';
 import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
 import { REST_MEASURE } from '@/types';
 import { CurrentMeasureDisplay } from './CurrentMeasureDisplay';
@@ -14,8 +13,6 @@ type MeasureSliderProps = {
 	demoBeforePlay: boolean;
 	isDemoPass: boolean;
 	isCountingIn: boolean;
-	scrollDirection: ScrollDirection;
-	scrollSpeed: ScrollSpeed;
 };
 
 export function MeasureSlider({
@@ -27,12 +24,10 @@ export function MeasureSlider({
 	demoBeforePlay,
 	isDemoPass,
 	isCountingIn,
-	scrollDirection,
-	scrollSpeed,
 }: MeasureSliderProps) {
 	return (
 		<MeasureCarouselChrome
-			scroll={{ direction: scrollDirection, speed: scrollSpeed }}
+			live
 			nextSlot={
 				showNextMeasure ? (
 					<NextMeasurePreview
