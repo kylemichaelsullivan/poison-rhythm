@@ -18,7 +18,7 @@ export function Body() {
 	return (
 		<main
 			className={clsx(
-				'Body flex flex-col flex-auto items-center gap-6 w-full max-w-4xl',
+				'Body flex flex-col flex-auto items-center gap-6 w-full max-w-4xl px-3 sm:px-4',
 				subdivisionLevel === 'quarters' && 'grid-quarters',
 				subdivisionLevel === 'eighths' && 'grid-eighths',
 			)}

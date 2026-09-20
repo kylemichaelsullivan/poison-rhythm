@@ -17,7 +17,7 @@ type IconButtonProps = {
 
 const variantClassName: Record<IconButtonVariant, string> = {
 	info: clsx(
-		'flex size-6 shrink-0 items-center justify-center rounded-full border border-mid bg-surface-muted text-sm font-semibold leading-none text-dark shadow-control transition-[colors,box-shadow]',
+		'flex size-11 shrink-0 items-center justify-center rounded-full border border-mid bg-surface-muted text-sm font-semibold leading-none text-dark shadow-control transition-[colors,box-shadow]',
 		'hover:border-primary hover:bg-primary/10 hover:text-primary hover:shadow-soft',
 		'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface',
 	),

@@ -16,6 +16,16 @@ export default defineConfig({
 		{
 			name: 'chromium',
 			use: { ...devices['Desktop Chrome'] },
+			testIgnore: /mobile-layout\.spec\.ts/,
+		},
+		{
+			// Phone a11y + layout smoke only (360×800); other e2e stay desktop.
+			name: 'mobile',
+			use: {
+				...devices['Pixel 5'],
+				viewport: { width: 360, height: 800 },
+			},
+			testMatch: /(a11y|mobile-layout)\.spec\.ts/,
 		},
 	],
 	webServer: {

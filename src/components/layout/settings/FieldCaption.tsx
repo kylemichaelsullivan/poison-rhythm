@@ -7,7 +7,7 @@ type FieldCaptionProps = {
 export function FieldCaption({ children, id }: FieldCaptionProps) {
 	return (
 		<p
-			className='FieldCaption min-h-[2.75rem] text-center text-sm leading-snug text-dark'
+			className='FieldCaption min-h-11 text-center text-sm leading-snug text-dark'
 			id={id}
 		>
 			{children}

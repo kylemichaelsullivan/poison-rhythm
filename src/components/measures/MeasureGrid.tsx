@@ -37,7 +37,7 @@ function MeasureCellGrid({
 	return (
 		<div
 			className={clsx(
-				'MeasureCellGrid grid grid-cols-4 gap-2 w-full border-2 border-primary/25 rounded-lg p-2 bg-primary/5 shadow-soft sm:gap-2.5',
+				'MeasureCellGrid grid grid-cols-2 gap-2 w-full border-2 border-primary/25 rounded-lg p-2 bg-primary/5 shadow-soft sm:grid-cols-4 sm:gap-2.5',
 				showSticking && 'pb-4',
 			)}
 		>

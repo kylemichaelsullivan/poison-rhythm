@@ -32,13 +32,30 @@ export const controlSurfaceBaseClassName =
 
 /** In-flow corner icon buttons; use as children of a bar with `appChromeBarClassName`. */
 export const cornerControlButtonClassName =
-	'flex items-center justify-center w-10 h-10';
+	'flex items-center justify-center min-w-11 min-h-11 w-11 h-11';
 
 /**
  * Shared row layout for `<header />` and `<footer />`: flex, even spacing, padding.
+ * Horizontal safe-area keeps chrome clear of notches; pair with header/footer extras.
  */
 export const appChromeBarClassName =
-	'flex justify-between items-center w-full px-4 py-2 bg-chrome/80 shadow-soft';
+	'flex justify-between items-center w-full gap-2 py-2 bg-chrome/80 shadow-soft pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))]';
+
+/** Top safe-area for the header chrome bar (notch / status bar). */
+export const appChromeBarHeaderClassName =
+	'pt-[max(0.5rem,env(safe-area-inset-top))]';
+
+/** Bottom safe-area for the footer chrome bar (home indicator). */
+export const appChromeBarFooterClassName =
+	'pb-[max(0.5rem,env(safe-area-inset-bottom))]';
+
+/**
+ * When carousel prev/next collapse under the section (`max-[63rem]`), reserve
+ * space so absolute nav buttons (anchored with `bottom`) do not overlap PlayControls.
+ * Matches `0.5rem` inset + `size-11` (2.75rem) button height.
+ */
+export const carouselCollapsedNavReserveClassName =
+	'max-[63rem]:pb-[calc(0.5rem+2.75rem)]';
 
 export const focusVisibleRingClassName =
 	'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-chrome';
@@ -78,11 +95,10 @@ export function focusWithForcedRing(
 }
 
 export const roundPlayPauseButtonClassName =
-	'flex justify-center items-center rounded-full border-2 border-primary-border bg-primary w-12 h-12 p-3 text-on-primary shadow-primary-glow transition-[opacity,box-shadow] hover:opacity-90 hover:shadow-raised disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 aria-disabled:hover:opacity-50';
+	'flex justify-center items-center rounded-full border-2 border-primary-border bg-primary min-w-12 min-h-12 w-12 h-12 p-3 text-on-primary shadow-primary-glow transition-[opacity,box-shadow] hover:opacity-90 hover:shadow-raised disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 aria-disabled:hover:opacity-50';
 
 export const modifyTempoButtonClassName =
-	'flex justify-center items-center border-2 border-primary-border rounded bg-primary w-8 h-8 p-2 text-on-primary shadow-control transition hover:opacity-90 hover:shadow-soft disabled:opacity-50';
-
+	'flex justify-center items-center border-2 border-primary-border rounded bg-primary min-w-11 min-h-11 w-11 h-11 p-2 text-on-primary shadow-control transition hover:opacity-90 hover:shadow-soft disabled:opacity-50';
 /**
  * Sit a control just outside a `relative` parent’s left (`start`) or right
  * (`end`) edge, with a 1rem gutter. Optional collapse drops to the bottom
@@ -97,8 +113,8 @@ export function sideGutterControlClassName(
 		side === 'start' ? 'right-[calc(100%+1rem)]' : 'left-[calc(100%+1rem)]',
 		collapseBelowGutter &&
 			(side === 'start'
-				? 'max-[63rem]:top-[calc(100%+0.75rem)] max-[63rem]:right-auto max-[63rem]:left-2 max-[63rem]:translate-y-0'
-				: 'max-[63rem]:top-[calc(100%+0.75rem)] max-[63rem]:left-auto max-[63rem]:right-2 max-[63rem]:translate-y-0'),
+				? 'max-[63rem]:top-auto max-[63rem]:bottom-2 max-[63rem]:right-auto max-[63rem]:left-2 max-[63rem]:translate-y-0'
+				: 'max-[63rem]:top-auto max-[63rem]:bottom-2 max-[63rem]:left-auto max-[63rem]:right-2 max-[63rem]:translate-y-0'),
 	);
 }
 
@@ -121,8 +137,8 @@ export function segmentControlClassName(
 	} = {},
 ): string {
 	return clsx(
-		'flex items-center justify-center rounded border p-2 text-sm transition-colors',
-		variant === 'header' && 'size-9 shrink-0 p-1.5',
+		'flex min-h-11 items-center justify-center rounded border p-2 text-sm transition-colors',
+		variant === 'header' && 'size-11 shrink-0 p-1.5',
 		grow === true && 'flex-1',
 		grow === 'auto' && 'flex-auto',
 		className,

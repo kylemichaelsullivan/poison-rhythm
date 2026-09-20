@@ -25,12 +25,16 @@ export function Section({
 				darkSurfaceClassName,
 			)}
 		>
-			<div className='flex w-full items-center justify-between gap-3'>
-				<div className='flex min-w-0 items-center gap-2'>
+			<div className='flex w-full flex-wrap items-center justify-between gap-x-3 gap-y-2'>
+				<div className='flex min-w-0 flex-wrap items-center gap-2'>
 					<SectionTitle>{title}</SectionTitle>
 					{headerLeading}
 				</div>
-				{headerAction}
+				{headerAction ? (
+					<div className='flex min-w-0 flex-wrap items-center gap-2'>
+						{headerAction}
+					</div>
+				) : null}
 			</div>
 			{children}
 		</section>

@@ -17,7 +17,9 @@ export function AboutPoisonRhythmButton({
 			className={clsx(
 				'AppTitleBrandTrigger rounded-sm',
 				focusVisibleRingClassName,
-				variant === 'title' && 'text-2xl font-bold',
+				variant === 'title'
+					? 'max-w-full truncate text-lg font-bold sm:text-2xl'
+					: 'truncate',
 			)}
 			aria-haspopup='dialog'
 			aria-expanded={open}

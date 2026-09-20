@@ -24,7 +24,7 @@ export function MetronomeControlBar({
 			id='beat-selector'
 			tabIndex={-1}
 			className={clsx(
-				'MetronomeContent relative flex flex-col justify-center gap-4 items-center px-8 py-4 sm:flex-row',
+				'MetronomeContent relative flex flex-col justify-center gap-4 items-center px-3 py-4 sm:flex-row sm:px-8',
 				controlSurfaceBaseClassName,
 			)}
 		>

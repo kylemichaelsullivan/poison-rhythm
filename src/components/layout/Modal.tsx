@@ -25,6 +25,10 @@ const FOCUSABLE_SELECTOR = [
 	'[tabindex]:not([tabindex="-1"])',
 ].join(', ');
 
+/** Near-fullscreen on phones; desktop sizes apply from `sm` upward. */
+const phoneNearFullscreenClassName =
+	'max-sm:h-[min(100dvh,100%)] max-sm:max-h-[min(100dvh,100%)] max-sm:w-full max-sm:max-w-none max-sm:rounded-none';
+
 export function Modal({
 	open,
 	fullWidth = false,
@@ -109,15 +113,26 @@ export function Modal({
 
 	const sizeClassName =
 		size === 'xl'
-			? 'h-[80vh] max-h-[80vh] w-[80vw] max-w-3xl'
+			? 'sm:h-[80vh] sm:max-h-[80vh] sm:w-[80vw] sm:max-w-3xl'
 			: size === 'lg'
-				? 'max-w-lg'
+				? 'sm:max-w-lg'
 				: size === 'md'
-					? 'max-w-md'
-					: 'max-w-sm';
+					? 'sm:max-w-md'
+					: 'sm:max-w-sm';
+
+	const maxHeightClassName =
+		size === 'xl'
+			? 'max-sm:max-h-[min(100dvh,100%)] sm:max-h-[80vh]'
+			: 'max-sm:max-h-[min(100dvh,100%)] sm:max-h-[min(90vh,40rem)]';
 
 	return (
-		<div className='Modal fixed flex items-center justify-center p-4 inset-0 z-50'>
+		<div
+			className={clsx(
+				'Modal fixed inset-0 z-50 flex items-center justify-center',
+				'p-[max(0px,env(safe-area-inset-top))] max-sm:p-0',
+				'sm:p-4 sm:pl-[max(1rem,env(safe-area-inset-left))] sm:pr-[max(1rem,env(safe-area-inset-right))] sm:pt-[max(1rem,env(safe-area-inset-top))] sm:pb-[max(1rem,env(safe-area-inset-bottom))]',
+			)}
+		>
 			<button
 				type='button'
 				className={clsx('absolute inset-0', modalScrimClassName)}
@@ -126,12 +141,13 @@ export function Modal({
 			/>
 			<div
 				className={clsx(
-					'relative flex min-h-0 flex-col gap-4 w-full p-6',
-					size === 'xl' ? 'max-h-[80vh]' : 'max-h-[min(90vh,40rem)]',
+					'relative flex min-h-0 w-full flex-col gap-4 p-4 sm:p-6',
+					maxHeightClassName,
 					modalPanelClassName,
+					phoneNearFullscreenClassName,
 					fullWidth
 						? 'max-w-none rounded-none'
-						: clsx(sizeClassName, 'rounded-lg'),
+						: clsx(sizeClassName, 'sm:rounded-lg'),
 				)}
 				role='dialog'
 				aria-modal='true'
@@ -142,7 +158,7 @@ export function Modal({
 			>
 				<button
 					type='button'
-					className='absolute top-3 right-3 flex justify-center items-center w-8 h-8 text-xl font-semibold leading-none text-dark transition-colors hover:text-primary focus-visible:outline-none focus-visible:text-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-white'
+					className='absolute top-3 right-3 flex min-h-11 min-w-11 items-center justify-center text-xl font-semibold leading-none text-dark transition-colors hover:text-primary focus-visible:outline-none focus-visible:text-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-white'
 					aria-label='Close Modal'
 					onClick={onClose}
 				>
@@ -150,7 +166,7 @@ export function Modal({
 				</button>
 				{title && (
 					<h2
-						className='shrink-0 text-lg font-semibold text-black text-center'
+						className='shrink-0 pr-10 text-center text-lg font-semibold text-black'
 						id={titleId}
 					>
 						{title}

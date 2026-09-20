@@ -26,10 +26,10 @@ export function SelectSetting<T extends string>({
 }: SelectSettingProps<T>) {
 	return (
 		<SettingRow label={label}>
-			<div className='flex min-w-0 flex-col items-end gap-1'>
+			<div className='flex min-w-0 w-full flex-col items-stretch gap-1 sm:w-auto sm:items-end'>
 				<select
 					className={clsx(
-						'min-w-0 max-w-[12rem] rounded border px-2 py-1.5 text-sm',
+						'min-h-11 min-w-0 w-full max-w-full rounded border px-2 py-1.5 text-sm sm:max-w-[12rem]',
 						inputSurfaceClassName,
 						disabled && 'cursor-not-allowed opacity-60',
 					)}
@@ -44,7 +44,7 @@ export function SelectSetting<T extends string>({
 					))}
 				</select>
 				{hint ? (
-					<span className='max-w-[12rem] text-right text-[0.65rem] text-muted'>
+					<span className='max-w-full text-left text-[0.65rem] text-muted sm:max-w-[12rem] sm:text-right'>
 						{hint}
 					</span>
 				) : null}

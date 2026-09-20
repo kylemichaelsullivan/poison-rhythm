@@ -25,7 +25,7 @@ export function ShowNotesTrigger({
 			type='button'
 			className={clsx(
 				controlButtonBaseClassName,
-				'flex items-center justify-center text-sm text-center w-10 h-10',
+				'flex min-h-11 min-w-11 w-11 h-11 items-center justify-center overflow-hidden px-0.5 text-center text-xs leading-tight sm:text-sm',
 				open && 'ring-2 ring-primary',
 			)}
 			title='Note Subdivisions'

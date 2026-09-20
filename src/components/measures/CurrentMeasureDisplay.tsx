@@ -27,10 +27,7 @@ export function CurrentMeasureDisplay({
 }: CurrentMeasureDisplayProps) {
 	return (
 		<div
-			className={clsx(
-				'CurrentMeasureDisplay w-full',
-				highlight && 'ring-2 ring-primary/50 rounded-lg shadow-soft',
-			)}
+			className='CurrentMeasureDisplay w-full'
 			data-counting-in={countingIn ? 'true' : 'false'}
 		>
 			{label ? (
@@ -47,12 +44,18 @@ export function CurrentMeasureDisplay({
 					</output>
 				)
 			) : null}
-			<MeasureGrid
-				measure={measure}
-				richMeasure={richMeasure}
-				playback={playback}
-				hidden={hidden}
-			/>
+			<div
+				className={clsx(
+					highlight && 'ring-2 ring-primary/50 rounded-lg shadow-soft',
+				)}
+			>
+				<MeasureGrid
+					measure={measure}
+					richMeasure={richMeasure}
+					playback={playback}
+					hidden={hidden}
+				/>
+			</div>
 		</div>
 	);
 }
