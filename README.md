@@ -162,7 +162,7 @@ The rhythm engine (`src/lib/rhythm/`) accepts both `difficulty` and `subdivision
 |------|----------|
 | Mode | Play mode + Endless, complexity (difficulty, subdivision), practice (Show Poison?, show next, preview pass, mute on pass) |
 | Sound | Tempo, metronome mute, rhythm mute, count-in |
-| Look | Theme, display mode (grid / notation), feedback, color accents (Crayola tray); see [`documentation/COLORS.md`](documentation/COLORS.md) |
+| Look | Theme, display mode (grid / notation; Scroll Coming Soon), feedback, color accents (Crayola tray); see [`documentation/COLORS.md`](documentation/COLORS.md) |
 | Main-page shortcuts | Poison Display Mode badge, header ShowNotes, footer metronome |
 
 Settings modal tabs: **Mode**, **Sound**, **Look** (`SettingsTabs`).
@@ -231,8 +231,8 @@ Coverage includes:
 - Playback clock / look-ahead (count-in → playback join with no timer gap)
 - Difficulty levels, subdivision playback, metronome tempo/tap
 - Theme options and preference storage
-- Playwright: seeded round ready, count-in highlight gating, count-in beats on Play, demo pass, notation overflow
-- Axe: start screen (seeded round), generated round, settings (incl. Sound), metronome, modals, count-in (WCAG 2.2 A/AA + best-practice)
+- Playwright: seeded round ready, count-in highlight gating, count-in beats on Play, Escape-to-stop, demo pass, notation overflow, mobile layout smoke (360×800)
+- Axe: start screen (seeded round), generated round, settings (incl. Sound), metronome, modals, count-in on **desktop and mobile** (WCAG 2.2 A/AA + best-practice)
 
 Details: [`documentation/TESTING.md`](documentation/TESTING.md).
 

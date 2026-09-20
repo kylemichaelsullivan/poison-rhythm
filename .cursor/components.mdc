@@ -82,13 +82,13 @@ src/components/
 - **Purpose**: Poison rhythm and New/Reuse controls
 - **Props**: `poisonRhythm`, `onNewPoison`, `onReusePoison`, optional soft-disable focus helpers
 - **Header**: `PoisonVisibilityToggle` (Eye) in `headerLeading`; `DisplayModeTrigger` → `DisplayModeModal` in `headerAction`
+- **Display Mode**: Grid / Notation only on the badge; Scroll is Coming Soon in `DisplayModeControls` (schema fields dormant — do not re-wire on main)
 - **Uses**: `PoisonMeasureContent` / `PoisonMeasureFrame`, Section, MeasureGrid, ControlButtons
-- **Display Mode**: Grid / notation + optional Scroll (Guitar Hero–style); controls in `DisplayModeControls`
 
 ### MeasuresSection / MeasureSlider
 
 - **MeasuresSection**: Empty state or carousel; shared spacer via `MeasureCarouselChrome`
-- **MeasureSlider**: Presentational carousel; playback side effects in `useMeasurePlaybackSync`
+- **MeasureSlider**: Presentational carousel; `live` on chrome for `data-testid="measure-slider"`; playback side effects in `useMeasurePlaybackSync`
 - **Layers**: `NextMeasurePreview`, `CurrentMeasureDisplay`, `CarouselNavButtons`
 
 ### MeasureGrid / MeasureCell
@@ -96,6 +96,7 @@ src/components/
 - **Purpose**: 16th-note grid with accent, sticking (L/R), poison overlay, and playback highlighting
 - **Props**: `measure`, optional `richMeasure`, `playback`, `hidden`
 - **Render modes**: `grid` or `notation` (MusiSync via `rhythmRenderMode`)
+- **Layout**: Four pedagogical beats; wraps to **2×2** beat groups below `sm`
 - **Overlays**: `RhythmAccentMark` / `RhythmAccentOverlay`; `RhythmStickingOverlay`
 
 ### Section / SectionTitle

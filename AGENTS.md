@@ -28,23 +28,26 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 2. **`EmptyStartPrompt` is fallback only.** Still rendered when `round === null`, but round is not cleared to `null` after mount in normal flow.
 3. **`e2e/helpers.ts` `generateRound` does not click New.** It waits for `data-testid="measure-slider"` and an enabled Play button (auto-seeded round).
 4. **Complexity is available from the title About modal and Settings → Mode** (difficulty 1–5 + subdivision). Header ShowNotes remains a quick control. Do not add Settings dials for density or syncopation as separate fields.
-5. **Display mode** is on the Poison section badge → `DisplayModeModal`, and also under **Settings → Look → Display**.
+5. **Display mode** is on the Poison section badge → `DisplayModeModal`, and also under **Settings → Look → Display**. Badge labels are **GRID** / **NOTATION** only; Scroll is Coming Soon (schema fields exist but are **not wired** on main — leave for `display-scroll`).
 6. **Play modes** are on the Difficulty section badge in the title About modal → `PlayModesModal`, and also under **Settings → Mode → Play Mode** (Classic / Bucket Drumming + Endless).
 7. **Color accents are preference keys**, not the game-settings blob — `ColorPreferencesProvider` + `poison-rhythm-dominant-color` / `poison-rhythm-secondary-color` (null = brand). See [`documentation/COLORS.md`](documentation/COLORS.md).
 8. **User-facing copy** uses typographic apostrophe `’` (not `'`). Prefer Title Case for labels/titles; sentence case for body hints.
 9. **Do not commit `.tmp-glyphs/`.** Local glyph audit screenshots; gitignored and Biome-ignored.
 10. **Round logic lives in `GameProvider`.** `useGameLoop` exists but is unused by the app shell — prefer extending `GameProvider` / `@/lib/game-modes` / `@/lib/rhythm`.
 11. **Difficulty slider** lives at the bottom of the title About modal (and Settings → Mode). Regenerate confirm (`ConfirmRegenModal`) only appears after that host modal closes, and only if difficulty changed from the committed value while a round is active (`PendingDifficultyProvider`).
+12. **Phone-up layout** targets ≈360px (320px no horizontal overflow). Measure beat groups wrap to **2×2** below `sm`. Playwright `mobile` project (360×800) runs `a11y` + `mobile-layout` only.
+13. **Escape stops playback** in `MetronomeProvider` on `keydown` (works while Play/Pause is focused); ignored in text inputs and dialogs.
 
 ## Key paths
 
 | Path | Role |
 |------|------|
 | `src/contexts/GameProvider.tsx` | Sync-seeded round, New/Reuse, endless append |
-| `src/contexts/MetronomeProvider.tsx` | Audio clock, count-in, demo/student passes, `countInBeat` |
+| `src/contexts/MetronomeProvider.tsx` | Audio clock, count-in, demo/student passes, `countInBeat`, Escape-to-stop |
 | `src/components/layout/settings/` | Settings modal (`SettingsOverlay` → Mode / Sound / Look) |
 | `src/components/controls/PlayControls.tsx` | Play/Pause; `data-count-in-beat` during count-in |
-| `src/components/measures/MeasureGrid.tsx` | Grid vs lazy notation; prefetches chunk + MusiSync font |
+| `src/components/measures/MeasureGrid.tsx` | Grid vs lazy notation; 2×2 beat wrap below `sm`; prefetches chunk + MusiSync font |
+| `src/components/measures/MeasureCarouselChrome.tsx` | Carousel chrome; `live` sets `data-testid="measure-slider"` |
 | `src/lib/rhythm/` | Measure/round generation |
 | `src/lib/notation/` | Events → spelling → beams → MusiSync glyphs |
 | `src/lib/notation/musisync-glyphs.ts` | Duration glyph map (`i`/`j`/`d` dotted notes) |

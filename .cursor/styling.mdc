@@ -23,6 +23,14 @@ alwaysApply: false
 - **Formatting**: Use Biome for formatting and linting (`bun run lint` / `bun run check` / `bun run ci`; VS Code: install recommended `biomejs.biome`)
 - **Utility function**: Use `clsx()` for conditional classes (not `cn()`)
 
+### Phone-up layout
+
+- **Floor**: Design primarily for ≈360px width; 320px must remain operable without page-level horizontal overflow
+- **Touch**: Prefer ≥44px hit targets on primary chrome (Play, corners, carousel, segments, modal close)
+- **Safe area**: Header/footer use `env(safe-area-inset-*)` with `viewport-fit=cover` in `index.html`
+- **Measure grid**: Keep four pedagogical beats; wrap beat groups to **2×2** below `sm` (`MeasureGrid`)
+- **Modals**: Near-fullscreen on small viewports (`Modal`)
+
 ### Color & Theme
 
 Theme tokens are defined in `src/index.css` (`@theme`) and exposed as Tailwind utilities. They use `light-dark()` so light/dark/system mode stays consistent when `data-theme` changes.

@@ -90,11 +90,11 @@ Provider tree in `main.tsx`: `ThemeProvider` → `ColorPreferencesProvider` → 
 
 ### Notation and display
 
-- **rhythmRenderMode**: `grid` | `notation` — Poison section badge (`DisplayModeModal`) and Settings → Look → Display
+- **rhythmRenderMode**: `grid` | `notation` — Poison section badge (`DisplayModeModal`) and Settings → Look → Display; badge text is GRID / NOTATION only
 - **Pipeline**: `@/lib/notation` — `measureToNotationEvents` → beaming → `measureToNotationSteps` → `MeasureNotation`
 - **Font**: MusiSync served from `/fonts/MusiSync.*`; preload via `loadMusiSyncFont` / `useMusiSyncFont`; `MeasureGrid` prefetches notation chunk + font when mode is notation
 - **Glyphs**: dotted notes `i`/`j`/`d`; beams include `³` / `O` / `o` — see `src/assets/fonts/README.md`; never alias unmatched patterns
-- **Scroll mode**: `scrollDirection` / `scrollSpeed` in settings schema; UI Coming Soon
+- **Scroll mode**: `scrollDirection` / `scrollSpeed` remain in settings schema and `scroll-animation.ts`, but are **not wired** in the UI (Coming Soon). Do not re-enable on main ahead of the `display-scroll` branch.
 
 ### Preferences and settings
 
@@ -110,6 +110,7 @@ Provider tree in `main.tsx`: `ThemeProvider` → `ColorPreferencesProvider` → 
 - **feedbackMode** (Settings): Gates visual blinker, poison overlay, and rhythm hit sounds
 - **Demo before play**: MetronomeContext runs demo pass then student pass; `muteOnStudentPass` suppresses rhythm audio on pass 2
 - **Count-in**: Optional one-bar quarter-note lead-in; status “Counting In”; Play control exposes `data-count-in-beat` / `data-counting-in`
+- **Escape**: Stops measure/metronome playback on `keydown` even when a control is focused; ignored in text inputs and dialogs
 
 ### Components
 

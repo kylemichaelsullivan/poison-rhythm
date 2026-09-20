@@ -47,12 +47,14 @@ Rules of thumb:
 
 Main page shell: `Header` → `Body` (`PoisonSection`, `MeasuresSection`, `PlayControls`) → `Footer`.
 
+Phone-up layout (≈360px primary; 320px must not overflow horizontally): safe-area insets on chrome, ≥44px touch targets on primary controls, near-fullscreen modals on small viewports, and measure beat groups wrapping to a **2×2** grid below `sm` (`MeasureGrid`). Carousel prev/next sit above Play so they do not overlap.
+
 | Composer | Notable layers / hooks |
 |----------|------------------------|
 | `DifficultyControls` | `DifficultySlider`, `ModeBadgeTrigger`, `DifficultyHelpModal`, `PlayModesModal`; regen confirm via `PendingDifficultyProvider` (About modal + Settings → Mode) |
-| `MeasureSlider` | `MeasureCarouselChrome`, `NextMeasurePreview`, `useMeasurePlaybackSync` |
+| `MeasureSlider` | `MeasureCarouselChrome` (`live` sets `data-testid="measure-slider"`), `NextMeasurePreview`, `useMeasurePlaybackSync` |
 | `ShowNotes` | `ShowNotesTrigger`, `ShowNotesSlider`, `useHoverPinPopover` |
-| `PoisonSection` | `PoisonMeasureContent`, `PoisonMeasureFrame`, `DisplayModeModal` / `DisplayModeControls` |
+| `PoisonSection` | `PoisonMeasureContent`, `PoisonMeasureFrame`, `DisplayModeModal` / `DisplayModeControls` (badge: Grid / Notation only) |
 | `Body` | `useSoftDisableFocus` |
 
 Settings shell: footer **Settings** → lazy `SettingsOverlay` → tabs `Mode` / `Sound` / `Look` over `layout/settings/` atoms (`SettingsGroup`, `EnableToggle`, `When`, …). Color accents persist via `ColorPreferencesProvider` (student-scoped preference keys; null = brand). Main-UI shortcuts remain: Poison badge → `DisplayModeModal`; header ShowNotes; footer metronome for tempo. Mirrored in Settings: play mode + complexity + practice under Mode; tempo under Sound; theme, display, feedback, and colors under Look. Difficulty + play-mode badge also live in the title About modal. See [`COLORS.md`](COLORS.md).
@@ -116,7 +118,7 @@ Defined in `src/lib/settings-schema.ts`, persisted as `poison-rhythm-settings-v1
 
 | Category | Fields |
 |----------|--------|
-| General | `players`, `feedbackMode`; `scrollDirection` / `scrollSpeed` (Coming Soon in Display Mode) |
+| General | `players`, `feedbackMode`; `scrollDirection` / `scrollSpeed` (schema + helpers retained; **not wired** in UI — Display Mode shows Coming Soon) |
 | Practice | `showNextMeasure`, `demoBeforePlay`, `muteOnStudentPass` |
 | Rhythm | `accents`, `sticking`, `phraseLength` (Coming Soon in Settings); `rests` (unused; always off) |
 | Poison | `poisonMode` (Eye toggle on Poison section + Settings → Mode → Practice) |
@@ -205,8 +207,8 @@ Playback cursor: `useSmoothNotationCursor` interpolates position across `Notatio
 | `count-in-schedule.ts` | `planCountIn` helper over the playback clock |
 | `measure-playback.ts` | Measure-level step indexing for carousel sync |
 | `playback-state.ts` | Count-in / demo / student pass gating for cell highlight |
-| `scroll-animation.ts` | Scroll-mode animation helpers (Coming Soon in Display Mode) |
-| `MetronomeProvider` | Schedules clicks/hits on the audio clock; UI updates via delayed timeouts |
+| `scroll-animation.ts` | Scroll-mode animation helpers (dormant; Coming Soon in Display Mode — keep for eventual highway mode) |
+| `MetronomeProvider` | Schedules clicks/hits on the audio clock; UI updates via delayed timeouts; **Escape** stops playback (keydown; ignored in inputs/dialogs) |
 
 ## Types
 

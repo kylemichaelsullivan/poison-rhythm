@@ -45,10 +45,18 @@ Location: `e2e/`
 
 | Spec | Coverage |
 |------|----------|
-| `playback.spec.ts` | Round ready, count-in highlight gating, **count-in beats on the Play button**, post–count-in highlight, demo pass |
-| `a11y.spec.ts` | axe WCAG 2.2 A/AA + best-practice (start screen, round, settings/Sound, metronome, modals, count-in) |
+| `playback.spec.ts` | Round ready, count-in highlight gating, **count-in beats on the Play button**, post–count-in highlight, demo pass, **Escape stops playback** (including while Play/Pause is focused) |
+| `a11y.spec.ts` | axe WCAG 2.2 A/AA + best-practice (start screen, round, settings/Sound, metronome, modals, count-in). Runs on **Desktop Chrome** and **mobile** (360×800) projects |
+| `mobile-layout.spec.ts` | 360×800 smoke: carousel nav vs Play overlap, 2-col measure grid, Settings panel scroll |
 | `notation-scroll.spec.ts` | MusiSync boxes do not vertically overflow |
 | `helpers.ts` | Shared prefs seeding and round-ready wait |
+
+### Playwright projects
+
+| Project | Viewport | Specs |
+|---------|----------|--------|
+| `chromium` | Desktop Chrome | All `e2e/` except `mobile-layout.spec.ts` |
+| `mobile` | 360×800 (Pixel 5 UA) | `a11y.spec.ts`, `mobile-layout.spec.ts` only |
 
 ### Helpers
 
@@ -64,6 +72,10 @@ During count-in, `PlayControls` exposes:
 - `data-count-in-beat` — string beat number (or empty when not counting)
 
 Assert these rather than scraping glyph text alone.
+
+### Keyboard stop
+
+`MetronomeProvider` stops playback on **Escape** via `keydown` so it still works when focus is on Play/Pause (or other controls). Escape is ignored inside text inputs and `[role="dialog"]`.
 
 ### Start screen
 
