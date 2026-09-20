@@ -2,12 +2,24 @@
 name: git-commits
 description: >-
   Formats Poison Rhythm git commits as TYPE: Title Case Message (ADD, FIX,
-  UPDATE, REMOVE, REFACTOR, MERGE, REVERT, BRANCH, DEPLOY). Use when creating
+  UPDATE, REMOVE, REFACTOR, MERGE, REVERT, BRANCH, DEPLOY). Before committing,
+  run format/lint/tests, fix until clean, and update docs. Use when creating
   commits, writing commit messages, splitting changes into commits, or when the
   user invokes /git-commits.
 ---
 
 # Git Commits
+
+## Before committing
+
+Do this **before** inspecting diffs or creating any commit:
+
+1. **Run all formatting, linting, and tests** — `bun run check` then `bun run test:all` (or equivalently ensure Biome format/lint plus Bun unit/integration plus Playwright are green).
+2. **Fix failures and bugs** — resolve any failing checks, type errors, or regressions introduced by the change set.
+3. **Repeat 1 & 2 until clean** — do not proceed while Biome, Bun tests, or Playwright are red.
+4. **Update all documentation** — bring `AGENTS.md`, `documentation/*`, `README.md`, and relevant `.cursor/*.mdc` in line with the behavior you are about to commit (gotchas, architecture, testing, teachers, Cursor rules).
+
+Only after the gate is green and docs match the code should you follow the format and agent checklist below.
 
 ## Format
 
@@ -102,8 +114,9 @@ Prefer:
 
 When the user asks for commits:
 
-1. Inspect `git status`, `git diff`, and recent `git log` messages
-2. Split unrelated changes into separate commits when practical
-3. Stage only the files for that commit
-4. Use `TYPE: Title Case Message` via HEREDOC; never amend unless the user explicitly asks and amend rules allow it
-5. Do not push unless asked
+1. Complete **Before committing** (format/lint/tests → fix → loop until clean → update docs)
+2. Inspect `git status`, `git diff`, and recent `git log` messages
+3. Split unrelated changes into separate commits when practical
+4. Stage only the files for that commit
+5. Use `TYPE: Title Case Message` via HEREDOC; never amend unless the user explicitly asks and amend rules allow it
+6. Do not push unless asked
