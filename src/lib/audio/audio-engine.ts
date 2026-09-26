@@ -5,6 +5,17 @@ export function clampScheduleTime(audioNow: number, time: number): number {
 	return Math.max(time, audioNow);
 }
 
+/**
+ * Future notes must be silenced on stop/pause; notes already in their envelope
+ * should finish so poison / end-of-round does not chop the last hit.
+ */
+export function shouldCancelScheduledSource(
+	audioNow: number,
+	startTime: number,
+): boolean {
+	return startTime > audioNow;
+}
+
 function scheduleTime(context: AudioContext, time: number): number {
 	return clampScheduleTime(context.currentTime, time);
 }
@@ -14,18 +25,26 @@ export type HitOptions = {
 	isPoison?: boolean;
 };
 
+type TrackedSource = {
+	oscillator: OscillatorNode;
+	startTime: number;
+};
+
 export type AudioEngine = {
 	getContext: () => AudioContext;
 	scheduleClick: (time: number) => void;
 	scheduleHit: (time: number, options?: HitOptions) => void;
-	/** Stop any oscillators scheduled into the future (e.g. when pausing mid count-in). */
+	/**
+	 * Cancel oscillators scheduled in the future (pause / stop).
+	 * Sources already sounding keep their natural envelope.
+	 */
 	cancelScheduled: () => void;
 	closeIfOpen: () => void;
 };
 
 export function createAudioEngine(): AudioEngine {
 	let audioContext: AudioContext | null = null;
-	let scheduledSources: OscillatorNode[] = [];
+	let scheduledSources: TrackedSource[] = [];
 
 	const getContext = (): AudioContext => {
 		if (!audioContext) {
@@ -34,26 +53,42 @@ export function createAudioEngine(): AudioEngine {
 		return audioContext;
 	};
 
-	const track = (oscillator: OscillatorNode): void => {
-		scheduledSources.push(oscillator);
+	const track = (oscillator: OscillatorNode, startTime: number): void => {
+		scheduledSources.push({ oscillator, startTime });
 		oscillator.addEventListener('ended', () => {
-			scheduledSources = scheduledSources.filter((node) => node !== oscillator);
+			scheduledSources = scheduledSources.filter(
+				(entry) => entry.oscillator !== oscillator,
+			);
 		});
 	};
 
 	const cancelScheduled = (): void => {
-		for (const oscillator of scheduledSources) {
+		const audioNow = audioContext?.currentTime ?? 0;
+		const remaining: TrackedSource[] = [];
+		for (const entry of scheduledSources) {
+			if (!shouldCancelScheduledSource(audioNow, entry.startTime)) {
+				remaining.push(entry);
+				continue;
+			}
 			try {
-				oscillator.stop();
+				entry.oscillator.stop();
+			} catch {
+				// Already stopped or never started.
+			}
+		}
+		scheduledSources = remaining;
+	};
+
+	const closeIfOpen = (): void => {
+		for (const entry of scheduledSources) {
+			try {
+				// Unmount tear-down silences everything, including in-flight notes.
+				entry.oscillator.stop();
 			} catch {
 				// Already stopped or never started.
 			}
 		}
 		scheduledSources = [];
-	};
-
-	const closeIfOpen = (): void => {
-		cancelScheduled();
 		if (audioContext && audioContext.state !== 'closed') {
 			void audioContext.close();
 		}
@@ -72,7 +107,7 @@ export function createAudioEngine(): AudioEngine {
 		gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
 		oscillator.connect(gain);
 		gain.connect(context.destination);
-		track(oscillator);
+		track(oscillator, startTime);
 		oscillator.start(startTime);
 		oscillator.stop(startTime + duration + 0.01);
 	};
@@ -94,7 +129,7 @@ export function createAudioEngine(): AudioEngine {
 		gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
 		oscillator.connect(gain);
 		gain.connect(context.destination);
-		track(oscillator);
+		track(oscillator, startTime);
 		oscillator.start(startTime);
 		oscillator.stop(startTime + duration + 0.01);
 	};
