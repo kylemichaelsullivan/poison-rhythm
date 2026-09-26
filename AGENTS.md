@@ -51,6 +51,7 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 | `src/components/layout/settings/` | Settings modal (`SettingsOverlay` → Mode / Sound / Look) |
 | `src/components/controls/PlayControls.tsx` | Play/Pause; `data-count-in-beat` during count-in |
 | `src/components/measures/MeasureGrid.tsx` | Grid vs lazy notation; 2×2 beat wrap below `sm`; prefetches chunk + MusiSync font |
+| `src/components/measures/measure-phase-chrome.ts` | Live-measure shell/hit classes by `data-playback-phase` (idle / count-in / listening / playing) |
 | `src/components/measures/MeasureCarouselChrome.tsx` | Carousel chrome; `live` sets `data-testid="measure-slider"` |
 | `src/lib/rhythm/` | Measure/round generation |
 | `src/lib/notation/` | Events → spelling → beams → MusiSync glyphs |

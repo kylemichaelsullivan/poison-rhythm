@@ -130,9 +130,11 @@ Defined in `src/lib/settings-schema.ts`, persisted as `poison-rhythm-settings-v1
 When `demoBeforePlay` is enabled:
 
 1. Count-in (optional; Sound → Count-In Before Play)
-2. For **each** carousel measure: **Listening (demo) pass** — plays the current measure so students can hear it; cells highlighted
-3. **Playing (student) pass** — same measure again; if `muteOnStudentPass`, rhythm hits suppressed; metronome continues
+2. For **each** carousel measure: **Listening (demo) pass** — plays the current measure so students can hear it; cells highlighted; dashed primary shell + ink (black/white) notes (`data-playback-phase="listening"`)
+3. **Playing (student) pass** — same measure again with solid secondary glow shell + secondary notes (`data-playback-phase="playing"`); if `muteOnStudentPass`, rhythm hits suppressed; metronome continues
 4. Advance to the next measure and repeat from step 2
+
+Count-in, Listening, and Playing share a fixed `border-2` shell so the measure does not jump between phases; count-in also fades the live measure (`opacity-55`).
 
 Implemented in `MetronomeProvider` with `playbackPass`: `'demo' | 'student'` and `setPlaybackMeasure` (current carousel cell).
 
@@ -201,7 +203,7 @@ Playback cursor: `useSmoothNotationCursor` interpolates position across `Notatio
 
 | Module | Role |
 |--------|------|
-| `audio/audio-engine.ts` | `createAudioEngine` — metronome clicks and rhythm hits via Web Audio |
+| `audio/audio-engine.ts` | `createAudioEngine` — metronome clicks and rhythm hits via Web Audio; `cancelScheduled` silences future notes only so the last hit can finish its envelope |
 | `playback-clock.ts` | Pure event timeline: optional count-in, then subdivision steps |
 | `lookahead-scheduler.ts` | Polls `AudioContext.currentTime`; schedules within `SCHEDULE_AHEAD_SEC` |
 | `count-in-schedule.ts` | `planCountIn` helper over the playback clock |

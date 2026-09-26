@@ -8,6 +8,10 @@ import {
 import { shouldShowAccents, shouldShowSticking } from '@/lib/settings-schema';
 import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
 import { MeasureNotationGlyph } from './MeasureNotationGlyph';
+import {
+	type MeasurePlaybackPhase,
+	measureShellClass,
+} from './measure-phase-chrome';
 import { NotationPlaybackCursor } from './NotationPlaybackCursor';
 import { RhythmAccentOverlay } from './RhythmAccentOverlay';
 import { RhythmStickingOverlay } from './RhythmStickingOverlay';
@@ -17,6 +21,7 @@ type MeasureNotationProps = {
 	richMeasure?: RichRhythmMeasure;
 	playback?: boolean;
 	hidden?: boolean;
+	phase?: MeasurePlaybackPhase;
 };
 
 export function MeasureNotation({
@@ -24,6 +29,7 @@ export function MeasureNotation({
 	richMeasure,
 	playback = false,
 	hidden = false,
+	phase,
 }: MeasureNotationProps) {
 	const { subdivisionLevel } = useSubdivision();
 	const { settings } = useSettings();
@@ -37,7 +43,8 @@ export function MeasureNotation({
 	return (
 		<div
 			className={clsx(
-				'MeasureNotation relative w-full border-2 border-primary/30 rounded-lg px-3 py-4 bg-primary/5 shadow-soft',
+				'MeasureNotation relative w-full px-3 py-4',
+				measureShellClass(phase),
 				stickingEnabled && 'pb-4',
 				accentsEnabled && 'pt-6',
 				hidden && 'opacity-0',

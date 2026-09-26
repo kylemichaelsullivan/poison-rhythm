@@ -244,7 +244,7 @@ Details: [`documentation/TESTING.md`](documentation/TESTING.md).
 4. Note the **poison rhythm** in the Poison Rhythm section (hidden when poison mode is off or set to hidden).
 5. Click **New (+)** for a fresh poison and measures, or **Reuse** to keep the same poison and regenerate measures.
 6. Use **Prev/Next** to step through measures and find which one matches the poison.
-7. Use **Play** to hear measures (optional count-in shows beat numbers on the Play control). With **Preview Before Play** enabled (Settings → Mode), the current measure plays once as a demo (Listening), then again as the student pass (Playing; optionally muted).
+7. Use **Play** to hear measures (optional count-in shows beat numbers on the Play control and fades the live measure). With **Preview Before Play** enabled (Settings → Mode), the current measure plays once as a demo (Listening — dashed primary shell and black/white notes), then again as the student pass (Playing — secondary glow shell and secondary notes; optionally muted).
 8. Open the footer **metronome** to set tempo or tap tempo.
 9. Open the footer **Settings** for theme, colors, sound (including tempo), complexity, play/display mode, poison visibility, and practice features (show next measure, demo pass). Difficulty + play mode are in the title **About** modal; other main-page shortcuts remain: Poison **Display Mode** badge, header ShowNotes, footer metronome.
 

@@ -39,6 +39,7 @@ export function MeasuresSection({ onNewPoison }: MeasuresSectionProps) {
 		demoBeforePlay,
 		isDemoPass,
 		isCountingIn,
+		isMeasuresRunning,
 		measuresLength,
 		setCurrentIndex,
 	} = useMeasurePlaybackSync();
@@ -100,11 +101,7 @@ export function MeasuresSection({ onNewPoison }: MeasuresSectionProps) {
 									) : undefined
 								}
 							>
-								<CurrentMeasureDisplay
-									measure={REST_MEASURE}
-									label={demoBeforePlay ? 'Playing' : undefined}
-									labelVisible={demoBeforePlay}
-								/>
+								<CurrentMeasureDisplay measure={REST_MEASURE} highlight />
 							</MeasureCarouselChrome>
 						}
 					>
@@ -120,6 +117,7 @@ export function MeasuresSection({ onNewPoison }: MeasuresSectionProps) {
 								demoBeforePlay={demoBeforePlay}
 								isDemoPass={isDemoPass}
 								isCountingIn={isCountingIn}
+								isMeasuresRunning={isMeasuresRunning}
 							/>
 						)}
 					</StableContentFrame>

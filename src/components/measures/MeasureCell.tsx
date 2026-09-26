@@ -4,6 +4,11 @@ import { cellToSubdivisionStep } from '@/lib';
 import { shouldShowVisualFeedback } from '@/lib/audio';
 import { shouldHighlightPlaybackStep } from '@/lib/playback-state';
 import { shouldShowAccents, shouldShowSticking } from '@/lib/settings-schema';
+import {
+	type MeasurePlaybackPhase,
+	measureHitClass,
+	measureHitHighlightClass,
+} from './measure-phase-chrome';
 import { RhythmAccentMark } from './RhythmAccentMark';
 import { RhythmStickingLabel } from './RhythmStickingLabel';
 
@@ -14,6 +19,7 @@ type MeasureCellProps = {
 	accent?: boolean;
 	sticking?: 'L' | 'R';
 	hidden?: boolean;
+	phase?: MeasurePlaybackPhase;
 };
 
 export function MeasureCell({
@@ -23,6 +29,7 @@ export function MeasureCell({
 	accent = false,
 	sticking,
 	hidden = false,
+	phase,
 }: MeasureCellProps) {
 	const { subdivisionLevel } = useSubdivision();
 	const { settings } = useSettings();
@@ -43,9 +50,8 @@ export function MeasureCell({
 		<div
 			className={clsx(
 				'MeasureCell relative aspect-square rounded-[3px]',
-				value ? 'bg-primary shadow-soft' : 'bg-surface-muted',
-				showStepHighlight &&
-					'ring-2 ring-secondary ring-inset transition-shadow duration-200',
+				value ? measureHitClass(phase) : 'bg-surface-muted',
+				showStepHighlight && measureHitHighlightClass(phase),
 				hidden && value && 'opacity-0',
 			)}
 			title={value ? (accent ? 'Accent Hit' : 'Hit') : 'Rest'}

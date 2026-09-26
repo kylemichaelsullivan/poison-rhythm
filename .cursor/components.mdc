@@ -89,7 +89,7 @@ src/components/
 
 - **MeasuresSection**: Empty state or carousel; shared spacer via `MeasureCarouselChrome`
 - **MeasureSlider**: Presentational carousel; `live` on chrome for `data-testid="measure-slider"`; playback side effects in `useMeasurePlaybackSync`
-- **Layers**: `NextMeasurePreview`, `CurrentMeasureDisplay`, `CarouselNavButtons`
+- **Layers**: `NextMeasurePreview`, `CurrentMeasureDisplay` / `measure-phase-chrome` (`data-playback-phase`: idle / count-in / listening / playing — fixed `border-2`; Listening = dashed primary shell + ink notes, Playing = secondary glow shell + secondary notes, count-in faded), `CarouselNavButtons`
 
 ### MeasureGrid / MeasureCell
 

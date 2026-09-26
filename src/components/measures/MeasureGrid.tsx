@@ -5,7 +5,12 @@ import { loadMusiSyncFont } from '@/lib/notation';
 import type { RhythmRenderMode } from '@/lib/settings-schema';
 import { shouldShowSticking } from '@/lib/settings-schema';
 import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
-import { MeasureCell } from '.';
+import { MeasureCell } from './MeasureCell';
+import {
+	type MeasurePlaybackPhase,
+	measureBeatGroupClass,
+	measureShellClass,
+} from './measure-phase-chrome';
 
 const measureNotationImport = () =>
 	import('./MeasureNotation').then((module) => ({
@@ -21,6 +26,8 @@ type MeasureGridProps = {
 	hidden?: boolean;
 	/** Override settings render mode (e.g. height reserve always measures grid). */
 	renderMode?: RhythmRenderMode;
+	/** Live playback chrome (Listening = secondary, Playing = primary). */
+	phase?: MeasurePlaybackPhase;
 };
 
 function MeasureCellGrid({
@@ -28,6 +35,7 @@ function MeasureCellGrid({
 	richMeasure,
 	playback = false,
 	hidden = false,
+	phase,
 }: MeasureGridProps) {
 	const { settings } = useSettings();
 	const showSticking = shouldShowSticking(settings);
@@ -37,7 +45,8 @@ function MeasureCellGrid({
 	return (
 		<div
 			className={clsx(
-				'MeasureCellGrid grid grid-cols-2 gap-2 w-full border-2 border-primary/25 rounded-lg p-2 bg-primary/5 shadow-soft sm:grid-cols-4 sm:gap-2.5',
+				'MeasureCellGrid grid grid-cols-2 gap-2 w-full p-2 sm:grid-cols-4 sm:gap-2.5',
+				measureShellClass(phase),
 				showSticking && 'pb-4',
 			)}
 		>
@@ -45,7 +54,10 @@ function MeasureCellGrid({
 				const start = beat * 4;
 				return (
 					<div
-						className='MeasureBeatGroup grid grid-cols-4 gap-px overflow-hidden rounded-md border border-primary/30 bg-surface p-px'
+						className={clsx(
+							'MeasureBeatGroup grid grid-cols-4 gap-px overflow-hidden rounded-md p-px',
+							measureBeatGroupClass(phase),
+						)}
 						data-beat={beat + 1}
 						key={beat}
 					>
@@ -60,6 +72,7 @@ function MeasureCellGrid({
 									accent={step?.accent}
 									sticking={step?.sticking}
 									hidden={hidden}
+									phase={phase}
 									key={`${i}-${cell}`}
 								/>
 							);
@@ -72,11 +85,18 @@ function MeasureCellGrid({
 }
 
 /** Notation-shaped shell shown while the lazy notation chunk loads. */
-function NotationFallback({ hidden = false }: { hidden?: boolean }) {
+function NotationFallback({
+	hidden = false,
+	phase,
+}: {
+	hidden?: boolean;
+	phase?: MeasurePlaybackPhase;
+}) {
 	return (
 		<output
 			className={clsx(
-				'MeasureNotation relative flex w-full items-center justify-center border-2 border-primary/30 rounded-lg px-3 py-4 bg-primary/5 shadow-soft',
+				'MeasureNotation relative flex w-full items-center justify-center px-3 py-4',
+				measureShellClass(phase),
 				hidden && 'opacity-0',
 			)}
 			aria-live='polite'
@@ -93,6 +113,7 @@ export function MeasureGrid({
 	playback = false,
 	hidden = false,
 	renderMode: renderModeProp,
+	phase,
 }: MeasureGridProps) {
 	const { settings } = useSettings();
 	const renderMode = renderModeProp ?? settings.rhythmRenderMode;
@@ -105,12 +126,13 @@ export function MeasureGrid({
 
 	if (renderMode === 'notation') {
 		return (
-			<Suspense fallback={<NotationFallback hidden={hidden} />}>
+			<Suspense fallback={<NotationFallback hidden={hidden} phase={phase} />}>
 				<MeasureNotation
 					measure={measure}
 					richMeasure={richMeasure}
 					playback={playback}
 					hidden={hidden}
+					phase={phase}
 				/>
 			</Suspense>
 		);
@@ -122,6 +144,7 @@ export function MeasureGrid({
 			richMeasure={richMeasure}
 			playback={playback}
 			hidden={hidden}
+			phase={phase}
 		/>
 	);
 }

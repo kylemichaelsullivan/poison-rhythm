@@ -93,7 +93,7 @@ From the badge on the Poison Rhythm section, or **Settings → Look → Display*
 
 - Prefer a larger window or projected display; section titles and the poison box are the visual anchors.
 - Phones work from about **360px** wide (smaller widths stay operable); measure cells wrap into a 2×2 beat layout on narrow screens.
-- Count-in and “Counting In” status help shared listening.
+- Count-in and measure chrome (faded dashed shell while counting in; dashed primary shell + ink notes on Listening; solid secondary glow + secondary notes on Playing — same border width so layout stays stable) help shared listening.
 - **Escape** stops playback (including when the Play/Pause control is focused).
 - Theme (light/dark/system) is under **Settings → Look**.
 - Colors (dominant / secondary) are under **Settings → Look** — prefer the **Poison Rhythm** pairing for shared classrooms; low-contrast crayons show a bypassable warning modal. See [`COLORS.md`](COLORS.md).

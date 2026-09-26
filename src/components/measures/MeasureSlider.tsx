@@ -1,6 +1,9 @@
 import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
 import { REST_MEASURE } from '@/types';
-import { CurrentMeasureDisplay } from './CurrentMeasureDisplay';
+import {
+	CurrentMeasureDisplay,
+	type MeasurePlaybackPhase,
+} from './CurrentMeasureDisplay';
 import { MeasureCarouselChrome } from './MeasureCarouselChrome';
 import { NextMeasurePreview } from './NextMeasurePreview';
 
@@ -13,7 +16,39 @@ type MeasureSliderProps = {
 	demoBeforePlay: boolean;
 	isDemoPass: boolean;
 	isCountingIn: boolean;
+	isMeasuresRunning: boolean;
 };
+
+function resolvePlaybackPhase({
+	isCountingIn,
+	isMeasuresRunning,
+	demoBeforePlay,
+	isDemoPass,
+}: {
+	isCountingIn: boolean;
+	isMeasuresRunning: boolean;
+	demoBeforePlay: boolean;
+	isDemoPass: boolean;
+}): MeasurePlaybackPhase {
+	if (isCountingIn) return 'count-in';
+	if (!isMeasuresRunning) return 'idle';
+	if (demoBeforePlay && isDemoPass) return 'listening';
+	return 'playing';
+}
+
+function resolvePlaybackLabel({
+	isCountingIn,
+	demoBeforePlay,
+	isDemoPass,
+}: {
+	isCountingIn: boolean;
+	demoBeforePlay: boolean;
+	isDemoPass: boolean;
+}): string {
+	if (isCountingIn) return 'Counting In';
+	if (demoBeforePlay) return isDemoPass ? 'Listening' : 'Playing';
+	return 'Current Measure';
+}
 
 export function MeasureSlider({
 	displayMeasure,
@@ -24,7 +59,15 @@ export function MeasureSlider({
 	demoBeforePlay,
 	isDemoPass,
 	isCountingIn,
+	isMeasuresRunning,
 }: MeasureSliderProps) {
+	const phase = resolvePlaybackPhase({
+		isCountingIn,
+		isMeasuresRunning,
+		demoBeforePlay,
+		isDemoPass,
+	});
+
 	return (
 		<MeasureCarouselChrome
 			live
@@ -42,17 +85,12 @@ export function MeasureSlider({
 				richMeasure={displayRich}
 				highlight
 				playback
-				countingIn={isCountingIn}
-				label={
-					isCountingIn
-						? 'Counting In'
-						: demoBeforePlay
-							? isDemoPass
-								? 'Listening'
-								: 'Playing'
-							: 'Current Measure'
-				}
-				labelVisible={demoBeforePlay}
+				phase={phase}
+				label={resolvePlaybackLabel({
+					isCountingIn,
+					demoBeforePlay,
+					isDemoPass,
+				})}
 			/>
 		</MeasureCarouselChrome>
 	);

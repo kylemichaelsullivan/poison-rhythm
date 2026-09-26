@@ -124,6 +124,11 @@ test.describe('accessibility', () => {
 
 		await clickPlay(page);
 		await expect(page.getByRole('status')).toHaveText('Counting In');
+		await expect(
+			page
+				.getByTestId('measure-slider')
+				.locator('[data-playback-phase="count-in"]'),
+		).toBeVisible();
 		await expectNoA11yViolations(page, 'count-in playback');
 
 		await clickPause(page);

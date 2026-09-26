@@ -110,7 +110,9 @@ test.describe('measure playback', () => {
 		await clickPlay(page);
 
 		const slider = page.getByTestId('measure-slider');
-		await expect(slider.getByText('Listening', { exact: true })).toBeVisible({
+		await expect(
+			slider.locator('[data-playback-phase="listening"]'),
+		).toBeVisible({
 			timeout: 2_000,
 		});
 		await expect(

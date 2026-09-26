@@ -1,6 +1,9 @@
 import clsx from 'clsx';
 import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
-import { MeasureGrid } from '.';
+import { MeasureGrid } from './MeasureGrid';
+import type { MeasurePlaybackPhase } from './measure-phase-chrome';
+
+export type { MeasurePlaybackPhase } from './measure-phase-chrome';
 
 type CurrentMeasureDisplayProps = {
 	measure: RhythmMeasure;
@@ -9,10 +12,10 @@ type CurrentMeasureDisplayProps = {
 	/** When true, cells follow metronome playback highlights. */
 	playback?: boolean;
 	hidden?: boolean;
+	/** Screen-reader live status (never shown visually). */
 	label?: string;
-	/** When true, show `label` visually (e.g. Listening / Playing during demo mode). */
-	labelVisible?: boolean;
-	countingIn?: boolean;
+	/** Visual playback phase for the live measure chrome. */
+	phase?: MeasurePlaybackPhase;
 };
 
 export function CurrentMeasureDisplay({
@@ -22,40 +25,32 @@ export function CurrentMeasureDisplay({
 	playback = false,
 	hidden = false,
 	label,
-	labelVisible = false,
-	countingIn = false,
+	phase = 'idle',
 }: CurrentMeasureDisplayProps) {
+	const countingIn = phase === 'count-in';
+
 	return (
 		<div
-			className='CurrentMeasureDisplay w-full'
+			className={clsx(
+				'CurrentMeasureDisplay w-full rounded-lg transition-[box-shadow,opacity] duration-200',
+				highlight && phase === 'idle' && 'ring-2 ring-primary shadow-soft',
+				countingIn && 'opacity-55',
+			)}
 			data-counting-in={countingIn ? 'true' : 'false'}
+			data-playback-phase={phase}
 		>
 			{label ? (
-				labelVisible ? (
-					<output
-						className='Caption mb-2 block px-1 text-sm text-dark'
-						aria-live='polite'
-					>
-						{label}
-					</output>
-				) : (
-					<output className='sr-only' aria-live='polite'>
-						{label}
-					</output>
-				)
+				<output className='sr-only' aria-live='polite'>
+					{label}
+				</output>
 			) : null}
-			<div
-				className={clsx(
-					highlight && 'ring-2 ring-primary/50 rounded-lg shadow-soft',
-				)}
-			>
-				<MeasureGrid
-					measure={measure}
-					richMeasure={richMeasure}
-					playback={playback}
-					hidden={hidden}
-				/>
-			</div>
+			<MeasureGrid
+				measure={measure}
+				richMeasure={richMeasure}
+				playback={playback}
+				hidden={hidden}
+				phase={phase}
+			/>
 		</div>
 	);
 }

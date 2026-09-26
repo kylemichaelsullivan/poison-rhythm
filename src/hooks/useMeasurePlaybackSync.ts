@@ -20,6 +20,7 @@ type UseMeasurePlaybackSyncResult = {
 	demoBeforePlay: boolean;
 	isDemoPass: boolean;
 	isCountingIn: boolean;
+	isMeasuresRunning: boolean;
 	measuresLength: number;
 	setCurrentIndex: (index: number) => void;
 };
@@ -143,6 +144,7 @@ export function useMeasurePlaybackSync(): UseMeasurePlaybackSyncResult {
 		demoBeforePlay: settings.demoBeforePlay,
 		isDemoPass,
 		isCountingIn,
+		isMeasuresRunning,
 		measuresLength: measures.length,
 		setCurrentIndex,
 	};

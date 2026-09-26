@@ -105,11 +105,11 @@ Provider tree in `main.tsx`: `ThemeProvider` → `ColorPreferencesProvider` → 
 
 ### Audio and feedback
 
-- **audio/audio-engine**: `createAudioEngine`, `scheduleClick`, `scheduleHit`, `shouldPlayRhythmAudio`, `shouldShowVisualFeedback`
+- **audio/audio-engine**: `createAudioEngine`, `scheduleClick`, `scheduleHit`, `cancelScheduled` (future notes only), `shouldCancelScheduledSource`, `shouldPlayRhythmAudio`, `shouldShowVisualFeedback`
 - **playback-clock** / **lookahead-scheduler**: Continuous audio-clock timeline for count-in → playback (no wall-clock join gap)
 - **feedbackMode** (Settings): Gates visual blinker, poison overlay, and rhythm hit sounds
 - **Demo before play**: MetronomeContext runs demo pass then student pass; `muteOnStudentPass` suppresses rhythm audio on pass 2
-- **Count-in**: Optional one-bar quarter-note lead-in; status “Counting In”; Play control exposes `data-count-in-beat` / `data-counting-in`
+- **Count-in**: Optional one-bar quarter-note lead-in; live measure uses dashed faded shell + sr-only “Counting In”; Play control exposes `data-count-in-beat` / `data-counting-in`
 - **Escape**: Stops measure/metronome playback on `keydown` even when a control is focused; ignored in text inputs and dialogs
 
 ### Components
