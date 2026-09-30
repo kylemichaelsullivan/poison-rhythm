@@ -33,7 +33,7 @@ export function CurrentMeasureDisplay({
 		<div
 			className={clsx(
 				'CurrentMeasureDisplay w-full rounded-lg transition-[box-shadow,opacity] duration-200',
-				highlight && phase === 'idle' && 'ring-2 ring-primary shadow-soft',
+				highlight && phase === 'idle' && 'shadow-soft',
 				countingIn && 'opacity-55',
 			)}
 			data-counting-in={countingIn ? 'true' : 'false'}
