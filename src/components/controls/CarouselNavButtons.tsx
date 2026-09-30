@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import type { ReactNode } from 'react';
 import {
-	carouselCollapsedNavReserveClassName,
+	sideGutterCollapsedReserveClassName,
 	sideGutterControlClassName,
 } from '@/lib/control-classes';
 import { CarouselNavButton } from './CarouselNavButton';
@@ -16,8 +16,8 @@ type CarouselNavButtonsProps = {
 
 /**
  * Prev/next sit in the page gutters beside the body column.
- * Below ~63rem (no lateral gutter), they drop to the bottom corners with
- * reserved padding so they do not overlap PlayControls.
+ * Below ~63rem (no lateral gutter), they drop under the section with
+ * `sideGutterCollapsedReserveClassName` so they clear PlayControls.
  */
 export function CarouselNavButtons({
 	children,
@@ -30,7 +30,7 @@ export function CarouselNavButtons({
 		<div
 			className={clsx(
 				'CarouselNavButtons relative w-full',
-				carouselCollapsedNavReserveClassName,
+				sideGutterCollapsedReserveClassName,
 			)}
 		>
 			<div

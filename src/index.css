@@ -137,6 +137,19 @@
 	--font-musisync: "MusiSync", ui-monospace, monospace;
 
 	/*
+	 * Side-gutter exterior controls (carousel prev/next, metronome ±, …).
+	 * Lateral: sit `width` outside a `relative` host.
+	 * Collapsed (viewport < 63rem): drop under the host with `collapse-gap`
+	 * between the host bottom and the control, plus `collapse-inset` from
+	 * the host’s bottom/side edges. Reserve padding uses
+	 * gap + control-size + inset — see `sideGutterCollapsedReserveClassName`.
+	 */
+	--side-gutter-width: 1rem;
+	--side-gutter-collapse-inset: 0.5rem;
+	--side-gutter-collapse-gap: 0.75rem;
+	--side-gutter-control-size: 2.75rem; /* size-11 */
+
+	/*
 	 * Elevation: short, low-opacity, slightly purple-tinted — not stacked black.
 	 * Shadow *colors* use light-dark(); full shadow stacks are composed from them
 	 * (light-dark() cannot wrap comma-separated box-shadow lists).

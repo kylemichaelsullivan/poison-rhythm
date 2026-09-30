@@ -29,6 +29,7 @@ alwaysApply: false
 - **Touch**: Prefer ≥44px hit targets on primary chrome (Play, corners, carousel, segments, modal close)
 - **Safe area**: Header/footer use `env(safe-area-inset-*)` with `viewport-fit=cover` in `index.html`
 - **Measure grid**: Keep four pedagogical beats; wrap beat groups to **2×2** below `sm` (`MeasureGrid`)
+- **Side gutters**: Exterior controls use `sideGutterControlClassName` + `sideGutterCollapsedReserveClassName`; spacing from `--side-gutter-*` tokens
 - **Modals**: Near-fullscreen on small viewports (`Modal`)
 
 ### Color & Theme
@@ -61,6 +62,17 @@ If a color needs translucency, define it in `@theme` (e.g. `--color-scrim`) — 
 | `inputSurfaceClassName` | Text/number inputs on themed backgrounds |
 | `controlButtonBaseClassName` | Chrome icon/action buttons (`bg-chrome text-black`) |
 | `controlSurfaceBaseClassName` | Bordered chrome panels (ShowNotes popover, metronome bar) |
+| `sideGutterControlClassName` | Exterior controls in page/modal gutters (carousel nav, tempo ±) |
+| `sideGutterCollapsedReserveClassName` | Host padding when those controls collapse under (~63rem) |
+
+**Side-gutter layout tokens** (`src/index.css` `@theme` — tweak once for site-wide spacing):
+
+| Token | Default | Role |
+|-------|---------|------|
+| `--side-gutter-width` | `1rem` | Gap beside host when controls sit laterally |
+| `--side-gutter-collapse-gap` | `0.75rem` | Gap under host when controls stack below |
+| `--side-gutter-collapse-inset` | `0.5rem` | Inset from host bottom/side corners when stacked |
+| `--side-gutter-control-size` | `2.75rem` | Reserved control height (`size-11`) |
 
 **Pair foreground with background**:
 

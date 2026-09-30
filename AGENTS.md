@@ -57,7 +57,7 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 | `src/lib/notation/` | Events → spelling → beams → MusiSync glyphs |
 | `src/lib/notation/musisync-glyphs.ts` | Duration glyph map (`i`/`j`/`d` dotted notes) |
 | `src/lib/notation/beam-glyphs.ts` | Beamed patterns (`³`, `O`, `o`, U+E001 for `[1,2]`, `n`, `y`, …) |
-| `src/lib/control-classes.ts` | Shared control classes; `SegmentControlVariant` includes `'header'` |
+| `src/lib/control-classes.ts` | Shared control classes; side-gutter helpers + `SegmentControlVariant` includes `'header'` |
 | `src/types/rhythm.ts` | `RhythmMeasure` / `RichRhythmMeasure` + adapters |
 | `e2e/helpers.ts` | Pref seeding + round-ready wait |
 | `documentation/ARCHITECTURE.md` | Engine, state, UI layers |

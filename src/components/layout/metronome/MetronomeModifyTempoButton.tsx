@@ -33,7 +33,9 @@ export function MetronomeModifyTempoButton({
 			className={clsx(
 				'ModifyTempoButton',
 				modifyTempoButtonClassName,
-				sideGutterControlClassName(isDecrease ? 'start' : 'end'),
+				sideGutterControlClassName(isDecrease ? 'start' : 'end', {
+					collapseBelowGutter: true,
+				}),
 				focusVisibleRingClassName,
 			)}
 			title={label}

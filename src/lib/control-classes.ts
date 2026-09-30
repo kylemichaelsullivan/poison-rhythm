@@ -50,12 +50,15 @@ export const appChromeBarFooterClassName =
 	'pb-[max(0.5rem,env(safe-area-inset-bottom))]';
 
 /**
- * When carousel prev/next collapse under the section (`max-[63rem]`), reserve
- * space so absolute nav buttons (anchored with `bottom`) do not overlap PlayControls.
- * Matches `0.5rem` inset + `size-11` (2.75rem) button height.
+ * When side-gutter controls collapse under their host (`max-[63rem]`), reserve
+ * space so absolute controls (anchored with `bottom`) clear the host and
+ * whatever follows (PlayControls, Tap, …).
+ *
+ * Formula: `--side-gutter-collapse-gap` + `--side-gutter-control-size` +
+ * `--side-gutter-collapse-inset` (tokens in `src/index.css` `@theme`).
  */
-export const carouselCollapsedNavReserveClassName =
-	'max-[63rem]:pb-[calc(0.5rem+2.75rem)]';
+export const sideGutterCollapsedReserveClassName =
+	'max-[63rem]:pb-[calc(var(--side-gutter-collapse-gap)+var(--side-gutter-control-size)+var(--side-gutter-collapse-inset))]';
 
 export const focusVisibleRingClassName =
 	'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-chrome';
@@ -101,8 +104,10 @@ export const modifyTempoButtonClassName =
 	'flex justify-center items-center border-2 border-primary-border rounded bg-primary min-w-11 min-h-11 w-11 h-11 p-2 text-on-primary shadow-control transition hover:opacity-90 hover:shadow-soft disabled:opacity-50';
 /**
  * Sit a control just outside a `relative` parent’s left (`start`) or right
- * (`end`) edge, with a 1rem gutter. Optional collapse drops to the bottom
- * corners when the page has no lateral gutter (below ~63rem).
+ * (`end`) edge (`--side-gutter-width`). Optional collapse drops to the bottom
+ * corners when the page has no lateral gutter (below ~63rem), with
+ * `--side-gutter-collapse-gap` under the host — pair the host with
+ * `sideGutterCollapsedReserveClassName`.
  */
 export function sideGutterControlClassName(
 	side: 'start' | 'end',
@@ -110,11 +115,13 @@ export function sideGutterControlClassName(
 ): string {
 	return clsx(
 		'absolute top-1/2 z-10 -translate-y-1/2',
-		side === 'start' ? 'right-[calc(100%+1rem)]' : 'left-[calc(100%+1rem)]',
+		side === 'start'
+			? 'right-[calc(100%+var(--side-gutter-width))]'
+			: 'left-[calc(100%+var(--side-gutter-width))]',
 		collapseBelowGutter &&
 			(side === 'start'
-				? 'max-[63rem]:top-auto max-[63rem]:bottom-2 max-[63rem]:right-auto max-[63rem]:left-2 max-[63rem]:translate-y-0'
-				: 'max-[63rem]:top-auto max-[63rem]:bottom-2 max-[63rem]:left-auto max-[63rem]:right-2 max-[63rem]:translate-y-0'),
+				? 'max-[63rem]:top-auto max-[63rem]:bottom-[var(--side-gutter-collapse-inset)] max-[63rem]:right-auto max-[63rem]:left-[var(--side-gutter-collapse-inset)] max-[63rem]:translate-y-0'
+				: 'max-[63rem]:top-auto max-[63rem]:bottom-[var(--side-gutter-collapse-inset)] max-[63rem]:left-auto max-[63rem]:right-[var(--side-gutter-collapse-inset)] max-[63rem]:translate-y-0'),
 	);
 }
 
