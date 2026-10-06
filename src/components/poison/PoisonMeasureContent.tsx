@@ -15,13 +15,11 @@ export function PoisonMeasureContent({
 }: PoisonMeasureContentProps) {
 	const { settings, updateSettings } = useSettings();
 	const { poisonMeasure, round } = useGame();
-	const { isMeasuresPlaying, isDemoPass } = useMetronome();
+	const { isMeasuresPlaying } = useMetronome();
 
 	const poisonEnabled = isPoisonEnabled(settings);
 	const hidePoisonReference =
-		isMeasuresPlaying &&
-		!isDemoPass &&
-		shouldHidePoisonDuringPlayback(settings.poisonMode);
+		isMeasuresPlaying && shouldHidePoisonDuringPlayback(settings.poisonMode);
 	const hasPoisonPattern =
 		poisonEnabled && poisonRhythm !== null && settings.poisonMode !== 'off';
 
