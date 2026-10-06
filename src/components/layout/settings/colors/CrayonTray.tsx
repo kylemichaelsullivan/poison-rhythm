@@ -1,21 +1,32 @@
 import {
-	assessCrayonContrast,
 	type ColorRole,
 	CRAYOLA_TRAYS,
 	type CrayonId,
+	rateAccentAgainstPartner,
 } from '@/lib/colors';
 import { CrayonSwatch } from './CrayonSwatch';
 
 type CrayonTrayProps = {
 	role: ColorRole;
 	selectedId: CrayonId | null;
+	/** Hex of the other role — Primary grades vs Secondary and vice versa. */
+	partnerHex: string;
 	onSelect: (id: CrayonId) => void;
 };
 
-export function CrayonTray({ role, selectedId, onSelect }: CrayonTrayProps) {
+export function CrayonTray({
+	role,
+	selectedId,
+	partnerHex,
+	onSelect,
+}: CrayonTrayProps) {
+	const partnerLabel = role === 'dominant' ? 'Secondary' : 'Dominant';
+
 	return (
 		<fieldset className='CrayonTray flex min-w-0 flex-col gap-3 border-0 p-0'>
-			<legend className='sr-only'>Crayon Colors</legend>
+			<legend className='sr-only'>
+				Crayon Colors graded against {partnerLabel}
+			</legend>
 			{/*
 			 * Physical Crayola box is landscape with four sleeves side-by-side.
 			 * Portrait UI stacks the four sleeves; each sleeve keeps the
@@ -32,7 +43,7 @@ export function CrayonTray({ role, selectedId, onSelect }: CrayonTrayProps) {
 					</h4>
 					<div className='grid grid-cols-8 gap-1 max-[380px]:grid-cols-4'>
 						{tray.crayons.map((crayon) => {
-							const assessment = assessCrayonContrast(crayon.hex, role);
+							const rating = rateAccentAgainstPartner(crayon.hex, partnerHex);
 							const selected = selectedId === crayon.id;
 							return (
 								<CrayonSwatch
@@ -40,7 +51,9 @@ export function CrayonTray({ role, selectedId, onSelect }: CrayonTrayProps) {
 									name={crayon.name}
 									hex={crayon.hex}
 									selected={selected}
-									warning={assessment.level}
+									grade={rating.grade}
+									ratio={rating.ratio}
+									partnerLabel={partnerLabel}
 									onSelect={() => onSelect(crayon.id)}
 								/>
 							);

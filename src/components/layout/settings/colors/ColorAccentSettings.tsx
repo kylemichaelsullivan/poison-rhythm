@@ -1,38 +1,46 @@
 import { useMemo, useState } from 'react';
 import { useColorPreferences } from '@/contexts';
 import {
-	assessCrayonContrast,
 	type ColorPairing,
 	type ColorRole,
 	type CrayonId,
-	crayonByIdOrNull,
+	rateColorPairContrast,
+	resolveDominantHex,
+	resolveSecondaryHex,
 	suggestPairings,
 } from '@/lib/colors';
 import { SettingsGroup } from '../SettingsGroup';
 import { ColorPairPreview } from './ColorPairPreview';
-import { ContrastWarningModal } from './ContrastWarningModal';
+import { ContrastScoreMeter } from './ContrastScoreMeter';
 import { CrayonTray } from './CrayonTray';
 import { SuggestedPairings } from './SuggestedPairings';
 
-type PendingContrastPick = {
-	id: CrayonId;
-	name: string;
-	summary: string;
-};
-
-/** Color groups for Settings → Look (preview → tray → pairings). */
+/** Color groups for Settings → Look (preview → grade → tray → pairings). */
 export function ColorAccentSettings() {
 	const { dominantColor, secondaryColor, setDominantColor, setSecondaryColor } =
 		useColorPreferences();
 	const [role, setRole] = useState<ColorRole>('dominant');
-	const [pendingPick, setPendingPick] = useState<PendingContrastPick | null>(
-		null,
-	);
 	const pairings = useMemo(() => suggestPairings(), []);
 
 	const selectedId = role === 'dominant' ? dominantColor : secondaryColor;
+	const partnerHex =
+		role === 'dominant'
+			? resolveSecondaryHex(secondaryColor)
+			: resolveDominantHex(dominantColor);
 
-	const applyColor = (id: CrayonId) => {
+	const contrastRating = useMemo(
+		() =>
+			rateColorPairContrast(
+				resolveDominantHex(dominantColor),
+				resolveSecondaryHex(secondaryColor),
+			),
+		[dominantColor, secondaryColor],
+	);
+
+	const handleSelect = (id: CrayonId) => {
+		if (id === selectedId) {
+			return;
+		}
 		if (role === 'dominant') {
 			setDominantColor(id);
 		} else {
@@ -40,37 +48,9 @@ export function ColorAccentSettings() {
 		}
 	};
 
-	const handleSelect = (id: CrayonId) => {
-		if (id === selectedId) {
-			return;
-		}
-		const crayon = crayonByIdOrNull(id);
-		if (crayon == null) {
-			return;
-		}
-		const assessment = assessCrayonContrast(crayon.hex, role);
-		if (assessment.level === 'warn') {
-			setPendingPick({
-				id,
-				name: crayon.name,
-				summary: assessment.summary ?? 'This color has low contrast.',
-			});
-			return;
-		}
-		applyColor(id);
-	};
-
 	const handleApplyPairing = (pairing: ColorPairing) => {
 		setDominantColor(pairing.dominantId);
 		setSecondaryColor(pairing.secondaryId);
-	};
-
-	const handleConfirmLowContrast = () => {
-		if (pendingPick == null) {
-			return;
-		}
-		applyColor(pendingPick.id);
-		setPendingPick(null);
 	};
 
 	return (
@@ -82,9 +62,11 @@ export function ColorAccentSettings() {
 					role={role}
 					onRoleChange={setRole}
 				/>
+				<ContrastScoreMeter rating={contrastRating} />
 				<CrayonTray
 					role={role}
 					selectedId={selectedId}
+					partnerHex={partnerHex}
 					onSelect={handleSelect}
 				/>
 			</SettingsGroup>
@@ -97,14 +79,6 @@ export function ColorAccentSettings() {
 					onApply={handleApplyPairing}
 				/>
 			</SettingsGroup>
-
-			<ContrastWarningModal
-				open={pendingPick != null}
-				crayonName={pendingPick?.name ?? ''}
-				summary={pendingPick?.summary ?? ''}
-				onCancel={() => setPendingPick(null)}
-				onConfirm={handleConfirmLowContrast}
-			/>
 		</>
 	);
 }

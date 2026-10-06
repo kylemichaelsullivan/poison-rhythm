@@ -34,7 +34,7 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 4. **Complexity is available from the title About modal and Settings → Mode** (difficulty 1–5 + subdivision). Header ShowNotes remains a quick control. Do not add Settings dials for density or syncopation as separate fields.
 5. **Display mode** is on the Poison section badge → `DisplayModeModal`, and also under **Settings → Look → Display**. Badge labels are **GRID** / **NOTATION** only; Scroll is Coming Soon (schema fields exist but are **not wired** on main — leave for `display-scroll`).
 6. **Play modes** are on the Difficulty section badge in the title About modal → `PlayModesModal`, and also under **Settings → Mode → Play Mode** (Classic / Bucket Drumming + Endless).
-7. **Color accents are preference keys**, not the game-settings blob — `ColorPreferencesProvider` + `poison-rhythm-dominant-color` / `poison-rhythm-secondary-color` (null = brand). See [`documentation/COLORS.md`](documentation/COLORS.md).
+7. **Color accents are preference keys**, not the game-settings blob — `ColorPreferencesProvider` + `poison-rhythm-dominant-color` / `poison-rhythm-secondary-color` (null = brand). Contrast uses WCAG 2.2 letter grades (`rateCrayonContrast` / `rateColorPairContrast`). Border hierarchy is shared via `src/lib/hierarchy-border.ts` (swatches + measure chrome). See [`documentation/COLORS.md`](documentation/COLORS.md) and [`documentation/A11Y.md`](documentation/A11Y.md).
 8. **User-facing copy** uses typographic apostrophe `’` (not `'`). Prefer Title Case for labels/titles; sentence case for body hints.
 9. **Do not commit `.tmp-glyphs/`.** Local glyph audit screenshots; gitignored and Biome-ignored.
 10. **Round logic lives in `GameProvider`.** `useGameLoop` exists but is unused by the app shell — prefer extending `GameProvider` / `@/lib/game-modes` / `@/lib/rhythm`.
@@ -58,6 +58,8 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 | `src/lib/notation/musisync-glyphs.ts` | Duration glyph map (`i`/`j`/`d` dotted notes) |
 | `src/lib/notation/beam-glyphs.ts` | Beamed patterns (`³`, `O`, `o`, U+E001 for `[1,2]`, `n`, `y`, …) |
 | `src/lib/control-classes.ts` | Shared control classes; side-gutter helpers + `SegmentControlVariant` includes `'header'` |
+| `src/lib/hierarchy-border.ts` | Shared border ranks (active / emphasis / structure / provisional) for swatches + measures |
+| `src/lib/colors/contrast.ts` | WCAG 2.2 ratios + letter grades for crayon / pair rating |
 | `src/types/rhythm.ts` | `RhythmMeasure` / `RichRhythmMeasure` + adapters |
 | `e2e/helpers.ts` | Pref seeding + round-ready wait |
 | `documentation/ARCHITECTURE.md` | Engine, state, UI layers |
@@ -72,7 +74,8 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 |-----|----------|
 | [`README.md`](README.md) | Humans: setup, play, structure |
 | [`documentation/TEACHERS.md`](documentation/TEACHERS.md) | Music teachers: classroom arcs and settings |
-| [`documentation/COLORS.md`](documentation/COLORS.md) | Color prefs, Crayola tray, contrast guidance |
+| [`documentation/COLORS.md`](documentation/COLORS.md) | Color prefs, Crayola tray, contrast grades |
+| [`documentation/A11Y.md`](documentation/A11Y.md) | Contrast grades, border hierarchy, keyboard / a11y |
 | [`documentation/printables/student-record.pdf`](documentation/printables/student-record.pdf) | Printable student practice log (regen: `bun run printables:student-record`) |
 | [`AGENTS.md`](AGENTS.md) | Agents + contributors: gotchas and pointers |
 | [`documentation/ARCHITECTURE.md`](documentation/ARCHITECTURE.md) | System design |

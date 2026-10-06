@@ -8,19 +8,20 @@
 	 * Each token: hex first (old browsers / Safari), then oklch when supported.
 	 */
 
-	/* Favicon-hued brand (chroma lifted vs raw samples for screen use) */
+	/* Favicon-hued brand (chroma lifted vs raw samples for screen use).
+	 * Deep + bright pairs are tuned for WCAG 2.2 grade A in light and dark. */
 	--color-brand-purple: #914893;
 	--color-brand-purple: oklch(52% 0.14 326);
 	--color-brand-purple-deep: #783b82;
 	--color-brand-purple-deep: oklch(46% 0.13 322);
-	--color-brand-purple-bright: #c17ac3;
-	--color-brand-purple-bright: oklch(68% 0.13 326);
+	--color-brand-purple-bright: #b593ba;
+	--color-brand-purple-bright: oklch(72% 0.08 326);
 	--color-brand-mint: #6eba66;
 	--color-brand-mint: oklch(72% 0.14 142);
-	--color-brand-mint-deep: #509a51;
-	--color-brand-mint-deep: oklch(62% 0.13 144);
-	--color-brand-mint-bright: #96d88f;
-	--color-brand-mint-bright: oklch(82% 0.12 142);
+	--color-brand-mint-deep: #246028;
+	--color-brand-mint-deep: oklch(38% 0.09 144);
+	--color-brand-mint-bright: #87a889;
+	--color-brand-mint-bright: oklch(68% 0.07 144);
 	--color-brand-cork: #ab7b49;
 	--color-brand-cork: oklch(62% 0.09 66);
 
@@ -56,14 +57,14 @@
 		var(--color-brand-purple-bright)
 	);
 	--color-on-primary: var(--color-ink-50);
-	/* Favicon mint is the natural complement border for purple fills */
-	--color-primary-border: var(--color-brand-mint);
+	/* Deep mint for borders — light mint stays atmosphere-only (gradients). */
+	--color-primary-border: var(--color-brand-mint-deep);
 	--color-primary-border: light-dark(
-		var(--color-brand-mint),
+		var(--color-brand-mint-deep),
 		var(--color-brand-mint-bright)
 	);
 
-	--color-secondary: var(--color-brand-mint);
+	--color-secondary: var(--color-brand-mint-deep);
 	--color-secondary: light-dark(
 		var(--color-brand-mint-deep),
 		var(--color-brand-mint-bright)

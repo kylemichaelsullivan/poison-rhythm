@@ -134,7 +134,7 @@ When `demoBeforePlay` is enabled:
 3. **Playing (student) pass** — same measure again with solid secondary glow shell + secondary notes (`data-playback-phase="playing"`); if `muteOnStudentPass`, rhythm hits suppressed; metronome continues
 4. Advance to the next measure and repeat from step 2
 
-Count-in, Listening, and Playing share a fixed `border-2` shell so the measure does not jump between phases; count-in also fades the live measure (`opacity-55`).
+Count-in, Listening, and Playing share a fixed-width shell from `hierarchyBorderClass` (`src/lib/hierarchy-border.ts` via `measure-phase-chrome.ts`) so the measure does not jump between phases; count-in also fades the live measure (`opacity-55`). Dashed = provisional (count-in / listening); solid active = playing. See [`A11Y.md`](A11Y.md).
 
 Implemented in `MetronomeProvider` with `playbackPass`: `'demo' | 'student'` and `setPlaybackMeasure` (current carousel cell).
 

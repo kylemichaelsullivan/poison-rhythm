@@ -1,9 +1,12 @@
-import { mixToward, pickOnColor } from './contrast';
+import { ACCENT_BRIGHTEN_FOR_DARK, mixToward, pickOnColor } from './contrast';
 import { type CrayonId, crayonByIdOrNull } from './crayola-64';
 
-/** Exact brand fallbacks when prefs are unset (match index.css). */
+/**
+ * Brand defaults when prefs are unset (match `@theme` purple-deep + mint-deep).
+ * Tuned for WCAG 2.2 grade **A** in light and dark (see `documentation/A11Y.md`).
+ */
 export const BRAND_DOMINANT_HEX = '#783b82';
-export const BRAND_SECONDARY_HEX = '#509a51';
+export const BRAND_SECONDARY_HEX = '#246028';
 
 const COLOR_VARS = [
 	'--color-brand-purple',
@@ -58,9 +61,13 @@ export function applyColorPreferenceVars(
 	const secondaryHex = resolveSecondaryHex(prefs.secondaryId);
 
 	const purpleDeep = mixToward(dominantHex, 'black', 0.12);
-	const purpleBright = mixToward(dominantHex, 'white', 0.28);
+	const purpleBright = mixToward(
+		dominantHex,
+		'white',
+		ACCENT_BRIGHTEN_FOR_DARK,
+	);
 	const mintDeep = mixToward(secondaryHex, 'black', 0.12);
-	const mintBright = mixToward(secondaryHex, 'white', 0.22);
+	const mintBright = mixToward(secondaryHex, 'white', ACCENT_BRIGHTEN_FOR_DARK);
 
 	root.style.setProperty('--color-brand-purple', dominantHex);
 	root.style.setProperty('--color-brand-purple-deep', purpleDeep);

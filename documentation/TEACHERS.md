@@ -96,7 +96,7 @@ From the badge on the Poison Rhythm section, or **Settings → Look → Display*
 - Count-in and measure chrome (faded dashed shell while counting in; dashed primary shell + ink notes on Listening; solid secondary glow + secondary notes on Playing — same border width so layout stays stable) help shared listening.
 - **Escape** stops playback (including when the Play/Pause control is focused).
 - Theme (light/dark/system) is under **Settings → Look**.
-- Colors (dominant / secondary) are under **Settings → Look** — prefer the **Poison Rhythm** pairing for shared classrooms; low-contrast crayons show a bypassable warning modal. See [`COLORS.md`](COLORS.md).
+- Colors (dominant / secondary) are under **Settings → Look** — prefer the **Poison Rhythm** pairing for shared classrooms; each crayon shows a WCAG letter grade (A–F). See [`COLORS.md`](COLORS.md) and [`A11Y.md`](A11Y.md).
 - Feedback toggles (visual / audio) live under Look if the room setup needs quieter or less flashy play.
 
 ## Student records (printable PDF)

@@ -1,8 +1,8 @@
 # Color Preferences — Poison Rhythm
 
-Classroom-facing notes on **Settings → Look** colors: dominant/secondary from a Crayola 64 tray, contrast warnings, and why Brand stays the default.
+Classroom-facing notes on **Settings → Look** colors: dominant/secondary from a Crayola 64 tray, WCAG contrast grades, and why Brand stays the default.
 
-For theme (light / dark / system) and display mode, see the same **Settings → Look** tab. For agents and schema wiring, see [`AGENTS.md`](../AGENTS.md).
+For full accessibility policy (grades, border hierarchy, keyboard), see [`A11Y.md`](A11Y.md). For theme and display mode, see the same **Settings → Look** tab. For agents and schema wiring, see [`AGENTS.md`](../AGENTS.md).
 
 ## What Dominant and Secondary control
 
@@ -15,9 +15,9 @@ Unset preferences keep the shipped **Poison Rhythm** purple + mint tokens from t
 
 ## Why Brand is recommended
 
-- **Recognition** — the potion purple / mint glass look is the product signal on projected screens and shared devices.
+- **Recognition** — the potion purple / deep mint look is the product signal on projected screens and shared devices.
 - **Classroom consistency** — one default pair means every station looks familiar when students rotate.
-- **Contrast already vetted** — Brand meets WCAG-oriented thresholds used by the in-app validators.
+- **Best contrast grade** — Brand purple-deep (`#783b82`) + deep mint (`#246028`) score **Grade A** (WCAG 2.2 AAA floor) in both light and dark. Suggested Pairings only list pairs that earn **A or B**.
 
 The Look tab marks **Poison Rhythm** as Recommended in Suggested Pairings.
 
@@ -32,20 +32,13 @@ Avoid near-identical crayons for both roles — borders disappear and badges los
 ## Mitigating decision fatigue
 
 - Only **two roles** (not a free hex picker or full theme editor).
-- Full tray for personal expression; **Suggested Pairings** sit below the tray as a fast recovery path (Brand first). Swatches are **squares** in four Crayola-style sleeves (16 each, 2×8), stacked in **portrait** (sleeves one above another instead of side-by-side).
+- Full tray for personal expression; **Suggested Pairings** sit below the tray as a fast recovery path (Brand first). Swatches are **squares** in four Crayola-style sleeves (16 each, 2×8), stacked in **portrait** and labeled Sleeve 1–4.
 
-## Accessibility
+## Contrast grades
 
-Validators score crayons against WCAG 2.1 **AA** ideas:
+Each crayon badge grades that swatch **against the other role’s current color** (Dominant vs Secondary). The pair meter still summarizes classroom surface readiness. See [`A11Y.md`](A11Y.md).
 
-- **4.5:1** for text on dominant fills (`on-primary` is chosen automatically — users never pick ink).
-- **3:1** for UI accents vs light and dark page surfaces. Curated pairings also check dominant↔secondary separation; Brand is always offered even when that pair sits under 3:1.
-
-**Strongly discourage, do not block:** choosing a crayon that fails **its own role** contrast opens an **Insufficient Contrast** modal. Teachers can **Cancel** or **Use Anyway**. The tray marks those swatches visually; Suggested Pairings (including Brand) remain the easy recovery.
-
-Do not rely on accent color alone for poison identity or playback state — layout, labels, and motion already carry those meanings.
-
-**Projection tip:** very bright yellows/whites can wash out on classroom projectors; Brand remains the safer teaching default.
+**Strongly discourage, do not block:** the pair meter and per-swatch grade badges update live. Grade **A/B** get solid hierarchy borders; **F** is dashed and dimmed. Suggested Pairings remain the easy recovery.
 
 ## Student profiles (later)
 
@@ -53,6 +46,8 @@ Color preferences are stored on **student-scoped** preference keys (`poison-rhyt
 
 ## Related
 
+- [`A11Y.md`](A11Y.md) — contrast grades, border hierarchy, keyboard
 - [`TEACHERS.md`](TEACHERS.md) — classroom arcs and accessibility tips
 - [`ARCHITECTURE.md`](ARCHITECTURE.md) — providers and settings layers
 - [`src/index.css`](../src/index.css) — brand and semantic color tokens
+- [`src/lib/hierarchy-border.ts`](../src/lib/hierarchy-border.ts) — shared border ranks

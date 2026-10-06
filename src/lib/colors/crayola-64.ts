@@ -165,23 +165,23 @@ export type CrayonTrayGroup = {
  */
 export const CRAYOLA_TRAYS: readonly CrayonTrayGroup[] = [
 	{
-		id: 'greens-yellows',
-		label: 'Greens & Yellows',
+		id: 'sleeve-1',
+		label: 'Sleeve 1',
 		crayons: CRAYOLA_64.slice(0, 16),
 	},
 	{
-		id: 'oranges-reds-pinks',
-		label: 'Oranges, Reds & Pinks',
+		id: 'sleeve-2',
+		label: 'Sleeve 2',
 		crayons: CRAYOLA_64.slice(16, 32),
 	},
 	{
-		id: 'purples-blues',
-		label: 'Purples & Blues',
+		id: 'sleeve-3',
+		label: 'Sleeve 3',
 		crayons: CRAYOLA_64.slice(32, 48),
 	},
 	{
-		id: 'neutrals-earth',
-		label: 'Neutrals & Earth',
+		id: 'sleeve-4',
+		label: 'Sleeve 4',
 		crayons: CRAYOLA_64.slice(48, 64),
 	},
 ] as const;

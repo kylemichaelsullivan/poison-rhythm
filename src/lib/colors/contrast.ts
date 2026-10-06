@@ -1,7 +1,18 @@
-/** WCAG 2.1 relative luminance and contrast helpers. */
+/** WCAG 2.2 relative luminance and contrast helpers. */
 
+/** WCAG 2.2 §1.4.6 Contrast (Enhanced) AAA — normal text. */
+export const WCAG_AAA_TEXT = 7;
+/** WCAG 2.2 §1.4.3 Contrast (Minimum) AA — normal text. */
 export const WCAG_AA_TEXT = 4.5;
+/** WCAG 2.2 §1.4.11 Non-text Contrast AA (also large-text AA floor). */
 export const WCAG_AA_UI = 3;
+
+/**
+ * How far toward white we lighten accents for dark-theme UI (matches
+ * `applyColorPreferenceVars` + `@theme` bright tokens). Tuned so brand
+ * purple-deep clears AAA (≥7:1) on dark surfaces.
+ */
+export const ACCENT_BRIGHTEN_FOR_DARK = 0.45;
 
 /** Brand ink tokens used for on-color picks (see index.css). */
 export const INK_50 = '#faf9fc';
@@ -93,7 +104,7 @@ export function validateAccentAgainstSurfaces(
 	const textRatio = contrastRatio(onColor, hex);
 	const uiRatioLight = contrastRatio(hex, surfaces.light);
 	// Dark UI uses a lightened brand variant in CSS; score the brightened form.
-	const brightForDark = mixToward(hex, 'white', 0.28);
+	const brightForDark = mixToward(hex, 'white', ACCENT_BRIGHTEN_FOR_DARK);
 	const uiRatioDark = contrastRatio(brightForDark, surfaces.dark);
 	const issues: ContrastIssue[] = [];
 
@@ -220,4 +231,110 @@ export function mixToward(
 	const mix = (channel: number) => Math.round(channel * (1 - a) + t * a);
 	const toHex = (channel: number) => mix(channel).toString(16).padStart(2, '0');
 	return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+export type ContrastGrade = 'A' | 'B' | 'C' | 'F';
+
+export type ContrastRating = {
+	/** Limiting (worst) contrast ratio for the scoped checks. */
+	ratio: number;
+	/** WCAG 2.2 letter grade from {@link gradeFromRatio}. */
+	grade: ContrastGrade;
+	/** `pass` when grade is A or B (meets AA text); otherwise `warn`. */
+	level: ContrastLevel;
+};
+
+/**
+ * Map a single contrast ratio to a WCAG 2.2 letter grade:
+ * A ≥ 7:1 (AAA), B ≥ 4.5:1 (AA), C ≥ 3:1 (large/UI), F below.
+ */
+export function gradeFromRatio(ratio: number): ContrastGrade {
+	if (ratio >= WCAG_AAA_TEXT) {
+		return 'A';
+	}
+	if (ratio >= WCAG_AA_TEXT) {
+		return 'B';
+	}
+	if (ratio >= WCAG_AA_UI) {
+		return 'C';
+	}
+	return 'F';
+}
+
+export function ratingFromRatio(ratio: number): ContrastRating {
+	const grade = gradeFromRatio(ratio);
+	return {
+		ratio,
+		grade,
+		level: grade === 'A' || grade === 'B' ? 'pass' : 'warn',
+	};
+}
+
+/**
+ * Grade a candidate accent against its partner color (dominant↔secondary).
+ * Used while picking crayons so Primary is scored vs current Secondary and vice versa.
+ */
+export function rateAccentAgainstPartner(
+	candidateHex: string,
+	partnerHex: string,
+): ContrastRating {
+	return ratingFromRatio(contrastRatio(candidateHex, partnerHex));
+}
+
+/**
+ * Single-ratio WCAG rating for a crayon in a color role (vs page surfaces).
+ * Dominant: worst of text-on-fill + UI vs light/dark (A≥7, B≥4.5, C≥3, F&lt;3).
+ * Secondary: worst of UI vs light/dark; meeting §1.4.11 (3:1) counts as **B**
+ * (borders are not normal text), A still ≥7, F below 3.
+ */
+export function rateCrayonContrast(
+	hex: string,
+	role: ColorRole,
+): ContrastRating {
+	const assessment = validateAccentAgainstSurfaces(hex);
+	if (role === 'dominant') {
+		const ratio = Math.min(
+			assessment.textRatio,
+			assessment.uiRatioLight,
+			assessment.uiRatioDark,
+		);
+		return ratingFromRatio(ratio);
+	}
+
+	const ratio = Math.min(assessment.uiRatioLight, assessment.uiRatioDark);
+	if (ratio >= WCAG_AAA_TEXT) {
+		return { ratio, grade: 'A', level: 'pass' };
+	}
+	if (ratio >= WCAG_AA_UI) {
+		return { ratio, grade: 'B', level: 'pass' };
+	}
+	return { ratio, grade: 'F', level: 'warn' };
+}
+
+/**
+ * Pair meter: worse of the two role surface grades (classroom readiness).
+ * Tray swatches use {@link rateAccentAgainstPartner} instead.
+ */
+export function rateColorPairContrast(
+	dominantHex: string,
+	secondaryHex: string,
+): ContrastRating {
+	const dominant = rateCrayonContrast(dominantHex, 'dominant');
+	const secondary = rateCrayonContrast(secondaryHex, 'secondary');
+	const gradeRank: Record<ContrastGrade, number> = {
+		A: 3,
+		B: 2,
+		C: 1,
+		F: 0,
+	};
+	const grade =
+		gradeRank[dominant.grade] <= gradeRank[secondary.grade]
+			? dominant.grade
+			: secondary.grade;
+	const ratio = Math.min(dominant.ratio, secondary.ratio);
+	return {
+		ratio,
+		grade,
+		level: grade === 'A' || grade === 'B' ? 'pass' : 'warn',
+	};
 }

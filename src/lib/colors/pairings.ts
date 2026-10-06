@@ -1,4 +1,5 @@
-import { validateAccentAgainstSurfaces, validateColorPair } from './contrast';
+import { BRAND_DOMINANT_HEX, BRAND_SECONDARY_HEX } from './apply-color-prefs';
+import { rateColorPairContrast } from './contrast';
 import {
 	type CrayonColor,
 	type CrayonId,
@@ -18,55 +19,58 @@ export type ColorPairing = {
 export const BRAND_PAIRING: ColorPairing = {
 	id: 'brand',
 	label: 'Poison Rhythm',
-	caption: 'Brand purple and mint — recommended for classrooms.',
+	caption: 'Brand purple + deep mint — Grade A in light and dark.',
 	dominantId: null,
 	secondaryId: null,
 	recommended: true,
 };
 
-/** Curated complementary / analogous pairs from the 64 tray. */
+/**
+ * Curated tray pairs — only crayons that can earn grade A/B.
+ * Pastel yellows/greens wash out and are omitted on purpose.
+ */
 export const CURATED_PAIRINGS: readonly ColorPairing[] = [
 	{
-		id: 'plum-sea-green',
-		label: 'Plum & Sea Green',
-		caption: 'Close to brand: cool purple with a soft green border.',
+		id: 'plum-brick-red',
+		label: 'Plum & Brick Red',
+		caption: 'Deep purple fill with a warm red border.',
 		dominantId: 'plum',
-		secondaryId: 'sea-green',
+		secondaryId: 'brick-red',
 	},
 	{
-		id: 'plum-goldenrod',
-		label: 'Plum & Goldenrod',
-		caption: 'Deep purple with a warm sunny secondary.',
+		id: 'plum-blue-violet',
+		label: 'Plum & Blue Violet',
+		caption: 'Cool analogous pair with strong luminance.',
 		dominantId: 'plum',
-		secondaryId: 'goldenrod',
+		secondaryId: 'blue-violet',
 	},
 	{
-		id: 'blue-violet-sea-green',
-		label: 'Blue-Violet & Sea Green',
-		caption: 'Cool complementary pair with clear separation.',
+		id: 'blue-violet-brick-red',
+		label: 'Blue Violet & Brick Red',
+		caption: 'Cool dominant with a warm border accent.',
 		dominantId: 'blue-violet',
-		secondaryId: 'sea-green',
+		secondaryId: 'brick-red',
 	},
 	{
-		id: 'indigo-goldenrod',
-		label: 'Indigo & Goldenrod',
-		caption: 'Deep dominant with a sunny border.',
-		dominantId: 'indigo',
-		secondaryId: 'goldenrod',
-	},
-	{
-		id: 'brick-red-granny',
-		label: 'Brick Red & Granny Smith',
-		caption: 'Warm dominant with a fresh green secondary.',
+		id: 'brick-red-plum',
+		label: 'Brick Red & Plum',
+		caption: 'Warm fill with a deep purple border.',
 		dominantId: 'brick-red',
-		secondaryId: 'granny-smith-apple',
+		secondaryId: 'plum',
 	},
 	{
-		id: 'blue-yellow',
-		label: 'Blue & Yellow',
-		caption: 'Classic high-energy complementary contrast.',
-		dominantId: 'blue',
-		secondaryId: 'yellow',
+		id: 'mahogany-blue-violet',
+		label: 'Mahogany & Blue Violet',
+		caption: 'Earth fill with a cool violet border.',
+		dominantId: 'mahogany',
+		secondaryId: 'blue-violet',
+	},
+	{
+		id: 'red-violet-plum',
+		label: 'Red Violet & Plum',
+		caption: 'Jewel tones with clear separation.',
+		dominantId: 'red-violet',
+		secondaryId: 'plum',
 	},
 ];
 
@@ -80,26 +84,40 @@ export function resolvePairingColors(pairing: ColorPairing): {
 	};
 }
 
-export function pairingPassesA11y(pairing: ColorPairing): boolean {
+function pairingHexes(pairing: ColorPairing): {
+	dominantHex: string;
+	secondaryHex: string;
+} | null {
 	if (pairing.dominantId == null && pairing.secondaryId == null) {
-		return true;
+		return {
+			dominantHex: BRAND_DOMINANT_HEX,
+			secondaryHex: BRAND_SECONDARY_HEX,
+		};
 	}
-
 	const { dominant, secondary } = resolvePairingColors(pairing);
 	if (dominant == null || secondary == null) {
-		return false;
+		return null;
 	}
-
-	// Dominant must work as a primary fill; secondary mainly needs separation as a border.
-	const dominantOk =
-		validateAccentAgainstSurfaces(dominant.hex).level === 'pass';
-	const pairOk =
-		validateColorPair(dominant.hex, secondary.hex).level === 'pass';
-	return dominantOk && pairOk;
+	return { dominantHex: dominant.hex, secondaryHex: secondary.hex };
 }
 
 /**
- * Brand first, then curated pairs that pass AA checks.
+ * Only offer pairings that earn grade A or B (WCAG AA+ classroom bar).
+ * Brand is always included by {@link suggestPairings} and must itself be A.
+ */
+export function pairingPassesA11y(pairing: ColorPairing): boolean {
+	const hexes = pairingHexes(pairing);
+	if (hexes == null) {
+		return false;
+	}
+	return (
+		rateColorPairContrast(hexes.dominantHex, hexes.secondaryHex).level ===
+		'pass'
+	);
+}
+
+/**
+ * Brand first, then curated pairs that pass AA+ grades.
  * Always keeps Brand even if somehow flagged.
  */
 export function suggestPairings(): ColorPairing[] {

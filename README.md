@@ -162,7 +162,7 @@ The rhythm engine (`src/lib/rhythm/`) accepts both `difficulty` and `subdivision
 |------|----------|
 | Mode | Play mode + Endless, complexity (difficulty, subdivision), practice (Show Poison?, show next, preview pass, mute on pass) |
 | Sound | Tempo, metronome mute, rhythm mute, count-in |
-| Look | Theme, display mode (grid / notation; Scroll Coming Soon), feedback, color accents (Crayola tray); see [`documentation/COLORS.md`](documentation/COLORS.md) |
+| Look | Theme, display mode (grid / notation; Scroll Coming Soon), feedback, color accents (Crayola tray); see [`documentation/COLORS.md`](documentation/COLORS.md) and [`documentation/A11Y.md`](documentation/A11Y.md) |
 | Main-page shortcuts | Poison Display Mode badge, header ShowNotes, footer metronome |
 
 Settings modal tabs: **Mode**, **Sound**, **Look** (`SettingsTabs`).
@@ -252,7 +252,8 @@ Details: [`documentation/TESTING.md`](documentation/TESTING.md).
 
 - [`AGENTS.md`](AGENTS.md) — agent/contributor entrypoint (gotchas, key paths, scripts)
 - [`documentation/TEACHERS.md`](documentation/TEACHERS.md) — classroom guide for music teachers
-- [`documentation/COLORS.md`](documentation/COLORS.md) — color accents, Crayola tray, contrast guidance
+- [`documentation/COLORS.md`](documentation/COLORS.md) — color accents, Crayola tray, contrast grades
+- [`documentation/A11Y.md`](documentation/A11Y.md) — contrast grades, border hierarchy, keyboard / a11y
 - [`documentation/printables/student-record.pdf`](documentation/printables/student-record.pdf) — printable student practice log
 - [`documentation/ARCHITECTURE.md`](documentation/ARCHITECTURE.md) — engine, state, settings, notation, UI composition
 - [`documentation/TESTING.md`](documentation/TESTING.md) — unit, integration, and Playwright guidance

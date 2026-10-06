@@ -1,3 +1,5 @@
+import { hierarchyBorderClass } from '@/lib/hierarchy-border';
+
 export type MeasurePlaybackPhase =
 	| 'idle'
 	| 'count-in'
@@ -6,40 +8,41 @@ export type MeasurePlaybackPhase =
 
 /**
  * Outer shell for grid / notation measure surfaces by playback phase.
- * Keep border width constant across count-in / listening / playing so the
- * carousel does not jump when the pass changes.
+ * Border hierarchy from {@link hierarchyBorderClass}: provisional (dashed)
+ * for count-in / listening; active solid for playing; emphasis for idle.
+ * Keep border width constant across phases so the carousel does not jump.
  *
- * Listening = dashed primary frame + ink (black/white) notes; Playing = solid
- * secondary glow frame + secondary notes.
+ * Listening = dashed primary frame + ink notes; Playing = solid secondary
+ * frame + secondary notes. Reuse the same ranks for Jazz Mode note chrome.
  */
 export function measureShellClass(
 	phase: MeasurePlaybackPhase | undefined,
 ): string {
 	switch (phase) {
 		case 'count-in':
-			return 'border-2 border-dashed border-mid rounded-lg bg-surface shadow-soft';
+			return `${hierarchyBorderClass('provisional', 'mid')} rounded-lg bg-surface shadow-soft`;
 		case 'listening':
-			return 'border-2 border-dashed border-primary rounded-lg bg-surface text-black shadow-primary-glow';
+			return `${hierarchyBorderClass('provisional', 'primary')} rounded-lg bg-surface text-black shadow-primary-glow`;
 		case 'playing':
-			return 'border-2 border-secondary rounded-lg bg-surface text-secondary shadow-secondary-glow';
+			return `${hierarchyBorderClass('active', 'secondary')} rounded-lg bg-surface text-secondary shadow-secondary-glow`;
 		default:
-			return 'border-2 border-primary/25 rounded-lg bg-primary/5 shadow-soft';
+			return `${hierarchyBorderClass('emphasis', 'primary-soft')} rounded-lg bg-primary/5 shadow-soft`;
 	}
 }
 
-/** Beat-group inset borders — primary while listening, secondary while playing. */
+/** Beat-group inset borders — structure rank nested inside the shell. */
 export function measureBeatGroupClass(
 	phase: MeasurePlaybackPhase | undefined,
 ): string {
 	switch (phase) {
 		case 'listening':
-			return 'border border-primary bg-surface';
+			return `${hierarchyBorderClass('structure', 'primary')} bg-surface`;
 		case 'playing':
-			return 'border border-secondary bg-surface';
+			return `${hierarchyBorderClass('structure', 'secondary')} bg-surface`;
 		case 'count-in':
-			return 'border border-mid bg-surface';
+			return `${hierarchyBorderClass('structure', 'mid')} bg-surface`;
 		default:
-			return 'border border-primary/30 bg-surface';
+			return `${hierarchyBorderClass('structure', 'primary-soft')} bg-surface`;
 	}
 }
 
