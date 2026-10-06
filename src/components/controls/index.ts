@@ -1,12 +1,12 @@
 export { CarouselNavButton } from './CarouselNavButton';
 export { CarouselNavButtons } from './CarouselNavButtons';
-export { ConfirmRegenModal } from './ConfirmRegenModal';
 export { ControlButton } from './ControlButton';
 export { ControlButtons } from './ControlButtons';
 export { DescribedOptionCard } from './DescribedOptionCard';
 export { DifficultyControls } from './DifficultyControls';
 export { DifficultyHelpList } from './DifficultyHelpList';
 export { DifficultyHelpModal } from './DifficultyHelpModal';
+export { DifficultyRegenAckModal } from './DifficultyRegenAckModal';
 export { DifficultySlider } from './DifficultySlider';
 export { InfoGlyphButton } from './InfoGlyphButton';
 export { ModalActions } from './ModalActions';

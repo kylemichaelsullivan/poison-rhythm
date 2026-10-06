@@ -51,7 +51,7 @@ Phone-up layout (≈360px primary; 320px must not overflow horizontally): safe-a
 
 | Composer | Notable layers / hooks |
 |----------|------------------------|
-| `DifficultyControls` | `DifficultySlider`, `ModeBadgeTrigger`, `DifficultyHelpModal`, `PlayModesModal`; regen confirm via `PendingDifficultyProvider` (About modal + Settings → Mode) |
+| `DifficultyControls` | `DifficultySlider`, `ModeBadgeTrigger`, `DifficultyHelpModal`, `PlayModesModal`; regen acknowledgement via `PendingDifficultyProvider` (About modal + Settings → Mode) |
 | `MeasureSlider` | `MeasureCarouselChrome` (`live` sets `data-testid="measure-slider"`), `NextMeasurePreview`, `useMeasurePlaybackSync` |
 | `ShowNotes` | `ShowNotesTrigger`, `ShowNotesSlider`, `useHoverPinPopover` |
 | `PoisonSection` | `PoisonMeasureContent`, `PoisonMeasureFrame`, `DisplayModeModal` / `DisplayModeControls` (badge: Grid / Notation only) |

@@ -38,7 +38,7 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 8. **User-facing copy** uses typographic apostrophe `’` (not `'`). Prefer Title Case for labels/titles; sentence case for body hints.
 9. **Do not commit `.tmp-glyphs/`.** Local glyph audit screenshots; gitignored and Biome-ignored.
 10. **Round logic lives in `GameProvider`.** `useGameLoop` exists but is unused by the app shell — prefer extending `GameProvider` / `@/lib/game-modes` / `@/lib/rhythm`.
-11. **Difficulty slider** lives at the bottom of the title About modal (and Settings → Mode). Regenerate confirm (`ConfirmRegenModal`) only appears after that host modal closes, and only if difficulty changed from the committed value while a round is active (`PendingDifficultyProvider`).
+11. **Difficulty slider** lives at the bottom of the title About modal (and Settings → Mode). Changing difficulty while a round is active drafts until the host modal closes; then `PendingDifficultyProvider` applies the new difficulty, regenerates the round, and shows an OK-only acknowledgement (`DifficultyRegenAckModal`).
 12. **Phone-up layout** targets ≈360px (320px no horizontal overflow). Measure beat groups wrap to **2×2** below `sm`. Playwright `mobile` project (360×800) runs `a11y` + `mobile-layout` only.
 13. **Escape stops playback** in `MetronomeProvider` on `keydown` (works while Play/Pause is focused); ignored in text inputs and dialogs.
 

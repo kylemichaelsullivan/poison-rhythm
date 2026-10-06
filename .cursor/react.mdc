@@ -117,7 +117,7 @@ Provider tree in `main.tsx`: `ThemeProvider` → `ColorPreferencesProvider` → 
 - **App**: Wraps `GameProvider`; renders Header, Body, Footer
 - **Body**: Composer; soft-disable focus via `useSoftDisableFocus`
 - **ui/**: Elemental atoms (`Button`, `IconButton`, `Caption`, `Stack`, `Row`)
-- **DifficultyControls**: Difficulty slider + mode badge + help / play-mode modals; regen confirm deferred to host-modal close (`PendingDifficultyProvider`)
+- **DifficultyControls**: Difficulty slider + mode badge + help / play-mode modals; regen acknowledgement after host-modal close (`PendingDifficultyProvider`)
 - **PoisonSection**: Composer; `PoisonMeasureContent` / `PoisonMeasureFrame` for reference visibility
 - **MeasuresSection / MeasureSlider**: Carousel chrome + `useMeasurePlaybackSync`
 - **ShowNotes**: Subdivision popover; `useHoverPinPopover` + `ShowNotesTrigger`

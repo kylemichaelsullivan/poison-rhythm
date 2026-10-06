@@ -6,8 +6,8 @@ export type PendingDifficultyContextValue = {
 	onDifficultyChange: (next: number) => void;
 	/**
 	 * Call when a host modal that contains the difficulty slider closes.
-	 * Opens the regenerate confirm only if difficulty changed from the
-	 * committed value while a round is active.
+	 * Applies the draft, regenerates the round, and opens an acknowledgement
+	 * when difficulty changed while a round is active.
 	 */
 	onHostModalClosed: () => void;
 };

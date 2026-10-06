@@ -68,7 +68,7 @@ src/components/
 - **Purpose**: Difficulty section with play-mode badge + help / regen / Play Modes modals
 - **Uses**: `InfoGlyphButton`, `ModeBadgeTrigger`, `DifficultySlider`, `DifficultyHelpModal`, `PlayModesModal`, `usePendingDifficulty`
 - **Variants**: `framed` (About section box with mode badge) vs compact Settings block (`framed={false}`)
-- **Note**: Lives in the title About modal and Settings → Mode; header ShowNotes remains the quick subdivision control. `ConfirmRegenModal` is owned by `PendingDifficultyProvider` and only opens after the host modal closes if difficulty changed.
+- **Note**: Lives in the title About modal and Settings → Mode; header ShowNotes remains the quick subdivision control. `DifficultyRegenAckModal` is owned by `PendingDifficultyProvider`: after the host modal closes with a pending difficulty change, it regenerates the round and shows an OK-only acknowledgement.
 
 ### ui/ atoms
 

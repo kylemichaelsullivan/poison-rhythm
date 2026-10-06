@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { useCallback, useMemo, useState } from 'react';
-import { ConfirmRegenModal } from '@/components/controls/ConfirmRegenModal';
+import { DifficultyRegenAckModal } from '@/components/controls/DifficultyRegenAckModal';
 import { useGame } from '@/contexts/GameContext';
 import {
 	PendingDifficultyContext,
@@ -16,7 +16,7 @@ export function PendingDifficultyProvider({
 	const { difficulty, setDifficulty } = useDifficulty();
 	const { round, handleNewRound } = useGame();
 	const [draftDifficulty, setDraftDifficulty] = useState<number | null>(null);
-	const [confirmOpen, setConfirmOpen] = useState(false);
+	const [ackOpen, setAckOpen] = useState(false);
 
 	const sliderValue = draftDifficulty ?? difficulty;
 
@@ -46,25 +46,16 @@ export function PendingDifficultyProvider({
 			setDraftDifficulty(null);
 			return;
 		}
-		setConfirmOpen(true);
-	}, [draftDifficulty, difficulty, round, setDifficulty]);
-
-	const onCancelRegen = useCallback(() => {
-		setConfirmOpen(false);
-		setDraftDifficulty(null);
-	}, []);
-
-	const onConfirmRegen = useCallback(() => {
-		if (draftDifficulty === null) {
-			setConfirmOpen(false);
-			return;
-		}
 		const next = draftDifficulty;
-		setConfirmOpen(false);
 		setDraftDifficulty(null);
 		setDifficulty(next);
 		handleNewRound({ difficulty: next });
-	}, [draftDifficulty, setDifficulty, handleNewRound]);
+		setAckOpen(true);
+	}, [draftDifficulty, difficulty, round, setDifficulty, handleNewRound]);
+
+	const onAcknowledgeRegen = useCallback(() => {
+		setAckOpen(false);
+	}, []);
 
 	const value = useMemo(
 		(): PendingDifficultyContextValue => ({
@@ -78,10 +69,9 @@ export function PendingDifficultyProvider({
 	return (
 		<PendingDifficultyContext.Provider value={value}>
 			{children}
-			<ConfirmRegenModal
-				open={confirmOpen}
-				onCancel={onCancelRegen}
-				onConfirm={onConfirmRegen}
+			<DifficultyRegenAckModal
+				open={ackOpen}
+				onAcknowledge={onAcknowledgeRegen}
 			/>
 		</PendingDifficultyContext.Provider>
 	);
