@@ -1,7 +1,9 @@
-export const BPM_MIN = 40;
-export const BPM_MAX = 300;
+export const BPM_MIN = 50;
+export const BPM_MAX = 200;
 export const BPM_INPUT_STEP = 1;
 export const BPM_BUTTON_STEP = 5;
+/** Visual tick interval for the tempo slider (landmarks only; input step stays 1). */
+export const BPM_TICK_INTERVAL = 50;
 export const BPM_DEFAULT = 120;
 export const TAP_RESET_MS = 1000;
 export const TAP_SAMPLE_COUNT = 3;

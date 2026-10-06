@@ -34,7 +34,7 @@ export function Metronome() {
 					</span>
 				</span>
 			}
-			fullWidth
+			size='lg'
 			lazy
 		>
 			<Suspense fallback={null}>

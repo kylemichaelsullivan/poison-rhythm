@@ -5,7 +5,6 @@ import { Icon } from '@/components/layout/Icon';
 import {
 	focusVisibleRingClassName,
 	modifyTempoButtonClassName,
-	sideGutterControlClassName,
 } from '@/lib/control-classes';
 import { BPM_MAX, BPM_MIN } from '@/lib/metronome-defaults';
 import {
@@ -19,6 +18,10 @@ type MetronomeModifyTempoButtonProps = {
 	onTempoChange: (value: number) => void;
 };
 
+/**
+ * In-flow beside the control surface when the modal has room; drops to the
+ * bottom corners below ~63rem (absolute, so it leaves the flex row).
+ */
 export function MetronomeModifyTempoButton({
 	direction,
 	tempo,
@@ -31,12 +34,13 @@ export function MetronomeModifyTempoButton({
 		<button
 			type='button'
 			className={clsx(
-				'ModifyTempoButton',
+				'ModifyTempoButton shrink-0',
 				modifyTempoButtonClassName,
-				sideGutterControlClassName(isDecrease ? 'start' : 'end', {
-					collapseBelowGutter: true,
-				}),
 				focusVisibleRingClassName,
+				'max-[63rem]:absolute max-[63rem]:top-auto max-[63rem]:bottom-[var(--side-gutter-collapse-inset)] max-[63rem]:translate-y-0',
+				isDecrease
+					? 'max-[63rem]:right-auto max-[63rem]:left-[var(--side-gutter-collapse-inset)]'
+					: 'max-[63rem]:left-auto max-[63rem]:right-[var(--side-gutter-collapse-inset)]',
 			)}
 			title={label}
 			disabled={isDecrease ? tempo <= BPM_MIN : tempo >= BPM_MAX}

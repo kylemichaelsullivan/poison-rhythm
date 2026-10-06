@@ -10,15 +10,15 @@ export function Metronome() {
 	const { onTap } = useTapTempo();
 
 	return (
-		<div className='Metronome flex flex-col gap-4 w-modal-inset max-w-3xl self-center'>
+		<div className='Metronome flex flex-col gap-4 w-full self-center'>
 			<SkipLink targetId='beat-selector'>Skip to Beat Selector</SkipLink>
+			<MetronomeTapTempo onTap={onTap} />
 			<MetronomeControlBar
 				tempo={tempo}
 				isRunning={isMetronomeRunning}
 				onToggle={toggleMetronome}
 				onTempoChange={handleTempoChange}
 			/>
-			<MetronomeTapTempo onTap={onTap} />
 		</div>
 	);
 }

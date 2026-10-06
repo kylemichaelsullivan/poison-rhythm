@@ -117,7 +117,7 @@ test.describe('accessibility', () => {
 		await seedPlaybackPrefs(page, {
 			countIn: true,
 			demoBeforePlay: false,
-			tempo: 40,
+			tempo: 60,
 		});
 		await page.goto('/');
 		await generateRound(page);

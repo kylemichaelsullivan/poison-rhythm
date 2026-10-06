@@ -19,7 +19,7 @@ test.describe('measure playback', () => {
 		await seedPlaybackPrefs(page, {
 			countIn: true,
 			demoBeforePlay: false,
-			tempo: 30,
+			tempo: 60,
 		});
 		await page.goto('/');
 		await generateRound(page);

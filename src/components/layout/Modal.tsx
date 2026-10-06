@@ -115,7 +115,7 @@ export function Modal({
 		size === 'xl'
 			? 'sm:h-[80vh] sm:max-h-[80vh] sm:w-[80vw] sm:max-w-3xl'
 			: size === 'lg'
-				? 'sm:max-w-lg'
+				? 'sm:max-w-xl'
 				: size === 'md'
 					? 'sm:max-w-md'
 					: 'sm:max-w-sm';

@@ -1,7 +1,28 @@
-import { BPM_BUTTON_STEP, BPM_MAX, BPM_MIN } from './metronome-defaults';
+import {
+	BPM_BUTTON_STEP,
+	BPM_MAX,
+	BPM_MIN,
+	BPM_TICK_INTERVAL,
+} from './metronome-defaults';
 
 export function clampTempo(value: number) {
 	return Math.min(BPM_MAX, Math.max(BPM_MIN, value));
+}
+
+/** Endpoints plus every multiple of `interval` strictly inside `[min, max]`. */
+export function tempoTickValues(
+	min = BPM_MIN,
+	max = BPM_MAX,
+	interval = BPM_TICK_INTERVAL,
+): number[] {
+	const ticks = new Set<number>([min, max]);
+	const first = Math.ceil(min / interval) * interval;
+	for (let tick = first; tick < max; tick += interval) {
+		if (tick > min) {
+			ticks.add(tick);
+		}
+	}
+	return [...ticks].sort((a, b) => a - b);
 }
 
 export function decrementTempoByStep(current: number) {
