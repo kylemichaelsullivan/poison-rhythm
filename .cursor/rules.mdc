@@ -175,7 +175,7 @@ export function ComponentName({
 - **No !important declarations**: Avoid using `!important` in CSS
 - **Tailwind**: Use Tailwind utilities; custom utilities live in `src/index.css` when needed
 - **Theme color utilities**: Use semantic tokens from `@theme` (`primary`, `surface`, `poison`, `accent`, `muted`, etc.) and shared surface helpers from `src/lib/control-classes.ts` — see `.cursor/styling.mdc`
-- **Variants over className**: Do not accept `className` on shared components for styling customization. Use a `variant` prop for supported visual differences
+- **Variants over className**: Do not accept `className` on shared components for styling customization. Use a `variant` / `tone` / `size` / `slot` prop for supported visual differences. Providers own state only; modal hosts mount beside the tree (`AboutPoisonRhythmModal`, `DifficultyRegenAckHost`, Body-owned `DisplayModeModal`)
 
 ### React Best Practices
 

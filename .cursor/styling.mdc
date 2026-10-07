@@ -132,7 +132,7 @@ className={clsx(
 )}
 ```
 
-- **No `className` props on components**: Do not accept `className` on shared components for styling customization. Encode supported visual differences as a `variant` prop (see `Button`, `IconButton`, `ControlButton`, `AboutPoisonRhythmButton`). Prefer composing `@/components/ui` atoms instead of inventing one-off button class strings in feature composers.
+- **No `className` props on components**: Do not accept `className` on shared components for styling customization. Encode supported visual differences as a `variant` / `tone` / `size` / `slot` prop (see `Button`, `IconButton`, `ControlButton`, `CornerButton`/`CornerModal` `tone`, `AboutPoisonRhythmButton`). Prefer composing `@/components/ui` atoms instead of inventing one-off button class strings in feature composers. Modal chrome uses `ModalScrim` / `ModalPanel` / `ModalCloseButton` / `ModalTitle`.
 
 ### JSX Attribute Order
 

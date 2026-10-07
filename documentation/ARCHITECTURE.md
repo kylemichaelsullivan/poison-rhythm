@@ -34,30 +34,34 @@ flowchart TB
 | Layer | Path | Examples |
 |-------|------|----------|
 | Atoms | `src/components/ui/` | `Button`, `IconButton`, `Caption`, `Stack`, `Row` |
-| Molecules | domain folders | `PlayModeOptionCard`, `ModalActions`, `MeasureCarouselChrome`, settings `EnableToggle` |
+| Molecules | domain folders | `PlayModeOptionCard`, `ModalActions`, `ModalPanel`, `MeasureCarouselChrome`, `ContrastGradeBadge`, settings `EnableToggle` |
 | Composers | domain folders | `DifficultyControls`, `MeasureSlider`, `ShowNotes`, `PoisonSection`, `Body` |
-| Hooks | `src/hooks/` | `useMeasurePlaybackSync`, `useHoverPinPopover`, `useSoftDisableFocus`, `useMusiSyncFont`, `useSmoothNotationCursor` |
+| Hosts | `App` / `Body` | `AboutPoisonRhythmModal`, `DifficultyRegenAckHost`, `DisplayModeModal` |
+| Hooks | `src/hooks/` | `useDisclosure`, `useModalFocusTrap`, `useNotationPrefetch`, `useMeasurePlaybackSync`, `useHoverPinPopover`, `useSoftDisableFocus` |
 
 Rules of thumb:
 
-- Prefer **one root HTML element** per component (or a documented layout role such as `Stack` / `Row`)
+- Prefer **one React component per file** and **one root HTML element** (or a documented layout role such as `Stack` / `Row`)
 - Composers wire context and hooks; atoms/molecules take **explicit props**
+- **Providers own state only** — mount modal hosts beside the tree (`App` / `Body`), not inside providers
 - Do not add raw `<button className=…>` in composers — use `@/components/ui` or settings atoms
-- **Variants over `className`** on shared components
+- **Variants over `className`** on shared components (`tone`, `size`, `framed`, `slot`)
 
-Main page shell: `Header` → `Body` (`PoisonSection`, `MeasuresSection`, `PlayControls`) → `Footer`.
+Main page shell: `Header` → `Body` (`PoisonSection`, `MeasuresSection`, `PlayControls`, single `DisplayModeModal`) → `Footer`.
 
-Phone-up layout (≈360px primary; 320px must not overflow horizontally): safe-area insets on chrome, ≥44px touch targets on primary controls, near-fullscreen modals on small viewports, and measure beat groups wrapping to a **2×2** grid below `sm` (`MeasureGrid`). Carousel prev/next sit above Play so they do not overlap.
+Phone-up layout (≈360px primary; 320px must not overflow horizontally): safe-area insets on chrome, ≥44px touch targets on primary controls, near-fullscreen modals on small viewports, and measure beat groups wrapping to a **2×2** grid below `sm` (`MeasureCellGrid` via `MeasureGrid`). Carousel prev/next sit above Play so they do not overlap.
 
-| Composer | Notable layers / hooks |
-|----------|------------------------|
-| `DifficultyControls` | `DifficultySlider`, `ModeBadgeTrigger`, `DifficultyHelpModal`, `PlayModesModal`; regen acknowledgement via `PendingDifficultyProvider` (About modal + Settings → Mode) |
+| Composer / host | Notable layers / hooks |
+|-----------------|------------------------|
+| `DifficultyControls` | `DifficultyFramedBlock` / `DifficultySettingsBlock`, help + play-mode modals; regen ack via `DifficultyRegenAckHost` |
 | `MeasureSlider` | `MeasureCarouselChrome` (`live` sets `data-testid="measure-slider"`), `NextMeasurePreview`, `useMeasurePlaybackSync` |
 | `ShowNotes` | `ShowNotesTrigger`, `ShowNotesSlider`, `useHoverPinPopover` |
-| `PoisonSection` | `PoisonMeasureContent`, `PoisonMeasureFrame`, `DisplayModeModal` / `DisplayModeControls` (badge: Grid / Notation only) |
-| `Body` | `useSoftDisableFocus` |
+| `PoisonSection` | `PoisonSectionHeader`, `PoisonMeasureContent`, `PoisonMeasureFrame` / `HiddenPoisonOverlay` (badge opens Body-owned `DisplayModeModal`) |
+| `Body` | `useSoftDisableFocus`, `useDisclosure` → single `DisplayModeModal` |
+| `Modal` | `ModalScrim`, `ModalPanel`, `ModalCloseButton`, `ModalTitle`, `useModalFocusTrap` |
+| `MeasureGrid` | `MeasureCellGrid` / lazy `MeasureNotation`, `NotationFallback`, `useNotationPrefetch` |
 
-Settings shell: footer **Settings** → lazy `SettingsOverlay` → tabs `Mode` / `Sound` / `Look` over `layout/settings/` atoms (`SettingsGroup`, `EnableToggle`, `When`, …). Color accents persist via `ColorPreferencesProvider` (student-scoped preference keys; null = brand). Main-UI shortcuts remain: Poison badge → `DisplayModeModal`; header ShowNotes; footer metronome for tempo. Mirrored in Settings: play mode + complexity + practice under Mode; tempo under Sound; theme, display, feedback, and colors under Look. Difficulty + play-mode badge also live in the title About modal. See [`COLORS.md`](COLORS.md).
+Settings shell: footer **Settings** → lazy `SettingsOverlay` → tabs `Mode` / `Sound` / `Look` over `layout/settings/` atoms (`SettingsGroup`, `EnableToggle`, `When`, …). Color accents persist via `ColorPreferencesProvider` (student-scoped preference keys; null = brand). Main-UI shortcuts remain: Poison/Measures badge → Body-owned `DisplayModeModal`; header ShowNotes; footer metronome for tempo (`CornerModal` `tone='muted'` when metronome muted). Mirrored in Settings: play mode + complexity + practice under Mode; tempo under Sound; theme, display, feedback, and colors under Look. Difficulty + play-mode badge also live in the title About modal (`AboutPoisonRhythmModal`). See [`COLORS.md`](COLORS.md).
 
 ## State flow
 
@@ -195,7 +199,7 @@ flowchart LR
 
 Font assets: canonical copies in `src/assets/fonts/`; served from `public/fonts/` as static `/fonts/MusiSync.*` URLs. See [`src/assets/fonts/README.md`](../src/assets/fonts/README.md) for glyph keys and refresh steps.
 
-`MeasureGrid` lazy-loads `MeasureNotation` and prefetches the chunk + MusiSync font when `rhythmRenderMode === 'notation'` (notation-shaped loading shell instead of flashing the cell grid).
+`MeasureGrid` lazy-loads `MeasureNotation` and prefetches the chunk + MusiSync font via `useNotationPrefetch` when `rhythmRenderMode === 'notation'` (`NotationFallback` shell instead of flashing the cell grid). Grid layout lives in `MeasureCellGrid` (takes `showSticking` as a prop).
 
 Playback cursor: `useSmoothNotationCursor` interpolates position across `NotationStep` indices; `NotationPlaybackCursor` highlights the active glyph during demo/student passes.
 

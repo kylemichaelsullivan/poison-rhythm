@@ -1,16 +1,12 @@
-import clsx from 'clsx';
-import { lazy, Suspense, useEffect } from 'react';
+import { lazy, Suspense } from 'react';
 import { useSettings } from '@/contexts';
-import { loadMusiSyncFont } from '@/lib/notation';
+import { useNotationPrefetch } from '@/hooks/useNotationPrefetch';
 import type { RhythmRenderMode } from '@/lib/settings-schema';
 import { shouldShowSticking } from '@/lib/settings-schema';
 import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
-import { MeasureCell } from './MeasureCell';
-import {
-	type MeasurePlaybackPhase,
-	measureBeatGroupClass,
-	measureShellClass,
-} from './measure-phase-chrome';
+import { MeasureCellGrid } from './MeasureCellGrid';
+import type { MeasurePlaybackPhase } from './measure-phase-chrome';
+import { NotationFallback } from './NotationFallback';
 
 const measureNotationImport = () =>
 	import('./MeasureNotation').then((module) => ({
@@ -30,83 +26,6 @@ type MeasureGridProps = {
 	phase?: MeasurePlaybackPhase;
 };
 
-function MeasureCellGrid({
-	measure,
-	richMeasure,
-	playback = false,
-	hidden = false,
-	phase,
-}: MeasureGridProps) {
-	const { settings } = useSettings();
-	const showSticking = shouldShowSticking(settings);
-
-	const beats = [0, 1, 2, 3] as const;
-
-	return (
-		<div
-			className={clsx(
-				'MeasureCellGrid grid grid-cols-2 gap-2 w-full p-2 sm:grid-cols-4 sm:gap-2.5',
-				measureShellClass(phase),
-				showSticking && 'pb-4',
-			)}
-		>
-			{beats.map((beat) => {
-				const start = beat * 4;
-				return (
-					<div
-						className={clsx(
-							'MeasureBeatGroup grid grid-cols-4 gap-px overflow-hidden rounded-md p-px',
-							measureBeatGroupClass(phase),
-						)}
-						data-beat={beat + 1}
-						key={beat}
-					>
-						{measure.slice(start, start + 4).map((cell, offset) => {
-							const i = start + offset;
-							const step = richMeasure?.[i];
-							return (
-								<MeasureCell
-									value={cell}
-									playback={playback}
-									index={i}
-									accent={step?.accent}
-									sticking={step?.sticking}
-									hidden={hidden}
-									phase={phase}
-									key={`${i}-${cell}`}
-								/>
-							);
-						})}
-					</div>
-				);
-			})}
-		</div>
-	);
-}
-
-/** Notation-shaped shell shown while the lazy notation chunk loads. */
-function NotationFallback({
-	hidden = false,
-	phase,
-}: {
-	hidden?: boolean;
-	phase?: MeasurePlaybackPhase;
-}) {
-	return (
-		<output
-			className={clsx(
-				'MeasureNotation relative flex w-full items-center justify-center px-3 py-4',
-				measureShellClass(phase),
-				hidden && 'opacity-0',
-			)}
-			aria-live='polite'
-			aria-busy='true'
-		>
-			<span className='text-sm text-muted'>Loading Rhythm…</span>
-		</output>
-	);
-}
-
 export function MeasureGrid({
 	measure,
 	richMeasure,
@@ -117,12 +36,9 @@ export function MeasureGrid({
 }: MeasureGridProps) {
 	const { settings } = useSettings();
 	const renderMode = renderModeProp ?? settings.rhythmRenderMode;
+	const showSticking = shouldShowSticking(settings);
 
-	useEffect(() => {
-		if (renderMode !== 'notation') return;
-		void measureNotationImport();
-		void loadMusiSyncFont();
-	}, [renderMode]);
+	useNotationPrefetch(renderMode, measureNotationImport);
 
 	if (renderMode === 'notation') {
 		return (
@@ -145,6 +61,7 @@ export function MeasureGrid({
 			playback={playback}
 			hidden={hidden}
 			phase={phase}
+			showSticking={showSticking}
 		/>
 	);
 }

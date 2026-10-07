@@ -60,40 +60,52 @@ src/components/
 ### Body
 
 - **Purpose**: Main game composition
-- **Uses**: `useSoftDisableFocus` for New → Play focus guidance; renders PoisonSection, MeasuresSection, PlayControls
+- **Uses**: `useSoftDisableFocus` for New → Play focus guidance; renders PoisonSection, MeasuresSection, PlayControls; owns the single `DisplayModeModal` via `useDisclosure`
 - **No props**: Reads game state from context
 
 ### DifficultyControls (composer)
 
-- **Purpose**: Difficulty section with play-mode badge + help / regen / Play Modes modals
-- **Uses**: `InfoGlyphButton`, `ModeBadgeTrigger`, `DifficultySlider`, `DifficultyHelpModal`, `PlayModesModal`, `usePendingDifficulty`
+- **Purpose**: Difficulty section with play-mode badge + help / Play Modes modals
+- **Uses**: `DifficultyFramedBlock` / `DifficultySettingsBlock`, `DifficultyHelpModal`, `PlayModesModal`, `usePendingDifficulty`, `useDisclosure`
 - **Variants**: `framed` (About section box with mode badge) vs compact Settings block (`framed={false}`)
-- **Note**: Lives in the title About modal and Settings → Mode; header ShowNotes remains the quick subdivision control. `DifficultyRegenAckModal` is owned by `PendingDifficultyProvider`: after the host modal closes with a pending difficulty change, it regenerates the round and shows an OK-only acknowledgement.
+- **Note**: Lives in the title About modal and Settings → Mode; header ShowNotes remains the quick subdivision control. After the host modal closes with a pending difficulty change, `PendingDifficultyProvider` regenerates the round; `DifficultyRegenAckHost` (App-level) shows the OK-only acknowledgement.
+
+### Modal (composer)
+
+- **Purpose**: Shared dialog shell
+- **Layers**: `ModalScrim`, `ModalPanel` (`size` / `fullWidth`), `ModalCloseButton` (`IconButton` `modalClose`), `ModalTitle`, `useModalFocusTrap`
+- **Public props unchanged**: `open`, `onClose`, `title`, `ariaLabel`, `size`, `fullWidth`
+
+### CornerModal / CornerButton
+
+- **Variants**: `tone?: 'default' | 'muted'` (muted = dashed mid border for muted metronome); no `className` / `buttonClassName` passthrough
+- **Hooks**: `useDisclosure`, `useDelayedClick` for single vs double-click open
 
 ### ui/ atoms
 
 - **Button**: text actions (`primary` | `secondary` | `ghost`)
-- **IconButton**: glyph/icon-only (`info` | `bare`)
+- **IconButton**: glyph/icon-only (`info` | `bare` | `modalClose`)
 - **Caption**: muted helper `<p>` (`xs` | `sm`)
 - **Stack** / **Row**: vertical / horizontal flex+gap layout layers
 
 ### PoisonSection (composer)
 
 - **Purpose**: Poison rhythm and New/Reuse controls
-- **Props**: `poisonRhythm`, `onNewPoison`, `onReusePoison`, optional soft-disable focus helpers
-- **Header**: `PoisonVisibilityToggle` (Eye) in `headerLeading`; `DisplayModeTrigger` → `DisplayModeModal` in `headerAction`
-- **Display Mode**: Grid / Notation only on the badge; Scroll is Coming Soon in `DisplayModeControls` (schema fields dormant — do not re-wire on main)
-- **Uses**: `PoisonMeasureContent` / `PoisonMeasureFrame`, Section, MeasureGrid, ControlButtons
+- **Props**: `poisonRhythm`, `onNewPoison`, `onReusePoison`, `onOpenDisplayMode`, optional soft-disable focus helpers
+- **Header**: `PoisonSectionHeader` (`slot: 'leading' | 'action'`) → visibility toggle / display trigger
+- **Display Mode**: Grid / Notation only on the badge; modal owned by `Body` (not this section). Scroll is Coming Soon in `DisplayModeControls` (schema fields dormant — do not re-wire on main)
+- **Uses**: `PoisonMeasureContent` / `PoisonMeasureFrame` / `HiddenPoisonOverlay`, Section, MeasureGrid, ControlButtons
 
 ### MeasuresSection / MeasureSlider
 
-- **MeasuresSection**: Empty state or carousel; shared spacer via `MeasureCarouselChrome`
+- **MeasuresSection**: Empty state or carousel; `NextMeasureToggle` + `MeasuresSectionHeaderActions`; opens Body-owned `DisplayModeModal` in Bucket mode
 - **MeasureSlider**: Presentational carousel; `live` on chrome for `data-testid="measure-slider"`; playback side effects in `useMeasurePlaybackSync`
 - **Layers**: `NextMeasurePreview`, `CurrentMeasureDisplay` / `measure-phase-chrome` (`data-playback-phase`: idle / count-in / listening / playing — fixed `border-2`; Listening = dashed primary shell + ink notes, Playing = secondary glow shell + secondary notes, count-in faded), `CarouselNavButtons`
 
 ### MeasureGrid / MeasureCell
 
 - **Purpose**: 16th-note grid with accent, sticking (L/R), poison overlay, and playback highlighting
+- **Composer**: `MeasureGrid` switches grid vs notation; `MeasureCellGrid` owns the cell layout (`showSticking` prop); `NotationFallback` + `useNotationPrefetch` for lazy notation
 - **Props**: `measure`, optional `richMeasure`, `playback`, `hidden`
 - **Render modes**: `grid` or `notation` (MusiSync via `rhythmRenderMode`)
 - **Layout**: Four pedagogical beats; wraps to **2×2** beat groups below `sm`
@@ -107,7 +119,7 @@ src/components/
 ### Settings (layout/settings)
 
 - **SettingsOverlay**: Three tabs — Mode, Sound, Look (`SettingsTabs`)
-- **GameSettingsPanel** / **SoundSettingsPanel** / **LookSettingsPanel**: compose setting atoms (`Look` includes theme, display, feedback, and `ColorAccentSettings`)
+- **GameSettingsPanel** / **SoundSettingsPanel** / **LookSettingsPanel**: compose setting atoms (`Look` includes theme, display, feedback, and `ColorAccentSettings` → `ColorPairPreview` / `ContrastScoreMeter` / `CrayonTray` / `ContrastGradeBadge`)
 - **SettingsGroup** / **ConditionalSettingsGroup**: Section dividers inside a tab
 - **Setting utilities**: `NumberSetting`, `OnOffSetting`, `SelectSetting`, `SegmentedControl`, `When`, `useUpdateSetting`
 - **ThemeSetting**, **Fieldset**, **SegmentButton**, **SettingRow**, **EnableToggle** / **IconToggle**, **FieldCaption**

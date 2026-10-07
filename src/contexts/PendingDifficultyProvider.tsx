@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { useCallback, useMemo, useState } from 'react';
-import { DifficultyRegenAckModal } from '@/components/controls/DifficultyRegenAckModal';
 import { useGame } from '@/contexts/GameContext';
 import {
 	PendingDifficultyContext,
@@ -62,17 +61,21 @@ export function PendingDifficultyProvider({
 			sliderValue,
 			onDifficultyChange,
 			onHostModalClosed,
+			ackOpen,
+			onAcknowledgeRegen,
 		}),
-		[sliderValue, onDifficultyChange, onHostModalClosed],
+		[
+			sliderValue,
+			onDifficultyChange,
+			onHostModalClosed,
+			ackOpen,
+			onAcknowledgeRegen,
+		],
 	);
 
 	return (
 		<PendingDifficultyContext.Provider value={value}>
 			{children}
-			<DifficultyRegenAckModal
-				open={ackOpen}
-				onAcknowledge={onAcknowledgeRegen}
-			/>
 		</PendingDifficultyContext.Provider>
 	);
 }

@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import type { ReactNode, Ref } from 'react';
 import { focusVisibleRingClassName } from '@/lib/control-classes';
 
-export type IconButtonVariant = 'info' | 'bare';
+export type IconButtonVariant = 'info' | 'bare' | 'modalClose';
 
 type IconButtonProps = {
 	children: ReactNode;
@@ -22,6 +22,11 @@ const variantClassName: Record<IconButtonVariant, string> = {
 		'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface',
 	),
 	bare: clsx('group rounded transition-colors', focusVisibleRingClassName),
+	modalClose: clsx(
+		'flex min-h-11 min-w-11 items-center justify-center text-xl font-semibold leading-none text-dark transition-colors',
+		'hover:text-primary',
+		'focus-visible:outline-none focus-visible:text-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-white',
+	),
 };
 
 export function IconButton({

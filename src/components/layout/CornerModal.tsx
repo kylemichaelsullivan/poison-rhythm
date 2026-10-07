@@ -1,9 +1,10 @@
-import { type ReactNode, useEffect, useRef, useState } from 'react';
-import { CornerButton } from './CornerButton';
+import { type ReactNode, useCallback } from 'react';
+import { useDelayedClick } from '@/hooks/useDelayedClick';
+import { useDisclosure } from '@/hooks/useDisclosure';
+import { CornerButton, type CornerButtonTone } from './CornerButton';
 import type { SvgIconComponent } from './Icon';
 import { Modal } from './Modal';
-
-const DOUBLE_CLICK_MS = 280;
+import type { ModalSize } from './ModalPanel';
 
 type CornerModalProps = {
 	label: string;
@@ -13,11 +14,11 @@ type CornerModalProps = {
 	detail?: ReactNode;
 	title?: string;
 	fullWidth?: boolean;
-	size?: 'sm' | 'md' | 'lg' | 'xl';
+	size?: ModalSize;
 	/** Mount modal body only while open. */
 	lazy?: boolean;
-	/** Extra classes on the trigger (e.g. muted metronome). */
-	buttonClassName?: string;
+	/** Trigger tone; `muted` for dashed mid styling (e.g. muted metronome). */
+	tone?: CornerButtonTone;
 	/** Tooltip on the trigger; defaults to `label`. */
 	buttonTitle?: string;
 	/**
@@ -39,46 +40,20 @@ export function CornerModal({
 	fullWidth,
 	size,
 	lazy = false,
-	buttonClassName,
+	tone = 'default',
 	buttonTitle,
 	onDoubleClick,
 	onClose,
 	children,
 }: CornerModalProps) {
-	const [open, setOpen] = useState(false);
-	const clickTimerRef = useRef<number | undefined>(undefined);
+	const { open, onOpen, onClose: closeDisclosure } = useDisclosure();
 
-	useEffect(() => {
-		return () => {
-			if (clickTimerRef.current !== undefined) {
-				clearTimeout(clickTimerRef.current);
-			}
-		};
-	}, []);
-
-	function handleClick() {
-		if (!onDoubleClick) {
-			setOpen(true);
-			return;
-		}
-
-		if (clickTimerRef.current !== undefined) {
-			clearTimeout(clickTimerRef.current);
-			clickTimerRef.current = undefined;
-			onDoubleClick();
-			return;
-		}
-
-		clickTimerRef.current = window.setTimeout(() => {
-			clickTimerRef.current = undefined;
-			setOpen(true);
-		}, DOUBLE_CLICK_MS);
-	}
-
-	function handleClose() {
-		setOpen(false);
+	const handleClose = useCallback(() => {
+		closeDisclosure();
 		onClose?.();
-	}
+	}, [closeDisclosure, onClose]);
+
+	const handleClick = useDelayedClick(onOpen, { onDoubleClick });
 
 	return (
 		<>
@@ -86,7 +61,7 @@ export function CornerModal({
 				label={label}
 				icon={icon}
 				expanded={expanded}
-				className={buttonClassName}
+				tone={tone}
 				title={buttonTitle}
 				onClick={handleClick}
 			>

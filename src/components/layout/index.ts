@@ -1,6 +1,7 @@
 export { AppTitle } from './AppTitle';
 export {
 	AboutPoisonRhythmButton,
+	AboutPoisonRhythmModal,
 	AboutPoisonRhythmProvider,
 } from './about';
 export { Body } from './Body';

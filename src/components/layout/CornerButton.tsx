@@ -7,17 +7,25 @@ import {
 } from '@/lib/control-classes';
 import { Icon, type SvgIconComponent } from './Icon';
 
+export type CornerButtonTone = 'default' | 'muted';
+
 type CornerButtonProps = {
 	label: string;
 	icon?: SvgIconComponent;
 	/** Wider layout for icon + trailing content. Inferred when `children` are set. */
 	expanded?: boolean;
 	onClick?: () => void;
-	className?: string;
+	/** Visual tone; `muted` uses a dashed mid border (e.g. muted metronome). */
+	tone?: CornerButtonTone;
 	/** Tooltip; defaults to `label`. */
 	title?: string;
 	/** Trailing content beside the icon (e.g. tempo readout). */
 	children?: ReactNode;
+};
+
+const toneClassName: Record<CornerButtonTone, string | undefined> = {
+	default: undefined,
+	muted: 'border-dashed text-mid',
 };
 
 export function CornerButton({
@@ -25,7 +33,7 @@ export function CornerButton({
 	icon: IconSvg = SettingsIcon,
 	expanded,
 	onClick,
-	className,
+	tone = 'default',
 	title,
 	children,
 }: CornerButtonProps) {
@@ -38,7 +46,7 @@ export function CornerButton({
 				cornerControlButtonClassName,
 				controlButtonBaseClassName,
 				isExpanded && 'gap-2 px-2.5 w-auto',
-				className,
+				toneClassName[tone],
 			)}
 			title={title ?? label}
 			aria-label={label}

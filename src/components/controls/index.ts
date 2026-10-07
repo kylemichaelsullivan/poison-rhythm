@@ -6,6 +6,7 @@ export { DescribedOptionCard } from './DescribedOptionCard';
 export { DifficultyControls } from './DifficultyControls';
 export { DifficultyHelpList } from './DifficultyHelpList';
 export { DifficultyHelpModal } from './DifficultyHelpModal';
+export { DifficultyRegenAckHost } from './DifficultyRegenAckHost';
 export { DifficultyRegenAckModal } from './DifficultyRegenAckModal';
 export { DifficultySlider } from './DifficultySlider';
 export { InfoGlyphButton } from './InfoGlyphButton';

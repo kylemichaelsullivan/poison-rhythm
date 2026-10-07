@@ -1,17 +1,9 @@
-import { useState } from 'react';
-import EyeIcon from '@/assets/svg/eye.svg?react';
-import {
-	CarouselNavButtons,
-	PlaybackVolumeButton,
-} from '@/components/controls';
+import { CarouselNavButtons } from '@/components/controls';
 import {
 	EmptyStartPrompt,
 	Section,
 	StableContentFrame,
 } from '@/components/layout';
-import { IconToggle } from '@/components/layout/settings';
-import { DisplayModeModal, DisplayModeTrigger } from '@/components/poison';
-import { Row } from '@/components/ui';
 import { useGame, useSettings } from '@/contexts';
 import { useMeasurePlaybackSync } from '@/hooks/useMeasurePlaybackSync';
 import { isBucketTrainerMode } from '@/lib/settings-schema';
@@ -19,15 +11,20 @@ import { REST_MEASURE } from '@/types';
 import { CurrentMeasureDisplay, MeasureSlider } from '.';
 import { MeasureCarouselChrome } from './MeasureCarouselChrome';
 import { MeasureHeightReserve } from './MeasureHeightReserve';
+import { MeasuresSectionHeaderActions } from './MeasuresSectionHeaderActions';
+import { NextMeasureToggle } from './NextMeasureToggle';
 
 type MeasuresSectionProps = {
 	onNewPoison: () => void;
+	onOpenDisplayMode: () => void;
 };
 
-export function MeasuresSection({ onNewPoison }: MeasuresSectionProps) {
+export function MeasuresSection({
+	onNewPoison,
+	onOpenDisplayMode,
+}: MeasuresSectionProps) {
 	const { measures } = useGame();
 	const { settings, updateSettings } = useSettings();
-	const [displayOpen, setDisplayOpen] = useState(false);
 	const bucketMode = isBucketTrainerMode(settings);
 	const showNext = settings.showNextMeasure;
 	const {
@@ -46,90 +43,65 @@ export function MeasuresSection({ onNewPoison }: MeasuresSectionProps) {
 
 	const hasMeasures = measures.length > 0;
 
-	const nextMeasureToggle = (
-		<IconToggle
-			label={
-				showNext
-					? 'Next Measure Preview: Visible'
-					: 'Next Measure Preview: Hidden'
-			}
-			title={showNext ? 'Hide Next Measure' : 'Show Next Measure'}
-			pressed={showNext}
-			pressedIcon={EyeIcon}
-			unpressedIcon={EyeIcon}
-			variant='header'
-			grow={false}
-			onPressedChange={(visible) =>
-				updateSettings({ showNextMeasure: visible })
-			}
-		/>
-	);
-
 	return (
-		<>
-			<CarouselNavButtons
-				onPrev={() => setCurrentIndex(Math.max(0, safeIndex - 1))}
-				onNext={() =>
-					setCurrentIndex(Math.min(measuresLength - 1, safeIndex + 1))
+		<CarouselNavButtons
+			onPrev={() => setCurrentIndex(Math.max(0, safeIndex - 1))}
+			onNext={() =>
+				setCurrentIndex(Math.min(measuresLength - 1, safeIndex + 1))
+			}
+			canGoPrev={hasMeasures && safeIndex > 0}
+			canGoNext={hasMeasures && safeIndex < measuresLength - 1}
+		>
+			<Section
+				title='Measures'
+				headerLeading={
+					<NextMeasureToggle
+						visible={showNext}
+						onVisibleChange={(visible) =>
+							updateSettings({ showNextMeasure: visible })
+						}
+					/>
 				}
-				canGoPrev={hasMeasures && safeIndex > 0}
-				canGoNext={hasMeasures && safeIndex < measuresLength - 1}
+				headerAction={
+					<MeasuresSectionHeaderActions
+						showDisplayMode={bucketMode}
+						renderMode={settings.rhythmRenderMode}
+						onOpenDisplayMode={onOpenDisplayMode}
+					/>
+				}
 			>
-				<Section
-					title='Measures'
-					headerLeading={nextMeasureToggle}
-					headerAction={
-						<Row gap='2' align='center'>
-							<PlaybackVolumeButton />
-							{bucketMode ? (
-								<DisplayModeTrigger
-									renderMode={settings.rhythmRenderMode}
-									onClick={() => setDisplayOpen(true)}
-								/>
-							) : null}
-						</Row>
+				<StableContentFrame
+					spacer={
+						<MeasureCarouselChrome
+							nextSlot={
+								showNext ? (
+									<div className='NextMeasurePreview w-full opacity-35'>
+										<MeasureHeightReserve measure={REST_MEASURE} />
+									</div>
+								) : undefined
+							}
+						>
+							<CurrentMeasureDisplay measure={REST_MEASURE} highlight />
+						</MeasureCarouselChrome>
 					}
 				>
-					<StableContentFrame
-						spacer={
-							<MeasureCarouselChrome
-								nextSlot={
-									showNext ? (
-										<div className='NextMeasurePreview w-full opacity-35'>
-											<MeasureHeightReserve measure={REST_MEASURE} />
-										</div>
-									) : undefined
-								}
-							>
-								<CurrentMeasureDisplay measure={REST_MEASURE} highlight />
-							</MeasureCarouselChrome>
-						}
-					>
-						{!hasMeasures || !displayMeasure ? (
-							<EmptyStartPrompt onClick={onNewPoison} />
-						) : (
-							<MeasureSlider
-								displayMeasure={displayMeasure}
-								displayRich={displayRich}
-								nextDisplayMeasure={nextDisplayMeasure}
-								nextDisplayRich={nextDisplayRich}
-								showNextMeasure={showNext}
-								demoBeforePlay={demoBeforePlay}
-								isDemoPass={isDemoPass}
-								isCountingIn={isCountingIn}
-								isMeasuresRunning={isMeasuresRunning}
-							/>
-						)}
-					</StableContentFrame>
-				</Section>
-			</CarouselNavButtons>
-
-			{bucketMode ? (
-				<DisplayModeModal
-					open={displayOpen}
-					onClose={() => setDisplayOpen(false)}
-				/>
-			) : null}
-		</>
+					{!hasMeasures || !displayMeasure ? (
+						<EmptyStartPrompt onClick={onNewPoison} />
+					) : (
+						<MeasureSlider
+							displayMeasure={displayMeasure}
+							displayRich={displayRich}
+							nextDisplayMeasure={nextDisplayMeasure}
+							nextDisplayRich={nextDisplayRich}
+							showNextMeasure={showNext}
+							demoBeforePlay={demoBeforePlay}
+							isDemoPass={isDemoPass}
+							isCountingIn={isCountingIn}
+							isMeasuresRunning={isMeasuresRunning}
+						/>
+					)}
+				</StableContentFrame>
+			</Section>
+		</CarouselNavButtons>
 	);
 }

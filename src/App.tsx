@@ -1,6 +1,8 @@
 import clsx from 'clsx';
 import { memo } from 'react';
+import { DifficultyRegenAckHost } from '@/components/controls';
 import {
+	AboutPoisonRhythmModal,
 	AboutPoisonRhythmProvider,
 	Body,
 	Footer,
@@ -30,6 +32,8 @@ function App() {
 			<PendingDifficultyProvider>
 				<AboutPoisonRhythmProvider>
 					<AppContent />
+					<AboutPoisonRhythmModal />
+					<DifficultyRegenAckHost />
 				</AboutPoisonRhythmProvider>
 			</PendingDifficultyProvider>
 		</GameProvider>

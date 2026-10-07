@@ -50,10 +50,10 @@ Import hooks and providers from `@/contexts`.
 | `MetronomeContext` | `useMetronome` | Tempo, playback, demo/student passes; `setPlaybackMeasure` syncs carousel |
 | `ThemeContext` | `useTheme` | Light/dark/system theme only |
 
-Provider tree in `main.tsx`: `ThemeProvider` → `ColorPreferencesProvider` → `SettingsProvider` → `PreferencesProvider` → `MetronomeProvider` → `App`. `App.tsx` wraps content in `GameProvider` → `AboutPoisonRhythmProvider` (memoized `AppContent` so About open/close does not re-render the shell). About modal hosts `DifficultyControls` (needs game context).
+Provider tree in `main.tsx`: `ThemeProvider` → `ColorPreferencesProvider` → `SettingsProvider` → `PreferencesProvider` → `MetronomeProvider` → `App`. `App.tsx` wraps content in `GameProvider` → `PendingDifficultyProvider` → `AboutPoisonRhythmProvider` (memoized `AppContent` so About open/close does not re-render the shell), then mounts `AboutPoisonRhythmModal` and `DifficultyRegenAckHost` beside the shell. **Providers own state only**; modal hosts sit next to the tree.
 
 - **Local state**: Use `useState` and `useCallback` in hooks or parent components
-- **Composition**: `App` renders `Header`, `Body`, and `Footer`; `Body` composes game sections and play controls
+- **Composition**: `App` renders `Header`, `Body`, and `Footer`; `Body` composes game sections, play controls, and the single `DisplayModeModal`
 - **No global store required**: Current app is small; avoid adding Zustand or similar unless state grows significantly
 - **Context slices**: Prefer `useSubdivision` / `useDifficulty` / `usePlaybackPreferences` over `usePreferences` so tempo/mute updates do not re-render measure UI
 
@@ -75,7 +75,7 @@ Provider tree in `main.tsx`: `ThemeProvider` → `ColorPreferencesProvider` → 
 
 ### Rhythm complexity
 
-- **Difficulty (1–5)**: Hit count and placement bias — title About modal + Settings → Mode (`DifficultyControls` / `PendingDifficultyProvider`)
+- **Difficulty (1–5)**: Hit count and placement bias — title About modal + Settings → Mode (`DifficultyControls` / `PendingDifficultyProvider` + `DifficultyRegenAckHost`)
 - **Subdivision**: Header ShowNotes + Settings → Mode → `subdivisionLevel` — drives generation, display, and playback
 - **Do not** add Settings dials for density or syncopation as separate fields (subdivision is mirrored, not a third independent control)
 
@@ -90,9 +90,9 @@ Provider tree in `main.tsx`: `ThemeProvider` → `ColorPreferencesProvider` → 
 
 ### Notation and display
 
-- **rhythmRenderMode**: `grid` | `notation` — Poison section badge (`DisplayModeModal`) and Settings → Look → Display; badge text is GRID / NOTATION only
+- **rhythmRenderMode**: `grid` | `notation` — Poison/Measures badges open Body-owned `DisplayModeModal`; also Settings → Look → Display; badge text is GRID / NOTATION only
 - **Pipeline**: `@/lib/notation` — `measureToNotationEvents` → beaming → `measureToNotationSteps` → `MeasureNotation`
-- **Font**: MusiSync served from `/fonts/MusiSync.*`; preload via `loadMusiSyncFont` / `useMusiSyncFont`; `MeasureGrid` prefetches notation chunk + font when mode is notation
+- **Font**: MusiSync served from `/fonts/MusiSync.*`; preload via `loadMusiSyncFont` / `useMusiSyncFont`; `useNotationPrefetch` from `MeasureGrid` when mode is notation
 - **Glyphs**: dotted notes `i`/`j`/`d`; beams include `³` / `O` / `o` — see `src/assets/fonts/README.md`; never alias unmatched patterns
 - **Scroll mode**: `scrollDirection` / `scrollSpeed` remain in settings schema and `scroll-animation.ts`, but are **not wired** in the UI (Coming Soon). Do not re-enable on main ahead of the `display-scroll` branch.
 
@@ -114,15 +114,16 @@ Provider tree in `main.tsx`: `ThemeProvider` → `ColorPreferencesProvider` → 
 
 ### Components
 
-- **App**: Wraps `GameProvider`; renders Header, Body, Footer
-- **Body**: Composer; soft-disable focus via `useSoftDisableFocus`
-- **ui/**: Elemental atoms (`Button`, `IconButton`, `Caption`, `Stack`, `Row`)
-- **DifficultyControls**: Difficulty slider + mode badge + help / play-mode modals; regen acknowledgement after host-modal close (`PendingDifficultyProvider`)
-- **PoisonSection**: Composer; `PoisonMeasureContent` / `PoisonMeasureFrame` for reference visibility
-- **MeasuresSection / MeasureSlider**: Carousel chrome + `useMeasurePlaybackSync`
+- **App**: `GameProvider` → `PendingDifficultyProvider` → `AboutPoisonRhythmProvider`; memoized `AppContent` + `AboutPoisonRhythmModal` + `DifficultyRegenAckHost`
+- **Body**: Composer; soft-disable focus via `useSoftDisableFocus`; owns single `DisplayModeModal`
+- **ui/**: Elemental atoms (`Button`, `IconButton` including `modalClose`, `Caption`, `Stack`, `Row`)
+- **Modal**: Composer over `ModalScrim` / `ModalPanel` / `ModalCloseButton` / `ModalTitle` + `useModalFocusTrap`
+- **DifficultyControls**: `DifficultyFramedBlock` / `DifficultySettingsBlock` + help / play-mode modals; regen ack via `DifficultyRegenAckHost`
+- **PoisonSection**: Composer; `PoisonSectionHeader`, `PoisonMeasureContent` / `PoisonMeasureFrame` / `HiddenPoisonOverlay`
+- **MeasuresSection / MeasureSlider**: `NextMeasureToggle`, `MeasuresSectionHeaderActions`, carousel chrome + `useMeasurePlaybackSync`
 - **ShowNotes**: Subdivision popover; `useHoverPinPopover` + `ShowNotesTrigger`
-- **MeasureGrid / MeasureCell**: Grid or notation (MusiSync) with accent, sticking, poison overlays; `useMusiSyncFont` + `useSmoothNotationCursor` for notation mode
-- **Metronome**: Footer corner modal for tempo, tap tempo, and metronome playback (tempo also in Settings → Sound)
+- **MeasureGrid / MeasureCell**: `MeasureCellGrid` or lazy notation; `useNotationPrefetch` + `useMusiSyncFont` + `useSmoothNotationCursor`
+- **Metronome**: Footer `CornerModal` (`tone='muted'` when muted) for tempo, tap tempo, and metronome playback
 - **Settings**: Footer corner modal → lazy `SettingsOverlay` with Mode / Sound / Look tabs
 - **Entrypoint docs**: Prefer `AGENTS.md` for gotchas; `documentation/TESTING.md` for e2e helper semantics
 

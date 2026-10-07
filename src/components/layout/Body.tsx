@@ -1,8 +1,9 @@
 import clsx from 'clsx';
 import { PlayControls } from '@/components/controls';
 import { MeasuresSection } from '@/components/measures';
-import { PoisonSection } from '@/components/poison';
+import { DisplayModeModal, PoisonSection } from '@/components/poison';
 import { useGame, useSettings, useSubdivision } from '@/contexts';
+import { useDisclosure } from '@/hooks/useDisclosure';
 import { useSoftDisableFocus } from '@/hooks/useSoftDisableFocus';
 import { isBucketTrainerMode } from '@/lib/settings-schema';
 
@@ -14,6 +15,11 @@ export function Body() {
 	const { playButtonRef, handleNewPoison } =
 		useSoftDisableFocus(handleNewRound);
 	const bucketMode = isBucketTrainerMode(settings);
+	const {
+		open: displayOpen,
+		onOpen: onOpenDisplayMode,
+		onClose: onCloseDisplayMode,
+	} = useDisclosure();
 
 	return (
 		<main
@@ -29,16 +35,22 @@ export function Body() {
 					onNewPoison={handleNewPoison}
 					onReusePoison={handleReuseRound}
 					onReuseDisabledClick={handleNewPoison}
+					onOpenDisplayMode={onOpenDisplayMode}
 				/>
 			) : null}
 
-			<MeasuresSection onNewPoison={handleNewPoison} />
+			<MeasuresSection
+				onNewPoison={handleNewPoison}
+				onOpenDisplayMode={onOpenDisplayMode}
+			/>
 
 			<PlayControls
 				disabled={measures.length === 0}
 				onDisabledClick={handleNewPoison}
 				playButtonRef={playButtonRef}
 			/>
+
+			<DisplayModeModal open={displayOpen} onClose={onCloseDisplayMode} />
 		</main>
 	);
 }

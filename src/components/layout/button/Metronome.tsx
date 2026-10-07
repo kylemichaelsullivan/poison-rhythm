@@ -19,7 +19,7 @@ export function Metronome() {
 			icon={MetronomeIcon}
 			label={`Change Tempo (${tempo} BPM)`}
 			buttonTitle={`Change Tempo (${tempo} BPM). Double-Click to ${muteAction} Metronome`}
-			buttonClassName={muteMetronome ? 'border-dashed text-mid' : undefined}
+			tone={muteMetronome ? 'muted' : 'default'}
 			onDoubleClick={() => setMuteMetronome(!muteMetronome)}
 			detail={
 				<span

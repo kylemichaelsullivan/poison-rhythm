@@ -85,7 +85,7 @@ The a11y “start screen” test expects a **seeded** round (`measure-slider`), 
 
 - Dotted note glyphs: `i` / `j` / `d` — see [`src/assets/fonts/README.md`](../src/assets/fonts/README.md)
 - `[1,2]` (sixteenth + eighth) beams to derived U+E001 (undotted `O`); never alias to stock `O` (`[1,3]`)
-- Lazy `MeasureNotation` + `loadMusiSyncFont` prefetch when display mode is notation (`MeasureGrid`)
+- Lazy `MeasureNotation` + `loadMusiSyncFont` prefetch when display mode is notation (`MeasureGrid` → `useNotationPrefetch`; loading shell is `NotationFallback`)
 
 ## Scratch artifacts
 

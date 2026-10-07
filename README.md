@@ -109,11 +109,12 @@ UI is composed like stacked layers (one concern per file; prefer one root DOM el
 | Layer | Location | Role |
 |-------|----------|------|
 | **Atoms** | `src/components/ui/` | Single-element primitives (`Button`, `IconButton`, `Caption`, `Stack`, `Row`) |
-| **Molecules** | `controls/`, `measures/`, `layout/settings/` | Composed pieces (`PlayModeOptionCard`, `MeasureCarouselChrome`, `EnableToggle`) |
+| **Molecules** | `controls/`, `measures/`, `layout/`, `layout/settings/` | Composed pieces (`PlayModeOptionCard`, `MeasureCarouselChrome`, `ModalPanel`, `EnableToggle`, `ContrastGradeBadge`) |
 | **Composers** | feature folders | Wire context + hooks (`DifficultyControls`, `MeasureSlider`, `ShowNotes`, `Body`) |
-| **Hooks** | `src/hooks/` | Side effects out of JSX (`useMeasurePlaybackSync`, `useHoverPinPopover`, `useSoftDisableFocus`, `useMusiSyncFont`, `useSmoothNotationCursor`) |
+| **Hosts** | `App` / `Body` | Modal hosts beside the tree (`AboutPoisonRhythmModal`, `DifficultyRegenAckHost`, `DisplayModeModal`) |
+| **Hooks** | `src/hooks/` | Side effects out of JSX (`useDisclosure`, `useModalFocusTrap`, `useNotationPrefetch`, `useMeasurePlaybackSync`, …) |
 
-Feature composers should import `@/components/ui` (or existing settings atoms) instead of inventing raw `<button className=…>` markup. Details: [`.cursor/components.mdc`](.cursor/components.mdc), [`documentation/ARCHITECTURE.md`](documentation/ARCHITECTURE.md).
+Feature composers should import `@/components/ui` (or existing settings atoms) instead of inventing raw `<button className=…>` markup. Prefer **variants** (`tone`, `size`, `framed`, `slot`) over `className` passthrough. Details: [`.cursor/components.mdc`](.cursor/components.mdc), [`documentation/ARCHITECTURE.md`](documentation/ARCHITECTURE.md).
 
 ### Context modules
 
@@ -132,7 +133,7 @@ Import from the barrel: `@/contexts`.
 | `MetronomeContext` | `useMetronome` | `MetronomeProvider` | Tempo, metronome/measure playback, demo-before-play passes |
 | `ThemeContext` | `useTheme` | `ThemeProvider` | Light/dark/system theme |
 
-Provider tree: `main.tsx` wraps `ThemeProvider` → `ColorPreferencesProvider` → `SettingsProvider` → `PreferencesProvider` → `MetronomeProvider`; `App.tsx` adds `GameProvider` → `AboutPoisonRhythmProvider`.
+Provider tree: `main.tsx` wraps `ThemeProvider` → `ColorPreferencesProvider` → `SettingsProvider` → `PreferencesProvider` → `MetronomeProvider`; `App.tsx` adds `GameProvider` → `PendingDifficultyProvider` → `AboutPoisonRhythmProvider`, then mounts `AppContent` plus modal hosts (`AboutPoisonRhythmModal`, `DifficultyRegenAckHost`). Providers own state only; UI hosts sit beside the tree.
 
 ### Playback timing
 

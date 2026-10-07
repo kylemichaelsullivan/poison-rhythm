@@ -3,6 +3,7 @@ import { createContext, useContext } from 'react';
 export type AboutPoisonRhythmContextValue = {
 	open: boolean;
 	openAbout: () => void;
+	closeAbout: () => void;
 };
 
 export const AboutPoisonRhythmContext =

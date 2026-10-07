@@ -10,6 +10,9 @@ export type PendingDifficultyContextValue = {
 	 * when difficulty changed while a round is active.
 	 */
 	onHostModalClosed: () => void;
+	/** Whether the post-regen acknowledgement modal should be open. */
+	ackOpen: boolean;
+	onAcknowledgeRegen: () => void;
 };
 
 export const PendingDifficultyContext =
