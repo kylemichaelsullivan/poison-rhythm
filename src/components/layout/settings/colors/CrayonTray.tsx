@@ -2,30 +2,51 @@ import {
 	type ColorRole,
 	CRAYOLA_TRAYS,
 	type CrayonId,
-	rateAccentAgainstPartner,
+	ratePairIfRolePicked,
 } from '@/lib/colors';
-import { CrayonSwatch } from './CrayonSwatch';
+import { CrayonSwatch, type CrayonSwatchEmphasis } from './CrayonSwatch';
 
 type CrayonTrayProps = {
 	role: ColorRole;
-	selectedId: CrayonId | null;
-	/** Hex of the other role — Primary grades vs Secondary and vice versa. */
+	/** Crayon for the role currently being edited. */
+	activeId: CrayonId | null;
+	/** Crayon for the other role — shown with softer emphasis. */
+	partnerId: CrayonId | null;
+	/** Hex of the other role — held fixed while previewing each pick. */
 	partnerHex: string;
 	onSelect: (id: CrayonId) => void;
 };
 
+function swatchEmphasis(
+	crayonId: CrayonId,
+	activeId: CrayonId | null,
+	partnerId: CrayonId | null,
+): CrayonSwatchEmphasis {
+	if (activeId != null && crayonId === activeId) {
+		return 'active';
+	}
+	if (partnerId != null && crayonId === partnerId) {
+		return 'partner';
+	}
+	return 'none';
+}
+
 export function CrayonTray({
 	role,
-	selectedId,
+	activeId,
+	partnerId,
 	partnerHex,
 	onSelect,
 }: CrayonTrayProps) {
-	const partnerLabel = role === 'dominant' ? 'Secondary' : 'Dominant';
+	const roleLabel = role === 'dominant' ? 'Dominant' : 'Secondary';
+	const partnerRoleLabel = role === 'dominant' ? 'Secondary' : 'Dominant';
 
 	return (
 		<fieldset className='CrayonTray flex min-w-0 flex-col gap-3 border-0 p-0'>
 			<legend className='sr-only'>
-				Crayon Colors graded against {partnerLabel}
+				Crayon Colors — each badge is the WCAG pair grade if chosen as{' '}
+				{roleLabel}. Current {roleLabel} is emphasized; current{' '}
+				{partnerRoleLabel} is marked more lightly.
 			</legend>
 			{/*
 			 * Physical Crayola box is landscape with four sleeves side-by-side.
@@ -43,17 +64,20 @@ export function CrayonTray({
 					</h4>
 					<div className='grid grid-cols-8 gap-1 max-[380px]:grid-cols-4'>
 						{tray.crayons.map((crayon) => {
-							const rating = rateAccentAgainstPartner(crayon.hex, partnerHex);
-							const selected = selectedId === crayon.id;
+							const rating = ratePairIfRolePicked(crayon.hex, role, partnerHex);
+							const emphasis = swatchEmphasis(crayon.id, activeId, partnerId);
 							return (
 								<CrayonSwatch
 									key={crayon.id}
 									name={crayon.name}
 									hex={crayon.hex}
-									selected={selected}
+									emphasis={emphasis}
 									grade={rating.grade}
 									ratio={rating.ratio}
-									partnerLabel={partnerLabel}
+									roleLabel={roleLabel}
+									partnerRoleLabel={
+										emphasis === 'partner' ? partnerRoleLabel : undefined
+									}
 									onSelect={() => onSelect(crayon.id)}
 								/>
 							);

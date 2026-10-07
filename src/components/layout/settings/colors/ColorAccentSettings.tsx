@@ -22,7 +22,8 @@ export function ColorAccentSettings() {
 	const [role, setRole] = useState<ColorRole>('dominant');
 	const pairings = useMemo(() => suggestPairings(), []);
 
-	const selectedId = role === 'dominant' ? dominantColor : secondaryColor;
+	const activeId = role === 'dominant' ? dominantColor : secondaryColor;
+	const partnerId = role === 'dominant' ? secondaryColor : dominantColor;
 	const partnerHex =
 		role === 'dominant'
 			? resolveSecondaryHex(secondaryColor)
@@ -38,7 +39,7 @@ export function ColorAccentSettings() {
 	);
 
 	const handleSelect = (id: CrayonId) => {
-		if (id === selectedId) {
+		if (id === activeId) {
 			return;
 		}
 		if (role === 'dominant') {
@@ -65,7 +66,8 @@ export function ColorAccentSettings() {
 				<ContrastScoreMeter rating={contrastRating} />
 				<CrayonTray
 					role={role}
-					selectedId={selectedId}
+					activeId={activeId}
+					partnerId={partnerId}
 					partnerHex={partnerHex}
 					onSelect={handleSelect}
 				/>

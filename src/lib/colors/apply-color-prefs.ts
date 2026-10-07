@@ -3,7 +3,7 @@ import { type CrayonId, crayonByIdOrNull } from './crayola-64';
 
 /**
  * Brand defaults when prefs are unset (match `@theme` purple-deep + mint-deep).
- * Tuned for WCAG 2.2 grade **A** in light and dark (see `documentation/A11Y.md`).
+ * Tuned for WCAG 2.2 **AAA** in light and dark (see `documentation/A11Y.md`).
  */
 export const BRAND_DOMINANT_HEX = '#783b82';
 export const BRAND_SECONDARY_HEX = '#246028';

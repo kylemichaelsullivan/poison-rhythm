@@ -19,14 +19,14 @@ export type ColorPairing = {
 export const BRAND_PAIRING: ColorPairing = {
 	id: 'brand',
 	label: 'Poison Rhythm',
-	caption: 'Brand purple + deep mint — Grade A in light and dark.',
+	caption: 'Brand purple + deep mint — WCAG AAA in light and dark.',
 	dominantId: null,
 	secondaryId: null,
 	recommended: true,
 };
 
 /**
- * Curated tray pairs — only crayons that can earn grade A/B.
+ * Curated tray pairs — only crayons that can earn AAA/AA.
  * Pastel yellows/greens wash out and are omitted on purpose.
  */
 export const CURATED_PAIRINGS: readonly ColorPairing[] = [
@@ -40,7 +40,7 @@ export const CURATED_PAIRINGS: readonly ColorPairing[] = [
 	{
 		id: 'plum-blue-violet',
 		label: 'Plum & Blue Violet',
-		caption: 'Cool analogous pair with strong luminance.',
+		caption: 'Cool analogous pair with clear hue separation.',
 		dominantId: 'plum',
 		secondaryId: 'blue-violet',
 	},
@@ -102,8 +102,8 @@ function pairingHexes(pairing: ColorPairing): {
 }
 
 /**
- * Only offer pairings that earn grade A or B (WCAG AA+ classroom bar).
- * Brand is always included by {@link suggestPairings} and must itself be A.
+ * Only offer pairings that earn AAA or AA (WCAG AA+ classroom bar).
+ * Brand is always included by {@link suggestPairings} and must itself be AAA.
  */
 export function pairingPassesA11y(pairing: ColorPairing): boolean {
 	const hexes = pairingHexes(pairing);

@@ -7,13 +7,15 @@ import {
 	CRAYOLA_TRAY_SIZE,
 	CRAYOLA_TRAYS,
 	contrastRatio,
+	deltaE76,
 	gradeFromRatio,
 	isCrayonId,
 	pairingPassesA11y,
 	pickOnColor,
-	rateAccentAgainstPartner,
 	rateColorPairContrast,
 	rateCrayonContrast,
+	ratePairIfRolePicked,
+	ratePairSeparation,
 	relativeLuminance,
 	suggestPairings,
 	validateAccentAgainstSurfaces,
@@ -77,10 +79,19 @@ describe('contrast', () => {
 		).toBe(true);
 	});
 
-	test('near-identical pair warns', () => {
+	test('near-identical pair warns via ΔE even when luminance is close', () => {
 		const result = validateColorPair('#783b82', '#7a3d84');
 		expect(result.level).toBe('warn');
+		expect(deltaE76('#783b82', '#7a3d84')).toBeLessThan(12);
+	});
+
+	test('brand pair passes validateColorPair despite ~1:1 luminance', () => {
+		const result = validateColorPair(BRAND_DOMINANT_HEX, BRAND_SECONDARY_HEX);
+		expect(result.level).toBe('pass');
 		expect(result.pairRatio).toBeLessThan(WCAG_AA_UI);
+		expect(deltaE76(BRAND_DOMINANT_HEX, BRAND_SECONDARY_HEX)).toBeGreaterThan(
+			50,
+		);
 	});
 
 	test('assessCrayonContrast warns on weak role fills, not pair separation', () => {
@@ -93,40 +104,80 @@ describe('contrast', () => {
 	});
 
 	test('gradeFromRatio follows WCAG 2.2 thresholds', () => {
-		expect(gradeFromRatio(WCAG_AAA_TEXT)).toBe('A');
-		expect(gradeFromRatio(WCAG_AA_TEXT)).toBe('B');
-		expect(gradeFromRatio(WCAG_AA_UI)).toBe('C');
-		expect(gradeFromRatio(2.9)).toBe('F');
+		expect(gradeFromRatio(WCAG_AAA_TEXT)).toBe('AAA');
+		expect(gradeFromRatio(WCAG_AA_TEXT)).toBe('AA');
+		expect(gradeFromRatio(WCAG_AA_UI)).toBe('UI');
+		expect(gradeFromRatio(2.9)).toBe('Fail');
 	});
 
 	test('rateColorPairContrast grades brand high and pale pairs low', () => {
 		const brand = rateColorPairContrast('#783b82', '#246028');
-		expect(brand.grade).toBe('A');
+		expect(brand.grade).toBe('AAA');
 		expect(brand.level).toBe('pass');
 
 		const pale = rateColorPairContrast('#fce883', '#ffffff');
-		expect(pale.grade === 'C' || pale.grade === 'F').toBe(true);
+		expect(pale.grade === 'UI' || pale.grade === 'Fail').toBe(true);
 		expect(pale.level).toBe('warn');
 	});
 
-	test('rateAccentAgainstPartner grades candidate vs partner color', () => {
-		const strong = rateAccentAgainstPartner('#783b82', '#faf9fc');
-		expect(strong.grade).toBe('A');
+	test('identical crayons fail the pair meter even when each alone is AAA', () => {
+		const plum = '#843179';
+		expect(rateCrayonContrast(plum, 'dominant').grade).toBe('AAA');
+		expect(rateCrayonContrast(plum, 'secondary').grade).toBe('AAA');
 
-		const weak = rateAccentAgainstPartner('#783b82', '#7a3d84');
-		expect(weak.grade).toBe('F');
+		const same = rateColorPairContrast(plum, plum);
+		expect(same.grade).toBe('Fail');
+		expect(same.level).toBe('warn');
+		expect(same.ratio).toBeCloseTo(1, 5);
 	});
 
-	test('rateCrayonContrast scores dominant vs secondary differently', () => {
+	test('ratePairSeparation only fails near-identical pairs', () => {
+		const brand = ratePairSeparation(BRAND_DOMINANT_HEX, BRAND_SECONDARY_HEX);
+		expect(brand.grade).toBe('AAA');
+		expect(brand.level).toBe('pass');
+
+		const same = ratePairSeparation('#843179', '#843179');
+		expect(same.grade).toBe('Fail');
+		expect(same.ratio).toBeCloseTo(1, 5);
+	});
+
+	test('rateCrayonContrast scores role vs surfaces; pair meter adds separation', () => {
 		const whiteDominant = rateCrayonContrast('#ffffff', 'dominant');
-		expect(whiteDominant.grade).toBe('F');
+		expect(whiteDominant.grade).toBe('Fail');
 
 		const brandDominant = rateCrayonContrast('#783b82', 'dominant');
-		expect(brandDominant.grade).toBe('A');
+		expect(brandDominant.grade).toBe('AAA');
 
 		const mintSecondary = rateCrayonContrast('#246028', 'secondary');
-		expect(mintSecondary.grade).toBe('A');
+		expect(mintSecondary.grade).toBe('AAA');
 		expect(mintSecondary.level).toBe('pass');
+
+		// Brand is ~1:1 luminance but hue-far — pair meter stays AAA from surfaces.
+		const brandPair = rateColorPairContrast('#783b82', '#246028');
+		expect(brandPair.grade).toBe('AAA');
+		expect(contrastRatio('#783b82', '#246028')).toBeLessThan(WCAG_AA_UI);
+	});
+
+	test('ratePairIfRolePicked previews the pair meter after a pick', () => {
+		const mint = '#246028';
+		const brand = '#783b82';
+		const pale = '#fce883';
+		const plum = '#843179';
+
+		const keepMintPickBrand = ratePairIfRolePicked(brand, 'dominant', mint);
+		expect(keepMintPickBrand).toEqual(rateColorPairContrast(brand, mint));
+		expect(keepMintPickBrand.grade).toBe('AAA');
+
+		const keepMintPickPale = ratePairIfRolePicked(pale, 'dominant', mint);
+		expect(keepMintPickPale).toEqual(rateColorPairContrast(pale, mint));
+		expect(keepMintPickPale.grade).toBe('Fail');
+
+		const keepBrandPickMint = ratePairIfRolePicked(mint, 'secondary', brand);
+		expect(keepBrandPickMint).toEqual(rateColorPairContrast(brand, mint));
+
+		const sameAsPartner = ratePairIfRolePicked(plum, 'secondary', plum);
+		expect(sameAsPartner.grade).toBe('Fail');
+		expect(sameAsPartner.ratio).toBeCloseTo(1, 5);
 	});
 });
 
@@ -137,7 +188,7 @@ describe('pairings', () => {
 		expect(suggestions.length).toBeGreaterThan(1);
 	});
 
-	test('Brand pairing always passes and is grade A', () => {
+	test('Brand pairing always passes and is WCAG AAA', () => {
 		expect(
 			pairingPassesA11y({
 				id: 'brand',
@@ -151,7 +202,7 @@ describe('pairings', () => {
 			BRAND_DOMINANT_HEX,
 			BRAND_SECONDARY_HEX,
 		);
-		expect(brand.grade).toBe('A');
+		expect(brand.grade).toBe('AAA');
 	});
 
 	test('curated suggestions only include AA+ grades', () => {

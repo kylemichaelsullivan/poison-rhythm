@@ -26,9 +26,9 @@ describe('hierarchy-border', () => {
 	});
 
 	test('contrast grades map to encouraging ranks', () => {
-		expect(hierarchyRankForContrastGrade('A', true)).toBe('active');
-		expect(hierarchyRankForContrastGrade('B', false)).toBe('emphasis');
-		expect(hierarchyRankForContrastGrade('C', false)).toBe('structure');
-		expect(hierarchyRankForContrastGrade('F', false)).toBe('provisional');
+		expect(hierarchyRankForContrastGrade('AAA', true)).toBe('active');
+		expect(hierarchyRankForContrastGrade('AA', false)).toBe('emphasis');
+		expect(hierarchyRankForContrastGrade('UI', false)).toBe('structure');
+		expect(hierarchyRankForContrastGrade('Fail', false)).toBe('provisional');
 	});
 });

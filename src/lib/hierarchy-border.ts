@@ -3,10 +3,10 @@
  *
  * | Rank          | Style                         | Typical use                                      |
  * |---------------|-------------------------------|--------------------------------------------------|
- * | `active`      | `border-2` solid              | Selected control, Playing measure, grade A/B     |
- * | `emphasis`    | `border-2` solid (softer)     | Idle measure shell, grade C, strong unselected   |
+ * | `active`      | `border-2` solid              | Selected control, Playing measure, AAA/AA        |
+ * | `emphasis`    | `border-2` solid (softer)     | Idle measure shell, UI grade, strong unselected  |
  * | `structure`   | `border` solid                | Nested beat groups, quiet unselected swatches    |
- * | `provisional` | `border-2` dashed             | Count-in / Listening, grade F, muted / incomplete|
+ * | `provisional` | `border-2` dashed             | Count-in / Listening, Fail grade, muted          |
  *
  * Keep `border-2` vs `border` consistent within a layer so layout does not jump.
  * Jazz Mode (and any future note chrome) should import these helpers rather than
@@ -59,18 +59,18 @@ export function hierarchyBorderClass(
 	return clsx(hierarchyBorderWeightClass(rank), TONE_SOLID[tone]);
 }
 
-/** Map a WCAG letter grade to swatch border rank (encourages A/B). */
+/** Map a WCAG contrast label to swatch border rank (encourages AAA/AA). */
 export function hierarchyRankForContrastGrade(
-	grade: 'A' | 'B' | 'C' | 'F',
+	grade: 'AAA' | 'AA' | 'UI' | 'Fail',
 	selected: boolean,
 ): HierarchyBorderRank {
-	if (grade === 'F') {
+	if (grade === 'Fail') {
 		return 'provisional';
 	}
 	if (selected) {
-		return grade === 'C' ? 'emphasis' : 'active';
+		return grade === 'UI' ? 'emphasis' : 'active';
 	}
-	if (grade === 'A' || grade === 'B') {
+	if (grade === 'AAA' || grade === 'AA') {
 		return 'emphasis';
 	}
 	return 'structure';

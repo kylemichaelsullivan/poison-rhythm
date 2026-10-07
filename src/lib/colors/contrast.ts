@@ -83,6 +83,46 @@ export function contrastRatio(foreground: string, background: string): number {
 	return (lighter + 0.05) / (darker + 0.05);
 }
 
+/** D65 reference white for sRGB → Lab. */
+const LAB_XN = 0.95047;
+const LAB_YN = 1;
+const LAB_ZN = 1.08883;
+
+function hexToLab(hex: string): { L: number; a: number; b: number } {
+	const { r, g, b } = parseHexColor(hex);
+	const R = channelToLinear(r);
+	const G = channelToLinear(g);
+	const B = channelToLinear(b);
+	// sRGB D65 → XYZ (IEC 61966-2-1)
+	const x = R * 0.4124564 + G * 0.3575761 + B * 0.1804375;
+	const y = R * 0.2126729 + G * 0.7151522 + B * 0.072175;
+	const z = R * 0.0193339 + G * 0.119192 + B * 0.9503041;
+	const f = (t: number) =>
+		t > 216 / 24389 ? Math.cbrt(t) : (841 / 108) * t + 4 / 29;
+	const fx = f(x / LAB_XN);
+	const fy = f(y / LAB_YN);
+	const fz = f(z / LAB_ZN);
+	return { L: 116 * fy - 16, a: 500 * (fx - fy), b: 200 * (fy - fz) };
+}
+
+/**
+ * CIE76 ΔE — perceptual distance. Brand purple/mint is hue-far (~89) despite
+ * ~1:1 WCAG luminance; identical crayons are 0.
+ */
+export function deltaE76(hexA: string, hexB: string): number {
+	const a = hexToLab(hexA);
+	const b = hexToLab(hexB);
+	return Math.hypot(a.L - b.L, a.a - b.a, a.b - b.b);
+}
+
+/**
+ * Minimum CIE76 ΔE before Dominant/Secondary are treated as indistinct.
+ * Below this, the pair meter fails (identical crayons). Hue-far Brand pairs
+ * stay above this despite ~1:1 WCAG luminance — grades themselves still come
+ * only from WCAG contrast ratios vs surfaces.
+ */
+export const PAIR_SEPARATION_MIN = 12;
+
 export function pickOnColor(
 	background: string,
 	light: string = INK_50,
@@ -158,15 +198,18 @@ export function validateColorPair(
 	secondary: string,
 ): PairAssessment {
 	const pairRatio = contrastRatio(dominant, secondary);
+	const separation = deltaE76(dominant, secondary);
 	const issues: ContrastIssue[] = [];
 
-	if (pairRatio < WCAG_AA_UI) {
+	// Luminance-only WCAG fails Brand (purple/mint ≈ 1:1). Use ΔE so hue-distinct
+	// pairs pass while identical / near-identical crayons still warn.
+	if (separation < PAIR_SEPARATION_MIN) {
 		issues.push({
 			level: 'warn',
 			ratio: pairRatio,
-			threshold: WCAG_AA_UI,
+			threshold: PAIR_SEPARATION_MIN,
 			against: 'dominant vs secondary',
-			message: `Dominant and secondary are hard to tell apart (${pairRatio.toFixed(1)}:1; aim for ${WCAG_AA_UI}:1).`,
+			message: `Dominant and secondary are hard to tell apart (ΔE ${separation.toFixed(0)}; aim for ${PAIR_SEPARATION_MIN}+).`,
 		});
 	}
 
@@ -187,8 +230,8 @@ export type CrayonContrastAssessment = {
 
 /**
  * Role suitability for a crayon being selected (fill/border vs page surfaces).
- * Does not score dominant↔secondary pair separation — brand and many good pairs
- * sit under strict 3:1, and pair checks belong in curated pairing filters.
+ * Pair separation (identical / near-identical Dominant↔Secondary) is scored in
+ * {@link rateColorPairContrast}, not here.
  */
 export function assessCrayonContrast(
 	hex: string,
@@ -233,32 +276,33 @@ export function mixToward(
 	return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 
-export type ContrastGrade = 'A' | 'B' | 'C' | 'F';
+/** WCAG 2.2 conformance label from a contrast ratio (classroom meter + badges). */
+export type ContrastGrade = 'AAA' | 'AA' | 'UI' | 'Fail';
 
 export type ContrastRating = {
 	/** Limiting (worst) contrast ratio for the scoped checks. */
 	ratio: number;
-	/** WCAG 2.2 letter grade from {@link gradeFromRatio}. */
+	/** WCAG 2.2 label from {@link gradeFromRatio}. */
 	grade: ContrastGrade;
-	/** `pass` when grade is A or B (meets AA text); otherwise `warn`. */
+	/** `pass` when grade is AAA or AA; otherwise `warn`. */
 	level: ContrastLevel;
 };
 
 /**
- * Map a single contrast ratio to a WCAG 2.2 letter grade:
- * A ≥ 7:1 (AAA), B ≥ 4.5:1 (AA), C ≥ 3:1 (large/UI), F below.
+ * Map a single contrast ratio to a WCAG 2.2 label:
+ * AAA ≥ 7:1, AA ≥ 4.5:1, UI ≥ 3:1 (§1.4.11 / large text), Fail below.
  */
 export function gradeFromRatio(ratio: number): ContrastGrade {
 	if (ratio >= WCAG_AAA_TEXT) {
-		return 'A';
+		return 'AAA';
 	}
 	if (ratio >= WCAG_AA_TEXT) {
-		return 'B';
+		return 'AA';
 	}
 	if (ratio >= WCAG_AA_UI) {
-		return 'C';
+		return 'UI';
 	}
-	return 'F';
+	return 'Fail';
 }
 
 export function ratingFromRatio(ratio: number): ContrastRating {
@@ -266,26 +310,33 @@ export function ratingFromRatio(ratio: number): ContrastRating {
 	return {
 		ratio,
 		grade,
-		level: grade === 'A' || grade === 'B' ? 'pass' : 'warn',
+		level: grade === 'AAA' || grade === 'AA' ? 'pass' : 'warn',
 	};
 }
 
-/**
- * Grade a candidate accent against its partner color (dominant↔secondary).
- * Used while picking crayons so Primary is scored vs current Secondary and vice versa.
- */
-export function rateAccentAgainstPartner(
-	candidateHex: string,
-	partnerHex: string,
-): ContrastRating {
-	return ratingFromRatio(contrastRatio(candidateHex, partnerHex));
+/** True when AAA or AA (classroom “good enough” bar). */
+export function contrastGradePasses(grade: ContrastGrade): boolean {
+	return grade === 'AAA' || grade === 'AA';
 }
 
+const GRADE_RANK: Record<ContrastGrade, number> = {
+	AAA: 3,
+	AA: 2,
+	UI: 1,
+	Fail: 0,
+};
+
 /**
- * Single-ratio WCAG rating for a crayon in a color role (vs page surfaces).
- * Dominant: worst of text-on-fill + UI vs light/dark (A≥7, B≥4.5, C≥3, F&lt;3).
- * Secondary: worst of UI vs light/dark; meeting §1.4.11 (3:1) counts as **B**
- * (borders are not normal text), A still ≥7, F below 3.
+ * Single-ratio WCAG rating for a crayon in a color role vs page surfaces.
+ *
+ * Role checks alone do not score Dominant↔Secondary separation (Brand purple +
+ * mint is ~1:1 luminance but hue-far). Pair meter uses {@link rateColorPairContrast}.
+ *
+ * - **Dominant** (fills / badges): worst of text-on-fill + UI vs light/dark
+ *   (AAA≥7, AA≥4.5, UI≥3, Fail&lt;3).
+ * - **Secondary** (borders / chrome): worst of UI vs light/dark; meeting
+ *   §1.4.11 (3:1) counts as **AA** (borders are not normal text). AAA still ≥7;
+ *   Fail below 3 (no separate UI band).
  */
 export function rateCrayonContrast(
 	hex: string,
@@ -303,17 +354,34 @@ export function rateCrayonContrast(
 
 	const ratio = Math.min(assessment.uiRatioLight, assessment.uiRatioDark);
 	if (ratio >= WCAG_AAA_TEXT) {
-		return { ratio, grade: 'A', level: 'pass' };
+		return { ratio, grade: 'AAA', level: 'pass' };
 	}
 	if (ratio >= WCAG_AA_UI) {
-		return { ratio, grade: 'B', level: 'pass' };
+		return { ratio, grade: 'AA', level: 'pass' };
 	}
-	return { ratio, grade: 'F', level: 'warn' };
+	return { ratio, grade: 'Fail', level: 'warn' };
 }
 
 /**
- * Pair meter: worse of the two role surface grades (classroom readiness).
- * Tray swatches use {@link rateAccentAgainstPartner} instead.
+ * Fail gate for near-identical Dominant/Secondary (ΔE). Does not invent AAA/AA
+ * from hue distance — only fails when crayons are indistinct. Otherwise returns
+ * a non-limiting AAA so surface WCAG ratios stay in charge.
+ */
+export function ratePairSeparation(
+	dominantHex: string,
+	secondaryHex: string,
+): ContrastRating {
+	const ratio = contrastRatio(dominantHex, secondaryHex);
+	const separation = deltaE76(dominantHex, secondaryHex);
+	if (separation < PAIR_SEPARATION_MIN) {
+		return { ratio, grade: 'Fail', level: 'warn' };
+	}
+	return { ratio, grade: 'AAA', level: 'pass' };
+}
+
+/**
+ * Pair meter + Suggested Pairings: worse of role-vs-surface WCAG grades.
+ * Near-identical crayons fail via ΔE even when each alone clears AAA.
  */
 export function rateColorPairContrast(
 	dominantHex: string,
@@ -321,20 +389,36 @@ export function rateColorPairContrast(
 ): ContrastRating {
 	const dominant = rateCrayonContrast(dominantHex, 'dominant');
 	const secondary = rateCrayonContrast(secondaryHex, 'secondary');
-	const gradeRank: Record<ContrastGrade, number> = {
-		A: 3,
-		B: 2,
-		C: 1,
-		F: 0,
-	};
-	const grade =
-		gradeRank[dominant.grade] <= gradeRank[secondary.grade]
+	const surfaceGrade =
+		GRADE_RANK[dominant.grade] <= GRADE_RANK[secondary.grade]
 			? dominant.grade
 			: secondary.grade;
-	const ratio = Math.min(dominant.ratio, secondary.ratio);
+	const surfaceRatio = Math.min(dominant.ratio, secondary.ratio);
+	const separation = ratePairSeparation(dominantHex, secondaryHex);
+
+	if (separation.grade === 'Fail') {
+		return separation;
+	}
+
 	return {
-		ratio,
-		grade,
-		level: grade === 'A' || grade === 'B' ? 'pass' : 'warn',
+		ratio: surfaceRatio,
+		grade: surfaceGrade,
+		level: contrastGradePasses(surfaceGrade) ? 'pass' : 'warn',
 	};
+}
+
+/**
+ * What the pair meter would show if `candidateHex` were picked for `role`,
+ * keeping the other role at `partnerHex`. Tray swatch badges use this so the
+ * WCAG label previews the resulting classroom grade.
+ */
+export function ratePairIfRolePicked(
+	candidateHex: string,
+	role: ColorRole,
+	partnerHex: string,
+): ContrastRating {
+	if (role === 'dominant') {
+		return rateColorPairContrast(candidateHex, partnerHex);
+	}
+	return rateColorPairContrast(partnerHex, candidateHex);
 }

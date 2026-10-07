@@ -1,24 +1,18 @@
 import clsx from 'clsx';
-import type { ContrastRating } from '@/lib/colors';
+import { type ContrastRating, contrastGradePasses } from '@/lib/colors';
 import { hierarchyBorderClass } from '@/lib/hierarchy-border';
 
 type ContrastScoreMeterProps = {
 	rating: ContrastRating;
 };
 
-const WCAG_LABEL: Record<ContrastRating['grade'], string> = {
-	A: 'AAA',
-	B: 'AA',
-	C: 'UI',
-	F: 'Fail',
-};
-
 /**
- * Pair contrast readout: one WCAG 2.2 ratio + letter grade.
+ * Pair classroom grade: WCAG label + limiting contrast ratio.
+ * Near-identical crayons show Fail · 1.0:1, not a surface AAA.
  * Ink chrome borders so accent prefs cannot wash out the meter.
  */
 export function ContrastScoreMeter({ rating }: ContrastScoreMeterProps) {
-	const encourage = rating.grade === 'A' || rating.grade === 'B';
+	const encourage = contrastGradePasses(rating.grade);
 
 	return (
 		<output
@@ -28,6 +22,7 @@ export function ContrastScoreMeter({ rating }: ContrastScoreMeterProps) {
 				'bg-chrome text-black',
 			)}
 			aria-live='polite'
+			aria-label={`Pair contrast ${rating.grade}, ${rating.ratio.toFixed(1)} to 1`}
 			data-testid='contrast-score-meter'
 			data-contrast-grade={rating.grade}
 			data-contrast={rating.level}
@@ -37,9 +32,7 @@ export function ContrastScoreMeter({ rating }: ContrastScoreMeterProps) {
 				<span className='ml-2 text-mid'>·</span>
 				<span className='ml-2'>{rating.ratio.toFixed(1)}:1</span>
 			</p>
-			<p className='text-xs font-medium text-dark'>
-				{WCAG_LABEL[rating.grade]}
-			</p>
+			<p className='text-xs font-medium text-dark'>WCAG 2.2</p>
 		</output>
 	);
 }

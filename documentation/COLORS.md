@@ -17,7 +17,7 @@ Unset preferences keep the shipped **Poison Rhythm** purple + mint tokens from t
 
 - **Recognition** — the potion purple / deep mint look is the product signal on projected screens and shared devices.
 - **Classroom consistency** — one default pair means every station looks familiar when students rotate.
-- **Best contrast grade** — Brand purple-deep (`#783b82`) + deep mint (`#246028`) score **Grade A** (WCAG 2.2 AAA floor) in both light and dark. Suggested Pairings only list pairs that earn **A or B**.
+- **Best contrast grade** — Brand purple-deep (`#783b82`) + deep mint (`#246028`) score **WCAG AAA** in both light and dark. Suggested Pairings only list pairs that earn **AAA or AA**.
 
 The Look tab marks **Poison Rhythm** as Recommended in Suggested Pairings.
 
@@ -36,9 +36,9 @@ Avoid near-identical crayons for both roles — borders disappear and badges los
 
 ## Contrast grades
 
-Each crayon badge grades that swatch **against the other role’s current color** (Dominant vs Secondary). The pair meter still summarizes classroom surface readiness. See [`A11Y.md`](A11Y.md).
+The pair meter (`rateColorPairContrast`) shows **WCAG 2.2 labels** (AAA / AA / UI / Fail) from contrast ratios vs page surfaces. Near-identical Dominant/Secondary (ΔE &lt; 12) fail even when each crayon alone clears AAA; Brand purple + mint stays **AAA** because they are hue-far. Each swatch badge previews that same meter **if you pick that crayon** for the active role (`ratePairIfRolePicked`), keeping the other role fixed. See [`A11Y.md`](A11Y.md).
 
-**Strongly discourage, do not block:** the pair meter and per-swatch grade badges update live. Grade **A/B** get solid hierarchy borders; **F** is dashed and dimmed. Suggested Pairings remain the easy recovery.
+**Strongly discourage, do not block:** the pair meter (`ContrastScoreMeter`) and per-swatch WCAG badges (`ContrastGradeBadge` on `CrayonSwatch`) update live. Role tiles live in `ColorRoleTile`; the decorative strip is `ColorPairPlayPreview`. **AAA/AA** get solid hierarchy borders; **Fail** is dashed and dimmed. In the tray, the active role’s crayon uses strongest border/shadow; the other role’s crayon stays visible at lighter emphasis (switches when you change Dominant vs Secondary). Suggested Pairings remain the easy recovery.
 
 ## Student profiles (later)
 
