@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { ColorSettingsPanel } from './ColorSettingsPanel';
 import { GameSettingsPanel } from './GameSettingsPanel';
 import { LookSettingsPanel } from './LookSettingsPanel';
 import { type SettingsTabId, SettingsTabs } from './SettingsTabs';
@@ -13,6 +14,7 @@ export function SettingsOverlay() {
 				{activeTab === 'mode' && <GameSettingsPanel />}
 				{activeTab === 'sound' && <SoundSettingsPanel />}
 				{activeTab === 'look' && <LookSettingsPanel />}
+				{activeTab === 'colors' && <ColorSettingsPanel />}
 			</SettingsTabs>
 		</div>
 	);

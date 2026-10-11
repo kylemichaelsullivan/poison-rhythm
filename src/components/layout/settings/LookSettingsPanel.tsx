@@ -1,12 +1,11 @@
 import { useTheme } from '@/contexts';
-import { ColorAccentSettings } from './colors';
 import { DisplayModeControls } from './DisplayModeControls';
 import { FeedbackToggles } from './FeedbackToggles';
 import { SettingsGroup } from './SettingsGroup';
 import { ThemeSetting } from './ThemeSetting';
 import { useUpdateSetting } from './useUpdateSetting';
 
-/** Theme, display, feedback, and color accents — one Look tab. */
+/** Theme, display, and feedback — Settings → Look. */
 export function LookSettingsPanel() {
 	const { theme, setTheme } = useTheme();
 	const { settings, set } = useUpdateSetting();
@@ -27,8 +26,6 @@ export function LookSettingsPanel() {
 					onChange={(value) => set('feedbackMode', value)}
 				/>
 			</SettingsGroup>
-
-			<ColorAccentSettings />
 		</>
 	);
 }

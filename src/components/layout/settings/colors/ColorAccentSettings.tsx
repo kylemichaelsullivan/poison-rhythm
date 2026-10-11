@@ -15,7 +15,7 @@ import { ContrastScoreMeter } from './ContrastScoreMeter';
 import { CrayonTray } from './CrayonTray';
 import { SuggestedPairings } from './SuggestedPairings';
 
-/** Color groups for Settings → Look (preview → grade → tray → pairings). */
+/** Color groups for Settings → Colors (preview → grade → tray → pairings). */
 export function ColorAccentSettings() {
 	const { dominantColor, secondaryColor, setDominantColor, setSecondaryColor } =
 		useColorPreferences();

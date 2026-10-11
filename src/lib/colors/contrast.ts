@@ -276,33 +276,36 @@ export function mixToward(
 	return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 
-/** WCAG 2.2 conformance label from a contrast ratio (classroom meter + badges). */
-export type ContrastGrade = 'AAA' | 'AA' | 'UI' | 'Fail';
+/**
+ * US classroom letter grade from contrast (A/B/C/F). Thresholds follow WCAG
+ * 2.2 ratios under the hood; teachers only see the letter.
+ */
+export type ContrastGrade = 'A' | 'B' | 'C' | 'F';
 
 export type ContrastRating = {
 	/** Limiting (worst) contrast ratio for the scoped checks. */
 	ratio: number;
-	/** WCAG 2.2 label from {@link gradeFromRatio}. */
+	/** Letter grade from {@link gradeFromRatio}. */
 	grade: ContrastGrade;
-	/** `pass` when grade is AAA or AA; otherwise `warn`. */
+	/** `pass` when grade is A or B; otherwise `warn`. */
 	level: ContrastLevel;
 };
 
 /**
- * Map a single contrast ratio to a WCAG 2.2 label:
- * AAA ≥ 7:1, AA ≥ 4.5:1, UI ≥ 3:1 (§1.4.11 / large text), Fail below.
+ * Map a contrast ratio to a US letter grade:
+ * A ≥ 7:1, B ≥ 4.5:1, C ≥ 3:1, F below.
  */
 export function gradeFromRatio(ratio: number): ContrastGrade {
 	if (ratio >= WCAG_AAA_TEXT) {
-		return 'AAA';
+		return 'A';
 	}
 	if (ratio >= WCAG_AA_TEXT) {
-		return 'AA';
+		return 'B';
 	}
 	if (ratio >= WCAG_AA_UI) {
-		return 'UI';
+		return 'C';
 	}
-	return 'Fail';
+	return 'F';
 }
 
 export function ratingFromRatio(ratio: number): ContrastRating {
@@ -310,33 +313,33 @@ export function ratingFromRatio(ratio: number): ContrastRating {
 	return {
 		ratio,
 		grade,
-		level: grade === 'AAA' || grade === 'AA' ? 'pass' : 'warn',
+		level: grade === 'A' || grade === 'B' ? 'pass' : 'warn',
 	};
 }
 
-/** True when AAA or AA (classroom “good enough” bar). */
+/** True when A or B (classroom “good enough” bar). */
 export function contrastGradePasses(grade: ContrastGrade): boolean {
-	return grade === 'AAA' || grade === 'AA';
+	return grade === 'A' || grade === 'B';
 }
 
 const GRADE_RANK: Record<ContrastGrade, number> = {
-	AAA: 3,
-	AA: 2,
-	UI: 1,
-	Fail: 0,
+	A: 3,
+	B: 2,
+	C: 1,
+	F: 0,
 };
 
 /**
- * Single-ratio WCAG rating for a crayon in a color role vs page surfaces.
+ * Letter grade for a crayon in a color role vs page surfaces.
  *
  * Role checks alone do not score Dominant↔Secondary separation (Brand purple +
  * mint is ~1:1 luminance but hue-far). Pair meter uses {@link rateColorPairContrast}.
  *
  * - **Dominant** (fills / badges): worst of text-on-fill + UI vs light/dark
- *   (AAA≥7, AA≥4.5, UI≥3, Fail&lt;3).
+ *   (A≥7, B≥4.5, C≥3, F&lt;3).
  * - **Secondary** (borders / chrome): worst of UI vs light/dark; meeting
- *   §1.4.11 (3:1) counts as **AA** (borders are not normal text). AAA still ≥7;
- *   Fail below 3 (no separate UI band).
+ *   3:1 earns **B** (borders are not normal text). A still ≥7; F below 3
+ *   (no separate C band).
  */
 export function rateCrayonContrast(
 	hex: string,
@@ -354,18 +357,18 @@ export function rateCrayonContrast(
 
 	const ratio = Math.min(assessment.uiRatioLight, assessment.uiRatioDark);
 	if (ratio >= WCAG_AAA_TEXT) {
-		return { ratio, grade: 'AAA', level: 'pass' };
+		return { ratio, grade: 'A', level: 'pass' };
 	}
 	if (ratio >= WCAG_AA_UI) {
-		return { ratio, grade: 'AA', level: 'pass' };
+		return { ratio, grade: 'B', level: 'pass' };
 	}
-	return { ratio, grade: 'Fail', level: 'warn' };
+	return { ratio, grade: 'F', level: 'warn' };
 }
 
 /**
- * Fail gate for near-identical Dominant/Secondary (ΔE). Does not invent AAA/AA
- * from hue distance — only fails when crayons are indistinct. Otherwise returns
- * a non-limiting AAA so surface WCAG ratios stay in charge.
+ * Fail gate for near-identical Dominant/Secondary (ΔE). Does not invent letter
+ * grades from hue — only F when crayons are indistinct. Otherwise returns a
+ * non-limiting A so surface ratios stay in charge.
  */
 export function ratePairSeparation(
 	dominantHex: string,
@@ -374,14 +377,14 @@ export function ratePairSeparation(
 	const ratio = contrastRatio(dominantHex, secondaryHex);
 	const separation = deltaE76(dominantHex, secondaryHex);
 	if (separation < PAIR_SEPARATION_MIN) {
-		return { ratio, grade: 'Fail', level: 'warn' };
+		return { ratio, grade: 'F', level: 'warn' };
 	}
-	return { ratio, grade: 'AAA', level: 'pass' };
+	return { ratio, grade: 'A', level: 'pass' };
 }
 
 /**
- * Pair meter + Suggested Pairings: worse of role-vs-surface WCAG grades.
- * Near-identical crayons fail via ΔE even when each alone clears AAA.
+ * Pair meter + Suggested Pairings: worse of role-vs-surface letter grades.
+ * Near-identical crayons earn F via ΔE even when each alone clears A.
  */
 export function rateColorPairContrast(
 	dominantHex: string,
@@ -396,7 +399,7 @@ export function rateColorPairContrast(
 	const surfaceRatio = Math.min(dominant.ratio, secondary.ratio);
 	const separation = ratePairSeparation(dominantHex, secondaryHex);
 
-	if (separation.grade === 'Fail') {
+	if (separation.grade === 'F') {
 		return separation;
 	}
 
@@ -410,7 +413,7 @@ export function rateColorPairContrast(
 /**
  * What the pair meter would show if `candidateHex` were picked for `role`,
  * keeping the other role at `partnerHex`. Tray swatch badges use this so the
- * WCAG label previews the resulting classroom grade.
+ * letter previews the resulting classroom grade.
  */
 export function ratePairIfRolePicked(
 	candidateHex: string,

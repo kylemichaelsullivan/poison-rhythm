@@ -50,7 +50,7 @@ test.describe('mobile layout', () => {
 
 		await page.getByRole('button', { name: 'Settings' }).click();
 		await expect(page.getByRole('dialog')).toBeVisible();
-		await page.getByRole('tab', { name: 'Look' }).click();
+		await page.getByRole('tab', { name: 'Colors' }).click();
 		const panel = page.locator('.SettingsTabPanel');
 		await expect(panel).toBeVisible();
 		await expect(panel).toHaveCSS('overflow-y', 'auto');

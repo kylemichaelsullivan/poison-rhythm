@@ -44,9 +44,9 @@ export function CrayonTray({
 	return (
 		<fieldset className='CrayonTray flex min-w-0 flex-col gap-3 border-0 p-0'>
 			<legend className='sr-only'>
-				Crayon Colors — each badge is the WCAG pair grade if chosen as{' '}
-				{roleLabel}. Current {roleLabel} is emphasized; current{' '}
-				{partnerRoleLabel} is marked more lightly.
+				Crayon Colors — each badge shows contrast if chosen as {roleLabel}.
+				Current {roleLabel} is emphasized; current {partnerRoleLabel} is marked
+				more lightly. Prefer A or B for lethal contrast.
 			</legend>
 			{/*
 			 * Physical Crayola box is landscape with four sleeves side-by-side.

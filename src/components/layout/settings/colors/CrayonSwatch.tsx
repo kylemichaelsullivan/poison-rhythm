@@ -40,7 +40,7 @@ function borderForEmphasis(
 	const tone: HierarchyBorderTone =
 		rank === 'provisional'
 			? 'ink'
-			: grade === 'AAA' || grade === 'AA'
+			: grade === 'A' || grade === 'B'
 				? 'ink'
 				: 'mid';
 	return { rank, tone };
@@ -57,7 +57,7 @@ export function CrayonSwatch({
 	onSelect,
 }: CrayonSwatchProps) {
 	const { rank, tone } = borderForEmphasis(emphasis, grade);
-	const discourages = grade === 'Fail' && emphasis === 'none';
+	const discourages = grade === 'F' && emphasis === 'none';
 	const isActive = emphasis === 'active';
 	const isPartner = emphasis === 'partner';
 
@@ -80,8 +80,8 @@ export function CrayonSwatch({
 				discourages && 'opacity-70',
 			)}
 			style={{ backgroundColor: hex }}
-			title={`${name} — pair becomes WCAG ${grade} if ${roleLabel} (${ratio.toFixed(1)}:1)`}
-			aria-label={`${name}, pair becomes WCAG ${grade} if chosen as ${roleLabel}, ${ratio.toFixed(1)} to 1${statusHint}`}
+			title={`${name} — contrast becomes ${grade} if ${roleLabel} (${ratio.toFixed(1)}:1)`}
+			aria-label={`${name}, contrast becomes ${grade} if chosen as ${roleLabel}, ${ratio.toFixed(1)} to 1${statusHint}`}
 			aria-pressed={isActive}
 			onClick={onSelect}
 			data-contrast-grade={grade}

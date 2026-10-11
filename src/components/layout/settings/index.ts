@@ -1,3 +1,4 @@
+export { ColorSettingsPanel } from './ColorSettingsPanel';
 export { ConditionalSettingsGroup } from './ConditionalSettingsGroup';
 export { ColorAccentSettings } from './colors';
 export { DisplayModeControls } from './DisplayModeControls';

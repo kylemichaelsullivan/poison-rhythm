@@ -104,57 +104,57 @@ describe('contrast', () => {
 	});
 
 	test('gradeFromRatio follows WCAG 2.2 thresholds', () => {
-		expect(gradeFromRatio(WCAG_AAA_TEXT)).toBe('AAA');
-		expect(gradeFromRatio(WCAG_AA_TEXT)).toBe('AA');
-		expect(gradeFromRatio(WCAG_AA_UI)).toBe('UI');
-		expect(gradeFromRatio(2.9)).toBe('Fail');
+		expect(gradeFromRatio(WCAG_AAA_TEXT)).toBe('A');
+		expect(gradeFromRatio(WCAG_AA_TEXT)).toBe('B');
+		expect(gradeFromRatio(WCAG_AA_UI)).toBe('C');
+		expect(gradeFromRatio(2.9)).toBe('F');
 	});
 
 	test('rateColorPairContrast grades brand high and pale pairs low', () => {
 		const brand = rateColorPairContrast('#783b82', '#246028');
-		expect(brand.grade).toBe('AAA');
+		expect(brand.grade).toBe('A');
 		expect(brand.level).toBe('pass');
 
 		const pale = rateColorPairContrast('#fce883', '#ffffff');
-		expect(pale.grade === 'UI' || pale.grade === 'Fail').toBe(true);
+		expect(pale.grade === 'C' || pale.grade === 'F').toBe(true);
 		expect(pale.level).toBe('warn');
 	});
 
-	test('identical crayons fail the pair meter even when each alone is AAA', () => {
+	test('identical crayons fail the pair meter even when each alone is A', () => {
 		const plum = '#843179';
-		expect(rateCrayonContrast(plum, 'dominant').grade).toBe('AAA');
-		expect(rateCrayonContrast(plum, 'secondary').grade).toBe('AAA');
+		expect(rateCrayonContrast(plum, 'dominant').grade).toBe('A');
+		expect(rateCrayonContrast(plum, 'secondary').grade).toBe('A');
 
 		const same = rateColorPairContrast(plum, plum);
-		expect(same.grade).toBe('Fail');
+		expect(same.grade).toBe('F');
 		expect(same.level).toBe('warn');
 		expect(same.ratio).toBeCloseTo(1, 5);
 	});
 
 	test('ratePairSeparation only fails near-identical pairs', () => {
 		const brand = ratePairSeparation(BRAND_DOMINANT_HEX, BRAND_SECONDARY_HEX);
-		expect(brand.grade).toBe('AAA');
+		expect(brand.grade).toBe('A');
 		expect(brand.level).toBe('pass');
 
 		const same = ratePairSeparation('#843179', '#843179');
-		expect(same.grade).toBe('Fail');
+		expect(same.grade).toBe('F');
 		expect(same.ratio).toBeCloseTo(1, 5);
 	});
 
 	test('rateCrayonContrast scores role vs surfaces; pair meter adds separation', () => {
 		const whiteDominant = rateCrayonContrast('#ffffff', 'dominant');
-		expect(whiteDominant.grade).toBe('Fail');
+		expect(whiteDominant.grade).toBe('F');
 
 		const brandDominant = rateCrayonContrast('#783b82', 'dominant');
-		expect(brandDominant.grade).toBe('AAA');
+		expect(brandDominant.grade).toBe('A');
 
 		const mintSecondary = rateCrayonContrast('#246028', 'secondary');
-		expect(mintSecondary.grade).toBe('AAA');
+		expect(mintSecondary.grade).toBe('A');
 		expect(mintSecondary.level).toBe('pass');
 
-		// Brand is ~1:1 luminance but hue-far — pair meter stays AAA from surfaces.
+		// Brand is ~1:1 luminance but hue-far — pair meter stays A from surfaces.
 		const brandPair = rateColorPairContrast('#783b82', '#246028');
-		expect(brandPair.grade).toBe('AAA');
+		expect(brandPair.grade).toBe('A');
 		expect(contrastRatio('#783b82', '#246028')).toBeLessThan(WCAG_AA_UI);
 	});
 
@@ -166,17 +166,17 @@ describe('contrast', () => {
 
 		const keepMintPickBrand = ratePairIfRolePicked(brand, 'dominant', mint);
 		expect(keepMintPickBrand).toEqual(rateColorPairContrast(brand, mint));
-		expect(keepMintPickBrand.grade).toBe('AAA');
+		expect(keepMintPickBrand.grade).toBe('A');
 
 		const keepMintPickPale = ratePairIfRolePicked(pale, 'dominant', mint);
 		expect(keepMintPickPale).toEqual(rateColorPairContrast(pale, mint));
-		expect(keepMintPickPale.grade).toBe('Fail');
+		expect(keepMintPickPale.grade).toBe('F');
 
 		const keepBrandPickMint = ratePairIfRolePicked(mint, 'secondary', brand);
 		expect(keepBrandPickMint).toEqual(rateColorPairContrast(brand, mint));
 
 		const sameAsPartner = ratePairIfRolePicked(plum, 'secondary', plum);
-		expect(sameAsPartner.grade).toBe('Fail');
+		expect(sameAsPartner.grade).toBe('F');
 		expect(sameAsPartner.ratio).toBeCloseTo(1, 5);
 	});
 });
@@ -188,7 +188,7 @@ describe('pairings', () => {
 		expect(suggestions.length).toBeGreaterThan(1);
 	});
 
-	test('Brand pairing always passes and is WCAG AAA', () => {
+	test('Brand pairing always passes and is grade A', () => {
 		expect(
 			pairingPassesA11y({
 				id: 'brand',
@@ -202,7 +202,7 @@ describe('pairings', () => {
 			BRAND_DOMINANT_HEX,
 			BRAND_SECONDARY_HEX,
 		);
-		expect(brand.grade).toBe('AAA');
+		expect(brand.grade).toBe('A');
 	});
 
 	test('curated suggestions only include AA+ grades', () => {

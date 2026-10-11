@@ -118,8 +118,8 @@ src/components/
 
 ### Settings (layout/settings)
 
-- **SettingsOverlay**: Three tabs — Mode, Sound, Look (`SettingsTabs`)
-- **GameSettingsPanel** / **SoundSettingsPanel** / **LookSettingsPanel**: compose setting atoms (`Look` includes theme, display, feedback, and `ColorAccentSettings` → `ColorPairPreview` / `ContrastScoreMeter` / `CrayonTray` / `ContrastGradeBadge`)
+- **SettingsOverlay**: Four tabs — Mode, Sound, Look, Colors (`SettingsTabs`)
+- **GameSettingsPanel** / **SoundSettingsPanel** / **LookSettingsPanel** / **ColorSettingsPanel**: compose setting atoms (`Look` = theme, display, feedback; `Colors` = `ColorAccentSettings` → `ColorPairPreview` / `ContrastScoreMeter` / `CrayonTray` / `ContrastGradeBadge`)
 - **SettingsGroup** / **ConditionalSettingsGroup**: Section dividers inside a tab
 - **Setting utilities**: `NumberSetting`, `OnOffSetting`, `SelectSetting`, `SegmentedControl`, `When`, `useUpdateSetting`
 - **ThemeSetting**, **Fieldset**, **SegmentButton**, **SettingRow**, **EnableToggle** / **IconToggle**, **FieldCaption**

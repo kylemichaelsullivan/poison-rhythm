@@ -80,7 +80,7 @@ src/
 │   │   ├── about/    # About modal content
 │   │   ├── button/   # Footer corner triggers (Settings, Metronome, Account)
 │   │   ├── metronome/
-│   │   └── settings/ # SettingsOverlay + Mode / Sound / Look panels
+│   │   └── settings/ # SettingsOverlay + Mode / Sound / Look / Colors panels
 │   ├── measures/     # Measure carousel chrome, grid, notation, playback highlighting
 │   └── poison/       # Poison rhythm section layers + New/Reuse
 ├── contexts/         # React context modules (see Context modules below)
@@ -163,10 +163,11 @@ The rhythm engine (`src/lib/rhythm/`) accepts both `difficulty` and `subdivision
 |------|----------|
 | Mode | Play mode + Endless, complexity (difficulty, subdivision), practice (Show Poison?, show next, preview pass, mute on pass) |
 | Sound | Tempo, metronome mute, rhythm mute, count-in |
-| Look | Theme, display mode (grid / notation; Scroll Coming Soon), feedback, color accents (Crayola tray); see [`documentation/COLORS.md`](documentation/COLORS.md) and [`documentation/A11Y.md`](documentation/A11Y.md) |
+| Look | Theme, display mode (grid / notation; Scroll Coming Soon), feedback |
+| Colors | Dominant / secondary Crayola accents; see [`documentation/COLORS.md`](documentation/COLORS.md) and [`documentation/A11Y.md`](documentation/A11Y.md) |
 | Main-page shortcuts | Poison Display Mode badge, header ShowNotes, footer metronome |
 
-Settings modal tabs: **Mode**, **Sound**, **Look** (`SettingsTabs`).
+Settings modal tabs: **Mode**, **Sound**, **Look**, **Colors** (`SettingsTabs`).
 
 **Persistence:**
 

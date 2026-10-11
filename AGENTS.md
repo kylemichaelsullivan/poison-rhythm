@@ -34,7 +34,7 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 4. **Complexity is available from the title About modal and Settings → Mode** (difficulty 1–5 + subdivision). Header ShowNotes remains a quick control. Do not add Settings dials for density or syncopation as separate fields.
 5. **Display mode** is on the Poison section badge (and Measures badge in Bucket mode) → one `DisplayModeModal` owned by `Body`, and also under **Settings → Look → Display**. Badge labels are **GRID** / **NOTATION** only; Scroll is Coming Soon (schema fields exist but are **not wired** on main — leave for `display-scroll`).
 6. **Play modes** are on the Difficulty section badge in the title About modal → `PlayModesModal`, and also under **Settings → Mode → Play Mode** (Classic / Bucket Drumming + Endless).
-7. **Color accents are preference keys**, not the game-settings blob — `ColorPreferencesProvider` + `poison-rhythm-dominant-color` / `poison-rhythm-secondary-color` (null = brand). Contrast uses WCAG 2.2 labels AAA/AA/UI/Fail (`rateCrayonContrast`) plus a ΔE fail gate for near-identical pairs (`rateColorPairContrast`). Border hierarchy is shared via `src/lib/hierarchy-border.ts` (swatches + measure chrome). See [`documentation/COLORS.md`](documentation/COLORS.md) and [`documentation/A11Y.md`](documentation/A11Y.md).
+7. **Color accents are preference keys**, not the game-settings blob — `ColorPreferencesProvider` + `poison-rhythm-dominant-color` / `poison-rhythm-secondary-color` (null = brand). Contrast uses US letter grades A/B/C/F (`rateCrayonContrast`; WCAG thresholds under the hood) plus a ΔE fail gate for near-identical pairs (`rateColorPairContrast`). Border hierarchy is shared via `src/lib/hierarchy-border.ts` (swatches + measure chrome). See [`documentation/COLORS.md`](documentation/COLORS.md) and [`documentation/A11Y.md`](documentation/A11Y.md).
 8. **User-facing copy** uses typographic apostrophe `’` (not `'`). Prefer Title Case for labels/titles; sentence case for body hints.
 9. **Do not commit `.tmp-glyphs/`.** Local glyph audit screenshots; gitignored and Biome-ignored.
 10. **Round logic lives in `GameProvider`.** `useGameLoop` exists but is unused by the app shell — prefer extending `GameProvider` / `@/lib/game-modes` / `@/lib/rhythm`.
@@ -53,7 +53,7 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 | `src/components/controls/DifficultyRegenAckHost.tsx` | App-level host for post-regen OK acknowledgement |
 | `src/components/layout/about/AboutPoisonRhythmModal.tsx` | App-level host for title About + `DifficultyControls` |
 | `src/components/layout/Modal.tsx` | Modal composer; chrome atoms + `useModalFocusTrap` |
-| `src/components/layout/settings/` | Settings modal (`SettingsOverlay` → Mode / Sound / Look) |
+| `src/components/layout/settings/` | Settings modal (`SettingsOverlay` → Mode / Sound / Look / Colors) |
 | `src/components/controls/PlayControls.tsx` | Play/Pause; `data-count-in-beat` during count-in |
 | `src/components/measures/MeasureGrid.tsx` | Mode switch + Suspense; grid via `MeasureCellGrid`; prefetch via `useNotationPrefetch` |
 | `src/components/measures/measure-phase-chrome.ts` | Live-measure shell/hit classes by `data-playback-phase` (idle / count-in / listening / playing) |
@@ -66,7 +66,7 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 | `src/lib/notation/beam-glyphs.ts` | Beamed patterns (`³`, `O`, `o`, U+E001 for `[1,2]`, `n`, `y`, …) |
 | `src/lib/control-classes.ts` | Shared control classes; side-gutter helpers + `SegmentControlVariant` includes `'header'` |
 | `src/lib/hierarchy-border.ts` | Shared border ranks (active / emphasis / structure / provisional) for swatches + measures |
-| `src/lib/colors/contrast.ts` | WCAG 2.2 ratios + AAA/AA/UI/Fail labels for crayon / pair rating |
+| `src/lib/colors/contrast.ts` | WCAG ratios mapped to US letter grades A/B/C/F for crayon / pair rating |
 | `src/types/rhythm.ts` | `RhythmMeasure` / `RichRhythmMeasure` + adapters |
 | `e2e/helpers.ts` | Pref seeding + round-ready wait |
 | `documentation/ARCHITECTURE.md` | Engine, state, UI layers |
