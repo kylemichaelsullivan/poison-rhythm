@@ -12,10 +12,7 @@ export function StableContentFrame({
 }: StableContentFrameProps) {
 	return (
 		<div className='StableContentFrame relative w-full overflow-hidden'>
-			<div
-				className='invisible pointer-events-none select-none'
-				aria-hidden='true'
-			>
+			<div className='invisible pointer-events-none' aria-hidden='true'>
 				{spacer}
 			</div>
 			<div className='absolute inset-0 flex min-h-0 items-start [&>*]:min-h-0 [&>*]:w-full'>

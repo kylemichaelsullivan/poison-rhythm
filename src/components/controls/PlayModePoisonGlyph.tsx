@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-type PlayModePoisonGlyphSize = 'md';
+type PlayModePoisonGlyphSize = 'sm' | 'md';
 
 type PlayModePoisonGlyphProps = {
 	muted?: boolean;
@@ -8,6 +8,7 @@ type PlayModePoisonGlyphProps = {
 };
 
 const sizeClassName: Record<PlayModePoisonGlyphSize, string> = {
+	sm: 'h-6 w-6',
 	md: 'h-8 w-8',
 };
 
@@ -21,6 +22,7 @@ export function PlayModePoisonGlyph({
 			src='/favicon-32x32.png'
 			alt=''
 			decoding='async'
+			draggable={false}
 			className={clsx(
 				'PlayModeIcon__glyph PlayModeIcon__glyph--poison block',
 				sizeClassName[size],

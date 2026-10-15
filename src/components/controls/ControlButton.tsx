@@ -38,7 +38,7 @@ export function ControlButton({
 		? 'border-mid bg-surface-muted text-mid cursor-not-allowed'
 		: variant === 'primary'
 			? 'border-2 border-primary-border bg-primary text-on-primary shadow-primary-glow hover:opacity-90'
-			: 'border border-mid bg-surface-muted text-black shadow-control hover:border-primary hover:bg-primary/10 hover:text-primary hover:shadow-soft';
+			: 'border-2 border-secondary bg-surface text-black shadow-control hover:bg-primary/10 hover:shadow-soft';
 
 	return (
 		<button

@@ -29,6 +29,7 @@ describe('hierarchy-border', () => {
 		expect(hierarchyRankForContrastGrade('A', true)).toBe('active');
 		expect(hierarchyRankForContrastGrade('B', false)).toBe('emphasis');
 		expect(hierarchyRankForContrastGrade('C', false)).toBe('structure');
+		expect(hierarchyRankForContrastGrade('D', false)).toBe('provisional');
 		expect(hierarchyRankForContrastGrade('F', false)).toBe('provisional');
 	});
 });

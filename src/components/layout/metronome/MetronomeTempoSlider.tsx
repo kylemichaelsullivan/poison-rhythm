@@ -49,7 +49,7 @@ export function MetronomeTempoSlider({
 				  Sit ticks below the thumb overhang and under the input in paint order.
 				*/}
 				<div
-					className='TempoTicks relative z-0 h-2 select-none mx-[calc(var(--range-thumb-size)/2)] mt-[calc((var(--range-thumb-size)-0.5rem)/2)]'
+					className='TempoTicks relative z-0 h-2 mx-[calc(var(--range-thumb-size)/2)] mt-[calc((var(--range-thumb-size)-0.5rem)/2)]'
 					aria-hidden='true'
 				>
 					{TEMPO_TICKS.map((tick) => (

@@ -11,3 +11,4 @@ export { useNotationPrefetch } from './useNotationPrefetch';
 export { useSmoothNotationCursor } from './useSmoothNotationCursor';
 export { useSoftDisableFocus } from './useSoftDisableFocus';
 export { useTapTempo } from './useTapTempo';
+export { useTimedDismiss } from './useTimedDismiss';

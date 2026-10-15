@@ -37,7 +37,7 @@ flowchart TB
 | Molecules | domain folders | `PlayModeOptionCard`, `ModalActions`, `ModalPanel`, `MeasureCarouselChrome`, `ContrastGradeBadge`, settings `EnableToggle` |
 | Composers | domain folders | `DifficultyControls`, `MeasureSlider`, `ShowNotes`, `PoisonSection`, `Body` |
 | Hosts | `App` / `Body` | `AboutPoisonRhythmModal`, `DifficultyRegenAckHost`, `DisplayModeModal` |
-| Hooks | `src/hooks/` | `useDisclosure`, `useModalFocusTrap`, `useNotationPrefetch`, `useMeasurePlaybackSync`, `useHoverPinPopover`, `useSoftDisableFocus` |
+| Hooks | `src/hooks/` | `useDisclosure`, `useModalFocusTrap`, `useTimedDismiss`, `useNotationPrefetch`, `useMeasurePlaybackSync`, `useHoverPinPopover`, `useSoftDisableFocus` |
 
 Rules of thumb:
 
@@ -58,7 +58,7 @@ Phone-up layout (≈360px primary; 320px must not overflow horizontally): safe-a
 | `ShowNotes` | `ShowNotesTrigger`, `ShowNotesSlider`, `useHoverPinPopover` |
 | `PoisonSection` | `PoisonSectionHeader`, `PoisonMeasureContent`, `PoisonMeasureFrame` / `HiddenPoisonOverlay` (badge opens Body-owned `DisplayModeModal`) |
 | `Body` | `useSoftDisableFocus`, `useDisclosure` → single `DisplayModeModal` |
-| `Modal` | `ModalScrim`, `ModalPanel`, `ModalCloseButton`, `ModalTitle`, `useModalFocusTrap` |
+| `Modal` | `ModalScrim`, `ModalPanel`, `ModalCloseButton`, `ModalTitle`, `TimedNoticeProgress` when `dismissAfterMs` is set, `useModalFocusTrap`, `useTimedDismiss` |
 | `MeasureGrid` | `MeasureCellGrid` / lazy `MeasureNotation`, `NotationFallback`, `useNotationPrefetch` |
 
 Settings shell: footer **Settings** → lazy `SettingsOverlay` → tabs `Mode` / `Sound` / `Look` / `Colors` over `layout/settings/` atoms (`SettingsGroup`, `EnableToggle`, `When`, …). Color accents persist via `ColorPreferencesProvider` (student-scoped preference keys; null = brand). Main-UI shortcuts remain: Poison/Measures badge → Body-owned `DisplayModeModal`; header ShowNotes; footer metronome for tempo (`CornerModal` `tone='muted'` when metronome muted). Mirrored in Settings: play mode + complexity + practice under Mode; tempo under Sound; theme, display, and feedback under Look; crayon accents under Colors. Difficulty + play-mode badge also live in the title About modal (`AboutPoisonRhythmModal`). See [`COLORS.md`](COLORS.md).

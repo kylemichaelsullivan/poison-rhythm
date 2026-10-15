@@ -21,7 +21,10 @@ const variantClassName: Record<IconButtonVariant, string> = {
 		'hover:border-primary hover:bg-primary/10 hover:text-primary hover:shadow-soft',
 		'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface',
 	),
-	bare: clsx('group rounded transition-colors', focusVisibleRingClassName),
+	bare: clsx(
+		'group inline-flex items-center rounded transition-colors',
+		focusVisibleRingClassName,
+	),
 	modalClose: clsx(
 		'flex min-h-11 min-w-11 items-center justify-center text-xl font-semibold leading-none text-dark transition-colors',
 		'hover:text-primary',

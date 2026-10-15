@@ -11,6 +11,7 @@ export function AboutBrandHeader({ version }: AboutBrandHeaderProps) {
 				alt=''
 				width={72}
 				height={72}
+				draggable={false}
 				className='size-18 rounded-xl'
 			/>
 			<h2 className='AppTitleBrand text-2xl font-bold tracking-tight'>

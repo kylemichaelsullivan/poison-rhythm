@@ -6,6 +6,8 @@ export const WCAG_AAA_TEXT = 7;
 export const WCAG_AA_TEXT = 4.5;
 /** WCAG 2.2 §1.4.11 Non-text Contrast AA (also large-text AA floor). */
 export const WCAG_AA_UI = 3;
+/** Below the UI floor but still separable — letter grade D. */
+export const CONTRAST_D_MIN = 2;
 
 /**
  * How far toward white we lighten accents for dark-theme UI (matches
@@ -277,13 +279,13 @@ export function mixToward(
 }
 
 /**
- * US classroom letter grade from contrast (A/B/C/F). Thresholds follow WCAG
- * 2.2 ratios under the hood; teachers only see the letter.
+ * US letter grade from contrast (A/B/C/D/F). Thresholds follow WCAG 2.2
+ * ratios through C; D is the band under the 3:1 UI floor.
  */
-export type ContrastGrade = 'A' | 'B' | 'C' | 'F';
+export type ContrastGrade = 'A' | 'B' | 'C' | 'D' | 'F';
 
 export type ContrastRating = {
-	/** Limiting (worst) contrast ratio for the scoped checks. */
+	/** Contrast ratio this grade is based on. */
 	ratio: number;
 	/** Letter grade from {@link gradeFromRatio}. */
 	grade: ContrastGrade;
@@ -293,7 +295,7 @@ export type ContrastRating = {
 
 /**
  * Map a contrast ratio to a US letter grade:
- * A ≥ 7:1, B ≥ 4.5:1, C ≥ 3:1, F below.
+ * A ≥ 7:1, B ≥ 4.5:1, C ≥ 3:1, D ≥ 2:1, F below.
  */
 export function gradeFromRatio(ratio: number): ContrastGrade {
 	if (ratio >= WCAG_AAA_TEXT) {
@@ -304,6 +306,9 @@ export function gradeFromRatio(ratio: number): ContrastGrade {
 	}
 	if (ratio >= WCAG_AA_UI) {
 		return 'C';
+	}
+	if (ratio >= CONTRAST_D_MIN) {
+		return 'D';
 	}
 	return 'F';
 }
@@ -322,24 +327,15 @@ export function contrastGradePasses(grade: ContrastGrade): boolean {
 	return grade === 'A' || grade === 'B';
 }
 
-const GRADE_RANK: Record<ContrastGrade, number> = {
-	A: 3,
-	B: 2,
-	C: 1,
-	F: 0,
-};
-
 /**
  * Letter grade for a crayon in a color role vs page surfaces.
  *
  * Role checks alone do not score Dominant↔Secondary separation (Brand purple +
  * mint is ~1:1 luminance but hue-far). Pair meter uses {@link rateColorPairContrast}.
  *
- * - **Dominant** (fills / badges): worst of text-on-fill + UI vs light/dark
- *   (A≥7, B≥4.5, C≥3, F&lt;3).
- * - **Secondary** (borders / chrome): worst of UI vs light/dark; meeting
- *   3:1 earns **B** (borders are not normal text). A still ≥7; F below 3
- *   (no separate C band).
+ * - **Dominant** (fills / badges): worst of text-on-fill + UI vs light/dark.
+ * - **Secondary** (borders / chrome): worst of UI vs light/dark.
+ * Both use {@link gradeFromRatio} (A≥7, B≥4.5, C≥3, D≥2, F below).
  */
 export function rateCrayonContrast(
 	hex: string,
@@ -356,13 +352,7 @@ export function rateCrayonContrast(
 	}
 
 	const ratio = Math.min(assessment.uiRatioLight, assessment.uiRatioDark);
-	if (ratio >= WCAG_AAA_TEXT) {
-		return { ratio, grade: 'A', level: 'pass' };
-	}
-	if (ratio >= WCAG_AA_UI) {
-		return { ratio, grade: 'B', level: 'pass' };
-	}
-	return { ratio, grade: 'F', level: 'warn' };
+	return ratingFromRatio(ratio);
 }
 
 /**
@@ -383,31 +373,14 @@ export function ratePairSeparation(
 }
 
 /**
- * Pair meter + Suggested Pairings: worse of role-vs-surface letter grades.
- * Near-identical crayons earn F via ΔE even when each alone clears A.
+ * Pair meter: one contrast ratio between Dominant and Secondary.
+ * Grade A is the 7:1 (AAA) floor. Same crayon twice is 1:1, grade F.
  */
 export function rateColorPairContrast(
 	dominantHex: string,
 	secondaryHex: string,
 ): ContrastRating {
-	const dominant = rateCrayonContrast(dominantHex, 'dominant');
-	const secondary = rateCrayonContrast(secondaryHex, 'secondary');
-	const surfaceGrade =
-		GRADE_RANK[dominant.grade] <= GRADE_RANK[secondary.grade]
-			? dominant.grade
-			: secondary.grade;
-	const surfaceRatio = Math.min(dominant.ratio, secondary.ratio);
-	const separation = ratePairSeparation(dominantHex, secondaryHex);
-
-	if (separation.grade === 'F') {
-		return separation;
-	}
-
-	return {
-		ratio: surfaceRatio,
-		grade: surfaceGrade,
-		level: contrastGradePasses(surfaceGrade) ? 'pass' : 'warn',
-	};
+	return ratingFromRatio(contrastRatio(dominantHex, secondaryHex));
 }
 
 /**

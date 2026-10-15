@@ -11,6 +11,7 @@ export {
 	ACCENT_BRIGHTEN_FOR_DARK,
 	type AccentAssessment,
 	assessCrayonContrast,
+	CONTRAST_D_MIN,
 	type ColorRole,
 	type ContrastGrade,
 	type ContrastIssue,

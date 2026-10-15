@@ -11,8 +11,9 @@ import { DifficultySettingsBlock } from './DifficultySettingsBlock';
 import { PlayModesModal } from './PlayModesModal';
 
 const POISON_BADGE: GameModeHudBadge = {
-	label: 'POISON',
+	label: 'Poison',
 	tone: 'classic',
+	endless: false,
 };
 
 type DifficultyControlsProps = {

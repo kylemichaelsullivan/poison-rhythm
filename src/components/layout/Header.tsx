@@ -10,7 +10,7 @@ export function Header() {
 	return (
 		<header
 			className={clsx(
-				'Header border-b-2 border-primary/35',
+				'Header border-b-4 border-secondary bg-primary text-on-primary',
 				appChromeBarClassName,
 				appChromeBarHeaderClassName,
 			)}

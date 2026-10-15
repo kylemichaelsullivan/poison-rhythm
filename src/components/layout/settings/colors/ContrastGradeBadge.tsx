@@ -16,7 +16,9 @@ export function ContrastGradeBadge({ grade }: ContrastGradeBadgeProps) {
 					? 'bg-black text-white'
 					: grade === 'C'
 						? 'bg-chrome text-black border border-black'
-						: 'bg-chrome text-mid border border-dashed border-black',
+						: grade === 'D'
+							? 'bg-chrome text-black border border-dashed border-black'
+							: 'bg-chrome text-mid border border-dashed border-black',
 			)}
 			aria-hidden='true'
 		>

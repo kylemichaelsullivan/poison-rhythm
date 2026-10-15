@@ -26,8 +26,13 @@ type CornerModalProps = {
 	 * this instead and does not open the modal.
 	 */
 	onDoubleClick?: () => void;
-	/** Called after the modal closes (X, scrim, or Escape). */
+	/** Called after the modal closes (X, scrim, Escape, or timed dismiss). */
 	onClose?: () => void;
+	/**
+	 * When set, the dialog dismisses itself after this many milliseconds and
+	 * shows the timed-notice progress bar. Omit for a manual dismiss only.
+	 */
+	dismissAfterMs?: number;
 	children?: ReactNode;
 };
 
@@ -44,6 +49,7 @@ export function CornerModal({
 	buttonTitle,
 	onDoubleClick,
 	onClose,
+	dismissAfterMs,
 	children,
 }: CornerModalProps) {
 	const { open, onOpen, onClose: closeDisclosure } = useDisclosure();
@@ -72,6 +78,7 @@ export function CornerModal({
 				title={title}
 				fullWidth={fullWidth}
 				size={size}
+				dismissAfterMs={dismissAfterMs}
 				onClose={handleClose}
 			>
 				{lazy ? (open ? children : null) : children}

@@ -68,17 +68,17 @@ src/components/
 - **Purpose**: Difficulty section with play-mode badge + help / Play Modes modals
 - **Uses**: `DifficultyFramedBlock` / `DifficultySettingsBlock`, `DifficultyHelpModal`, `PlayModesModal`, `usePendingDifficulty`, `useDisclosure`
 - **Variants**: `framed` (About section box with mode badge) vs compact Settings block (`framed={false}`)
-- **Note**: Lives in the title About modal and Settings → Mode; header ShowNotes remains the quick subdivision control. After the host modal closes with a pending difficulty change, `PendingDifficultyProvider` regenerates the round; `DifficultyRegenAckHost` (App-level) shows the OK-only acknowledgement.
+- **Note**: Lives in the title About modal and Settings → Mode; header ShowNotes remains the quick subdivision control. After the host modal closes with a pending difficulty change, `PendingDifficultyProvider` regenerates the round; `DifficultyRegenAckHost` (App-level) shows a timed acknowledgement (`Modal` `dismissAfterMs`, no OK button).
 
 ### Modal (composer)
 
 - **Purpose**: Shared dialog shell
 - **Layers**: `ModalScrim`, `ModalPanel` (`size` / `fullWidth`), `ModalCloseButton` (`IconButton` `modalClose`), `ModalTitle`, `useModalFocusTrap`
-- **Public props unchanged**: `open`, `onClose`, `title`, `ariaLabel`, `size`, `fullWidth`
+- **Props**: `open`, `onClose`, `title`, `ariaLabel`, `size`, `fullWidth`, optional `dismissAfterMs` (auto-close + `TimedNoticeProgress`)
 
 ### CornerModal / CornerButton
 
-- **Variants**: `tone?: 'default' | 'muted'` (muted = dashed mid border for muted metronome); no `className` / `buttonClassName` passthrough
+- **Variants**: `tone?: 'default' | 'muted'` (muted = dashed mid border for muted metronome); optional `dismissAfterMs` for the timed notice (Account). No `className` / `buttonClassName` passthrough
 - **Hooks**: `useDisclosure`, `useDelayedClick` for single vs double-click open
 
 ### ui/ atoms

@@ -39,7 +39,7 @@ export const cornerControlButtonClassName =
  * Horizontal safe-area keeps chrome clear of notches; pair with header/footer extras.
  */
 export const appChromeBarClassName =
-	'flex justify-between items-center w-full gap-2 py-2 bg-chrome/80 shadow-soft pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))]';
+	'flex justify-between items-center w-full gap-2 py-2 shadow-soft pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))]';
 
 /** Top safe-area for the header chrome bar (notch / status bar). */
 export const appChromeBarHeaderClassName =
@@ -98,7 +98,7 @@ export function focusWithForcedRing(
 }
 
 export const roundPlayPauseButtonClassName =
-	'flex justify-center items-center rounded-full border-2 border-primary-border bg-primary min-w-12 min-h-12 w-12 h-12 p-3 text-on-primary shadow-primary-glow transition-[opacity,box-shadow] hover:opacity-90 hover:shadow-raised disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 aria-disabled:hover:opacity-50';
+	'flex justify-center items-center rounded-full border-4 border-secondary bg-primary min-w-12 min-h-12 w-12 h-12 p-3 text-on-primary shadow-raised transition-[opacity,box-shadow] hover:opacity-90 hover:shadow-raised disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 aria-disabled:hover:opacity-50';
 
 export const modifyTempoButtonClassName =
 	'flex justify-center items-center border-2 border-primary-border rounded bg-primary min-w-11 min-h-11 w-11 h-11 p-2 text-on-primary shadow-control transition hover:opacity-90 hover:shadow-soft disabled:opacity-50';
@@ -154,7 +154,7 @@ export function segmentControlClassName(
 		!disabled && [hoverRingClassName, 'hover:border-mid'],
 		isSelected
 			? variant === 'header'
-				? 'border-primary-border bg-primary/15 text-primary shadow-soft'
+				? 'border-2 border-secondary bg-primary text-on-primary shadow-soft'
 				: 'border-primary-border bg-primary text-on-primary shadow-primary-glow'
 			: variant === 'checkbox'
 				? clsx(
@@ -162,10 +162,10 @@ export function segmentControlClassName(
 						!disabled && 'hover:bg-surface-muted',
 					)
 				: variant === 'header'
-					? 'border-mid bg-chrome text-mid shadow-control'
+					? 'border-2 border-secondary bg-surface text-black shadow-control'
 					: clsx(
-							'border-mid bg-surface-muted text-muted shadow-control',
-							!disabled && 'hover:bg-chrome-hover hover:border-primary/50',
+							'border-secondary bg-surface-muted text-black shadow-control',
+							!disabled && 'hover:bg-chrome-hover hover:border-primary',
 						),
 	);
 }

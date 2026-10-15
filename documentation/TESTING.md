@@ -31,7 +31,7 @@ Location: `src/lib/__tests__/`
 | Notation | `notation/` — spelling, beams, dotted glyphs, ABC |
 | Game modes | `game-modes/` — endless, demo audio gating |
 | Audio | `audio-engine` |
-| Misc | difficulty, subdivision, tempo/tap, theme, PRNG |
+| Misc | difficulty, subdivision, tempo/tap, theme, PRNG, timed-notice (duration, iOS-safe progress colors) |
 
 Conventions:
 
@@ -46,6 +46,7 @@ Location: `e2e/`
 | Spec | Coverage |
 |------|----------|
 | `playback.spec.ts` | Round ready, count-in highlight gating, **count-in beats on the Play button**, post–count-in highlight, demo pass, **Escape stops playback** (including while Play/Pause is focused) |
+| `difficulty-regen-ack.spec.ts` | Difficulty acknowledgement and Account notice: **no OK button**, `0.5rem` theme progress bar, dismiss on `TIMED_NOTICE_DURATION_MS`, **pause while hovered**. Account copy uses `text-wrap: pretty` (no non-breaking spaces) |
 | `a11y.spec.ts` | axe WCAG 2.2 A/AA + best-practice (start screen, round, settings/Sound, metronome, modals, count-in). Runs on **Desktop Chrome** and **mobile** (360×800) projects |
 | `mobile-layout.spec.ts` | 360×800 smoke: carousel nav vs Play overlap, 2-col measure grid, Settings panel scroll |
 | `notation-scroll.spec.ts` | MusiSync boxes do not vertically overflow |

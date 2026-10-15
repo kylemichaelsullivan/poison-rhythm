@@ -241,6 +241,8 @@ export function isPoisonEnabled(settings: GameSettings): boolean {
 export type GameModeHudBadge = {
 	label: string;
 	tone: 'endless' | 'bucket' | 'classic';
+	/** Endless stream (Poison checkbox, or Bucket Drumming). */
+	endless: boolean;
 };
 
 export function gameModeHudBadge(
@@ -248,8 +250,10 @@ export function gameModeHudBadge(
 ): GameModeHudBadge | null {
 	switch (settings.gameMode) {
 		case 'bucketTrainer':
-			return { label: 'BUCKET', tone: 'bucket' };
+			return { label: 'Bucket', tone: 'bucket', endless: true };
 		default:
-			return settings.endless ? { label: 'ENDLESS', tone: 'endless' } : null;
+			return settings.endless
+				? { label: 'Poison', tone: 'endless', endless: true }
+				: null;
 	}
 }

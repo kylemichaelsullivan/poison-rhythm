@@ -11,7 +11,11 @@ export function ModeBadgeTrigger({ badge, onClick }: ModeBadgeTriggerProps) {
 	return (
 		<IconButton
 			variant='bare'
-			label={`Play Mode: ${badge.label}. Change Play Mode`}
+			label={
+				badge.endless && badge.tone !== 'bucket'
+					? `Play Mode: ${badge.label}, Endless. Change Play Mode`
+					: `Play Mode: ${badge.label}. Change Play Mode`
+			}
 			title='Change Play Mode'
 			popup='dialog'
 			onClick={onClick}

@@ -23,10 +23,11 @@ export function DifficultyFramedBlock({
 	return (
 		<Section
 			title='Difficulty'
-			headerLeading={<InfoGlyphButton onClick={onOpenHelp} />}
-			headerAction={
+			titleSide='end'
+			headerLeading={
 				<ModeBadgeTrigger badge={modeBadge} onClick={onOpenPlayModes} />
 			}
+			headerAction={<InfoGlyphButton onClick={onOpenHelp} />}
 		>
 			<DifficultySlider value={sliderValue} onChange={onDifficultyChange} />
 		</Section>

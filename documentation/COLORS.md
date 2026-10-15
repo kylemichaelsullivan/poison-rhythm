@@ -8,8 +8,8 @@ For full accessibility policy (grades, border hierarchy, keyboard), see [`A11Y.m
 
 | Role | UI effect |
 |------|-----------|
-| **Dominant** | Primary accent: Play fills, badges, section titles, playback highlights, purple-family atmosphere |
-| **Secondary** | Complement accent: primary borders, mint-family atmosphere |
+| **Dominant** | Primary accent: Play fills, badges, section titles, page wash, panel surfaces, header edge, playback highlights |
+| **Secondary** | Complement accent: section borders, footer edge, chrome bars, opposite page wash, title gradient |
 
 Unset preferences keep the shipped **Poison Rhythm** purple + mint tokens from the favicon brand. Choosing crayons overrides those CSS variables for this browser (student-scoped local storage today).
 
@@ -17,7 +17,7 @@ Unset preferences keep the shipped **Poison Rhythm** purple + mint tokens from t
 
 - **Recognition** — the potion purple / deep mint look is the product signal on projected screens and shared devices.
 - **Classroom consistency** — one default pair means every station looks familiar when students rotate.
-- **Best contrast grade** — Brand purple-deep (`#783b82`) + deep mint (`#246028`) score **A** in both light and dark. Suggested Pairings only list pairs that earn **A or B**.
+- **Product pair** — Brand purple-deep (`#783b82`) + deep mint (`#246028`) is the default look. Suggested Pairings are grade **A** (7:1 between the two colors) across yellow, green, blue, orange, pink, cyan, violet, and earth.
 
 The Colors tab marks **Poison Rhythm** as Recommended in Suggested Pairings.
 
@@ -36,7 +36,7 @@ Avoid near-identical crayons for both roles — borders disappear and badges los
 
 ## Contrast grades
 
-The pair meter (`rateColorPairContrast`) shows **US letter grades** (A / B / C / F) from contrast ratios vs page surfaces, plus a short poison / D&D nudge toward stronger picks. Near-identical Dominant/Secondary (ΔE &lt; 12) earn **F** even when each crayon alone clears A; Brand purple + mint stays **A** because they are hue-far. Each swatch badge previews that same meter **if you pick that crayon** for the active role (`ratePairIfRolePicked`), keeping the other role fixed. See [`A11Y.md`](A11Y.md).
+The pair meter (`rateColorPairContrast`) shows one **US letter grade** and one ratio: Dominant against Secondary. Grade **A** is 7:1 or better. Each swatch badge previews that same meter **if you pick that crayon** for the active role (`ratePairIfRolePicked`), keeping the other role fixed. See [`A11Y.md`](A11Y.md).
 
 **Strongly discourage, do not block:** the pair meter (`ContrastScoreMeter`) and per-swatch grade badges (`ContrastGradeBadge` on `CrayonSwatch`) update live. Role tiles live in `ColorRoleTile`; the decorative strip is `ColorPairPlayPreview`. **A/B** get solid hierarchy borders; **F** is dashed and dimmed. In the tray, the active role’s crayon uses strongest border/shadow; the other role’s crayon stays visible at lighter emphasis (switches when you change Dominant vs Secondary). Suggested Pairings remain the easy recovery.
 
@@ -50,4 +50,5 @@ Color preferences are stored on **student-scoped** preference keys (`poison-rhyt
 - [`TEACHERS.md`](TEACHERS.md) — classroom arcs and accessibility tips
 - [`ARCHITECTURE.md`](ARCHITECTURE.md) — providers and settings layers
 - [`src/index.css`](../src/index.css) — brand and semantic color tokens
+- [`IOS.md`](IOS.md) — WebKit color fallbacks (hex defaults, crayon hex overrides)
 - [`src/lib/hierarchy-border.ts`](../src/lib/hierarchy-border.ts) — shared border ranks

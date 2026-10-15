@@ -61,10 +61,10 @@ export function hierarchyBorderClass(
 
 /** Map a contrast letter grade to swatch border rank (encourages A/B). */
 export function hierarchyRankForContrastGrade(
-	grade: 'A' | 'B' | 'C' | 'F',
+	grade: 'A' | 'B' | 'C' | 'D' | 'F',
 	selected: boolean,
 ): HierarchyBorderRank {
-	if (grade === 'F') {
+	if (grade === 'F' || grade === 'D') {
 		return 'provisional';
 	}
 	if (selected) {

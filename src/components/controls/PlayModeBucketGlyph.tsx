@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { useId } from 'react';
 
-type PlayModeBucketGlyphSize = 'md';
+type PlayModeBucketGlyphSize = 'sm' | 'md';
 
 type PlayModeBucketGlyphProps = {
 	active: boolean;
@@ -10,6 +10,7 @@ type PlayModeBucketGlyphProps = {
 };
 
 const sizeClassName: Record<PlayModeBucketGlyphSize, string> = {
+	sm: 'h-6 w-6',
 	md: 'h-8 w-8',
 };
 

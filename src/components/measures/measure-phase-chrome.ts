@@ -26,7 +26,7 @@ export function measureShellClass(
 		case 'playing':
 			return `${hierarchyBorderClass('active', 'secondary')} rounded-lg bg-surface text-secondary shadow-secondary-glow`;
 		default:
-			return `${hierarchyBorderClass('emphasis', 'primary-soft')} rounded-lg bg-primary/5 shadow-soft`;
+			return `${hierarchyBorderClass('emphasis', 'secondary')} rounded-lg bg-surface shadow-soft`;
 	}
 }
 
@@ -42,7 +42,7 @@ export function measureBeatGroupClass(
 		case 'count-in':
 			return `${hierarchyBorderClass('structure', 'mid')} bg-surface`;
 		default:
-			return `${hierarchyBorderClass('structure', 'primary-soft')} bg-surface`;
+			return `${hierarchyBorderClass('structure', 'secondary')} bg-surface`;
 	}
 }
 

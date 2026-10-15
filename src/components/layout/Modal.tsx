@@ -1,10 +1,12 @@
 import clsx from 'clsx';
-import { type ReactNode, useId, useRef } from 'react';
+import { type ReactNode, useEffect, useId, useRef, useState } from 'react';
 import { useModalFocusTrap } from '@/hooks/useModalFocusTrap';
+import { useTimedDismiss } from '@/hooks/useTimedDismiss';
 import { ModalCloseButton } from './ModalCloseButton';
 import { ModalPanel, type ModalSize } from './ModalPanel';
 import { ModalScrim } from './ModalScrim';
 import { ModalTitle } from './ModalTitle';
+import { TimedNoticeProgress } from './TimedNoticeProgress';
 
 type ModalProps = {
 	open: boolean;
@@ -14,6 +16,11 @@ type ModalProps = {
 	/** Used when `title` is omitted so the dialog still has an accessible name. */
 	ariaLabel?: string;
 	onClose: () => void;
+	/**
+	 * When set, the dialog dismisses itself after this many milliseconds and
+	 * shows a progress bar along the top edge. Omit for a manual dismiss only.
+	 */
+	dismissAfterMs?: number;
 	children?: ReactNode;
 };
 
@@ -24,12 +31,20 @@ export function Modal({
 	title,
 	ariaLabel,
 	onClose,
+	dismissAfterMs,
 	children,
 }: ModalProps) {
 	const dialogRef = useRef<HTMLDivElement>(null);
 	const titleId = useId();
+	const [noticePaused, setNoticePaused] = useState(false);
+	const timed = dismissAfterMs != null;
 
 	useModalFocusTrap(open, onClose, dialogRef);
+	useTimedDismiss(open, dismissAfterMs, onClose, noticePaused);
+
+	useEffect(() => {
+		if (!open) setNoticePaused(false);
+	}, [open]);
 
 	if (!open) {
 		return null;
@@ -47,10 +62,18 @@ export function Modal({
 			<ModalPanel
 				size={size}
 				fullWidth={fullWidth}
+				clip={timed}
+				onHoverChange={timed ? setNoticePaused : undefined}
 				labelledBy={title ? titleId : undefined}
 				ariaLabel={ariaLabel}
 				ref={dialogRef}
 			>
+				{timed && dismissAfterMs != null ? (
+					<TimedNoticeProgress
+						durationMs={dismissAfterMs}
+						paused={noticePaused}
+					/>
+				) : null}
 				<ModalCloseButton onClose={onClose} />
 				{title ? <ModalTitle id={titleId}>{title}</ModalTitle> : null}
 				<div className='flex min-h-0 flex-1 flex-col'>{children}</div>

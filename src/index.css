@@ -5,135 +5,62 @@
 	 * Brand palette from the Poison favicon (potion bottle):
 	 * purple liquid + mint glass accents on near-neutral light / purple-ink dark.
 	 * Mint is for borders/accents — not page washes.
-	 * Each token: hex first (old browsers / Safari), then oklch when supported.
+	 *
+	 * @theme keeps a single sRGB value per token. A second oklch() or
+	 * light-dark() declaration in this block is dropped at build time, which
+	 * left iOS with no color at all. Wide-gamut upgrades live outside @theme.
+	 * Chrome on iOS uses WebKit, so it matches Safari on iOS (caniuse):
+	 * oklch() 15.4+, color-mix() 16.2+, @property 16.4+, light-dark() 17.5+.
+	 * Dark mode uses prefers-color-scheme (iOS 13+) plus data-theme.
 	 */
 
 	/* Favicon-hued brand (chroma lifted vs raw samples for screen use).
 	 * Deep + bright pairs are tuned for WCAG 2.2 grade A in light and dark. */
 	--color-brand-purple: #914893;
-	--color-brand-purple: oklch(52% 0.14 326);
 	--color-brand-purple-deep: #783b82;
-	--color-brand-purple-deep: oklch(46% 0.13 322);
 	--color-brand-purple-bright: #b593ba;
-	--color-brand-purple-bright: oklch(72% 0.08 326);
 	--color-brand-mint: #6eba66;
-	--color-brand-mint: oklch(72% 0.14 142);
 	--color-brand-mint-deep: #246028;
-	--color-brand-mint-deep: oklch(38% 0.09 144);
 	--color-brand-mint-bright: #87a889;
-	--color-brand-mint-bright: oklch(68% 0.07 144);
 	--color-brand-cork: #ab7b49;
-	--color-brand-cork: oklch(62% 0.09 66);
 
 	/* Near-neutral light inks (tiny purple whisper) / purple-ink dark */
 	--color-ink-50: #faf9fc;
-	--color-ink-50: oklch(98.5% 0.004 300);
 	--color-ink-100: #f2f1f5;
-	--color-ink-100: oklch(96% 0.006 300);
 	--color-ink-200: #e5e3e9;
-	--color-ink-200: oklch(92% 0.008 300);
 	--color-ink-300: #d2d0d7;
-	--color-ink-300: oklch(86% 0.01 300);
 	--color-ink-400: #9f9da5;
-	--color-ink-400: oklch(70% 0.012 300);
 	--color-ink-600: #5f5c65;
-	--color-ink-600: oklch(48% 0.015 300);
 	--color-ink-700: #434149;
-	--color-ink-700: oklch(38% 0.015 300);
 	--color-ink-800: #2a1f2c;
-	--color-ink-800: oklch(25% 0.03 326);
 	--color-ink-900: #1a121c;
-	--color-ink-900: oklch(18% 0.025 326);
 	--color-ink-950: #0d090e;
-	--color-ink-950: oklch(12% 0.02 326);
 
-	/*
-	 * Semantic tokens: hex light values first, then light-dark() when supported.
-	 * (Unsupported light-dark() drops the whole declaration → hex fallback remains.)
-	 */
+	/* Light semantic colors. Dark counterparts are set on :root below. */
 	--color-primary: var(--color-brand-purple-deep);
-	--color-primary: light-dark(
-		var(--color-brand-purple-deep),
-		var(--color-brand-purple-bright)
-	);
 	--color-on-primary: var(--color-ink-50);
 	/* Deep mint for borders — light mint stays atmosphere-only (gradients). */
 	--color-primary-border: var(--color-brand-mint-deep);
-	--color-primary-border: light-dark(
-		var(--color-brand-mint-deep),
-		var(--color-brand-mint-bright)
-	);
-
 	--color-secondary: var(--color-brand-mint-deep);
-	--color-secondary: light-dark(
-		var(--color-brand-mint-deep),
-		var(--color-brand-mint-bright)
-	);
-	--color-on-secondary: var(--color-ink-950);
-	--color-on-secondary: light-dark(var(--color-ink-950), var(--color-ink-950));
+	--color-on-secondary: var(--color-ink-50);
 	/* Purple complement border for mint fills */
-	--color-secondary-border: var(--color-brand-purple);
-	--color-secondary-border: light-dark(
-		var(--color-brand-purple-deep),
-		var(--color-brand-purple-bright)
-	);
-
+	--color-secondary-border: var(--color-brand-purple-deep);
 	--color-light: var(--color-ink-200);
-	--color-light: light-dark(var(--color-ink-200), var(--color-ink-800));
 	--color-mid: var(--color-ink-400);
-	--color-mid: light-dark(
-		var(--color-ink-400),
-		color-mix(
-			in oklch,
-			var(--color-brand-purple-bright) 45%,
-			var(--color-ink-800)
-		)
-	);
 	--color-dark: var(--color-ink-700);
-	--color-dark: light-dark(var(--color-ink-700), var(--color-ink-200));
 	--color-surface: var(--color-ink-100);
-	--color-surface: light-dark(var(--color-ink-100), var(--color-ink-900));
 	--color-surface-muted: var(--color-ink-300);
-	--color-surface-muted: light-dark(
-		var(--color-ink-300),
-		color-mix(in oklch, var(--color-brand-purple) 28%, var(--color-ink-800))
-	);
-
 	--color-chrome: var(--color-ink-100);
-	--color-chrome: light-dark(
-		var(--color-ink-100),
-		color-mix(in oklch, var(--color-brand-purple) 18%, var(--color-ink-900))
-	);
 	--color-chrome-hover: var(--color-ink-200);
-	--color-chrome-hover: light-dark(
-		var(--color-ink-200),
-		color-mix(
-			in oklch,
-			var(--color-brand-purple-bright) 24%,
-			var(--color-ink-800)
-		)
-	);
 	--color-white: var(--color-ink-50);
-	--color-white: light-dark(var(--color-ink-50), var(--color-ink-950));
 	--color-black: var(--color-ink-950);
-	--color-black: light-dark(var(--color-ink-950), var(--color-ink-50));
-
-	--color-scrim: rgba(13, 9, 14, 0.55);
-	--color-scrim: color-mix(
-		in oklch,
-		var(--color-brand-purple-deep) 55%,
-		transparent
-	);
-
+	--color-scrim: rgba(120, 59, 130, 0.55);
+	--page-wash-dominant: rgba(145, 72, 147, 0.16);
+	--page-wash-secondary: rgba(110, 186, 102, 0.12);
 	--color-brand-gradient-a: var(--color-brand-purple);
 	--color-brand-gradient-b: var(--color-brand-mint);
 	--color-accent: var(--color-brand-cork);
-	--color-accent: light-dark(
-		var(--color-brand-cork),
-		var(--color-brand-mint-bright)
-	);
 	--color-muted: var(--color-ink-700);
-	--color-muted: light-dark(var(--color-ink-700), var(--color-ink-300));
 
 	--font-musisync: "MusiSync", ui-monospace, monospace;
 
@@ -153,19 +80,11 @@
 
 	/*
 	 * Elevation: short, low-opacity, slightly purple-tinted — not stacked black.
-	 * Shadow *colors* use light-dark(); full shadow stacks are composed from them
-	 * (light-dark() cannot wrap comma-separated box-shadow lists).
+	 * Shadow colors are rgba so they paint without color-mix(). Dark values
+	 * are overridden with the theme block below.
 	 */
-	--shadow-color: rgba(13, 9, 14, 0.08);
-	--shadow-color: light-dark(
-		color-mix(in oklch, var(--color-ink-950) 9%, transparent),
-		color-mix(in oklch, black 48%, transparent)
-	);
-	--shadow-accent-color: rgba(120, 59, 130, 0.1);
-	--shadow-accent-color: light-dark(
-		color-mix(in oklch, var(--color-brand-purple) 12%, transparent),
-		color-mix(in oklch, var(--color-brand-purple-bright) 18%, transparent)
-	);
+	--shadow-color: rgba(13, 9, 14, 0.09);
+	--shadow-accent-color: rgba(145, 72, 147, 0.12);
 
 	--shadow-soft:
 		0 1px 2px var(--shadow-color), 0 1px 3px var(--shadow-accent-color);
@@ -177,10 +96,7 @@
 
 	--shadow-secondary-glow: 0 0 0.5rem var(--color-secondary);
 	--shadow-primary-glow:
-		0 1px 2px var(--shadow-color), 0 0 0.65rem rgba(120, 59, 130, 0.35);
-	--shadow-primary-glow:
-		0 1px 2px var(--shadow-color),
-		0 0 0.65rem color-mix(in oklch, var(--color-primary) 42%, transparent);
+		0 1px 2px var(--shadow-color), 0 0 0.65rem rgba(120, 59, 130, 0.42);
 }
 
 @font-face {
@@ -197,36 +113,362 @@
 	color-scheme: light dark;
 }
 
-/* User override: data-theme sets which side of light-dark() is used (light = 1st arg, dark = 2nd) */
+/*
+ * Dark palette as plain colors. prefers-color-scheme works on iOS 13+.
+ * data-theme forces a side without light-dark() (iOS 17.5+ only).
+ * Pre-mixed dark stops are sRGB mixes of the brand hex values.
+ */
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) {
+		color-scheme: dark;
+		--color-primary: var(--color-brand-purple-bright);
+		--color-on-primary: var(--color-ink-950);
+		--color-primary-border: var(--color-brand-mint-bright);
+		--color-secondary: var(--color-brand-mint-bright);
+		--color-on-secondary: var(--color-ink-950);
+		--color-secondary-border: var(--color-brand-purple-bright);
+		--color-light: var(--color-ink-800);
+		--color-mid: #69536c;
+		--color-dark: var(--color-ink-200);
+		--color-surface: var(--color-ink-900);
+		--color-surface-muted: #472a49;
+		--color-chrome: #2f1c31;
+		--color-chrome-hover: #4b3b4e;
+		--color-white: var(--color-ink-950);
+		--color-black: var(--color-ink-50);
+		--color-accent: var(--color-brand-mint-bright);
+		--color-muted: var(--color-ink-300);
+		--shadow-color: rgba(0, 0, 0, 0.48);
+		--shadow-accent-color: rgba(181, 147, 186, 0.18);
+	}
+}
+
 :root[data-theme="dark"] {
 	color-scheme: dark;
+	--color-primary: var(--color-brand-purple-bright);
+	--color-on-primary: var(--color-ink-950);
+	--color-primary-border: var(--color-brand-mint-bright);
+	--color-secondary: var(--color-brand-mint-bright);
+	--color-on-secondary: var(--color-ink-950);
+	--color-secondary-border: var(--color-brand-purple-bright);
+	--color-light: var(--color-ink-800);
+	--color-mid: #69536c;
+	--color-dark: var(--color-ink-200);
+	--color-surface: var(--color-ink-900);
+	--color-surface-muted: #472a49;
+	--color-chrome: #2f1c31;
+	--color-chrome-hover: #4b3b4e;
+	--color-white: var(--color-ink-950);
+	--color-black: var(--color-ink-50);
+	--color-accent: var(--color-brand-mint-bright);
+	--color-muted: var(--color-ink-300);
+	--shadow-color: rgba(0, 0, 0, 0.48);
+	--shadow-accent-color: rgba(181, 147, 186, 0.18);
 }
 
 :root[data-theme="light"] {
 	color-scheme: light;
 }
 
+/*
+ * Brand and ink tokens are registered colors. Custom properties are otherwise
+ * untyped, so `--token: #hex; --token: oklch(...)` does not fall back: the
+ * oklch() always wins, and a failed substitution blanks the property that
+ * uses the variable. With syntax "<color>", an oklch() the engine cannot
+ * compute is invalid and the initial-value hex is used instead (iOS 16.4+).
+ * Engines older than oklch() (iOS 15.4) skip the @supports block and keep
+ * the @theme hex.
+ */
+@property --color-brand-purple {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #914893;
+}
+@property --color-brand-purple-deep {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #783b82;
+}
+@property --color-brand-purple-bright {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #b593ba;
+}
+@property --color-brand-mint {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #6eba66;
+}
+@property --color-brand-mint-deep {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #246028;
+}
+@property --color-brand-mint-bright {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #87a889;
+}
+@property --color-brand-cork {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #ab7b49;
+}
+@property --color-ink-50 {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #faf9fc;
+}
+@property --color-ink-100 {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #f2f1f5;
+}
+@property --color-ink-200 {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #e5e3e9;
+}
+@property --color-ink-300 {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #d2d0d7;
+}
+@property --color-ink-400 {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #9f9da5;
+}
+@property --color-ink-600 {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #5f5c65;
+}
+@property --color-ink-700 {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #434149;
+}
+@property --color-ink-800 {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #2a1f2c;
+}
+@property --color-ink-900 {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #1a121c;
+}
+@property --color-ink-950 {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #0d090e;
+}
+
+/* oklch() where the engine supports it (iOS 15.4+). @theme hex stays otherwise. */
+@supports (color: oklch(50% 0.1 0)) {
+	:root {
+		--color-brand-purple: oklch(52% 0.14 326);
+		--color-brand-purple-deep: oklch(46% 0.13 322);
+		--color-brand-purple-bright: oklch(72% 0.08 326);
+		--color-brand-mint: oklch(72% 0.14 142);
+		--color-brand-mint-deep: oklch(38% 0.09 144);
+		--color-brand-mint-bright: oklch(68% 0.07 144);
+		--color-brand-cork: oklch(62% 0.09 66);
+		--color-ink-50: oklch(98.5% 0.004 300);
+		--color-ink-100: oklch(96% 0.006 300);
+		--color-ink-200: oklch(92% 0.008 300);
+		--color-ink-300: oklch(86% 0.01 300);
+		--color-ink-400: oklch(70% 0.012 300);
+		--color-ink-600: oklch(48% 0.015 300);
+		--color-ink-700: oklch(38% 0.015 300);
+		--color-ink-800: oklch(25% 0.03 326);
+		--color-ink-900: oklch(18% 0.025 326);
+		--color-ink-950: oklch(12% 0.02 326);
+	}
+}
+
+/* color-mix() in srgb: iOS 16.2+. Static hex above remains when this is dropped. */
+@supports (color: color-mix(in srgb, red, blue)) {
+	:root {
+		--color-scrim: color-mix(
+			in srgb,
+			var(--color-brand-purple-deep) 55%,
+			transparent
+		);
+		--shadow-primary-glow:
+			0 1px 2px var(--shadow-color),
+			0 0 0.65rem color-mix(in srgb, var(--color-primary) 42%, transparent);
+	}
+
+	@media (prefers-color-scheme: dark) {
+		:root:not([data-theme="light"]) {
+			--color-mid: color-mix(
+				in srgb,
+				var(--color-brand-purple-bright) 45%,
+				var(--color-ink-800)
+			);
+			--color-surface: color-mix(
+				in srgb,
+				var(--color-brand-purple) 26%,
+				var(--color-ink-900)
+			);
+			--color-surface-muted: color-mix(
+				in srgb,
+				var(--color-brand-purple) 34%,
+				var(--color-ink-800)
+			);
+			--color-chrome: color-mix(
+				in srgb,
+				var(--color-brand-mint) 22%,
+				var(--color-ink-900)
+			);
+			--color-chrome-hover: color-mix(
+				in srgb,
+				var(--color-brand-mint-bright) 30%,
+				var(--color-ink-800)
+			);
+			--shadow-color: color-mix(in srgb, black 48%, transparent);
+			--shadow-accent-color: color-mix(
+				in srgb,
+				var(--color-brand-purple-bright) 18%,
+				transparent
+			);
+		}
+	}
+
+	:root[data-theme="dark"] {
+		--color-mid: color-mix(
+			in srgb,
+			var(--color-brand-purple-bright) 45%,
+			var(--color-ink-800)
+		);
+		--color-surface: color-mix(
+			in srgb,
+			var(--color-brand-purple) 26%,
+			var(--color-ink-900)
+		);
+		--color-surface-muted: color-mix(
+			in srgb,
+			var(--color-brand-purple) 34%,
+			var(--color-ink-800)
+		);
+		--color-chrome: color-mix(
+			in srgb,
+			var(--color-brand-mint) 22%,
+			var(--color-ink-900)
+		);
+		--color-chrome-hover: color-mix(
+			in srgb,
+			var(--color-brand-mint-bright) 30%,
+			var(--color-ink-800)
+		);
+		--shadow-color: color-mix(in srgb, black 48%, transparent);
+		--shadow-accent-color: color-mix(
+			in srgb,
+			var(--color-brand-purple-bright) 18%,
+			transparent
+		);
+	}
+}
+
 @layer base {
+	/*
+	 * Avoid a one-word last line. `balance` is its own rule so an engine that
+	 * drops `pretty` keeps it. A second `text-wrap` in the same block is what
+	 * the duplicate-property lint rejects.
+	 */
+	p,
+	li,
+	h1,
+	h2,
+	h3,
+	h4 {
+		text-wrap: balance;
+	}
+
+	p,
+	li,
+	h1,
+	h2,
+	h3,
+	h4 {
+		text-wrap: pretty;
+	}
+
 	html {
 		background-color: var(--color-white);
 		color: var(--color-black);
+		/* Chrome is buttons and labels. Text entry opts back in below. */
+		-webkit-user-select: none;
+		user-select: none;
+		background-attachment: fixed;
+	}
+
+	/*
+	 * rgba stops paint everywhere. The prefixed gradient is a separate rule
+	 * so older WebKit keeps it when the standard syntax is dropped.
+	 */
+	html {
+		background-image:
+			-webkit-radial-gradient(
+				100% 0%,
+				var(--page-wash-dominant),
+				transparent 55%
+			),
+			-webkit-radial-gradient(
+				0% 100%,
+				var(--page-wash-secondary),
+				transparent 50%
+			);
+	}
+
+	html {
 		background-image:
 			radial-gradient(
 				110% 75% at 100% 0%,
-				color-mix(in oklch, var(--color-brand-purple) 14%, transparent),
+				var(--page-wash-dominant),
 				transparent 55%
 			),
 			radial-gradient(
 				90% 55% at 0% 100%,
-				color-mix(in oklch, var(--color-brand-cork) 10%, transparent),
+				var(--page-wash-secondary),
 				transparent 50%
 			);
-		background-attachment: fixed;
 	}
 
 	button,
 	input {
 		cursor: pointer;
+	}
+
+	/*
+	 * Page images and icons are chrome, not files to drag out.
+	 * -webkit-user-drag covers Chromium and Safari. Firefox still starts a
+	 * drag on img/svg unless dragstart is cancelled (see main.tsx).
+	 */
+	img,
+	svg,
+	picture,
+	video,
+	canvas,
+	audio {
+		-webkit-user-drag: none;
+	}
+
+	/*
+	 * Text entry can be selected so a value can be replaced. -webkit-user-drag
+	 * blocks dragging that selection out in Chromium and Safari. Firefox still
+	 * fires dragstart (see main.tsx). Range, check, and radio stay off this
+	 * rule so a thumb drag is not treated as a value drag.
+	 */
+	input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):not(
+			[type="button"]
+		):not([type="submit"]):not([type="reset"]):not([type="file"]),
+	textarea {
+		-webkit-user-select: text;
+		user-select: text;
+		-webkit-user-drag: none;
 	}
 
 	*:disabled {
@@ -258,7 +500,7 @@
 		border-radius: 9999px;
 		border: 2px solid var(--color-primary);
 		background: var(--color-white);
-		box-shadow: 0 0 0 1px color-mix(in oklch, var(--color-mid) 40%, transparent);
+		box-shadow: 0 0 0 1px rgba(159, 157, 165, 0.4);
 	}
 
 	input[type="range"]::-moz-range-track {
@@ -274,7 +516,7 @@
 		border-radius: 9999px;
 		border: 2px solid var(--color-primary);
 		background: var(--color-white);
-		box-shadow: 0 0 0 1px color-mix(in oklch, var(--color-mid) 40%, transparent);
+		box-shadow: 0 0 0 1px rgba(159, 157, 165, 0.4);
 	}
 }
 
@@ -290,12 +532,59 @@
 	filter: drop-shadow(0 0 0.45rem rgba(145, 72, 147, 0.35));
 }
 
-@supports (color: color-mix(in oklch, red, blue)) {
+@supports (color: color-mix(in srgb, red, blue)) {
+	:root {
+		--color-surface: color-mix(
+			in srgb,
+			var(--color-brand-purple) 8%,
+			var(--color-ink-100)
+		);
+		--color-surface-muted: color-mix(
+			in srgb,
+			var(--color-brand-purple) 12%,
+			var(--color-ink-200)
+		);
+		--color-chrome: color-mix(
+			in srgb,
+			var(--color-brand-mint) 8%,
+			var(--color-ink-100)
+		);
+		--color-chrome-hover: color-mix(
+			in srgb,
+			var(--color-brand-mint) 14%,
+			var(--color-ink-200)
+		);
+		--shadow-accent-color: color-mix(
+			in srgb,
+			var(--color-brand-purple) 24%,
+			transparent
+		);
+	}
+
+	html {
+		background-image:
+			radial-gradient(
+				110% 75% at 100% 0%,
+				var(--page-wash-dominant),
+				transparent 52%
+			),
+			radial-gradient(
+				90% 60% at 0% 100%,
+				var(--page-wash-secondary),
+				transparent 48%
+			);
+	}
+
+	input[type="range"]::-webkit-slider-thumb,
+	input[type="range"]::-moz-range-thumb {
+		box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-mid) 40%, transparent);
+	}
+
 	.AppTitleBrand,
 	.AppTitleBrandTrigger:hover,
 	.AppTitleBrandTrigger:focus-visible {
 		filter: drop-shadow(
-			0 0 0.45rem color-mix(in oklch, var(--color-primary) 35%, transparent)
+			0 0 0.45rem color-mix(in srgb, var(--color-primary) 35%, transparent)
 		);
 	}
 }
@@ -308,7 +597,7 @@
 			125deg,
 			var(--color-primary) 0%,
 			var(--color-brand-gradient-a) 28%,
-			var(--color-brand-cork) 52%,
+			var(--color-brand-mint) 52%,
 			var(--color-brand-gradient-b) 76%,
 			var(--color-primary) 100%
 		);
@@ -466,19 +755,92 @@
 	opacity: 0.42;
 }
 
+.PlayModeIcon:not(.PlayModeIcon--selected) {
+	background-color: rgba(250, 249, 252, 0.7);
+}
+
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) .PlayModeIcon:not(.PlayModeIcon--selected) {
+		background-color: rgba(13, 9, 14, 0.7);
+	}
+}
+
+:root[data-theme="dark"] .PlayModeIcon:not(.PlayModeIcon--selected) {
+	background-color: rgba(13, 9, 14, 0.7);
+}
+
+.PlayModeIcon--bucket.PlayModeIcon--selected {
+	background-color: #e4d9e7;
+	box-shadow: 0 0 0 1px rgba(145, 72, 147, 0.28);
+}
+
+.PlayModeIcon--poison.PlayModeIcon--selected {
+	background-color: #dae7db;
+	box-shadow: 0 0 0 1px rgba(110, 186, 102, 0.3);
+}
+
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) .PlayModeIcon--bucket.PlayModeIcon--selected {
+		background-color: #2b1a2d;
+	}
+
+	:root:not([data-theme="light"]) .PlayModeIcon--poison.PlayModeIcon--selected {
+		background-color: #293029;
+	}
+}
+
+:root[data-theme="dark"] .PlayModeIcon--bucket.PlayModeIcon--selected {
+	background-color: #2b1a2d;
+}
+
+:root[data-theme="dark"] .PlayModeIcon--poison.PlayModeIcon--selected {
+	background-color: #293029;
+}
+
+@supports (color: color-mix(in srgb, red, blue)) {
+	:root .PlayModeIcon:not(.PlayModeIcon--selected) {
+		background-color: color-mix(in srgb, var(--color-white) 70%, transparent);
+	}
+
+	:root .PlayModeIcon--bucket.PlayModeIcon--selected {
+		background-color: color-mix(
+			in srgb,
+			var(--color-brand-gradient-a) 14%,
+			var(--color-surface)
+		);
+		box-shadow: 0 0 0 1px
+			color-mix(in srgb, var(--color-brand-gradient-a) 28%, transparent);
+	}
+
+	:root .PlayModeIcon--poison.PlayModeIcon--selected {
+		background-color: color-mix(
+			in srgb,
+			var(--color-brand-gradient-b) 18%,
+			var(--color-surface)
+		);
+		box-shadow: 0 0 0 1px
+			color-mix(in srgb, var(--color-brand-gradient-b) 30%, transparent);
+	}
+}
+
 .PlayModeBucketIcon__path--active {
-	filter: drop-shadow(
-		0 1px 1px
-			color-mix(in oklch, var(--color-brand-gradient-a) 45%, transparent)
-	);
+	filter: drop-shadow(0 1px 1px rgba(145, 72, 147, 0.45));
+}
+
+@supports (color: color-mix(in srgb, red, blue)) {
+	.PlayModeBucketIcon__path--active {
+		filter: drop-shadow(
+			0 1px 1px
+				color-mix(in srgb, var(--color-brand-gradient-a) 45%, transparent)
+		);
+	}
 }
 
 /* Settings scroll panel: reserve gutter so the bar never sits on checkboxes. */
 .SettingsTabPanel {
 	scrollbar-gutter: stable;
 	scrollbar-width: thin;
-	scrollbar-color: color-mix(in oklch, var(--color-mid) 70%, transparent)
-		transparent;
+	scrollbar-color: rgba(159, 157, 165, 0.7) transparent;
 }
 
 .SettingsTabPanel::-webkit-scrollbar {
@@ -490,14 +852,85 @@
 }
 
 .SettingsTabPanel::-webkit-scrollbar-thumb {
-	background: color-mix(in oklch, var(--color-mid) 70%, transparent);
+	background: rgba(159, 157, 165, 0.7);
 	border-radius: 9999px;
 	border: 2px solid transparent;
 	background-clip: padding-box;
+	-webkit-background-clip: padding-box;
 }
 
 .SettingsTabPanel::-webkit-scrollbar-thumb:hover {
-	background: color-mix(in oklch, var(--color-dark) 55%, transparent);
+	background: rgba(67, 65, 73, 0.55);
 	background-clip: padding-box;
+	-webkit-background-clip: padding-box;
 	border: 2px solid transparent;
+}
+
+@supports (color: color-mix(in srgb, red, blue)) {
+	.SettingsTabPanel {
+		scrollbar-color: color-mix(in srgb, var(--color-mid) 70%, transparent)
+			transparent;
+	}
+
+	.SettingsTabPanel::-webkit-scrollbar-thumb {
+		background: color-mix(in srgb, var(--color-mid) 70%, transparent);
+	}
+
+	.SettingsTabPanel::-webkit-scrollbar-thumb:hover {
+		background: color-mix(in srgb, var(--color-dark) 55%, transparent);
+	}
+}
+
+/*
+ * Timed notice fill. Height, solid color, and both gradient syntaxes are
+ * asserted in src/lib/__tests__/timed-notice.test.ts.
+ * Stops are theme variables (hex in @theme; hex again when crayon prefs apply).
+ * No color-mix() or oklch() here — see documentation/IOS.md.
+ * scaleX avoids animating width (layout) on WebKit.
+ */
+.TimedNoticeProgress {
+	height: 0.5rem;
+	transform-origin: left center;
+	transform: scaleX(0);
+	background-color: var(--color-primary);
+	animation-name: timed-notice-fill;
+	animation-duration: var(--timed-notice-duration, 2.5s);
+	animation-timing-function: linear;
+	animation-fill-mode: forwards;
+}
+
+.TimedNoticeProgress {
+	background-image: -webkit-linear-gradient(
+		left,
+		var(--color-primary),
+		var(--color-secondary)
+	);
+}
+
+.TimedNoticeProgress {
+	background-image: linear-gradient(
+		to right,
+		var(--color-primary),
+		var(--color-secondary)
+	);
+}
+
+.TimedNoticeProgress[data-paused="true"] {
+	animation-play-state: paused;
+}
+
+@keyframes timed-notice-fill {
+	from {
+		transform: scaleX(0);
+	}
+	to {
+		transform: scaleX(1);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.TimedNoticeProgress {
+		animation: none;
+		transform: scaleX(1);
+	}
 }

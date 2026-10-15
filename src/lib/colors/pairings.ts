@@ -19,58 +19,72 @@ export type ColorPairing = {
 export const BRAND_PAIRING: ColorPairing = {
 	id: 'brand',
 	label: 'Poison Rhythm',
-	caption: 'Brand purple + deep mint — Grade A in light and dark.',
+	caption: 'Brand purple and deep mint.',
 	dominantId: null,
 	secondaryId: null,
 	recommended: true,
 };
 
 /**
- * Curated tray pairs — only crayons that can earn A/B.
- * Pastel yellows/greens wash out and are omitted on purpose.
+ * Curated pairs at 7:1 or better (grade A) across hue families.
+ * Only Black against a light crayon clears that bar in this tray.
  */
 export const CURATED_PAIRINGS: readonly ColorPairing[] = [
 	{
-		id: 'plum-brick-red',
-		label: 'Plum & Brick Red',
-		caption: 'Deep purple fill with a warm red border.',
-		dominantId: 'plum',
-		secondaryId: 'brick-red',
+		id: 'yellow-black',
+		label: 'Yellow & Black',
+		caption: 'Yellow fill, black border.',
+		dominantId: 'yellow',
+		secondaryId: 'black',
 	},
 	{
-		id: 'plum-blue-violet',
-		label: 'Plum & Blue Violet',
-		caption: 'Cool analogous pair with clear hue separation.',
-		dominantId: 'plum',
-		secondaryId: 'blue-violet',
+		id: 'black-sea-green',
+		label: 'Black & Sea Green',
+		caption: 'Black fill, green border.',
+		dominantId: 'black',
+		secondaryId: 'sea-green',
 	},
 	{
-		id: 'blue-violet-brick-red',
-		label: 'Blue Violet & Brick Red',
-		caption: 'Cool dominant with a warm border accent.',
-		dominantId: 'blue-violet',
-		secondaryId: 'brick-red',
+		id: 'sky-blue-black',
+		label: 'Sky Blue & Black',
+		caption: 'Sky blue fill, black border.',
+		dominantId: 'sky-blue',
+		secondaryId: 'black',
 	},
 	{
-		id: 'brick-red-plum',
-		label: 'Brick Red & Plum',
-		caption: 'Warm fill with a deep purple border.',
-		dominantId: 'brick-red',
-		secondaryId: 'plum',
+		id: 'black-orange',
+		label: 'Black & Orange',
+		caption: 'Black fill, orange border.',
+		dominantId: 'black',
+		secondaryId: 'orange',
 	},
 	{
-		id: 'mahogany-blue-violet',
-		label: 'Mahogany & Blue Violet',
-		caption: 'Earth fill with a cool violet border.',
-		dominantId: 'mahogany',
-		secondaryId: 'blue-violet',
+		id: 'carnation-pink-black',
+		label: 'Carnation Pink & Black',
+		caption: 'Pink fill, black border.',
+		dominantId: 'carnation-pink',
+		secondaryId: 'black',
 	},
 	{
-		id: 'red-violet-plum',
-		label: 'Red Violet & Plum',
-		caption: 'Jewel tones with clear separation.',
-		dominantId: 'red-violet',
-		secondaryId: 'plum',
+		id: 'black-cerulean',
+		label: 'Black & Cerulean',
+		caption: 'Black fill, cerulean border.',
+		dominantId: 'black',
+		secondaryId: 'cerulean',
+	},
+	{
+		id: 'wisteria-black',
+		label: 'Wisteria & Black',
+		caption: 'Violet fill, black border.',
+		dominantId: 'wisteria',
+		secondaryId: 'black',
+	},
+	{
+		id: 'black-burnt-sienna',
+		label: 'Black & Burnt Sienna',
+		caption: 'Black fill, earth border.',
+		dominantId: 'black',
+		secondaryId: 'burnt-sienna',
 	},
 ];
 
@@ -102,8 +116,8 @@ function pairingHexes(pairing: ColorPairing): {
 }
 
 /**
- * Only offer pairings that earn A or B (classroom bar).
- * Brand is always included by {@link suggestPairings} and must itself be A.
+ * Curated pairs must be grade A (7:1 between Dominant and Secondary).
+ * Brand is listed first by {@link suggestPairings} as the product default.
  */
 export function pairingPassesA11y(pairing: ColorPairing): boolean {
 	const hexes = pairingHexes(pairing);
@@ -111,14 +125,12 @@ export function pairingPassesA11y(pairing: ColorPairing): boolean {
 		return false;
 	}
 	return (
-		rateColorPairContrast(hexes.dominantHex, hexes.secondaryHex).level ===
-		'pass'
+		rateColorPairContrast(hexes.dominantHex, hexes.secondaryHex).grade === 'A'
 	);
 }
 
 /**
- * Brand first, then curated pairs that pass AA+ grades.
- * Always keeps Brand even if somehow flagged.
+ * Brand first, then curated pairs at 7:1 or better.
  */
 export function suggestPairings(): ColorPairing[] {
 	const curated = CURATED_PAIRINGS.filter(pairingPassesA11y);

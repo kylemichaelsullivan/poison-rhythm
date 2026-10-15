@@ -1,6 +1,6 @@
 import { Modal } from '@/components/layout';
-import { Button, Caption, Stack } from '@/components/ui';
-import { ModalActions } from './ModalActions';
+import { Caption } from '@/components/ui';
+import { TIMED_NOTICE_DURATION_MS } from '@/lib/timed-notice';
 
 type DifficultyRegenAckModalProps = {
 	open: boolean;
@@ -12,17 +12,15 @@ export function DifficultyRegenAckModal({
 	onAcknowledge,
 }: DifficultyRegenAckModalProps) {
 	return (
-		<Modal open={open} title='Difficulty Updated' onClose={onAcknowledge}>
-			<Stack gap='4'>
-				<Caption size='sm'>
-					Difficulty updated. A new pattern was generated.
-				</Caption>
-				<ModalActions>
-					<Button variant='primary' modalInitialFocus onClick={onAcknowledge}>
-						OK
-					</Button>
-				</ModalActions>
-			</Stack>
+		<Modal
+			open={open}
+			title='Difficulty Updated'
+			dismissAfterMs={TIMED_NOTICE_DURATION_MS}
+			onClose={onAcknowledge}
+		>
+			<Caption size='sm'>
+				Difficulty updated. A new pattern was generated.
+			</Caption>
 		</Modal>
 	);
 }

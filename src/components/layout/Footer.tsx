@@ -10,7 +10,7 @@ export function Footer() {
 	return (
 		<footer
 			className={clsx(
-				'Footer border-t-2 border-primary/30',
+				'Footer border-t-4 border-primary bg-secondary text-on-secondary',
 				appChromeBarClassName,
 				appChromeBarFooterClassName,
 			)}

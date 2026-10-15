@@ -1,31 +1,46 @@
 import clsx from 'clsx';
+import { sectionTitleClassName } from '@/components/layout/SectionTitle';
 import type { GameModeHudBadge } from '@/lib/settings-schema';
-
-/** Solid fg/bg for WCAG AAA contrast; tone is carried by the border. */
-const TONE_CLASS: Record<GameModeHudBadge['tone'], string> = {
-	endless:
-		'border-primary-border bg-primary/15 text-primary shadow-soft group-hover:border-primary group-focus-visible:border-primary',
-	bucket:
-		'border-primary/40 bg-primary/10 text-dark shadow-soft group-hover:border-primary group-focus-visible:border-primary',
-	classic:
-		'border-mid bg-chrome text-dark shadow-control group-hover:border-primary group-focus-visible:border-primary',
-};
+import { PlayModeBucketGlyph } from './PlayModeBucketGlyph';
+import { PlayModePoisonGlyph } from './PlayModePoisonGlyph';
 
 type ModeBadgeProps = {
 	badge: GameModeHudBadge;
 };
 
+/** Play-mode icon. Endless uses the same chrome with an infinity overlay. */
 export function ModeBadge({ badge }: ModeBadgeProps) {
 	return (
 		<span
-			className={clsx(
-				'ModeBadge inline-flex items-center rounded border px-2.5 py-1 text-sm font-bold tracking-wide transition-colors',
-				TONE_CLASS[badge.tone],
-			)}
+			className='ModeBadge inline-flex items-center gap-2'
 			data-testid='mode-badge'
 			data-mode-tone={badge.tone}
+			data-endless={badge.endless ? 'true' : 'false'}
 		>
-			{badge.label}
+			<span
+				className={clsx(
+					'relative inline-flex size-11 shrink-0 items-center justify-center rounded-full border-2 border-secondary bg-surface text-black shadow-control transition-[colors,box-shadow]',
+					'group-hover:bg-primary group-hover:text-on-primary group-hover:shadow-soft',
+					'group-focus-visible:border-primary',
+				)}
+			>
+				{badge.tone === 'bucket' ? (
+					<PlayModeBucketGlyph active={false} size='sm' />
+				) : (
+					<PlayModePoisonGlyph size='sm' />
+				)}
+				{badge.endless ? (
+					<span
+						className='pointer-events-none absolute top-0.5 right-0.5 flex size-3.5 items-center justify-center rounded-full bg-surface-muted text-[10px] font-bold leading-none text-dark ring-1 ring-mid'
+						aria-hidden
+					>
+						∞
+					</span>
+				) : null}
+			</span>
+			<span className={clsx(sectionTitleClassName, 'whitespace-nowrap')}>
+				{badge.label}
+			</span>
 		</span>
 	);
 }

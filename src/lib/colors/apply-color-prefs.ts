@@ -1,4 +1,9 @@
-import { ACCENT_BRIGHTEN_FOR_DARK, mixToward, pickOnColor } from './contrast';
+import {
+	ACCENT_BRIGHTEN_FOR_DARK,
+	mixToward,
+	parseHexColor,
+	pickOnColor,
+} from './contrast';
 import { type CrayonId, crayonByIdOrNull } from './crayola-64';
 
 /**
@@ -21,7 +26,16 @@ const COLOR_VARS = [
 	'--color-secondary',
 	'--color-on-secondary',
 	'--color-secondary-border',
+	'--color-accent',
+	'--page-wash-dominant',
+	'--page-wash-secondary',
+	'--shadow-accent-color',
 ] as const;
+
+function rgba(hex: string, alpha: number): string {
+	const { r, g, b } = parseHexColor(hex);
+	return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
 
 export type AppliedColorPrefs = {
 	dominantId: CrayonId | null;
@@ -82,4 +96,8 @@ export function applyColorPreferenceVars(
 	root.style.setProperty('--color-secondary', mintDeep);
 	root.style.setProperty('--color-on-secondary', pickOnColor(mintDeep));
 	root.style.setProperty('--color-secondary-border', dominantHex);
+	root.style.setProperty('--color-accent', secondaryHex);
+	root.style.setProperty('--page-wash-dominant', rgba(dominantHex, 0.16));
+	root.style.setProperty('--page-wash-secondary', rgba(secondaryHex, 0.12));
+	root.style.setProperty('--shadow-accent-color', rgba(dominantHex, 0.28));
 }

@@ -7,6 +7,10 @@ export type ModalSize = 'sm' | 'md' | 'lg' | 'xl';
 type ModalPanelProps = {
 	size?: ModalSize;
 	fullWidth?: boolean;
+	/** Clip to the panel radius. Used when a timed-notice bar sits on the top edge. */
+	clip?: boolean;
+	/** Pointer is over the panel. Timed notices pause while this is true. */
+	onHoverChange?: (hovered: boolean) => void;
 	labelledBy?: string;
 	ariaLabel?: string;
 	children: ReactNode;
@@ -21,6 +25,8 @@ const phoneNearFullscreenClassName =
 export function ModalPanel({
 	size = 'sm',
 	fullWidth = false,
+	clip = false,
+	onHoverChange,
 	labelledBy,
 	ariaLabel,
 	children,
@@ -47,11 +53,14 @@ export function ModalPanel({
 				maxHeightClassName,
 				modalPanelClassName,
 				phoneNearFullscreenClassName,
+				clip && 'overflow-hidden',
 				fullWidth
 					? 'max-w-none rounded-none'
 					: clsx(sizeClassName, 'sm:rounded-lg'),
 			)}
 			role='dialog'
+			onMouseEnter={onHoverChange ? () => onHoverChange(true) : undefined}
+			onMouseLeave={onHoverChange ? () => onHoverChange(false) : undefined}
 			aria-modal='true'
 			aria-labelledby={labelledBy}
 			aria-label={labelledBy ? undefined : (ariaLabel ?? 'Modal')}

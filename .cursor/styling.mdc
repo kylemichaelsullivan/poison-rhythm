@@ -9,6 +9,7 @@ alwaysApply: false
 ## Typography
 
 - **Apostrophes**: ALL user-facing text MUST use the typographic apostrophe ’ instead of the straight apostrophe '
+- **Orphans**: Do not glue words with non-breaking spaces. Paragraphs, list items, and headings set `text-wrap: balance` then `text-wrap: pretty` in `src/index.css`. Unsupported `pretty` is dropped and `balance` remains. Use the `text-pretty` utility only when an element is not one of those.
 - **Titles & alt text**: Prefer Title Case for titles, section headings, control labels, `title`, `alt`, and short `aria-label` / accessible names (e.g. `Show Next Measure`, `Visual Feedback`). Leave short prepositions lowercase when they sit mid-phrase (`Tap for Tempo`, `Click to Generate`). Body copy, captions, hints, and descriptions stay sentence case.
 - **Consistency**: Maintain consistent typography throughout the application
 
@@ -34,7 +35,9 @@ alwaysApply: false
 
 ### Color & Theme
 
-Theme tokens are defined in `src/index.css` (`@theme`) and exposed as Tailwind utilities. They use `light-dark()` so light/dark/system mode stays consistent when `data-theme` changes.
+Theme tokens are defined in `src/index.css` (`@theme`) as hex and rgba, then exposed as Tailwind utilities. Dark mode swaps those tokens with `prefers-color-scheme` and `data-theme` (iOS 13+). `oklch()` and `color-mix()` are upgrades inside `@supports` only — Chrome on iOS is WebKit, and caniuse puts `light-dark()` at iOS 17.5, `@property` at 16.4, `color-mix()` at 16.2, and `oklch()` at 15.4. Do not put a second `oklch()` or `light-dark()` value on the same `@theme` token; the build keeps only the last one. Do not stack `#hex` and `oklch()` on an untyped custom property — the `oklch()` replaces the hex. Brand and ink tokens are `@property` colors whose `initial-value` is the sRGB hex. iOS notes (experienced and speculative) live in [`documentation/IOS.md`](../documentation/IOS.md).
+
+The timed-notice bar (`.TimedNoticeProgress`) is `0.5rem` tall and animates with `scaleX`, not `width`. Its gradient stops are `var(--color-primary)` and `var(--color-secondary)` only: a solid `background-color` first, then `-webkit-linear-gradient(left, …)`, then `linear-gradient(to right, …)`. Do not put `color-mix()` or `oklch()` in that rule.
 
 **Semantic tokens** (prefer these):
 
@@ -220,6 +223,8 @@ className='flex items-center gap-2';
 
 ## CSS Best Practices
 
+- **No asset dragging**: Images, inline icons, and other media (`img`, `svg`, `picture`, `video`, `canvas`, `audio`) are not draggable. Global `-webkit-user-drag: none` lives in `src/index.css`; `main.tsx` cancels `dragstart` for Firefox. Set `draggable={false}` on `<img>` elements as well.
+- **Selection is opt-in**: `html` sets `-webkit-user-select: none` and `user-select: none`. Text-entry `input`s and `textarea` set `user-select: text`. Those fields also set `-webkit-user-drag: none`, and `main.tsx` cancels `dragstart` on them, so a selected value cannot be dragged out. Range, checkbox, and radio inputs are excluded. Do not add `select-none` on labels or chrome.
 - **Theme colors only**: Define palette values in `src/index.css` `@theme`; consume them via Tailwind utilities or `control-classes.ts` helpers in components
 - **No !important**: Avoid using `!important` declarations in CSS
 - **TypeScript**: Avoid using the `any` type in TypeScript code
