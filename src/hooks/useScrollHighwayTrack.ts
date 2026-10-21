@@ -1,6 +1,11 @@
 import type { RefObject } from 'react';
 import { useEffect, useRef } from 'react';
-import { useGame, useMetronome, useSubdivision } from '@/contexts';
+import {
+	useGame,
+	useMetronome,
+	useMetronomeTempo,
+	useSubdivision,
+} from '@/contexts';
 import { COUNT_IN_BEATS } from '@/lib/metronome-defaults';
 import {
 	countInHighwayProgress,
@@ -28,12 +33,12 @@ export function useScrollHighwayTrack(
 	const { currentIndex } = useGame();
 	const {
 		subdivisionIndex,
-		tempo,
 		isCountingIn,
 		countInBeat,
 		isMeasuresRunning,
 		measureCycle,
 	} = useMetronome();
+	const { tempo } = useMetronomeTempo();
 	const { subdivisionLevel } = useSubdivision();
 
 	const animating = active && isMeasuresRunning;
