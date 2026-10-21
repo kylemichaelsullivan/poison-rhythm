@@ -15,11 +15,11 @@ export function DifficultyHelpModal({
 }: DifficultyHelpModalProps) {
 	return (
 		<Modal open={open} title='Difficulty Levels' onClose={onClose}>
-			<Stack gap='4'>
+			<Stack gap='3'>
 				<DifficultyHelpList />
 				<Caption size='sm'>
-					On 1/8 or 1/4 notes, hit counts shrink to fit the fewer slots so
-					higher difficulty stays varied instead of filling every beat.
+					Ranges are for 1/16 grids; on 1/8 or 1/4 they shrink so higher levels
+					stay varied instead of filling every beat.
 				</Caption>
 				<Row justify='center'>
 					<Button

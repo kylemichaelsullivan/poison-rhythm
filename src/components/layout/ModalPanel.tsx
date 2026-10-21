@@ -46,7 +46,8 @@ export function ModalPanel({
 				// Smaller modals (About, etc.) hug content and stay centered in the scrim.
 				isXl
 					? 'gap-0 p-0 max-sm:h-dvh max-sm:max-h-dvh max-sm:w-full max-sm:max-w-none max-sm:rounded-none sm:gap-4 sm:p-6 sm:max-h-[80vh]'
-					: 'gap-4 p-4 max-sm:max-h-[min(100dvh,100%)] sm:p-6 sm:max-h-[min(90vh,40rem)]',
+					: // Definite dvh calc (not %): unresolved % max-height becomes none and lets tall dialogs overflow the viewport.
+						'gap-4 overflow-hidden p-4 max-h-[calc(100dvh-2rem-env(safe-area-inset-top)-env(safe-area-inset-bottom))] sm:p-6 sm:max-h-[min(90vh,40rem)]',
 				modalPanelClassName,
 				clip && 'overflow-hidden',
 				fullWidth

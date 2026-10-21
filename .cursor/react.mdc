@@ -117,7 +117,7 @@ Provider tree in `main.tsx`: `ThemeProvider` → `ColorPreferencesProvider` → 
 - **App**: `GameProvider` → `PendingDifficultyProvider` → `AboutPoisonRhythmProvider`; memoized `AppContent` + `AboutPoisonRhythmModal` + `DifficultyRegenAckHost`
 - **Body**: Composer; soft-disable focus via `useSoftDisableFocus`; owns single `DisplayModeModal`
 - **ui/**: Elemental atoms (`Button`, `IconButton` including `modalClose`, `Caption`, `Stack`, `Row`)
-- **Modal**: Composer over `ModalScrim` / `ModalPanel` / `ModalCloseButton` / `ModalTitle` + `useModalFocusTrap`
+- **Modal**: Composer over `ModalScrim` / `ModalPanel` / `ModalCloseButton` / `ModalTitle` + `useModalFocusTrap`; portals to `document.body` (nested dialogs escape parent overflow / backdrop-filter)
 - **DifficultyControls**: `DifficultyFramedBlock` / `DifficultySettingsBlock` + help / play-mode modals; regen ack via `DifficultyRegenAckHost`
 - **PoisonSection**: Composer; `PoisonSectionHeader`, `PoisonMeasureContent` / `PoisonMeasureFrame` / `HiddenPoisonOverlay`
 - **MeasuresSection / MeasureSlider**: `NextMeasureToggle`, `MeasuresSectionHeaderActions`, carousel chrome + `useMeasurePlaybackSync`

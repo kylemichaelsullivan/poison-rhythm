@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import { type ReactNode, useEffect, useId, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useModalFocusTrap } from '@/hooks/useModalFocusTrap';
 import { useTimedDismiss } from '@/hooks/useTimedDismiss';
 import { ModalCloseButton } from './ModalCloseButton';
@@ -52,7 +53,9 @@ export function Modal({
 
 	const sheet = size === 'xl';
 
-	return (
+	// Portal to body so nested dialogs (e.g. Difficulty Help inside About) are not
+	// clipped by a parent ModalPanel’s overflow / backdrop-filter containing block.
+	return createPortal(
 		<div
 			className={clsx(
 				'Modal fixed inset-0 z-50 flex items-center justify-center',
@@ -88,12 +91,13 @@ export function Modal({
 				<div
 					className={clsx(
 						'flex min-h-0 flex-col',
-						sheet ? 'flex-1' : 'shrink-0',
+						sheet ? 'flex-1' : 'overflow-y-auto overscroll-contain',
 					)}
 				>
 					{children}
 				</div>
 			</ModalPanel>
-		</div>
+		</div>,
+		document.body,
 	);
 }

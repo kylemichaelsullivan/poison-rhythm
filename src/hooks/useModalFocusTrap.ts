@@ -43,6 +43,17 @@ export function useModalFocusTrap(
 		initialFocus?.focus();
 
 		function handleKeyDown(e: KeyboardEvent) {
+			// Nested portaled modals each register a listener; only the topmost acts.
+			const overlay = dialog?.closest('.Modal');
+			const stack = document.querySelectorAll('.Modal');
+			if (
+				overlay != null &&
+				stack.length > 0 &&
+				overlay !== stack[stack.length - 1]
+			) {
+				return;
+			}
+
 			if (e.key === 'Escape') {
 				e.preventDefault();
 				onClose();

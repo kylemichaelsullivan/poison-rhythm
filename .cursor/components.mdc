@@ -75,6 +75,7 @@ src/components/
 
 - **Purpose**: Shared dialog shell
 - **Layers**: `ModalScrim`, `ModalPanel` (`size` / `fullWidth`), `ModalCloseButton` (`IconButton` `modalClose`), `ModalTitle`, `useModalFocusTrap`
+- **Portal**: Renders via `createPortal(..., document.body)` so nested dialogs (Difficulty Help / Play Modes inside About or Settings) are not clipped by a parent `ModalPanel` `overflow` / `backdrop-filter` containing block. Non-`xl` panels use a definite `dvh` max-height and scroll the body; `useModalFocusTrap` only handles Escape/Tab for the topmost `.Modal`.
 - **Props**: `open`, `onClose`, `title`, `ariaLabel`, `size`, `fullWidth`, optional `dismissAfterMs` (auto-close + `TimedNoticeProgress`)
 
 ### CornerModal / CornerButton
