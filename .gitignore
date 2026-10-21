@@ -6,17 +6,33 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+bun-debug.log*
 
 node_modules
 package-lock.json
 dist
 dist-ssr
 *.local
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Test / Playwright artifacts
 test-results
 playwright-report
 blob-report
 playwright/.cache
-.tmp-glyphs
+coverage
+*.lcov
+
+# Local scratch (glyph audits, screenshots, python venvs)
+.tmp-*
+
+# Caches
+.cache
+*.tsbuildinfo
 
 # Editor directories and files
 .vscode/*
@@ -24,6 +40,7 @@ playwright/.cache
 .idea
 *.code-workspace
 .DS_Store
+Thumbs.db
 *.suo
 *.ntvs*
 *.njsproj

@@ -9,7 +9,7 @@
 		"includes": [
 			"**",
 			"!!**/dist",
-			"!!**/.tmp-glyphs",
+			"!!**/.tmp-*",
 			"!!**/test-results",
 			"!!**/playwright-report",
 			"!!**/blob-report",
