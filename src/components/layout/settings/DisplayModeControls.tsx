@@ -14,6 +14,7 @@ export function DisplayModeControls() {
 				ariaLabel='Rhythm Render Mode'
 				options={RENDER_MODE_OPTIONS}
 				value={settings.rhythmRenderMode}
+				stackBelowSm
 				onChange={(value) => {
 					set('rhythmRenderMode', value);
 					if (value === 'notation') {
@@ -24,7 +25,7 @@ export function DisplayModeControls() {
 				}}
 			/>
 			<SettingRow label='Scroll'>
-				<span className='text-sm text-muted'>Coming Soon</span>
+				<span className='text-sm italic text-muted'>Coming Soon</span>
 			</SettingRow>
 		</Stack>
 	);

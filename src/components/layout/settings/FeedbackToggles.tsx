@@ -1,23 +1,19 @@
 import EyeIcon from '@/assets/svg/eye.svg?react';
 import HeadphoneIcon from '@/assets/svg/headphone.svg?react';
-import { Row } from '@/components/ui';
 import {
-	type FeedbackMode,
 	feedbackModeFromToggles,
 	feedbackTogglesFromMode,
 } from '@/lib/settings-schema';
 import { IconToggle } from './IconToggle';
+import { useUpdateSetting } from './useUpdateSetting';
 
-type FeedbackTogglesProps = {
-	value: FeedbackMode;
-	onChange: (value: FeedbackMode) => void;
-};
-
-export function FeedbackToggles({ value, onChange }: FeedbackTogglesProps) {
-	const { visual, audio } = feedbackTogglesFromMode(value);
+/** Visual / audio feedback gates — binds to global game settings. */
+export function FeedbackToggles() {
+	const { settings, set } = useUpdateSetting();
+	const { visual, audio } = feedbackTogglesFromMode(settings.feedbackMode);
 
 	return (
-		<Row gap='2' align='center' fullWidth>
+		<div className='FeedbackToggles flex w-full flex-wrap items-center gap-2'>
 			<IconToggle
 				label='Visual Feedback'
 				title={visual ? 'Disable Visual Feedback' : 'Enable Visual Feedback'}
@@ -26,7 +22,7 @@ export function FeedbackToggles({ value, onChange }: FeedbackTogglesProps) {
 				unpressedIcon={EyeIcon}
 				grow='auto'
 				onPressedChange={(next) =>
-					onChange(feedbackModeFromToggles(next, audio))
+					set('feedbackMode', feedbackModeFromToggles(next, audio))
 				}
 			/>
 			<IconToggle
@@ -37,9 +33,9 @@ export function FeedbackToggles({ value, onChange }: FeedbackTogglesProps) {
 				unpressedIcon={HeadphoneIcon}
 				grow='auto'
 				onPressedChange={(next) =>
-					onChange(feedbackModeFromToggles(visual, next))
+					set('feedbackMode', feedbackModeFromToggles(visual, next))
 				}
 			/>
-		</Row>
+		</div>
 	);
 }

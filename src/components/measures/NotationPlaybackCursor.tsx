@@ -1,19 +1,19 @@
-import { useMetronome, useSettings } from '@/contexts';
 import { useSmoothNotationCursor } from '@/hooks/useSmoothNotationCursor';
-import { shouldShowVisualFeedback } from '@/lib/audio';
 
 type NotationPlaybackCursorProps = {
 	playback?: boolean;
 	hidden?: boolean;
+	showVisualFeedback: boolean;
+	isMeasuresPlaying: boolean;
 };
 
 export function NotationPlaybackCursor({
 	playback = false,
 	hidden = false,
+	showVisualFeedback,
+	isMeasuresPlaying,
 }: NotationPlaybackCursorProps) {
-	const { settings } = useSettings();
-	const { isMeasuresPlaying } = useMetronome();
-	const showVisual = shouldShowVisualFeedback(settings.feedbackMode) && !hidden;
+	const showVisual = showVisualFeedback && !hidden;
 	const show = playback && isMeasuresPlaying && showVisual;
 	const leftPct = useSmoothNotationCursor(show);
 
@@ -23,7 +23,7 @@ export function NotationPlaybackCursor({
 
 	return (
 		<div
-			className='NotationPlaybackCursor pointer-events-none absolute inset-y-0 w-0.5 bg-primary shadow-[0_0_0.4rem_var(--color-primary)]'
+			className='NotationPlaybackCursor pointer-events-none absolute inset-y-0 w-0.5 bg-primary'
 			style={{ left: `${leftPct}%`, transform: 'translateX(-50%)' }}
 			aria-hidden
 		/>

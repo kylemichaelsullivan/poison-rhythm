@@ -1,11 +1,7 @@
+import { useMetronomeTempo } from '@/contexts';
 import { BPM_INPUT_STEP, BPM_MAX, BPM_MIN } from '@/lib/metronome-defaults';
 import { tempoTickValues } from '@/lib/metronome-tempo';
 import { MetronomeTempoInput } from './MetronomeTempoInput';
-
-type MetronomeTempoSliderProps = {
-	tempo: number;
-	onTempoChange: (value: number) => void;
-};
 
 const TEMPO_TICKS = tempoTickValues();
 const TEMPO_DATALIST_ID = 'poison-rhythm-tempo-ticks';
@@ -16,10 +12,10 @@ function tickOffsetPercent(tick: number) {
 	return ((tick - BPM_MIN) / TEMPO_SPAN) * 100;
 }
 
-export function MetronomeTempoSlider({
-	tempo,
-	onTempoChange,
-}: MetronomeTempoSliderProps) {
+/** Tempo slider + numeric input — tempo context only (not beat flash). */
+export function MetronomeTempoSlider() {
+	const { tempo, handleTempoChange } = useMetronomeTempo();
+
 	return (
 		<div className='Tempo flex gap-2 items-center w-full min-w-0'>
 			<div className='relative flex flex-col flex-auto min-w-0'>
@@ -32,7 +28,7 @@ export function MetronomeTempoSlider({
 					list={TEMPO_DATALIST_ID}
 					title='Set Tempo'
 					value={tempo}
-					onChange={(e) => onTempoChange(Number(e.target.value))}
+					onChange={(e) => handleTempoChange(Number(e.target.value))}
 					aria-label='Beats per Minute'
 					aria-valuemin={BPM_MIN}
 					aria-valuemax={BPM_MAX}
@@ -61,7 +57,7 @@ export function MetronomeTempoSlider({
 					))}
 				</div>
 			</div>
-			<MetronomeTempoInput tempo={tempo} onTempoChange={onTempoChange} />
+			<MetronomeTempoInput tempo={tempo} onTempoChange={handleTempoChange} />
 		</div>
 	);
 }

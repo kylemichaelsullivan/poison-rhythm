@@ -5,6 +5,7 @@ import {
 	type MeasurePlaybackPhase,
 } from './CurrentMeasureDisplay';
 import { MeasureCarouselChrome } from './MeasureCarouselChrome';
+import type { MeasureDisplayOptions } from './measure-display-options';
 import { NextMeasurePreview } from './NextMeasurePreview';
 
 type MeasureSliderProps = {
@@ -17,6 +18,7 @@ type MeasureSliderProps = {
 	isDemoPass: boolean;
 	isCountingIn: boolean;
 	isMeasuresRunning: boolean;
+	display: MeasureDisplayOptions;
 };
 
 function resolvePlaybackPhase({
@@ -60,6 +62,7 @@ export function MeasureSlider({
 	isDemoPass,
 	isCountingIn,
 	isMeasuresRunning,
+	display,
 }: MeasureSliderProps) {
 	const phase = resolvePlaybackPhase({
 		isCountingIn,
@@ -76,6 +79,7 @@ export function MeasureSlider({
 					<NextMeasurePreview
 						measure={nextDisplayMeasure ?? REST_MEASURE}
 						richMeasure={nextDisplayRich}
+						display={display}
 					/>
 				) : undefined
 			}
@@ -83,7 +87,6 @@ export function MeasureSlider({
 			<CurrentMeasureDisplay
 				measure={displayMeasure}
 				richMeasure={displayRich}
-				highlight
 				playback
 				phase={phase}
 				label={resolvePlaybackLabel({
@@ -91,6 +94,7 @@ export function MeasureSlider({
 					demoBeforePlay,
 					isDemoPass,
 				})}
+				display={display}
 			/>
 		</MeasureCarouselChrome>
 	);

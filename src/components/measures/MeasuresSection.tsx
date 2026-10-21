@@ -5,6 +5,7 @@ import {
 	StableContentFrame,
 } from '@/components/layout';
 import { useGame, useSettings } from '@/contexts';
+import { useMeasureDisplayOptions } from '@/hooks/useMeasureDisplayOptions';
 import { useMeasurePlaybackSync } from '@/hooks/useMeasurePlaybackSync';
 import { isBucketTrainerMode } from '@/lib/settings-schema';
 import { REST_MEASURE } from '@/types';
@@ -24,9 +25,10 @@ export function MeasuresSection({
 	onOpenDisplayMode,
 }: MeasuresSectionProps) {
 	const { measures } = useGame();
-	const { settings, updateSettings } = useSettings();
-	const bucketMode = isBucketTrainerMode(settings);
+	const { settings } = useSettings();
+	const display = useMeasureDisplayOptions();
 	const showNext = settings.showNextMeasure;
+	const showDisplayModeTrigger = isBucketTrainerMode(settings);
 	const {
 		safeIndex,
 		displayMeasure,
@@ -54,18 +56,11 @@ export function MeasuresSection({
 		>
 			<Section
 				title='Measures'
-				headerLeading={
-					<NextMeasureToggle
-						visible={showNext}
-						onVisibleChange={(visible) =>
-							updateSettings({ showNextMeasure: visible })
-						}
-					/>
-				}
+				headerLeading={<NextMeasureToggle />}
 				headerAction={
 					<MeasuresSectionHeaderActions
-						showDisplayMode={bucketMode}
-						renderMode={settings.rhythmRenderMode}
+						showDisplayModeTrigger={showDisplayModeTrigger}
+						renderMode={display.renderMode}
 						onOpenDisplayMode={onOpenDisplayMode}
 					/>
 				}
@@ -76,12 +71,15 @@ export function MeasuresSection({
 							nextSlot={
 								showNext ? (
 									<div className='NextMeasurePreview w-full opacity-35'>
-										<MeasureHeightReserve measure={REST_MEASURE} />
+										<MeasureHeightReserve
+											measure={REST_MEASURE}
+											display={display}
+										/>
 									</div>
 								) : undefined
 							}
 						>
-							<CurrentMeasureDisplay measure={REST_MEASURE} highlight />
+							<CurrentMeasureDisplay measure={REST_MEASURE} display={display} />
 						</MeasureCarouselChrome>
 					}
 				>
@@ -98,6 +96,7 @@ export function MeasuresSection({
 							isDemoPass={isDemoPass}
 							isCountingIn={isCountingIn}
 							isMeasuresRunning={isMeasuresRunning}
+							display={display}
 						/>
 					)}
 				</StableContentFrame>

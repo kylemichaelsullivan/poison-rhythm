@@ -36,8 +36,8 @@ export function DescribedOptionCard<T extends string>({
 			className={clsx(
 				'DescribedOptionCard overflow-hidden rounded-lg border-2 transition-colors',
 				selected
-					? 'border-primary bg-primary/10 shadow-raised'
-					: 'border-mid/80 bg-surface-muted shadow-soft hover:border-primary/45 hover:bg-chrome hover:shadow-raised',
+					? 'border-primary bg-primary/10'
+					: 'border-mid/80 bg-surface-muted hover:border-primary/45 hover:bg-chrome hover:shadow-raised',
 			)}
 		>
 			<label
@@ -45,7 +45,7 @@ export function DescribedOptionCard<T extends string>({
 				className={clsx(
 					'flex cursor-pointer items-center gap-4 p-4',
 					focusVisibleRingClassName,
-					'has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-inset',
+					'has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-inset has-[:focus-visible]:shadow-raised',
 				)}
 			>
 				<RadioInput

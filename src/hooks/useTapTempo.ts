@@ -1,9 +1,10 @@
 import { useRef } from 'react';
-import { useMetronome } from '@/contexts/MetronomeContext';
+import { useMetronome, useMetronomeTempo } from '@/contexts';
 import { applyTapTempo } from '@/lib/metronome-tap-tempo';
 
 export function useTapTempo() {
-	const { setTempo, startMetronome } = useMetronome();
+	const { setTempo } = useMetronomeTempo();
+	const { startMetronome } = useMetronome();
 	const tapTimesRef = useRef<number[]>([]);
 
 	function onTap() {

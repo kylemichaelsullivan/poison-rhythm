@@ -7,6 +7,8 @@ export type ColorPreferencesContextValue = {
 	secondaryColor: ColorPreference;
 	setDominantColor: (color: ColorPreference) => void;
 	setSecondaryColor: (color: ColorPreference) => void;
+	/** Exchange Dominant and Secondary preference values. */
+	swapColors: () => void;
 	resetToBrand: () => void;
 	isBrandDefault: boolean;
 };

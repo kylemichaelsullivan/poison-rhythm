@@ -43,7 +43,7 @@ export function Section({
 		);
 
 	return (
-		<section className='Section flex flex-col gap-4 rounded-lg border-2 border-secondary bg-surface text-black shadow-raised w-full p-4'>
+		<section className='Section flex w-full flex-col gap-4 rounded-lg border-2 border-secondary bg-surface p-4 text-black'>
 			<div className='flex w-full flex-wrap items-center justify-between gap-x-3 gap-y-2'>
 				<div className='flex min-w-0 items-center gap-2'>{start}</div>
 				{end ? (

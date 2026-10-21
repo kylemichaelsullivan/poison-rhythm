@@ -13,17 +13,37 @@ type UseLocalStorageOptions<T> = {
 	getDefault: () => T;
 };
 
+export type LocalStorageSetter<T> = (value: T | ((previous: T) => T)) => void;
+
+function persistValue<T>(
+	key: string,
+	next: T,
+	serialize: (value: T) => string | null,
+	cacheRef: { current: { raw: string | null; value: T } | null },
+) {
+	const encoded = serialize(next);
+	if (encoded === null) {
+		removeStorageItem(key);
+		cacheRef.current = { raw: null, value: next };
+	} else {
+		writeStorageItem(key, encoded);
+		cacheRef.current = { raw: encoded, value: next };
+	}
+}
+
 export function useLocalStorage<T>({
 	key,
 	parse,
 	serialize,
 	getDefault,
-}: UseLocalStorageOptions<T>): [T, (value: T) => void] {
+}: UseLocalStorageOptions<T>): [T, LocalStorageSetter<T>] {
 	const cacheRef = useRef<{ raw: string | null; value: T } | null>(null);
 	const parseRef = useRef(parse);
 	const getDefaultRef = useRef(getDefault);
+	const serializeRef = useRef(serialize);
 	parseRef.current = parse;
 	getDefaultRef.current = getDefault;
+	serializeRef.current = serialize;
 
 	const getSnapshot = useCallback((): T => {
 		const raw = readStorageItem(key);
@@ -46,18 +66,16 @@ export function useLocalStorage<T>({
 		getSnapshot,
 	);
 
-	const setValue = useCallback(
-		(next: T) => {
-			const encoded = serialize(next);
-			if (encoded === null) {
-				removeStorageItem(key);
-				cacheRef.current = { raw: null, value: next };
-			} else {
-				writeStorageItem(key, encoded);
-				cacheRef.current = { raw: encoded, value: next };
-			}
+	const setValue = useCallback<LocalStorageSetter<T>>(
+		(next) => {
+			const previous = getSnapshot();
+			const resolved =
+				typeof next === 'function'
+					? (next as (previous: T) => T)(previous)
+					: next;
+			persistValue(key, resolved, serializeRef.current, cacheRef);
 		},
-		[key, serialize],
+		[key, getSnapshot],
 	);
 
 	return [value, setValue];

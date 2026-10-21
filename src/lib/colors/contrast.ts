@@ -135,6 +135,48 @@ export function pickOnColor(
 	return lightRatio >= darkRatio ? light : dark;
 }
 
+/**
+ * Keep `foreground` when it already clears `minRatio` on `background`.
+ * Otherwise mix toward white or black (whichever improves contrast) just
+ * enough to meet the floor — preserves Secondary/Dominant chroma when the
+ * pair already separates (e.g. Black on gold).
+ */
+export function ensureContrastOn(
+	foreground: string,
+	background: string,
+	minRatio: number = WCAG_AA_TEXT,
+): string {
+	if (contrastRatio(foreground, background) >= minRatio) {
+		return foreground;
+	}
+
+	const towardWhite = contrastRatio(
+		mixToward(foreground, 'white', 0.5),
+		background,
+	);
+	const towardBlack = contrastRatio(
+		mixToward(foreground, 'black', 0.5),
+		background,
+	);
+	const toward: 'white' | 'black' =
+		towardWhite >= towardBlack ? 'white' : 'black';
+
+	let lo = 0;
+	let hi = 1;
+	let best = mixToward(foreground, toward, 1);
+	for (let i = 0; i < 14; i++) {
+		const mid = (lo + hi) / 2;
+		const candidate = mixToward(foreground, toward, mid);
+		if (contrastRatio(candidate, background) >= minRatio) {
+			best = candidate;
+			hi = mid;
+		} else {
+			lo = mid;
+		}
+	}
+	return best;
+}
+
 export function validateAccentAgainstSurfaces(
 	hex: string,
 	surfaces: { light: string; dark: string } = {
@@ -327,11 +369,164 @@ export function contrastGradePasses(grade: ContrastGrade): boolean {
 	return grade === 'A' || grade === 'B';
 }
 
+export type ColorThemeMode = 'light' | 'dark';
+
+export type ThemeContrastScores = {
+	light: ContrastRating;
+	dark: ContrastRating;
+};
+
+const GRADE_RANK: Record<ContrastGrade, number> = {
+	A: 5,
+	B: 4,
+	C: 3,
+	D: 2,
+	F: 1,
+};
+
+/** The weaker of two ratings (lower letter, then lower ratio). */
+export function worseContrastRating(
+	a: ContrastRating,
+	b: ContrastRating,
+): ContrastRating {
+	if (GRADE_RANK[a.grade] === GRADE_RANK[b.grade]) {
+		return a.ratio <= b.ratio ? a : b;
+	}
+	return GRADE_RANK[a.grade] < GRADE_RANK[b.grade] ? a : b;
+}
+
+/**
+ * How this accent reads in one theme, reusing a surface assessment.
+ * Light uses the hex as painted; dark uses {@link ACCENT_BRIGHTEN_FOR_DARK}.
+ */
+function accentRatioFromAssessment(
+	hex: string,
+	assessment: AccentAssessment,
+	role: ColorRole,
+	theme: ColorThemeMode,
+): number {
+	if (theme === 'light') {
+		return role === 'dominant'
+			? Math.min(assessment.textRatio, assessment.uiRatioLight)
+			: assessment.uiRatioLight;
+	}
+	const bright = mixToward(hex, 'white', ACCENT_BRIGHTEN_FOR_DARK);
+	const textOnBright = contrastRatio(pickOnColor(bright), bright);
+	return role === 'dominant'
+		? Math.min(textOnBright, assessment.uiRatioDark)
+		: assessment.uiRatioDark;
+}
+
+function accentRatioForTheme(
+	hex: string,
+	role: ColorRole,
+	theme: ColorThemeMode,
+): number {
+	return accentRatioFromAssessment(
+		hex,
+		validateAccentAgainstSurfaces(hex),
+		role,
+		theme,
+	);
+}
+
+/**
+ * Palette grade for one theme: the weaker of Dominant and Secondary on that
+ * theme’s surfaces. Near-identical pairs are F in both themes.
+ */
+export function ratePaletteForTheme(
+	dominantHex: string,
+	secondaryHex: string,
+	theme: ColorThemeMode,
+): ContrastRating {
+	if (deltaE76(dominantHex, secondaryHex) < PAIR_SEPARATION_MIN) {
+		return {
+			ratio: contrastRatio(dominantHex, secondaryHex),
+			grade: 'F',
+			level: 'warn',
+		};
+	}
+	return ratingFromRatio(
+		Math.min(
+			accentRatioForTheme(dominantHex, 'dominant', theme),
+			accentRatioForTheme(secondaryHex, 'secondary', theme),
+		),
+	);
+}
+
+/** Light Mode and Dark Mode grades for the same Dominant/Secondary pair. */
+export function ratePaletteThemes(
+	dominantHex: string,
+	secondaryHex: string,
+): ThemeContrastScores {
+	if (deltaE76(dominantHex, secondaryHex) < PAIR_SEPARATION_MIN) {
+		const fail: ContrastRating = {
+			ratio: contrastRatio(dominantHex, secondaryHex),
+			grade: 'F',
+			level: 'warn',
+		};
+		return { light: fail, dark: fail };
+	}
+
+	const dominantAssessment = validateAccentAgainstSurfaces(dominantHex);
+	const secondaryAssessment = validateAccentAgainstSurfaces(secondaryHex);
+
+	return {
+		light: ratingFromRatio(
+			Math.min(
+				accentRatioFromAssessment(
+					dominantHex,
+					dominantAssessment,
+					'dominant',
+					'light',
+				),
+				accentRatioFromAssessment(
+					secondaryHex,
+					secondaryAssessment,
+					'secondary',
+					'light',
+				),
+			),
+		),
+		dark: ratingFromRatio(
+			Math.min(
+				accentRatioFromAssessment(
+					dominantHex,
+					dominantAssessment,
+					'dominant',
+					'dark',
+				),
+				accentRatioFromAssessment(
+					secondaryHex,
+					secondaryAssessment,
+					'secondary',
+					'dark',
+				),
+			),
+		),
+	};
+}
+
+/**
+ * Theme grades if `candidateHex` were picked for `role`, holding `partnerHex`.
+ * Swatch badges use this so each crayon previews both modes.
+ */
+export function ratePaletteIfRolePicked(
+	candidateHex: string,
+	role: ColorRole,
+	partnerHex: string,
+): ThemeContrastScores {
+	if (role === 'dominant') {
+		return ratePaletteThemes(candidateHex, partnerHex);
+	}
+	return ratePaletteThemes(partnerHex, candidateHex);
+}
+
 /**
  * Letter grade for a crayon in a color role vs page surfaces.
  *
- * Role checks alone do not score Dominant↔Secondary separation (Brand purple +
- * mint is ~1:1 luminance but hue-far). Pair meter uses {@link rateColorPairContrast}.
+ * Role checks alone do not score Dominant↔Secondary separation. The color
+ * selector uses {@link ratePaletteThemes} (one grade per theme).
  *
  * - **Dominant** (fills / badges): worst of text-on-fill + UI vs light/dark.
  * - **Secondary** (borders / chrome): worst of UI vs light/dark.

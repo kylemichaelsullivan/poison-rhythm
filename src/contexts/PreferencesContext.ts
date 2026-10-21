@@ -10,26 +10,39 @@ export type ComplexityPreferencesValue = {
 	setDifficulty: (value: number) => void;
 };
 
-export type PlaybackPreferencesValue = {
+/** Channel mutes + count-in (no tempo — tempo lives in TempoPreferences). */
+export type SoundPreferencesValue = {
 	muteMetronome: boolean;
 	setMuteMetronome: (muted: boolean) => void;
 	countInEnabled: boolean;
 	setCountInEnabled: (enabled: boolean) => void;
 	muteRhythmSounds: boolean;
 	setMuteRhythmSounds: (muted: boolean) => void;
+};
+
+export type TempoPreferencesValue = {
 	tempo: number;
 	setTempo: (value: number | ((prev: number) => number)) => void;
 };
+
+/** Combined sound + tempo for callers that still want both. */
+export type PlaybackPreferencesValue = SoundPreferencesValue &
+	TempoPreferencesValue;
 
 /** Combined shape for callers that need complexity + playback prefs. */
 export type PreferencesContextValue = ComplexityPreferencesValue &
 	PlaybackPreferencesValue;
 
+export type PlaybackMuteChannel = 'metronome' | 'rhythm';
+
 export const ComplexityPreferencesContext =
 	createContext<ComplexityPreferencesValue | null>(null);
 
-export const PlaybackPreferencesContext =
-	createContext<PlaybackPreferencesValue | null>(null);
+export const SoundPreferencesContext =
+	createContext<SoundPreferencesValue | null>(null);
+
+export const TempoPreferencesContext =
+	createContext<TempoPreferencesValue | null>(null);
 
 export function useComplexityPreferences(): ComplexityPreferencesValue {
 	const ctx = useContext(ComplexityPreferencesContext);
@@ -41,17 +54,35 @@ export function useComplexityPreferences(): ComplexityPreferencesValue {
 	return ctx;
 }
 
-export function usePlaybackPreferences(): PlaybackPreferencesValue {
-	const ctx = useContext(PlaybackPreferencesContext);
+export function useSoundPreferences(): SoundPreferencesValue {
+	const ctx = useContext(SoundPreferencesContext);
 	if (ctx == null) {
 		throw new Error(
-			'usePlaybackPreferences must be used within PreferencesProvider',
+			'useSoundPreferences must be used within PreferencesProvider',
 		);
 	}
 	return ctx;
 }
 
-/** Subscribes to both preference slices (re-renders on any pref change). */
+export function useTempoPreference(): TempoPreferencesValue {
+	const ctx = useContext(TempoPreferencesContext);
+	if (ctx == null) {
+		throw new Error(
+			'useTempoPreference must be used within PreferencesProvider',
+		);
+	}
+	return ctx;
+}
+
+/** Sound + tempo (re-renders on either). Prefer narrow hooks when possible. */
+export function usePlaybackPreferences(): PlaybackPreferencesValue {
+	return {
+		...useSoundPreferences(),
+		...useTempoPreference(),
+	};
+}
+
+/** Subscribes to complexity + sound + tempo (re-renders on any pref change). */
 export function usePreferences(): PreferencesContextValue {
 	return {
 		...useComplexityPreferences(),
@@ -67,4 +98,19 @@ export function useDifficulty() {
 export function useSubdivision() {
 	const { subdivisionLevel, setSubdivisionLevel } = useComplexityPreferences();
 	return { subdivisionLevel, setSubdivisionLevel };
+}
+
+/** One mute channel — does not re-render when the other channel or tempo changes. */
+export function usePlaybackMute(channel: PlaybackMuteChannel) {
+	const {
+		muteMetronome,
+		setMuteMetronome,
+		muteRhythmSounds,
+		setMuteRhythmSounds,
+	} = useSoundPreferences();
+
+	if (channel === 'metronome') {
+		return { muted: muteMetronome, setMuted: setMuteMetronome } as const;
+	}
+	return { muted: muteRhythmSounds, setMuted: setMuteRhythmSounds } as const;
 }

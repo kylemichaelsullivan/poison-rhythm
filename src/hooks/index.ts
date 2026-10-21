@@ -1,13 +1,16 @@
+export { useColorRoleSelection } from './useColorRoleSelection';
 export { useDelayedClick } from './useDelayedClick';
 export { useDisclosure } from './useDisclosure';
 export { useGameLoop } from './useGameLoop';
 export { useHoverPinPopover } from './useHoverPinPopover';
 export { useLocalStorage } from './useLocalStorage';
+export { useMeasureDisplayOptions } from './useMeasureDisplayOptions';
 export { useMeasurePlaybackSync } from './useMeasurePlaybackSync';
 export { useMetronomeBeat } from './useMetronomeBeat';
 export { useModalFocusTrap } from './useModalFocusTrap';
 export { useMusiSyncFont } from './useMusiSyncFont';
 export { useNotationPrefetch } from './useNotationPrefetch';
+export { usePaletteContrast } from './usePaletteContrast';
 export { useSmoothNotationCursor } from './useSmoothNotationCursor';
 export { useSoftDisableFocus } from './useSoftDisableFocus';
 export { useTapTempo } from './useTapTempo';

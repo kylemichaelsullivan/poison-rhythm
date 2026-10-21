@@ -1,11 +1,8 @@
 import { useEffect } from 'react';
 import { useSubdivision } from '@/contexts';
 import { useHoverPinPopover } from '@/hooks/useHoverPinPopover';
-import {
-	indexToLevel,
-	levelToIndex,
-	SUBDIVISION_LABELS,
-} from '@/lib/subdivision-levels';
+import { durationGlyphsForLevel } from '@/lib/notation';
+import { indexToLevel, levelToIndex } from '@/lib/subdivision-levels';
 import { ClickOutside } from './ClickOutside';
 import { ShowNotesSlider } from './ShowNotesSlider';
 import { ShowNotesTrigger } from './ShowNotesTrigger';
@@ -24,6 +21,7 @@ export function ShowNotes() {
 		handleFocus,
 	} = useHoverPinPopover();
 	const value = levelToIndex(subdivisionLevel);
+	const { note: glyph } = durationGlyphsForLevel(subdivisionLevel);
 
 	useEffect(() => {
 		if (!open) return;
@@ -56,7 +54,7 @@ export function ShowNotes() {
 	return (
 		<div className='ShowNotes relative' ref={wrapperRef}>
 			<ShowNotesTrigger
-				label={SUBDIVISION_LABELS[value]}
+				glyph={glyph}
 				open={open}
 				onMouseEnter={handleHoverOpen}
 				onMouseLeave={handleMouseLeave}

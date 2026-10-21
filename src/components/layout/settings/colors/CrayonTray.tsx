@@ -1,90 +1,115 @@
+import { memo, useMemo } from 'react';
 import {
 	type ColorRole,
 	CRAYOLA_TRAYS,
 	type CrayonId,
-	ratePairIfRolePicked,
+	isBrandAccentId,
+	ratePaletteIfRolePicked,
+	type ThemeContrastScores,
 } from '@/lib/colors';
-import { CrayonSwatch, type CrayonSwatchEmphasis } from './CrayonSwatch';
+import type { ColorPreference } from '@/lib/preference-schemas';
+import type { CrayonSwatchEmphasis } from './CrayonSwatch';
+import {
+	CrayonTraySleeve,
+	type CrayonTraySwatchModel,
+} from './CrayonTraySleeve';
 
 type CrayonTrayProps = {
 	role: ColorRole;
-	/** Crayon for the role currently being edited. */
-	activeId: CrayonId | null;
-	/** Crayon for the other role — shown with softer emphasis. */
-	partnerId: CrayonId | null;
-	/** Hex of the other role — held fixed while previewing each pick. */
+	activeId: ColorPreference;
+	partnerId: ColorPreference;
 	partnerHex: string;
+	roleLabel: string;
+	partnerRoleLabel: string;
 	onSelect: (id: CrayonId) => void;
 };
 
 function swatchEmphasis(
 	crayonId: CrayonId,
-	activeId: CrayonId | null,
-	partnerId: CrayonId | null,
+	activeId: ColorPreference,
+	partnerId: ColorPreference,
 ): CrayonSwatchEmphasis {
-	if (activeId != null && crayonId === activeId) {
+	if (activeId != null && !isBrandAccentId(activeId) && crayonId === activeId) {
 		return 'active';
 	}
-	if (partnerId != null && crayonId === partnerId) {
+	if (
+		partnerId != null &&
+		!isBrandAccentId(partnerId) &&
+		crayonId === partnerId
+	) {
 		return 'partner';
 	}
 	return 'none';
 }
 
-export function CrayonTray({
+/**
+ * Crayon sleeves. Scores memoize on role + partner hex (theme taps / active
+ * selection alone do not rescore all 64 crayons).
+ */
+export const CrayonTray = memo(function CrayonTray({
 	role,
 	activeId,
 	partnerId,
 	partnerHex,
+	roleLabel,
+	partnerRoleLabel,
 	onSelect,
 }: CrayonTrayProps) {
-	const roleLabel = role === 'dominant' ? 'Dominant' : 'Secondary';
-	const partnerRoleLabel = role === 'dominant' ? 'Secondary' : 'Dominant';
+	const scoresById = useMemo(() => {
+		const map = new Map<CrayonId, ThemeContrastScores>();
+		for (const tray of CRAYOLA_TRAYS) {
+			for (const crayon of tray.crayons) {
+				map.set(
+					crayon.id,
+					ratePaletteIfRolePicked(crayon.hex, role, partnerHex),
+				);
+			}
+		}
+		return map;
+	}, [role, partnerHex]);
+
+	const sleeves = useMemo(
+		() =>
+			CRAYOLA_TRAYS.map((tray) => {
+				const swatches: CrayonTraySwatchModel[] = tray.crayons.map(
+					(crayon) => ({
+						id: crayon.id,
+						name: crayon.name,
+						hex: crayon.hex,
+						emphasis: swatchEmphasis(crayon.id, activeId, partnerId),
+						scores: scoresById.get(crayon.id) as ThemeContrastScores,
+					}),
+				);
+				return { id: tray.id, label: tray.label, swatches };
+			}),
+		[scoresById, activeId, partnerId],
+	);
+
+	const handleSelect = (id: CrayonId) => {
+		if (id === activeId) {
+			return;
+		}
+		onSelect(id);
+	};
 
 	return (
 		<fieldset className='CrayonTray flex min-w-0 flex-col gap-3 border-0 p-0'>
 			<legend className='sr-only'>
-				Crayon Colors — each badge shows contrast if chosen as {roleLabel}.
+				Crayon Colors — each swatch shows a Light Mode grade and a Dark Mode
+				grade if chosen as {roleLabel}. In Dark Mode the Dark grade sits on top.
 				Current {roleLabel} is emphasized; current {partnerRoleLabel} is marked
-				more lightly. Prefer A or B for lethal contrast.
+				more lightly. Prefer A or B in both modes.
 			</legend>
-			{/*
-			 * Physical Crayola box is landscape with four sleeves side-by-side.
-			 * Portrait UI stacks the four sleeves; each sleeve keeps the
-			 * familiar 2×8 face (16 squares).
-			 */}
-			{CRAYOLA_TRAYS.map((tray) => (
-				<section
-					key={tray.id}
-					className='CrayonTraySleeve flex flex-col gap-1.5 rounded-lg border border-mid bg-surface-muted p-2 shadow-soft'
-					aria-label={tray.label}
-				>
-					<h4 className='text-xs font-semibold uppercase tracking-wide text-muted'>
-						{tray.label}
-					</h4>
-					<div className='grid grid-cols-8 gap-1 max-[380px]:grid-cols-4'>
-						{tray.crayons.map((crayon) => {
-							const rating = ratePairIfRolePicked(crayon.hex, role, partnerHex);
-							const emphasis = swatchEmphasis(crayon.id, activeId, partnerId);
-							return (
-								<CrayonSwatch
-									key={crayon.id}
-									name={crayon.name}
-									hex={crayon.hex}
-									emphasis={emphasis}
-									grade={rating.grade}
-									ratio={rating.ratio}
-									roleLabel={roleLabel}
-									partnerRoleLabel={
-										emphasis === 'partner' ? partnerRoleLabel : undefined
-									}
-									onSelect={() => onSelect(crayon.id)}
-								/>
-							);
-						})}
-					</div>
-				</section>
+			{sleeves.map((sleeve) => (
+				<CrayonTraySleeve
+					key={sleeve.id}
+					label={sleeve.label}
+					swatches={sleeve.swatches}
+					roleLabel={roleLabel}
+					partnerRoleLabel={partnerRoleLabel}
+					onSelect={handleSelect}
+				/>
 			))}
 		</fieldset>
 	);
-}
+});

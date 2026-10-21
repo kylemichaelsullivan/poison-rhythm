@@ -2,7 +2,8 @@ import type { ReactNode } from 'react';
 import { useCallback, useMemo } from 'react';
 import {
 	ComplexityPreferencesContext,
-	PlaybackPreferencesContext,
+	SoundPreferencesContext,
+	TempoPreferencesContext,
 } from '@/contexts/PreferencesContext';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { clampTempo } from '@/lib/metronome-tempo';
@@ -80,10 +81,11 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
 
 	const setTempo = useCallback(
 		(next: number | ((prev: number) => number)) => {
-			const value = typeof next === 'function' ? next(tempo) : next;
-			setTempoState(clampTempo(value));
+			setTempoState((previous) =>
+				clampTempo(typeof next === 'function' ? next(previous) : next),
+			);
 		},
-		[setTempoState, tempo],
+		[setTempoState],
 	);
 
 	const complexityValue = useMemo(
@@ -96,7 +98,7 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
 		[subdivisionLevel, setSubdivisionLevel, difficulty, setDifficulty],
 	);
 
-	const playbackValue = useMemo(
+	const soundValue = useMemo(
 		() => ({
 			muteMetronome,
 			setMuteMetronome,
@@ -104,8 +106,6 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
 			setCountInEnabled,
 			muteRhythmSounds,
 			setMuteRhythmSounds,
-			tempo,
-			setTempo,
 		}),
 		[
 			muteMetronome,
@@ -114,16 +114,24 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
 			setCountInEnabled,
 			muteRhythmSounds,
 			setMuteRhythmSounds,
+		],
+	);
+
+	const tempoValue = useMemo(
+		() => ({
 			tempo,
 			setTempo,
-		],
+		}),
+		[tempo, setTempo],
 	);
 
 	return (
 		<ComplexityPreferencesContext.Provider value={complexityValue}>
-			<PlaybackPreferencesContext.Provider value={playbackValue}>
-				{children}
-			</PlaybackPreferencesContext.Provider>
+			<SoundPreferencesContext.Provider value={soundValue}>
+				<TempoPreferencesContext.Provider value={tempoValue}>
+					{children}
+				</TempoPreferencesContext.Provider>
+			</SoundPreferencesContext.Provider>
 		</ComplexityPreferencesContext.Provider>
 	);
 }

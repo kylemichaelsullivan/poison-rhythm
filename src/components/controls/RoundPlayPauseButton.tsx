@@ -18,6 +18,8 @@ type RoundPlayPauseButtonProps = {
 	title?: string;
 	/**
 	 * When set, replaces the play/pause icon with this digit (count-in beat).
+	 * Null during count-in (before the first beat) keeps the Play icon — callers
+	 * should pass isPlaying=false while counting in so Pause does not flash.
 	 * Accessible name stays Play/Pause so the control still reads as a toggle.
 	 */
 	countBeat?: number | null;

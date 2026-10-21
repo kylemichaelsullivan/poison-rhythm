@@ -9,6 +9,7 @@ type MetronomeTempoInputProps = {
 	onTempoChange: (value: number) => void;
 };
 
+/** BPM text field — props from MetronomeTempoSlider (avoids a second useMetronome). */
 export function MetronomeTempoInput({
 	tempo,
 	onTempoChange,

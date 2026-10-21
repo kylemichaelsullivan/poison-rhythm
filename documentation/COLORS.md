@@ -2,7 +2,7 @@
 
 Classroom-facing notes on **Settings → Colors**: dominant/secondary from a Crayola 64 tray, letter-grade contrast, and why Brand stays the default.
 
-For full accessibility policy (grades, border hierarchy, keyboard), see [`A11Y.md`](A11Y.md). For theme and display mode, see **Settings → Look**. For agents and schema wiring, see [`AGENTS.md`](../AGENTS.md).
+For full accessibility policy (grades, border hierarchy, keyboard), see [`A11Y.md`](A11Y.md). Theme (light/dark/system) lives on the Colors contrast meter; display mode is under **Settings → Mode**. For agents and schema wiring, see [`AGENTS.md`](../AGENTS.md).
 
 ## What Dominant and Secondary control
 
@@ -11,13 +11,13 @@ For full accessibility policy (grades, border hierarchy, keyboard), see [`A11Y.m
 | **Dominant** | Primary accent: Play fills, badges, section titles, page wash, panel surfaces, header edge, playback highlights |
 | **Secondary** | Complement accent: section borders, footer edge, chrome bars, opposite page wash, title gradient |
 
-Unset preferences keep the shipped **Poison Rhythm** purple + mint tokens from the favicon brand. Choosing crayons overrides those CSS variables for this browser (student-scoped local storage today).
+Unset preferences keep the shipped **Poison Rhythm** purple + mint tokens from the favicon brand. Choosing crayons overrides those CSS variables for this browser (student-scoped local storage today). Swapping roles materializes unset brand defaults as `poison-purple` / `poison-mint` tokens so mint can sit on Dominant (and purple on Secondary); swapping back to canonical brand order clears storage to unset again.
 
 ## Why Brand is recommended
 
 - **Recognition** — the potion purple / deep mint look is the product signal on projected screens and shared devices.
 - **Classroom consistency** — one default pair means every station looks familiar when students rotate.
-- **Product pair** — Brand purple-deep (`#783b82`) + deep mint (`#246028`) is the default look. Suggested Pairings are grade **A** (7:1 between the two colors) across yellow, green, blue, orange, pink, cyan, violet, and earth.
+- **Product pair** — Favicon purple (`#914893`) is the light-mode primary, with deep mint (`#246028`) as the green complement. That mint clears grade **A** on light and dark surfaces; the purple clears **B** in Light Mode and **A** in Dark Mode. Suggested Pairings are grade **A** (7:1 between the two colors) across yellow, green, blue, orange, pink, cyan, violet, and earth.
 
 The Colors tab marks **Poison Rhythm** as Recommended in Suggested Pairings.
 
@@ -36,9 +36,9 @@ Avoid near-identical crayons for both roles — borders disappear and badges los
 
 ## Contrast grades
 
-The pair meter (`rateColorPairContrast`) shows one **US letter grade** and one ratio: Dominant against Secondary. Grade **A** is 7:1 or better. Each swatch badge previews that same meter **if you pick that crayon** for the active role (`ratePairIfRolePicked`), keeping the other role fixed. See [`A11Y.md`](A11Y.md).
+The meter and each swatch stack two grades: Light Mode, then Dark Mode, with the current mode on top. Swatches show the letter. The meter shows grade + ratio in the same stack shape. Choosing Dominant scores the new color against the current Secondary. Choosing Secondary scores the new color against the current Dominant. See [`CONTRAST.md`](CONTRAST.md) and [`A11Y.md`](A11Y.md).
 
-**Strongly discourage, do not block:** the pair meter (`ContrastScoreMeter`) and per-swatch grade badges (`ContrastGradeBadge` on `CrayonSwatch`) update live. Role tiles live in `ColorRoleTile`; the decorative strip is `ColorPairPlayPreview`. **A/B** get solid hierarchy borders; **F** is dashed and dimmed. In the tray, the active role’s crayon uses strongest border/shadow; the other role’s crayon stays visible at lighter emphasis (switches when you change Dominant vs Secondary). Suggested Pairings remain the easy recovery.
+**Strongly discourage, do not block:** `ColorAccentSettings` owns prefs (+ role selection) and prop-drives the tray and pairings. The meter (`ContrastScoreMeter`) owns theme so locking Light/Dark does not rescore all 64 crayons. Per-swatch grade badges (`ContrastGradeBadge`) update live when the partner color changes. Role tiles live in `ColorRoleTile`; the swap control (`SwapColorRolesButton`) exchanges Dominant and Secondary; the decorative preview is `ColorPairPlayPreview` (mini measure grid). **A/B** get solid hierarchy borders; **F** is dashed and dimmed. In the tray, the active role’s crayon uses strongest border/shadow; the other role’s crayon stays visible at lighter emphasis (switches when you change Dominant vs Secondary). Suggested Pairings remain the easy recovery.
 
 ## Student profiles (later)
 
@@ -46,6 +46,7 @@ Color preferences are stored on **student-scoped** preference keys (`poison-rhyt
 
 ## Related
 
+- [`CONTRAST.md`](CONTRAST.md) — which role is being picked, and how the two scores stack
 - [`A11Y.md`](A11Y.md) — contrast grades, border hierarchy, keyboard
 - [`TEACHERS.md`](TEACHERS.md) — classroom arcs and accessibility tips
 - [`ARCHITECTURE.md`](ARCHITECTURE.md) — providers and settings layers

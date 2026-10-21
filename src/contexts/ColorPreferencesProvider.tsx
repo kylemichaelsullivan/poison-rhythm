@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { useCallback, useEffect, useMemo } from 'react';
 import { ColorPreferencesContext } from '@/contexts/ColorPreferencesContext';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { applyColorPreferenceVars } from '@/lib/colors';
+import { applyColorPreferenceVars, swapAccentColors } from '@/lib/colors';
 import {
 	type ColorPreference,
 	parseColorPreference,
@@ -46,6 +46,17 @@ export function ColorPreferencesProvider({
 		[setSecondaryColorState],
 	);
 
+	const swapColors = useCallback(() => {
+		const next = swapAccentColors(dominantColor, secondaryColor);
+		setDominantColorState(next.dominantId);
+		setSecondaryColorState(next.secondaryId);
+	}, [
+		dominantColor,
+		secondaryColor,
+		setDominantColorState,
+		setSecondaryColorState,
+	]);
+
 	const resetToBrand = useCallback(() => {
 		setDominantColorState(null);
 		setSecondaryColorState(null);
@@ -57,6 +68,7 @@ export function ColorPreferencesProvider({
 			secondaryColor,
 			setDominantColor,
 			setSecondaryColor,
+			swapColors,
 			resetToBrand,
 			isBrandDefault: dominantColor === null && secondaryColor === null,
 		}),
@@ -65,6 +77,7 @@ export function ColorPreferencesProvider({
 			secondaryColor,
 			setDominantColor,
 			setSecondaryColor,
+			swapColors,
 			resetToBrand,
 		],
 	);

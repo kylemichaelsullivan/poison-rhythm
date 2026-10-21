@@ -6,18 +6,27 @@ import {
 	CRAYOLA_64,
 	CRAYOLA_TRAY_SIZE,
 	CRAYOLA_TRAYS,
+	contrastGradePasses,
 	contrastRatio,
 	deltaE76,
+	ensureContrastOn,
 	gradeFromRatio,
 	isCrayonId,
+	mixToward,
 	pairingPassesA11y,
 	pickOnColor,
 	rateColorPairContrast,
 	rateCrayonContrast,
 	ratePairIfRolePicked,
 	ratePairSeparation,
+	ratePaletteIfRolePicked,
+	ratePaletteThemes,
 	relativeLuminance,
+	resolveDominantHex,
+	resolveSecondaryHex,
 	suggestPairings,
+	swapAccentColors,
+	titleHoverColors,
 	validateAccentAgainstSurfaces,
 	validateColorPair,
 	WCAG_AA_TEXT,
@@ -63,6 +72,40 @@ describe('contrast', () => {
 	test('pickOnColor chooses the higher-contrast ink', () => {
 		expect(pickOnColor('#783b82')).toBe('#faf9fc');
 		expect(pickOnColor('#fce883')).toBe('#0d090e');
+	});
+
+	test('ensureContrastOn keeps a passing foreground', () => {
+		expect(ensureContrastOn('#000000', '#fce883')).toBe('#000000');
+	});
+
+	test('ensureContrastOn lifts a failing role just enough', () => {
+		const lifted = ensureContrastOn(
+			BRAND_SECONDARY_HEX,
+			BRAND_DOMINANT_HEX,
+			WCAG_AA_UI,
+		);
+		expect(lifted).not.toBe(BRAND_SECONDARY_HEX);
+		expect(contrastRatio(lifted, BRAND_DOMINANT_HEX)).toBeGreaterThanOrEqual(
+			WCAG_AA_UI,
+		);
+	});
+
+	test('titleHoverColors keeps Black on gold; lifts brand mint on purple', () => {
+		const goldBlack = titleHoverColors('#fce883', '#000000');
+		expect(goldBlack.onPrimary.toLowerCase()).toBe('#000000');
+		expect(
+			contrastRatio(goldBlack.onSecondary, mixToward('#000000', 'black', 0.12)),
+		).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+
+		const brand = titleHoverColors(BRAND_DOMINANT_HEX, BRAND_SECONDARY_HEX);
+		const primaryFill = mixToward(BRAND_DOMINANT_HEX, 'black', 0.12);
+		const secondaryFill = mixToward(BRAND_SECONDARY_HEX, 'black', 0.12);
+		expect(contrastRatio(brand.onPrimary, primaryFill)).toBeGreaterThanOrEqual(
+			WCAG_AA_UI,
+		);
+		expect(
+			contrastRatio(brand.onSecondary, secondaryFill),
+		).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
 	});
 
 	test('brand purple passes accent surface checks', () => {
@@ -189,13 +232,26 @@ describe('pairings', () => {
 		expect(suggestions.length).toBeGreaterThan(1);
 	});
 
-	test('Brand stays first even when its pair ratio is below A', () => {
+	test('Brand purple and mint pass in both themes and stay first', () => {
+		expect(BRAND_DOMINANT_HEX).toBe('#914893');
 		expect(suggestPairings()[0]?.id).toBe('brand');
-		const brand = rateColorPairContrast(
-			BRAND_DOMINANT_HEX,
+		const scores = ratePaletteThemes(BRAND_DOMINANT_HEX, BRAND_SECONDARY_HEX);
+		expect(contrastGradePasses(scores.light.grade)).toBe(true);
+		expect(contrastGradePasses(scores.dark.grade)).toBe(true);
+		expect(scores.light.grade).toBe('B');
+		expect(scores.dark.grade).toBe('A');
+	});
+
+	test('ratePaletteIfRolePicked previews both themes', () => {
+		const preview = ratePaletteIfRolePicked(
+			'#ffffff',
+			'dominant',
 			BRAND_SECONDARY_HEX,
 		);
-		expect(brand.grade).toBe('F');
+		expect(preview.light.grade).toBe('F');
+		const same = ratePaletteThemes('#843179', '#843179');
+		expect(same.light.grade).toBe('F');
+		expect(same.dark.grade).toBe('F');
 	});
 
 	test('curated suggestions are grade A and span several hues', () => {
@@ -209,5 +265,35 @@ describe('pairings', () => {
 		expect(ids).toContain('black-sea-green');
 		expect(ids).toContain('sky-blue-black');
 		expect(ids).toContain('black-orange');
+	});
+});
+
+describe('swapAccentColors', () => {
+	test('swaps brand defaults onto explicit tokens', () => {
+		const swapped = swapAccentColors(null, null);
+		expect(swapped).toEqual({
+			dominantId: 'poison-mint',
+			secondaryId: 'poison-purple',
+		});
+		expect(resolveDominantHex(swapped.dominantId)).toBe(BRAND_SECONDARY_HEX);
+		expect(resolveSecondaryHex(swapped.secondaryId)).toBe(BRAND_DOMINANT_HEX);
+	});
+
+	test('swapping brand tokens back collapses to unset defaults', () => {
+		expect(swapAccentColors('poison-mint', 'poison-purple')).toEqual({
+			dominantId: null,
+			secondaryId: null,
+		});
+	});
+
+	test('swaps crayon ids and materializes a null partner', () => {
+		expect(swapAccentColors('yellow', 'black')).toEqual({
+			dominantId: 'black',
+			secondaryId: 'yellow',
+		});
+		expect(swapAccentColors('yellow', null)).toEqual({
+			dominantId: 'poison-mint',
+			secondaryId: 'yellow',
+		});
 	});
 });

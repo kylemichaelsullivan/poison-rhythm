@@ -73,6 +73,7 @@ export function SegmentButton({
 			onClick={onClick}
 			aria-label={label}
 			aria-pressed={pressed}
+			data-chrome-active={selected || undefined}
 		>
 			{iconNodes}
 		</button>

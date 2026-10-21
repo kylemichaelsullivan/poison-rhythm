@@ -4,31 +4,35 @@ import clsx from 'clsx';
 export const pageSurfaceClassName = 'bg-transparent text-black';
 
 /** Inset panels (sections, empty prompts). */
-export const darkSurfaceClassName = 'bg-surface text-black shadow-raised';
+export const darkSurfaceClassName = 'bg-surface text-black';
 
 /** Modal backdrop scrim. */
 export const modalScrimClassName = 'bg-scrim';
 
 /** Modal dialog panel surface. */
 export const modalPanelClassName =
-	'bg-white text-black backdrop-blur-md border-2 border-primary/35 shadow-overlay';
+	'bg-white text-black backdrop-blur-md border-2 border-primary/35';
 
 /** Settings grouping panel inside modals. */
-export const settingsPanelClassName =
-	'bg-light text-dark border border-mid shadow-soft';
+export const settingsPanelClassName = 'bg-light text-dark border border-mid';
 
 /** Light input surface on themed backgrounds. */
 export const inputSurfaceClassName =
-	'border border-mid rounded bg-white text-black shadow-control focus-within:border-primary';
+	'border border-mid rounded bg-white text-black focus-within:border-primary';
 
 /**
  * Shared control styles for small UI controls (buttons, popovers, etc.).
  */
+/**
+ * Chrome icon/action buttons. On header/footer bars, CSS overrides the hover
+ * border to the bar’s complement (Secondary on Header, Dominant on Footer).
+ * Flat at rest; elevation only on hover.
+ */
 export const controlButtonBaseClassName =
-	'border border-mid rounded bg-chrome text-black shadow-control transition-[colors,box-shadow] duration-200 ease-out hover:border-primary hover:bg-chrome-hover hover:shadow-soft';
+	'AppChromeControl border border-mid rounded bg-chrome text-black transition-[colors,box-shadow] duration-200 ease-out hover:border-primary hover:bg-chrome-hover hover:shadow-soft focus-visible:shadow-soft';
 
 export const controlSurfaceBaseClassName =
-	'border border-mid rounded bg-chrome text-black shadow-control';
+	'border border-mid rounded bg-chrome text-black';
 
 /** In-flow corner icon buttons; use as children of a bar with `appChromeBarClassName`. */
 export const cornerControlButtonClassName =
@@ -39,8 +43,7 @@ export const cornerControlButtonClassName =
  * Horizontal safe-area keeps chrome clear of notches; pair with header/footer extras.
  */
 export const appChromeBarClassName =
-	'flex justify-between items-center w-full gap-2 py-2 shadow-soft pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))]';
-
+	'flex justify-between items-center w-full gap-2 py-2 pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))]';
 /** Top safe-area for the header chrome bar (notch / status bar). */
 export const appChromeBarHeaderClassName =
 	'pt-[max(0.5rem,env(safe-area-inset-top))]';
@@ -64,12 +67,24 @@ export const focusVisibleRingClassName =
 	'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-chrome';
 
 /**
- * Hover affordance parallel to focus: same primary ring, tighter offset so
- * it isn’t identical to :focus-visible. Avoids filling/border tricks that
- * can match the selected/active look while the pointer stays over a toggle.
+ * Shared Settings interactive chrome (`.InteractiveInsetChrome` in
+ * `src/index.css`): inset ring + raised shadow on :hover / :focus-visible via
+ * CSS custom properties. Dark mode uses a white lift so active chips still
+ * read elevation. Prefer this over stacking Tailwind ring + shadow utilities.
+ * Resting chips stay flat.
  */
-export const hoverRingClassName =
-	'hover:outline-none hover:ring-2 hover:ring-primary hover:ring-offset-1 hover:ring-offset-chrome';
+export const interactiveInsetChromeClassName = 'InteractiveInsetChrome';
+
+/**
+ * Layout-stable selection outlines for color swatches / pairings.
+ * Uses `outline-black` so Light / Dark / System all track `--color-black`
+ * (ink flips in dark theme).
+ */
+export const selectionOutlineActiveClassName =
+	'outline outline-[3px] outline-offset-2 outline-black';
+
+export const selectionOutlinePartnerClassName =
+	'outline outline-2 outline-offset-1 outline-black';
 
 /**
  * Shows the focus ring while the element has a `data-force-focus-ring`
@@ -98,10 +113,10 @@ export function focusWithForcedRing(
 }
 
 export const roundPlayPauseButtonClassName =
-	'flex justify-center items-center rounded-full border-4 border-secondary bg-primary min-w-12 min-h-12 w-12 h-12 p-3 text-on-primary shadow-raised transition-[opacity,box-shadow] hover:opacity-90 hover:shadow-raised disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 aria-disabled:hover:opacity-50';
+	'flex size-12 shrink-0 aspect-square items-center justify-center rounded-full border-4 border-secondary bg-primary p-3 text-on-primary transition-[opacity,box-shadow] hover:opacity-90 hover:shadow-raised focus-visible:shadow-raised disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 aria-disabled:hover:opacity-50';
 
 export const modifyTempoButtonClassName =
-	'flex justify-center items-center border-2 border-primary-border rounded bg-primary min-w-11 min-h-11 w-11 h-11 p-2 text-on-primary shadow-control transition hover:opacity-90 hover:shadow-soft disabled:opacity-50';
+	'flex size-11 shrink-0 aspect-square items-center justify-center rounded-full border-2 border-primary-border bg-primary p-2 text-on-primary transition-[opacity,box-shadow] hover:opacity-90 hover:shadow-soft focus-visible:shadow-soft disabled:opacity-50';
 /**
  * Sit a control just outside a `relative` parent’s left (`start`) or right
  * (`end`) edge (`--side-gutter-width`). Optional collapse drops to the bottom
@@ -144,28 +159,24 @@ export function segmentControlClassName(
 	} = {},
 ): string {
 	return clsx(
-		'flex min-h-11 items-center justify-center rounded border p-2 text-sm transition-colors',
+		'flex min-h-11 items-center justify-center rounded border p-2 text-sm transition-[colors,box-shadow]',
 		variant === 'header' && 'size-11 shrink-0 p-1.5',
 		grow === true && 'flex-1',
 		grow === 'auto' && 'flex-auto',
 		className,
-		focusVisibleRingClassName,
+		interactiveInsetChromeClassName,
 		disabled && 'cursor-not-allowed opacity-50',
-		!disabled && [hoverRingClassName, 'hover:border-mid'],
 		isSelected
 			? variant === 'header'
-				? 'border-2 border-secondary bg-primary text-on-primary shadow-soft'
-				: 'border-primary-border bg-primary text-on-primary shadow-primary-glow'
+				? 'border-2 border-secondary bg-primary text-on-primary'
+				: 'border-primary-border bg-primary text-on-primary'
 			: variant === 'checkbox'
-				? clsx(
-						'border-mid bg-light shadow-control',
-						!disabled && 'hover:bg-surface-muted',
-					)
+				? clsx('border-mid bg-light', !disabled && 'hover:bg-surface-muted')
 				: variant === 'header'
-					? 'border-2 border-secondary bg-surface text-black shadow-control'
+					? 'border-2 border-secondary bg-surface text-black'
 					: clsx(
-							'border-secondary bg-surface-muted text-black shadow-control',
-							!disabled && 'hover:bg-chrome-hover hover:border-primary',
+							'border-secondary bg-surface-muted text-black',
+							!disabled && 'hover:bg-chrome-hover',
 						),
 	);
 }

@@ -1,13 +1,12 @@
 import clsx from 'clsx';
-import { useSettings, useSubdivision } from '@/contexts';
 import { useMusiSyncFont } from '@/hooks/useMusiSyncFont';
 import {
 	measureToNotationSteps,
 	notationStepsToGlyphString,
 } from '@/lib/notation';
-import { shouldShowAccents, shouldShowSticking } from '@/lib/settings-schema';
 import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
 import { MeasureNotationGlyph } from './MeasureNotationGlyph';
+import type { MeasureDisplayOptions } from './measure-display-options';
 import {
 	type MeasurePlaybackPhase,
 	measureShellClass,
@@ -22,6 +21,7 @@ type MeasureNotationProps = {
 	playback?: boolean;
 	hidden?: boolean;
 	phase?: MeasurePlaybackPhase;
+	display: MeasureDisplayOptions;
 };
 
 export function MeasureNotation({
@@ -30,35 +30,39 @@ export function MeasureNotation({
 	playback = false,
 	hidden = false,
 	phase,
+	display,
 }: MeasureNotationProps) {
-	const { subdivisionLevel } = useSubdivision();
-	const { settings } = useSettings();
-	const fontReady = useMusiSyncFont();
-	const steps = measureToNotationSteps(measure, richMeasure, subdivisionLevel);
+	const { ready: fontReady } = useMusiSyncFont();
+	const steps = measureToNotationSteps(
+		measure,
+		richMeasure,
+		display.subdivisionLevel,
+	);
 	const glyphString = notationStepsToGlyphString(steps);
 	const stepCount = Math.max(steps.length, 1);
-	const accentsEnabled = shouldShowAccents(settings);
-	const stickingEnabled = shouldShowSticking(settings);
+	const { showAccents, showSticking } = display;
 
 	return (
 		<div
 			className={clsx(
 				'MeasureNotation relative w-full px-3 py-4',
 				measureShellClass(phase),
-				stickingEnabled && 'pb-4',
-				accentsEnabled && 'pt-6',
+				showSticking && 'pb-4',
+				showAccents && 'pt-6',
 				hidden && 'opacity-0',
 			)}
 		>
 			<RhythmAccentOverlay
 				steps={steps}
 				stepCount={stepCount}
-				show={accentsEnabled && fontReady}
+				show={showAccents && fontReady}
 			/>
 			<div className='relative w-full'>
 				<NotationPlaybackCursor
 					playback={playback}
 					hidden={hidden || !fontReady}
+					showVisualFeedback={display.showVisualFeedback}
+					isMeasuresPlaying={display.isMeasuresPlaying}
 				/>
 				<section
 					// biome-ignore lint/a11y/noNoninteractiveTabindex: keyboard users must focus horizontal overflow
@@ -75,10 +79,7 @@ export function MeasureNotation({
 					))}
 				</section>
 			</div>
-			<RhythmStickingOverlay
-				steps={steps}
-				show={stickingEnabled && fontReady}
-			/>
+			<RhythmStickingOverlay steps={steps} show={showSticking && fontReady} />
 		</div>
 	);
 }

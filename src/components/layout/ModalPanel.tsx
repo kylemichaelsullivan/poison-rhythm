@@ -17,10 +17,6 @@ type ModalPanelProps = {
 	ref?: Ref<HTMLDivElement>;
 };
 
-/** Near-fullscreen on phones; desktop sizes apply from `sm` upward. */
-const phoneNearFullscreenClassName =
-	'max-sm:h-[min(100dvh,100%)] max-sm:max-h-[min(100dvh,100%)] max-sm:w-full max-sm:max-w-none max-sm:rounded-none';
-
 /** Dialog shell with size / fullWidth variants. */
 export function ModalPanel({
 	size = 'sm',
@@ -32,31 +28,30 @@ export function ModalPanel({
 	children,
 	ref,
 }: ModalPanelProps) {
-	const sizeClassName =
-		size === 'xl'
-			? 'sm:h-[80vh] sm:max-h-[80vh] sm:w-[80vw] sm:max-w-3xl'
-			: size === 'lg'
-				? 'sm:max-w-xl'
-				: size === 'md'
-					? 'sm:max-w-md'
-					: 'sm:max-w-sm';
+	const isXl = size === 'xl';
 
-	const maxHeightClassName =
-		size === 'xl'
-			? 'max-sm:max-h-[min(100dvh,100%)] sm:max-h-[80vh]'
-			: 'max-sm:max-h-[min(100dvh,100%)] sm:max-h-[min(90vh,40rem)]';
+	const sizeClassName = isXl
+		? 'sm:h-[80vh] sm:max-h-[80vh] sm:w-[80vw] sm:max-w-3xl'
+		: size === 'lg'
+			? 'sm:max-w-xl'
+			: size === 'md'
+				? 'sm:max-w-md'
+				: 'sm:max-w-sm';
 
 	return (
 		<div
 			className={clsx(
-				'ModalPanel relative flex min-h-0 w-full flex-col gap-4 p-4 sm:p-6',
-				maxHeightClassName,
+				'ModalPanel relative flex min-h-0 w-full flex-col',
+				// xl Settings sheet: edge-to-edge full height on phones.
+				// Smaller modals (About, etc.) hug content and stay centered in the scrim.
+				isXl
+					? 'gap-0 p-0 max-sm:h-dvh max-sm:max-h-dvh max-sm:w-full max-sm:max-w-none max-sm:rounded-none sm:gap-4 sm:p-6 sm:max-h-[80vh]'
+					: 'gap-4 p-4 max-sm:max-h-[min(100dvh,100%)] sm:p-6 sm:max-h-[min(90vh,40rem)]',
 				modalPanelClassName,
-				phoneNearFullscreenClassName,
 				clip && 'overflow-hidden',
 				fullWidth
 					? 'max-w-none rounded-none'
-					: clsx(sizeClassName, 'sm:rounded-lg'),
+					: clsx(sizeClassName, 'rounded-lg'),
 			)}
 			role='dialog'
 			onMouseEnter={onHoverChange ? () => onHoverChange(true) : undefined}

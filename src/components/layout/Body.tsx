@@ -10,7 +10,7 @@ import { isBucketTrainerMode } from '@/lib/settings-schema';
 export function Body() {
 	const { subdivisionLevel } = useSubdivision();
 	const { settings } = useSettings();
-	const { poisonRhythm, measures, handleNewRound, handleReuseRound } =
+	const { poisonRhythm, measures, round, handleNewRound, handleReuseRound } =
 		useGame();
 	const { playButtonRef, handleNewPoison } =
 		useSoftDisableFocus(handleNewRound);
@@ -32,6 +32,7 @@ export function Body() {
 			{!bucketMode ? (
 				<PoisonSection
 					poisonRhythm={poisonRhythm}
+					hasRound={round !== null}
 					onNewPoison={handleNewPoison}
 					onReusePoison={handleReuseRound}
 					onReuseDisabledClick={handleNewPoison}

@@ -32,16 +32,16 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 2. **`EmptyStartPrompt` is fallback only.** Still rendered when `round === null`, but round is not cleared to `null` after mount in normal flow.
 3. **`e2e/helpers.ts` `generateRound` does not click New.** It waits for `data-testid="measure-slider"` and an enabled Play button (auto-seeded round).
 4. **Complexity is available from the title About modal and Settings → Mode** (difficulty 1–5 + subdivision). Header ShowNotes remains a quick control. Do not add Settings dials for density or syncopation as separate fields.
-5. **Display mode** is on the Poison section badge (and Measures badge in Bucket mode) → one `DisplayModeModal` owned by `Body`, and also under **Settings → Look → Display**. Badge labels are **GRID** / **NOTATION** only; Scroll is Coming Soon (schema fields exist but are **not wired** on main — leave for `display-scroll`).
+5. **Display mode** is on the Poison section badge (and Measures badge in Bucket mode) → one `DisplayModeModal` owned by `Body`, and also under **Settings → Mode → Display**. Badge labels are **GRID** / **NOTATION** only; Scroll is Coming Soon (schema fields exist but are **not wired** on main — leave for `display-scroll`).
 6. **Play modes** are on the Difficulty section badge in the title About modal → `PlayModesModal`, and also under **Settings → Mode → Play Mode** (Classic / Bucket Drumming + Endless).
-7. **Color accents are preference keys**, not the game-settings blob — `ColorPreferencesProvider` + `poison-rhythm-dominant-color` / `poison-rhythm-secondary-color` (null = brand). Contrast uses US letter grades A/B/C/D/F (`rateCrayonContrast`; WCAG thresholds through C, D under 3:1) plus a ΔE fail gate for near-identical pairs (`rateColorPairContrast`). Border hierarchy is shared via `src/lib/hierarchy-border.ts` (swatches + measure chrome). See [`documentation/COLORS.md`](documentation/COLORS.md) and [`documentation/A11Y.md`](documentation/A11Y.md).
+7. **Color accents are preference keys**, not the game-settings blob — `ColorPreferencesProvider` + `poison-rhythm-dominant-color` / `poison-rhythm-secondary-color` (null = brand `#914893` / `#246028`). Picking Dominant scores that color against the current Secondary, and the reverse. The meter is the grade stack with ratios; each row is also Light Mode / Dark Mode / Match System (tap to lock, tap again for Match System; lit vs shaded bulb). Meter bars stay Light-over-Dark (no `.ThemeScoreStack`); swatches still reorder via CSS. Read [`documentation/CONTRAST.md`](documentation/CONTRAST.md) and [`.cursor/skills/color-contrast/SKILL.md`](.cursor/skills/color-contrast/SKILL.md) before changing it.
 8. **User-facing copy** uses typographic apostrophe `’` (not `'`). Prefer Title Case for labels/titles; sentence case for body hints.
-9. **Do not commit `.tmp-glyphs/`.** Local glyph audit screenshots; gitignored and Biome-ignored.
+9. **Do not commit `.tmp-*`.** Local glyph audits, screenshots, and scratch venvs; gitignored and Biome-ignored.
 10. **Round logic lives in `GameProvider`.** `useGameLoop` exists but is unused by the app shell — prefer extending `GameProvider` / `@/lib/game-modes` / `@/lib/rhythm`.
 11. **Difficulty slider** lives at the bottom of the title About modal (and Settings → Mode). Changing difficulty while a round is active drafts until the host modal closes; then `PendingDifficultyProvider` applies the new difficulty and regenerates the round. `DifficultyRegenAckHost` (mounted in `App`) shows a timed acknowledgement (no OK button; `TIMED_NOTICE_DURATION_MS`, default 2.5s, progress bar on the panel). Providers own state only; modal hosts sit beside the tree. iOS color and animation notes: [`documentation/IOS.md`](documentation/IOS.md).
 12. **Phone-up layout** targets ≈360px (320px no horizontal overflow). Measure beat groups wrap to **2×2** below `sm`. Playwright `mobile` project (360×800) runs `a11y` + `mobile-layout` only.
 13. **Escape stops playback** in `MetronomeProvider` on `keydown` (works while Play/Pause is focused); ignored in text inputs and dialogs.
-14. **One component per file**; composers take context/hooks, molecules take explicit props; **variants over `className`** (`tone`, `size`, `framed`, `slot`). Shared modal chrome: `ModalScrim` / `ModalPanel` / `ModalCloseButton` / `ModalTitle` + `useModalFocusTrap`.
+14. **One component per file**; composers take context/hooks, molecules take explicit props; **variants over `className`** (`tone`, `size`, `framed`, `slot`). Shared modal chrome: `ModalScrim` / `ModalPanel` / `ModalCloseButton` / `ModalTitle` + `useModalFocusTrap`. Measure leaves take `display` from `useMeasureDisplayOptions` (wired in `MeasuresSection` / `PoisonMeasureContent`). Settings → Colors: `ColorAccentSettings` owns prefs + theme; meter / tray / pairings / score rows are prop-driven (`CrayonTray` memoizes grades on role + partner so theme taps do not rescore). Prefer `useSetting` / `usePaletteContrast` / `useColorRoleSelection` over ad-hoc wiring; reusable atoms stay props-only (`MuteToggle`, `EnableToggle`, `CrayonSwatch`, `ThemeScoreRow`).
 
 ## Key paths
 
@@ -49,13 +49,15 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 |------|------|
 | `src/contexts/GameProvider.tsx` | Sync-seeded round, New/Reuse, endless append |
 | `src/contexts/PendingDifficultyProvider.tsx` | Draft difficulty + regen; state only (no modal JSX) |
-| `src/contexts/MetronomeProvider.tsx` | Audio clock, count-in, demo/student passes, `countInBeat`, Escape-to-stop |
+| `src/contexts/MetronomeProvider.tsx` | Audio clock + `useMetronome` / `useMetronomeTempo` split; count-in, demo/student passes, Escape-to-stop |
 | `src/components/controls/DifficultyRegenAckHost.tsx` | App-level host for the timed post-regen acknowledgement |
 | `src/components/layout/about/AboutPoisonRhythmModal.tsx` | App-level host for title About + `DifficultyControls` |
 | `src/components/layout/Modal.tsx` | Modal composer; chrome atoms + `useModalFocusTrap` |
-| `src/components/layout/settings/` | Settings modal (`SettingsOverlay` → Mode / Sound / Look / Colors) |
+| `src/components/layout/settings/` | Settings modal (`SettingsOverlay` → Mode / Sound / Colors) |
 | `src/components/controls/PlayControls.tsx` | Play/Pause; `data-count-in-beat` during count-in |
-| `src/components/measures/MeasureGrid.tsx` | Mode switch + Suspense; grid via `MeasureCellGrid`; prefetch via `useNotationPrefetch` |
+| `src/components/measures/MeasureGrid.tsx` | Mode switch + Suspense; prop-driven `display`; grid via `MeasureCellGrid`; prefetch via `useNotationPrefetch` |
+| `src/hooks/useMeasureDisplayOptions.ts` | Derive measure chrome flags once for section composers |
+| `src/components/layout/settings/colors/ColorAccentSettings.tsx` | Colors tab composer; owns prefs + role/contrast hooks; meter owns theme; tray memoized |
 | `src/components/measures/measure-phase-chrome.ts` | Live-measure shell/hit classes by `data-playback-phase` (idle / count-in / listening / playing) |
 | `src/components/measures/MeasureCarouselChrome.tsx` | Carousel chrome; `live` sets `data-testid="measure-slider"` |
 | `src/hooks/useDisclosure.ts` | Shared open/close state for modals |
@@ -82,6 +84,7 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 | [`README.md`](README.md) | Humans: setup, play, structure |
 | [`documentation/TEACHERS.md`](documentation/TEACHERS.md) | Music teachers: classroom arcs and settings |
 | [`documentation/COLORS.md`](documentation/COLORS.md) | Color prefs, Crayola tray, contrast grades |
+| [`documentation/CONTRAST.md`](documentation/CONTRAST.md) | Which role is scored, Light/Dark stack order |
 | [`documentation/A11Y.md`](documentation/A11Y.md) | Contrast grades, border hierarchy, keyboard / a11y |
 | [`documentation/IOS.md`](documentation/IOS.md) | iOS WebKit color, gradient, and animation quirks |
 | [`documentation/printables/student-record.pdf`](documentation/printables/student-record.pdf) | Printable student practice log (regen: `bun run printables:student-record`) |

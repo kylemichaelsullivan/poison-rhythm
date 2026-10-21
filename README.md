@@ -80,7 +80,7 @@ src/
 │   │   ├── about/    # About modal content
 │   │   ├── button/   # Footer corner triggers (Settings, Metronome, Account)
 │   │   ├── metronome/
-│   │   └── settings/ # SettingsOverlay + Mode / Sound / Look / Colors panels
+│   │   └── settings/ # SettingsOverlay + Mode / Sound / Colors panels
 │   ├── measures/     # Measure carousel chrome, grid, notation, playback highlighting
 │   └── poison/       # Poison rhythm section layers + New/Reuse
 ├── contexts/         # React context modules (see Context modules below)
@@ -128,9 +128,9 @@ Import from the barrel: `@/contexts`.
 | Module | Hook(s) | Provider | Role |
 |--------|---------|----------|------|
 | `GameContext` | `useGame` | `GameProvider` | Sync-seeded round on first paint, measures, poison index, endless prefetch, visual hints |
-| `SettingsContext` | `useSettings` | `SettingsProvider` | Game modes, poison/sticking, practice options (`localStorage`) |
-| `PreferencesContext` | `usePreferences`, `useComplexityPreferences`, `usePlaybackPreferences`, `useDifficulty`, `useSubdivision` | `PreferencesProvider` | Complexity (difficulty, subdivision) and playback (tempo, mutes, count-in) slices |
-| `MetronomeContext` | `useMetronome` | `MetronomeProvider` | Tempo, metronome/measure playback, demo-before-play passes |
+| `SettingsContext` | `useSettings`, `useSetting(key)` | `SettingsProvider` | Game modes / practice; keyed `useSetting` for single-field UI |
+| `PreferencesContext` | `useComplexityPreferences`, `useSoundPreferences`, `useTempoPreference`, `usePlaybackMute`, … | `PreferencesProvider` | Complexity / sound channels / tempo are separate slices |
+| `MetronomeContext` | `useMetronome`, `useMetronomeTempo` | `MetronomeProvider` | Playback clock vs tempo (BPM UI ignores beat flash) |
 | `ThemeContext` | `useTheme` | `ThemeProvider` | Light/dark/system theme |
 
 Provider tree: `main.tsx` wraps `ThemeProvider` → `ColorPreferencesProvider` → `SettingsProvider` → `PreferencesProvider` → `MetronomeProvider`; `App.tsx` adds `GameProvider` → `PendingDifficultyProvider` → `AboutPoisonRhythmProvider`, then mounts `AppContent` plus modal hosts (`AboutPoisonRhythmModal`, `DifficultyRegenAckHost`). Providers own state only; UI hosts sit beside the tree.
@@ -161,13 +161,12 @@ The rhythm engine (`src/lib/rhythm/`) accepts both `difficulty` and `subdivision
 
 | Area | Controls |
 |------|----------|
-| Mode | Play mode + Endless, complexity (difficulty, subdivision), practice (Show Poison?, show next, preview pass, mute on pass) |
-| Sound | Tempo, metronome mute, rhythm mute, count-in |
-| Look | Theme, display mode (grid / notation; Scroll Coming Soon), feedback |
-| Colors | Dominant / secondary Crayola accents; see [`documentation/COLORS.md`](documentation/COLORS.md) and [`documentation/A11Y.md`](documentation/A11Y.md) |
+| Mode | Display (grid / notation; Scroll Coming Soon), play mode + Endless, complexity (difficulty, subdivision), practice (Show Poison?, show next, preview pass, mute on pass) |
+| Sound | Visual/audio feedback, metronome mute, rhythm mute, count-in, tempo |
+| Colors | Dominant / secondary Crayola accents + Light/Dark theme toggles on the contrast meter; see [`documentation/COLORS.md`](documentation/COLORS.md) and [`documentation/A11Y.md`](documentation/A11Y.md) |
 | Main-page shortcuts | Poison Display Mode badge, header ShowNotes, footer metronome |
 
-Settings modal tabs: **Mode**, **Sound**, **Look**, **Colors** (`SettingsTabs`).
+Settings modal tabs: **Mode**, **Sound**, **Colors** (`SettingsTabs`).
 
 **Persistence:**
 
@@ -246,7 +245,7 @@ Details: [`documentation/TESTING.md`](documentation/TESTING.md).
 4. Note the **poison rhythm** in the Poison Rhythm section (hidden when poison mode is off or set to hidden).
 5. Click **New (+)** for a fresh poison and measures, or **Reuse** to keep the same poison and regenerate measures.
 6. Use **Prev/Next** to step through measures and find which one matches the poison.
-7. Use **Play** to hear measures (optional count-in shows beat numbers on the Play control and fades the live measure). With **Preview Before Play** enabled (Settings → Mode), the current measure plays once as a demo (Listening — dashed primary shell and black/white notes), then again as the student pass (Playing — secondary glow shell and secondary notes; optionally muted).
+7. Use **Play** to hear measures (optional count-in shows beat numbers on the Play control and fades the live measure). With **Preview Before Play** enabled (Settings → Mode), the current measure plays once as a demo (Listening — dashed primary shell and Secondary notes), then again as the student pass (Playing — secondary glow shell and Dominant notes; optionally muted).
 8. Open the footer **metronome** to set tempo or tap tempo.
 9. Open the footer **Settings** for theme, colors, sound (including tempo), complexity, play/display mode, poison visibility, and practice features (show next measure, demo pass). Difficulty + play mode are in the title **About** modal; other main-page shortcuts remain: Poison **Display Mode** badge, header ShowNotes, footer metronome.
 

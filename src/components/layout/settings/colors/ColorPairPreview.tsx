@@ -1,45 +1,31 @@
-import {
-	BRAND_DOMINANT_HEX,
-	BRAND_SECONDARY_HEX,
-	type ColorRole,
-	type CrayonId,
-	crayonByIdOrNull,
-} from '@/lib/colors';
+import { type ColorRole, resolveAccentDisplay } from '@/lib/colors';
+import type { ColorPreference } from '@/lib/preference-schemas';
 import { ColorPairPlayPreview } from './ColorPairPlayPreview';
 import { ColorRoleTile } from './ColorRoleTile';
+import { SwapColorRolesButton } from './SwapColorRolesButton';
 
 type ColorPairPreviewProps = {
-	dominantId: CrayonId | null;
-	secondaryId: CrayonId | null;
 	role: ColorRole;
 	onRoleChange: (role: ColorRole) => void;
+	dominantColor: ColorPreference;
+	secondaryColor: ColorPreference;
+	onSwap: () => void;
 };
 
-function roleHex(
-	id: CrayonId | null,
-	fallback: string,
-): { hex: string; name: string } {
-	const crayon = crayonByIdOrNull(id);
-	return {
-		hex: crayon?.hex ?? fallback,
-		name:
-			crayon?.name ??
-			(fallback === BRAND_DOMINANT_HEX ? 'Poison Purple' : 'Poison Mint'),
-	};
-}
-
+/** Role tiles + play preview; palette via props from the Colors composer. */
 export function ColorPairPreview({
-	dominantId,
-	secondaryId,
 	role,
 	onRoleChange,
+	dominantColor,
+	secondaryColor,
+	onSwap,
 }: ColorPairPreviewProps) {
-	const dominant = roleHex(dominantId, BRAND_DOMINANT_HEX);
-	const secondary = roleHex(secondaryId, BRAND_SECONDARY_HEX);
+	const dominant = resolveAccentDisplay(dominantColor, 'dominant');
+	const secondary = resolveAccentDisplay(secondaryColor, 'secondary');
 
 	return (
 		<div className='ColorPairPreview flex flex-col gap-3'>
-			<fieldset className='grid grid-cols-2 gap-2 border-0 p-0'>
+			<fieldset className='grid min-w-0 grid-cols-1 items-stretch justify-items-stretch gap-1.5 border-0 p-0 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:items-center sm:gap-2'>
 				<legend className='sr-only'>Color Role</legend>
 				<ColorRoleTile
 					label='Dominant'
@@ -48,6 +34,9 @@ export function ColorPairPreview({
 					selected={role === 'dominant'}
 					onSelect={() => onRoleChange('dominant')}
 				/>
+				<div className='flex justify-center'>
+					<SwapColorRolesButton onSwap={onSwap} />
+				</div>
 				<ColorRoleTile
 					label='Secondary'
 					hex={secondary.hex}

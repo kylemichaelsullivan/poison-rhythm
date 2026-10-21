@@ -19,7 +19,7 @@ export function ModeBadge({ badge }: ModeBadgeProps) {
 		>
 			<span
 				className={clsx(
-					'relative inline-flex size-11 shrink-0 items-center justify-center rounded-full border-2 border-secondary bg-surface text-black shadow-control transition-[colors,box-shadow]',
+					'relative inline-flex size-11 shrink-0 items-center justify-center rounded-full border-2 border-secondary bg-surface text-black transition-[colors,box-shadow]',
 					'group-hover:bg-primary group-hover:text-on-primary group-hover:shadow-soft',
 					'group-focus-visible:border-primary',
 				)}

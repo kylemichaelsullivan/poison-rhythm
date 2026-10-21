@@ -1,39 +1,37 @@
-import { shouldShowMuteOnStudentPass } from '@/lib/settings-schema';
-import { EnableToggle } from './EnableToggle';
+import { DisplayModeControls } from './DisplayModeControls';
+import { GameBooleanSetting } from './GameBooleanSetting';
 import { SettingRow } from './SettingRow';
 import { SettingsGroup } from './SettingsGroup';
-import { useUpdateSetting } from './useUpdateSetting';
 
+/** Settings → Mode. Display + practice bind globally inside their composers. */
 export function GameSettingsPanel() {
-	const { settings, set } = useUpdateSetting();
-
 	return (
 		<>
+			<SettingsGroup title='Display'>
+				<DisplayModeControls />
+			</SettingsGroup>
+
 			<SettingsGroup title='Practice'>
-				<EnableToggle
+				<GameBooleanSetting
+					setting='showNextMeasure'
 					label='Show Next Measure'
-					enabled={settings.showNextMeasure}
-					onChange={(value) => set('showNextMeasure', value)}
 				/>
-				<EnableToggle
+				<GameBooleanSetting
+					setting='demoBeforePlay'
 					label='Preview Before Play'
-					enabled={settings.demoBeforePlay}
-					onChange={(value) => set('demoBeforePlay', value)}
 				/>
-				<EnableToggle
+				<GameBooleanSetting
+					setting='muteOnStudentPass'
 					label='Mute on Playing Pass'
-					enabled={settings.muteOnStudentPass}
-					disabled={!shouldShowMuteOnStudentPass(settings)}
-					onChange={(value) => set('muteOnStudentPass', value)}
 				/>
 			</SettingsGroup>
 
 			<SettingsGroup title='Rhythm'>
 				<SettingRow label='Accents'>
-					<span className='text-sm text-muted'>Coming Soon</span>
+					<span className='text-sm italic text-muted'>Coming Soon</span>
 				</SettingRow>
 				<SettingRow label='Sticking'>
-					<span className='text-sm text-muted'>Coming Soon</span>
+					<span className='text-sm italic text-muted'>Coming Soon</span>
 				</SettingRow>
 			</SettingsGroup>
 		</>

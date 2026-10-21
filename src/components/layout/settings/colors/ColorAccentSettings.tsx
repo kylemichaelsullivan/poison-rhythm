@@ -1,83 +1,91 @@
-import { useMemo, useState } from 'react';
-import { useColorPreferences } from '@/contexts';
-import {
-	type ColorPairing,
-	type ColorRole,
-	type CrayonId,
-	rateColorPairContrast,
-	resolveDominantHex,
-	resolveSecondaryHex,
-	suggestPairings,
-} from '@/lib/colors';
+import { useCallback } from 'react';
+import { useColorPreferences, useTheme } from '@/contexts';
+import { useColorRoleSelection } from '@/hooks/useColorRoleSelection';
+import { usePaletteContrast } from '@/hooks/usePaletteContrast';
+import type { ColorPairing, CrayonId } from '@/lib/colors';
+import { nextThemePreference, themeOptionFor } from '@/lib/theme-options';
 import { SettingsGroup } from '../SettingsGroup';
 import { ColorPairPreview } from './ColorPairPreview';
 import { ContrastScoreMeter } from './ContrastScoreMeter';
 import { CrayonTray } from './CrayonTray';
 import { SuggestedPairings } from './SuggestedPairings';
 
-/** Color groups for Settings → Colors (preview → grade → tray → pairings). */
+/**
+ * Settings → Colors composer. Owns palette prefs + theme; children are
+ * prop-driven. Edit-role selection is local. CrayonTray is memoized so theme
+ * taps do not rescore all 64 crayons.
+ */
 export function ColorAccentSettings() {
-	const { dominantColor, secondaryColor, setDominantColor, setSecondaryColor } =
-		useColorPreferences();
-	const [role, setRole] = useState<ColorRole>('dominant');
-	const pairings = useMemo(() => suggestPairings(), []);
+	const {
+		dominantColor,
+		secondaryColor,
+		setDominantColor,
+		setSecondaryColor,
+		swapColors,
+	} = useColorPreferences();
+	const { theme, setTheme } = useTheme();
+	const roleSelection = useColorRoleSelection(dominantColor, secondaryColor);
+	const scores = usePaletteContrast(dominantColor, secondaryColor);
+	const themeCaption = themeOptionFor(theme).label;
 
-	const activeId = role === 'dominant' ? dominantColor : secondaryColor;
-	const partnerId = role === 'dominant' ? secondaryColor : dominantColor;
-	const partnerHex =
-		role === 'dominant'
-			? resolveSecondaryHex(secondaryColor)
-			: resolveDominantHex(dominantColor);
-
-	const contrastRating = useMemo(
-		() =>
-			rateColorPairContrast(
-				resolveDominantHex(dominantColor),
-				resolveSecondaryHex(secondaryColor),
-			),
-		[dominantColor, secondaryColor],
+	const handleApplyPairing = useCallback(
+		(pairing: ColorPairing) => {
+			setDominantColor(pairing.dominantId);
+			setSecondaryColor(pairing.secondaryId);
+		},
+		[setDominantColor, setSecondaryColor],
 	);
 
-	const handleSelect = (id: CrayonId) => {
-		if (id === activeId) {
-			return;
-		}
-		if (role === 'dominant') {
-			setDominantColor(id);
-		} else {
-			setSecondaryColor(id);
-		}
-	};
+	const handleSelectCrayon = useCallback(
+		(id: CrayonId) => {
+			if (roleSelection.role === 'dominant') {
+				setDominantColor(id);
+			} else {
+				setSecondaryColor(id);
+			}
+		},
+		[roleSelection.role, setDominantColor, setSecondaryColor],
+	);
 
-	const handleApplyPairing = (pairing: ColorPairing) => {
-		setDominantColor(pairing.dominantId);
-		setSecondaryColor(pairing.secondaryId);
-	};
+	const handleThemeModeSelect = useCallback(
+		(mode: 'light' | 'dark') => {
+			setTheme(nextThemePreference(theme, mode));
+		},
+		[setTheme, theme],
+	);
 
 	return (
 		<>
 			<SettingsGroup title='Colors'>
 				<ColorPairPreview
-					dominantId={dominantColor}
-					secondaryId={secondaryColor}
-					role={role}
-					onRoleChange={setRole}
+					role={roleSelection.role}
+					onRoleChange={roleSelection.setRole}
+					dominantColor={dominantColor}
+					secondaryColor={secondaryColor}
+					onSwap={swapColors}
 				/>
-				<ContrastScoreMeter rating={contrastRating} />
+				<ContrastScoreMeter
+					light={scores.light}
+					dark={scores.dark}
+					theme={theme}
+					onThemeModeSelect={handleThemeModeSelect}
+					themeCaption={themeCaption}
+				/>
 				<CrayonTray
-					role={role}
-					activeId={activeId}
-					partnerId={partnerId}
-					partnerHex={partnerHex}
-					onSelect={handleSelect}
+					role={roleSelection.role}
+					activeId={roleSelection.activeId}
+					partnerId={roleSelection.partnerId}
+					partnerHex={roleSelection.partnerHex}
+					roleLabel={roleSelection.roleLabel}
+					partnerRoleLabel={roleSelection.partnerRoleLabel}
+					onSelect={handleSelectCrayon}
 				/>
 			</SettingsGroup>
 
 			<SettingsGroup title='Suggested Pairings'>
 				<SuggestedPairings
-					pairings={pairings}
-					dominantId={dominantColor}
-					secondaryId={secondaryColor}
+					dominantColor={dominantColor}
+					secondaryColor={secondaryColor}
 					onApply={handleApplyPairing}
 				/>
 			</SettingsGroup>

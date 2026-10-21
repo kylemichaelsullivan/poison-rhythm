@@ -6,20 +6,29 @@ export {
 	type PlaybackPass,
 	type PlaybackSource,
 	useMetronome,
+	useMetronomeTempo,
 } from './MetronomeContext';
 export { MetronomeProvider } from './MetronomeProvider';
 export { usePendingDifficulty } from './PendingDifficultyContext';
 export { PendingDifficultyProvider } from './PendingDifficultyProvider';
 export {
+	type PlaybackMuteChannel,
 	type SubdivisionLevel,
 	useComplexityPreferences,
 	useDifficulty,
+	usePlaybackMute,
 	usePlaybackPreferences,
 	usePreferences,
+	useSoundPreferences,
 	useSubdivision,
+	useTempoPreference,
 } from './PreferencesContext';
 export { PreferencesProvider } from './PreferencesProvider';
-export { useSettings } from './SettingsContext';
+export {
+	useSettingKey,
+	useSettings,
+	useSettingsStore,
+} from './SettingsContext';
 export { SettingsProvider } from './SettingsProvider';
 export { type ThemeSetting, useTheme } from './ThemeContext';
 export { ThemeProvider } from './ThemeProvider';

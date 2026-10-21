@@ -5,8 +5,7 @@ import {
 	StableContentFrame,
 } from '@/components/layout';
 import { MeasureHeightReserve } from '@/components/measures';
-import { useGame, useSettings } from '@/contexts';
-import { isBucketTrainerMode } from '@/lib/settings-schema';
+import { useMeasureDisplayOptions } from '@/hooks/useMeasureDisplayOptions';
 import type { RhythmMeasure } from '@/types';
 import { REST_MEASURE } from '@/types';
 import { PoisonMeasureContent } from './PoisonMeasureContent';
@@ -14,6 +13,7 @@ import { PoisonSectionHeader } from './PoisonSectionHeader';
 
 type PoisonSectionProps = {
 	poisonRhythm: RhythmMeasure | null;
+	hasRound: boolean;
 	onNewPoison: () => void;
 	onReusePoison: () => void;
 	onReuseDisabledClick?: () => void;
@@ -22,42 +22,32 @@ type PoisonSectionProps = {
 
 export function PoisonSection({
 	poisonRhythm,
+	hasRound,
 	onNewPoison,
 	onReusePoison,
 	onReuseDisabledClick,
 	onOpenDisplayMode,
 }: PoisonSectionProps) {
-	const { settings, updateSettings } = useSettings();
-	const { round } = useGame();
-	const bucketMode = isBucketTrainerMode(settings);
+	const display = useMeasureDisplayOptions();
 
 	return (
 		<Section
 			title='Poison Rhythm'
-			headerLeading={
-				<PoisonSectionHeader
-					slot='leading'
-					poisonVisible={settings.poisonMode === 'visible'}
-					visibilityDisabled={bucketMode}
-					onPoisonVisibleChange={(visible) =>
-						updateSettings({
-							poisonMode: visible ? 'visible' : 'hidden',
-						})
-					}
-				/>
-			}
+			headerLeading={<PoisonSectionHeader slot='leading' />}
 			headerAction={
 				<PoisonSectionHeader
 					slot='action'
-					renderMode={settings.rhythmRenderMode}
+					renderMode={display.renderMode}
 					onOpenDisplayMode={onOpenDisplayMode}
 				/>
 			}
 		>
 			<StableContentFrame
-				spacer={<MeasureHeightReserve measure={REST_MEASURE} />}
+				spacer={
+					<MeasureHeightReserve measure={REST_MEASURE} display={display} />
+				}
 			>
-				{round === null ? (
+				{!hasRound ? (
 					<EmptyStartPrompt onClick={onNewPoison} />
 				) : (
 					<PoisonMeasureContent poisonRhythm={poisonRhythm} />
@@ -66,7 +56,7 @@ export function PoisonSection({
 			<ControlButtons
 				onNewPoison={onNewPoison}
 				onReusePoison={onReusePoison}
-				reuseDisabled={round === null}
+				reuseDisabled={!hasRound}
 				onReuseDisabledClick={onReuseDisabledClick}
 			/>
 		</Section>

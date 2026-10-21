@@ -1,10 +1,11 @@
-import { useSettings } from '@/contexts';
 import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
 import { MeasureGrid } from './MeasureGrid';
+import type { MeasureDisplayOptions } from './measure-display-options';
 
 type MeasureHeightReserveProps = {
 	measure: RhythmMeasure;
 	richMeasure?: RichRhythmMeasure;
+	display: MeasureDisplayOptions;
 };
 
 /**
@@ -14,15 +15,15 @@ type MeasureHeightReserveProps = {
 export function MeasureHeightReserve({
 	measure,
 	richMeasure,
+	display,
 }: MeasureHeightReserveProps) {
-	const { settings } = useSettings();
-
 	return (
 		<div className='MeasureHeightReserve w-full'>
 			<MeasureGrid
 				measure={measure}
 				richMeasure={richMeasure}
-				renderMode={settings.rhythmRenderMode}
+				renderMode={display.renderMode}
+				display={display}
 			/>
 		</div>
 	);

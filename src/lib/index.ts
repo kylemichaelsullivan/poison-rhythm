@@ -130,4 +130,8 @@ export {
 	subdivisionStepCount,
 } from './subdivision-playback';
 export type { ThemeOption, ThemePreference } from './theme-options';
-export { THEME_OPTIONS, themeOptionFor } from './theme-options';
+export {
+	nextThemePreference,
+	THEME_OPTIONS,
+	themeOptionFor,
+} from './theme-options';

@@ -1,10 +1,9 @@
 import { lazy, Suspense } from 'react';
-import { useSettings } from '@/contexts';
 import { useNotationPrefetch } from '@/hooks/useNotationPrefetch';
 import type { RhythmRenderMode } from '@/lib/settings-schema';
-import { shouldShowSticking } from '@/lib/settings-schema';
 import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
 import { MeasureCellGrid } from './MeasureCellGrid';
+import type { MeasureDisplayOptions } from './measure-display-options';
 import type { MeasurePlaybackPhase } from './measure-phase-chrome';
 import { NotationFallback } from './NotationFallback';
 
@@ -20,10 +19,11 @@ type MeasureGridProps = {
 	richMeasure?: RichRhythmMeasure;
 	playback?: boolean;
 	hidden?: boolean;
-	/** Override settings render mode (e.g. height reserve always measures grid). */
+	/** Override display render mode (e.g. height reserve always measures grid). */
 	renderMode?: RhythmRenderMode;
 	/** Live playback chrome (Listening = secondary, Playing = primary). */
 	phase?: MeasurePlaybackPhase;
+	display: MeasureDisplayOptions;
 };
 
 export function MeasureGrid({
@@ -33,10 +33,9 @@ export function MeasureGrid({
 	hidden = false,
 	renderMode: renderModeProp,
 	phase,
+	display,
 }: MeasureGridProps) {
-	const { settings } = useSettings();
-	const renderMode = renderModeProp ?? settings.rhythmRenderMode;
-	const showSticking = shouldShowSticking(settings);
+	const renderMode = renderModeProp ?? display.renderMode;
 
 	useNotationPrefetch(renderMode, measureNotationImport);
 
@@ -49,6 +48,7 @@ export function MeasureGrid({
 					playback={playback}
 					hidden={hidden}
 					phase={phase}
+					display={display}
 				/>
 			</Suspense>
 		);
@@ -61,7 +61,7 @@ export function MeasureGrid({
 			playback={playback}
 			hidden={hidden}
 			phase={phase}
-			showSticking={showSticking}
+			display={display}
 		/>
 	);
 }

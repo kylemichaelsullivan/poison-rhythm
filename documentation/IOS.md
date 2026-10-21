@@ -12,11 +12,12 @@ Tailwind’s `@theme` block keeps a single value per token. Putting a second `ok
 
 What the stylesheet does instead:
 
-- Hex and rgba live in `@theme`. `--color-primary` is `var(--color-brand-purple-deep)` (`#783b82`). `--color-secondary` is `var(--color-brand-mint-deep)` (`#246028`).
+- Hex and rgba live in `@theme`. `--color-primary` is `var(--color-brand-purple-deep)` (`#914893`). `--color-secondary` is `var(--color-brand-mint-deep)` (`#246028`). Dark mode primary is `--color-brand-purple-bright` (`#c39ac4`), a lighter mix of that purple, still a plain hex.
 - Brand and ink tokens are registered with `@property` (`syntax: "<color>"`, `initial-value` the sRGB hex). An untyped custom property does not fall back: `--token: #hex; --token: oklch(...)` always keeps the `oklch()`, and a failed substitution blanks the property that uses the variable. A registered color uses the hex initial value when `oklch()` cannot be computed.
 - `oklch()` is only assigned inside `@supports (color: oklch(50% 0.1 0))`. Engines older than that skip the block and keep the `@theme` hex. `@property` itself is iOS 16.4+, so the hex initial value is the fallback on engines that understand registration.
 - `color-mix()` is only inside `@supports (color: color-mix(in srgb, red, blue))`.
 - `light-dark()` is iOS 17.5 and newer. Dark mode uses `prefers-color-scheme` (iOS 13 and newer) and `data-theme` instead.
+- Crayon swatch grade stacks (`.ThemeScoreStack`) list Light, then Dark. Dark mode moves the Dark row above Light with flex `order` (`order: -1`). Flex `order` is available in old WebKit. Chrome, Firefox, and Safari on iOS and iPadOS all use WebKit, so they share this rule. It does not use `light-dark()`. The interactive contrast meter keeps Light over Dark always so theme click targets stay put.
 
 Recorded support in the stylesheet comment: `oklch()` iOS 15.4+, `color-mix()` iOS 16.2+, `@property` iOS 16.4+, `light-dark()` iOS 17.5+.
 

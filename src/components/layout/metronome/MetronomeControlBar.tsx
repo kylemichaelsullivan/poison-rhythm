@@ -8,24 +8,17 @@ import { MetronomePlayButton } from './MetronomePlayButton';
 import { MetronomeTempoSlider } from './MetronomeTempoSlider';
 
 type MetronomeControlBarProps = {
-	tempo: number;
-	isRunning: boolean;
 	disabled?: boolean;
-	onToggle: () => void;
-	onTempoChange: (value: number) => void;
 };
 
 /**
  * Tempo ± sit in-flow beside the control surface (inside the modal) when
  * there is room. Below ~63rem they drop under the surface; pair with
  * `sideGutterCollapsedReserveClassName` so they clear the bar and Tap.
+ * Play / tempo bind globally inside child composers.
  */
 export function MetronomeControlBar({
-	tempo,
-	isRunning,
 	disabled = false,
-	onToggle,
-	onTempoChange,
 }: MetronomeControlBarProps) {
 	return (
 		<div
@@ -36,29 +29,17 @@ export function MetronomeControlBar({
 				sideGutterCollapsedReserveClassName,
 			)}
 		>
-			<MetronomeModifyTempoButton
-				direction='decrease'
-				tempo={tempo}
-				onTempoChange={onTempoChange}
-			/>
+			<MetronomeModifyTempoButton direction='decrease' />
 			<div
 				className={clsx(
 					'MetronomeControlSurface flex min-w-0 flex-1 flex-col justify-center gap-4 items-center px-3 py-4 sm:flex-row sm:px-6',
 					controlSurfaceBaseClassName,
 				)}
 			>
-				<MetronomePlayButton
-					isRunning={isRunning}
-					disabled={disabled}
-					onToggle={onToggle}
-				/>
-				<MetronomeTempoSlider tempo={tempo} onTempoChange={onTempoChange} />
+				<MetronomePlayButton disabled={disabled} />
+				<MetronomeTempoSlider />
 			</div>
-			<MetronomeModifyTempoButton
-				direction='increase'
-				tempo={tempo}
-				onTempoChange={onTempoChange}
-			/>
+			<MetronomeModifyTempoButton direction='increase' />
 		</div>
 	);
 }

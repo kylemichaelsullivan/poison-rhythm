@@ -1,9 +1,7 @@
 import clsx from 'clsx';
-import { useMetronome, useSettings, useSubdivision } from '@/contexts';
 import { cellToSubdivisionStep } from '@/lib';
-import { shouldShowVisualFeedback } from '@/lib/audio';
 import { shouldHighlightPlaybackStep } from '@/lib/playback-state';
-import { shouldShowAccents, shouldShowSticking } from '@/lib/settings-schema';
+import type { SubdivisionLevel } from '@/lib/preference-schemas';
 import {
 	type MeasurePlaybackPhase,
 	measureHitClass,
@@ -20,6 +18,12 @@ type MeasureCellProps = {
 	sticking?: 'L' | 'R';
 	hidden?: boolean;
 	phase?: MeasurePlaybackPhase;
+	subdivisionLevel: SubdivisionLevel;
+	showVisualFeedback: boolean;
+	showAccents: boolean;
+	showSticking: boolean;
+	isMeasuresPlaying: boolean;
+	subdivisionIndex: number;
 };
 
 export function MeasureCell({
@@ -30,11 +34,14 @@ export function MeasureCell({
 	sticking,
 	hidden = false,
 	phase,
+	subdivisionLevel,
+	showVisualFeedback,
+	showAccents,
+	showSticking,
+	isMeasuresPlaying,
+	subdivisionIndex,
 }: MeasureCellProps) {
-	const { subdivisionLevel } = useSubdivision();
-	const { settings } = useSettings();
-	const { isMeasuresPlaying, subdivisionIndex } = useMetronome();
-	const showVisual = shouldShowVisualFeedback(settings.feedbackMode) && !hidden;
+	const showVisual = showVisualFeedback && !hidden;
 	const isCurrentStep = shouldHighlightPlaybackStep({
 		playbackEnabled: playback,
 		isMeasuresPlaying,
@@ -43,8 +50,8 @@ export function MeasureCell({
 		showVisual: true,
 	});
 	const showStepHighlight = isCurrentStep && showVisual;
-	const showAccent = shouldShowAccents(settings) && accent && value;
-	const showSticking = shouldShowSticking(settings) && sticking && value;
+	const showAccentMark = showAccents && accent && value;
+	const showStickingLabel = showSticking && sticking && value;
 
 	return (
 		<div
@@ -58,8 +65,8 @@ export function MeasureCell({
 			data-cell-index={index}
 			data-highlighted={showStepHighlight ? 'true' : undefined}
 		>
-			{showAccent ? <RhythmAccentMark /> : null}
-			{showSticking ? (
+			{showAccentMark ? <RhythmAccentMark /> : null}
+			{showStickingLabel ? (
 				<span className='absolute inset-x-0 top-full mt-0.5 text-center'>
 					<RhythmStickingLabel hand={sticking} />
 				</span>

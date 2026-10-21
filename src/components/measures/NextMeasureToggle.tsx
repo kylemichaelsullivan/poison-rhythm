@@ -1,16 +1,11 @@
 import EyeIcon from '@/assets/svg/eye.svg?react';
 import { IconToggle } from '@/components/layout/settings';
+import { useSetting } from '@/components/layout/settings/useSetting';
 
-type NextMeasureToggleProps = {
-	visible: boolean;
-	onVisibleChange: (visible: boolean) => void;
-};
+/** Eye toggle for next-measure preview — binds to `showNextMeasure`. */
+export function NextMeasureToggle() {
+	const [visible, setVisible] = useSetting('showNextMeasure');
 
-/** Eye toggle for next-measure preview visibility. */
-export function NextMeasureToggle({
-	visible,
-	onVisibleChange,
-}: NextMeasureToggleProps) {
 	return (
 		<IconToggle
 			label={
@@ -24,7 +19,7 @@ export function NextMeasureToggle({
 			unpressedIcon={EyeIcon}
 			variant='header'
 			grow={false}
-			onPressedChange={onVisibleChange}
+			onPressedChange={setVisible}
 		/>
 	);
 }

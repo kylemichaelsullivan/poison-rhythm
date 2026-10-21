@@ -5,8 +5,15 @@ import type { RhythmMeasure } from '@/types';
 
 export type { PlaybackPass, PlaybackSource };
 
-export type MetronomeContextValue = {
+/** Tempo preference + change handler (stable across beat flash / pass updates). */
+export type MetronomeTempoContextValue = {
 	tempo: number;
+	handleTempoChange: (updated: number) => void;
+	setTempo: Dispatch<SetStateAction<number>>;
+};
+
+/** Playback clock / transport — does not include tempo. */
+export type MetronomeContextValue = {
 	activeSource: PlaybackSource | null;
 	isRunning: boolean;
 	isMetronomeRunning: boolean;
@@ -28,13 +35,22 @@ export type MetronomeContextValue = {
 	toggleMeasures: () => void;
 	startMetronome: () => void;
 	stop: () => void;
-	handleTempoChange: (updated: number) => void;
-	setTempo: Dispatch<SetStateAction<number>>;
 };
+
+export const MetronomeTempoContext =
+	createContext<MetronomeTempoContextValue | null>(null);
 
 export const MetronomeContext = createContext<MetronomeContextValue | null>(
 	null,
 );
+
+export function useMetronomeTempo(): MetronomeTempoContextValue {
+	const context = useContext(MetronomeTempoContext);
+	if (!context) {
+		throw new Error('useMetronomeTempo must be used within MetronomeProvider');
+	}
+	return context;
+}
 
 export function useMetronome(): MetronomeContextValue {
 	const context = useContext(MetronomeContext);

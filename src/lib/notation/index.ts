@@ -28,6 +28,9 @@ export {
 export {
 	isMusiSyncFontReady,
 	loadMusiSyncFont,
+	MUSISYNC_SUBDIVISION_FONT_SPEC,
+	MUSISYNC_SUBDIVISION_NOTE_GLYPHS,
+	prefetchMusiSyncFont,
 } from './load-musisync-font';
 export {
 	type AbcTuneOptions,

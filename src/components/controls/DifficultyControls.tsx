@@ -1,20 +1,8 @@
-import { usePendingDifficulty, useSettings } from '@/contexts';
 import { useDisclosure } from '@/hooks/useDisclosure';
-import {
-	type GameMode,
-	type GameModeHudBadge,
-	gameModeHudBadge,
-} from '@/lib/settings-schema';
 import { DifficultyFramedBlock } from './DifficultyFramedBlock';
 import { DifficultyHelpModal } from './DifficultyHelpModal';
 import { DifficultySettingsBlock } from './DifficultySettingsBlock';
 import { PlayModesModal } from './PlayModesModal';
-
-const POISON_BADGE: GameModeHudBadge = {
-	label: 'Poison',
-	tone: 'classic',
-	endless: false,
-};
 
 type DifficultyControlsProps = {
 	/**
@@ -24,9 +12,11 @@ type DifficultyControlsProps = {
 	framed?: boolean;
 };
 
+/**
+ * Difficulty section composer. Slider / play-mode bind globally; help and
+ * Play Modes modals stay local disclosure.
+ */
 export function DifficultyControls({ framed = true }: DifficultyControlsProps) {
-	const { settings, updateSettings } = useSettings();
-	const { sliderValue, onDifficultyChange } = usePendingDifficulty();
 	const {
 		open: helpOpen,
 		onOpen: onOpenHelp,
@@ -40,16 +30,6 @@ export function DifficultyControls({ framed = true }: DifficultyControlsProps) {
 		setOpen: setModesOpen,
 	} = useDisclosure();
 
-	const modeBadge = gameModeHudBadge(settings) ?? POISON_BADGE;
-
-	function onSelectMode(value: GameMode) {
-		updateSettings({ gameMode: value });
-	}
-
-	function onEndlessChange(enabled: boolean) {
-		updateSettings({ endless: enabled });
-	}
-
 	function openPlayModes() {
 		setHelpOpen(false);
 		setModesOpen(true);
@@ -59,18 +39,11 @@ export function DifficultyControls({ framed = true }: DifficultyControlsProps) {
 		<>
 			{framed ? (
 				<DifficultyFramedBlock
-					sliderValue={sliderValue}
-					onDifficultyChange={onDifficultyChange}
-					modeBadge={modeBadge}
 					onOpenHelp={onOpenHelp}
 					onOpenPlayModes={onOpenModes}
 				/>
 			) : (
-				<DifficultySettingsBlock
-					sliderValue={sliderValue}
-					onDifficultyChange={onDifficultyChange}
-					onOpenHelp={onOpenHelp}
-				/>
+				<DifficultySettingsBlock onOpenHelp={onOpenHelp} />
 			)}
 
 			<DifficultyHelpModal
@@ -79,14 +52,7 @@ export function DifficultyControls({ framed = true }: DifficultyControlsProps) {
 				onOpenPlayModes={openPlayModes}
 			/>
 
-			<PlayModesModal
-				open={modesOpen}
-				selectedMode={settings.gameMode}
-				endless={settings.endless}
-				onClose={onCloseModes}
-				onSelectMode={onSelectMode}
-				onEndlessChange={onEndlessChange}
-			/>
+			<PlayModesModal open={modesOpen} onClose={onCloseModes} />
 		</>
 	);
 }

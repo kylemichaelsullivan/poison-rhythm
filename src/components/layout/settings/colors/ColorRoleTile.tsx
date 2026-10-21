@@ -1,6 +1,9 @@
 import clsx from 'clsx';
 import { pickOnColor } from '@/lib/colors';
-import { focusVisibleRingClassName } from '@/lib/control-classes';
+import {
+	interactiveInsetChromeClassName,
+	selectionOutlineActiveClassName,
+} from '@/lib/control-classes';
 
 type ColorRoleTileProps = {
 	label: string;
@@ -24,22 +27,25 @@ export function ColorRoleTile({
 		<button
 			type='button'
 			className={clsx(
-				'ColorRoleTile flex min-h-16 flex-col items-start justify-between gap-2 rounded-lg border-2 px-3 py-2 text-left transition-[box-shadow,border-color]',
-				focusVisibleRingClassName,
+				'ColorRoleTile flex min-h-16 min-w-0 flex-col items-center justify-between gap-2 rounded-lg border-2 px-2 py-2 text-center transition-[box-shadow,border-color,outline-color] sm:items-start sm:px-3 sm:text-left',
+				interactiveInsetChromeClassName,
 				selected
-					? 'border-black shadow-raised z-10'
-					: 'border-mid shadow-soft hover:border-primary',
+					? ['border-black z-10', selectionOutlineActiveClassName]
+					: 'border-mid',
 			)}
 			style={{ backgroundColor: hex, color: onColor }}
 			aria-pressed={selected}
 			aria-label={`${label}: ${name}`}
 			title={`${label}: ${name}`}
+			data-chrome-active={selected || undefined}
 			onClick={onSelect}
 		>
 			<span className='text-xs font-semibold uppercase tracking-wide opacity-90'>
 				{label}
 			</span>
-			<span className='text-sm font-medium leading-tight'>{name}</span>
+			<span className='line-clamp-2 break-words text-sm font-medium leading-tight'>
+				{name}
+			</span>
 		</button>
 	);
 }

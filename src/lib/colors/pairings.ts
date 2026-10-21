@@ -1,4 +1,8 @@
-import { BRAND_DOMINANT_HEX, BRAND_SECONDARY_HEX } from './apply-color-prefs';
+import {
+	type AccentColorId,
+	BRAND_DOMINANT_HEX,
+	BRAND_SECONDARY_HEX,
+} from './apply-color-prefs';
 import { rateColorPairContrast } from './contrast';
 import {
 	type CrayonColor,
@@ -19,7 +23,7 @@ export type ColorPairing = {
 export const BRAND_PAIRING: ColorPairing = {
 	id: 'brand',
 	label: 'Poison Rhythm',
-	caption: 'Brand purple and deep mint.',
+	caption: 'Purple and a green complement.',
 	dominantId: null,
 	secondaryId: null,
 	recommended: true,
@@ -137,10 +141,13 @@ export function suggestPairings(): ColorPairing[] {
 	return [BRAND_PAIRING, ...curated];
 }
 
+/** Static curated list — safe to reuse across mounts (no runtime prefs). */
+export const SUGGESTED_PAIRINGS: readonly ColorPairing[] = suggestPairings();
+
 export function pairingMatchesSelection(
 	pairing: ColorPairing,
-	dominantId: CrayonId | null,
-	secondaryId: CrayonId | null,
+	dominantId: AccentColorId,
+	secondaryId: AccentColorId,
 ): boolean {
 	return (
 		pairing.dominantId === dominantId && pairing.secondaryId === secondaryId

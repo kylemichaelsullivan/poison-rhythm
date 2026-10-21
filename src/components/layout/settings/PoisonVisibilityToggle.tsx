@@ -1,12 +1,9 @@
 import EyeIcon from '@/assets/svg/eye.svg?react';
 import { EnableToggle } from './EnableToggle';
 import { IconToggle } from './IconToggle';
+import { useSetting } from './useSetting';
 
 type PoisonVisibilityToggleProps = {
-	/** When true, poison reference is always shown. When false, hide during playback. */
-	visible: boolean;
-	onChange?: (visible: boolean) => void;
-	disabled?: boolean;
 	/**
 	 * Settings row with “Show Poison?” checkbox when true (default).
 	 * Header eye icon when false.
@@ -14,12 +11,21 @@ type PoisonVisibilityToggleProps = {
 	showLabel?: boolean;
 };
 
+/**
+ * Poison visibility — `poisonMode` visible vs hidden.
+ * Disabled automatically in Bucket Drumming.
+ */
 export function PoisonVisibilityToggle({
-	visible,
-	onChange,
-	disabled = false,
 	showLabel = true,
 }: PoisonVisibilityToggleProps) {
+	const [poisonMode, setPoisonMode] = useSetting('poisonMode');
+	const [gameMode] = useSetting('gameMode');
+	const visible = poisonMode === 'visible';
+	const disabled = gameMode === 'bucketTrainer';
+	const onChange = (next: boolean) => {
+		setPoisonMode(next ? 'visible' : 'hidden');
+	};
+
 	if (showLabel) {
 		return (
 			<EnableToggle

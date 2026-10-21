@@ -1,23 +1,23 @@
 import { RoundPlayPauseButton } from '@/components/controls/RoundPlayPauseButton';
+import { useMetronome } from '@/contexts';
 
 type MetronomePlayButtonProps = {
-	isRunning: boolean;
 	disabled?: boolean;
-	onToggle: () => void;
 };
 
+/** Start/stop metronome — binds to global metronome clock. */
 export function MetronomePlayButton({
-	isRunning,
 	disabled = false,
-	onToggle,
 }: MetronomePlayButtonProps) {
+	const { isMetronomeRunning, toggleMetronome } = useMetronome();
+
 	return (
 		<div className='MetronomeControls flex shrink-0 items-center justify-center px-3 py-3'>
 			<RoundPlayPauseButton
-				isPlaying={isRunning}
-				label={isRunning ? 'Stop Metronome' : 'Start Metronome'}
+				isPlaying={isMetronomeRunning}
+				label={isMetronomeRunning ? 'Stop Metronome' : 'Start Metronome'}
 				disabled={disabled}
-				onClick={onToggle}
+				onClick={toggleMetronome}
 			/>
 		</div>
 	);

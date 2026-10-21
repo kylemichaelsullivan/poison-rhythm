@@ -4,9 +4,11 @@ import { DisplayModeBadge } from './DisplayModeBadge';
 
 type DisplayModeTriggerProps = {
 	renderMode: RhythmRenderMode;
+	/** Opens Body-owned DisplayModeModal (local disclosure — not global). */
 	onClick: () => void;
 };
 
+/** Badge shows `renderMode`; open handler stays local. */
 export function DisplayModeTrigger({
 	renderMode,
 	onClick,

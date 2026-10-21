@@ -1,42 +1,26 @@
 import { MetronomeTempoSlider } from '@/components/layout/metronome/MetronomeTempoSlider';
-import { useMetronome, usePlaybackPreferences } from '@/contexts';
-import { EnableToggle } from './EnableToggle';
-import { MuteToggle } from './MuteToggle';
+import { CountInEnableSetting } from './CountInEnableSetting';
+import { FeedbackToggles } from './FeedbackToggles';
+import { MetronomeMuteSetting } from './MetronomeMuteSetting';
+import { RhythmHitsMuteSetting } from './RhythmHitsMuteSetting';
 import { SettingsGroup } from './SettingsGroup';
 
+/** Settings → Sound. Each control binds its own global prefs / settings. */
 export function SoundSettingsPanel() {
-	const { tempo, handleTempoChange } = useMetronome();
-	const {
-		muteMetronome,
-		countInEnabled,
-		muteRhythmSounds,
-		setMuteMetronome,
-		setCountInEnabled,
-		setMuteRhythmSounds,
-	} = usePlaybackPreferences();
-
 	return (
 		<>
-			<SettingsGroup title='Tempo'>
-				<MetronomeTempoSlider tempo={tempo} onTempoChange={handleTempoChange} />
+			<SettingsGroup title='Feedback'>
+				<FeedbackToggles />
 			</SettingsGroup>
 
 			<SettingsGroup title='Playback'>
-				<MuteToggle
-					label='Metronome'
-					muted={muteMetronome}
-					onChange={setMuteMetronome}
-				/>
-				<MuteToggle
-					label='Rhythm Hits'
-					muted={muteRhythmSounds}
-					onChange={setMuteRhythmSounds}
-				/>
-				<EnableToggle
-					label='Count-In Before Play'
-					enabled={countInEnabled}
-					onChange={setCountInEnabled}
-				/>
+				<MetronomeMuteSetting />
+				<RhythmHitsMuteSetting />
+				<CountInEnableSetting />
+			</SettingsGroup>
+
+			<SettingsGroup title='Tempo'>
+				<MetronomeTempoSlider />
 			</SettingsGroup>
 		</>
 	);

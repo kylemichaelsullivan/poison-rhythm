@@ -5,9 +5,6 @@ import { DisplayModeTrigger } from './DisplayModeTrigger';
 type PoisonSectionHeaderProps =
 	| {
 			slot: 'leading';
-			poisonVisible: boolean;
-			visibilityDisabled: boolean;
-			onPoisonVisibleChange: (visible: boolean) => void;
 	  }
 	| {
 			slot: 'action';
@@ -18,14 +15,7 @@ type PoisonSectionHeaderProps =
 /** Poison section header control for a single `Section` slot. */
 export function PoisonSectionHeader(props: PoisonSectionHeaderProps) {
 	if (props.slot === 'leading') {
-		return (
-			<PoisonVisibilityToggle
-				visible={props.poisonVisible}
-				showLabel={false}
-				disabled={props.visibilityDisabled}
-				onChange={props.onPoisonVisibleChange}
-			/>
-		);
+		return <PoisonVisibilityToggle showLabel={false} />;
 	}
 
 	return (

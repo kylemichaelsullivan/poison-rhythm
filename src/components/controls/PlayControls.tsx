@@ -46,7 +46,8 @@ export function PlayControls({
 					isCountingIn && isLit && 'opacity-100 ring-2 ring-primary',
 					!isCountingIn && isMeasuresRunning && isLit && 'ring-2 ring-primary',
 				)}
-				isPlaying={isMeasuresRunning}
+				isPlaying={isMeasuresRunning && !isCountingIn}
+				label={isMeasuresRunning ? 'Pause' : 'Play'}
 				countBeat={isCountingIn ? countInBeat : null}
 				title={disabled ? 'Click + Start' : undefined}
 				disabled={disabled}

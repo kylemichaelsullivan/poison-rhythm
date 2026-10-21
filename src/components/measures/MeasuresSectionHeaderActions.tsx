@@ -4,21 +4,21 @@ import { Row } from '@/components/ui';
 import type { RhythmRenderMode } from '@/lib/settings-schema';
 
 type MeasuresSectionHeaderActionsProps = {
-	showDisplayMode: boolean;
+	showDisplayModeTrigger: boolean;
 	renderMode: RhythmRenderMode;
 	onOpenDisplayMode: () => void;
 };
 
-/** Volume control plus optional Display Mode trigger for Measures. */
+/** Volume control plus Display Mode trigger in Bucket Drumming. */
 export function MeasuresSectionHeaderActions({
-	showDisplayMode,
+	showDisplayModeTrigger,
 	renderMode,
 	onOpenDisplayMode,
 }: MeasuresSectionHeaderActionsProps) {
 	return (
 		<Row gap='2' align='center'>
 			<PlaybackVolumeButton />
-			{showDisplayMode ? (
+			{showDisplayModeTrigger ? (
 				<DisplayModeTrigger
 					renderMode={renderMode}
 					onClick={onOpenDisplayMode}

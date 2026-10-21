@@ -2,11 +2,19 @@ import type { ReactNode } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type {
 	MetronomeContextValue,
+	MetronomeTempoContextValue,
 	PlaybackPass,
 	PlaybackSource,
 } from '@/contexts/MetronomeContext';
-import { MetronomeContext } from '@/contexts/MetronomeContext';
-import { usePreferences } from '@/contexts/PreferencesContext';
+import {
+	MetronomeContext,
+	MetronomeTempoContext,
+} from '@/contexts/MetronomeContext';
+import {
+	useSoundPreferences,
+	useSubdivision,
+	useTempoPreference,
+} from '@/contexts/PreferencesContext';
 import { useSettings } from '@/contexts/SettingsContext';
 import { createAudioEngine, shouldPlayRhythmAudio } from '@/lib/audio';
 import type { LookaheadScheduler } from '@/lib/lookahead-scheduler';
@@ -61,14 +69,10 @@ function shouldIgnoreEscapeStop(target: EventTarget | null) {
 }
 
 export function MetronomeProvider({ children }: MetronomeProviderProps) {
-	const {
-		subdivisionLevel,
-		muteMetronome,
-		countInEnabled,
-		muteRhythmSounds,
-		tempo,
-		setTempo,
-	} = usePreferences();
+	const { subdivisionLevel } = useSubdivision();
+	const { tempo, setTempo } = useTempoPreference();
+	const { muteMetronome, countInEnabled, muteRhythmSounds } =
+		useSoundPreferences();
 	const { settings } = useSettings();
 	const [activeSource, setActiveSource] = useState<PlaybackSource | null>(null);
 	const [isCountingIn, setIsCountingIn] = useState(false);
@@ -408,10 +412,19 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 		};
 	}, [tempo, handleTempoChange, stop]);
 
-	const value = useMemo(
+	const tempoValue = useMemo(
 		() =>
 			({
 				tempo,
+				handleTempoChange,
+				setTempo,
+			}) satisfies MetronomeTempoContextValue,
+		[tempo, handleTempoChange, setTempo],
+	);
+
+	const playbackValue = useMemo(
+		() =>
+			({
 				activeSource,
 				isRunning,
 				isMetronomeRunning,
@@ -431,11 +444,8 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 				toggleMeasures,
 				startMetronome,
 				stop,
-				handleTempoChange,
-				setTempo,
 			}) satisfies MetronomeContextValue,
 		[
-			tempo,
 			activeSource,
 			isRunning,
 			isMetronomeRunning,
@@ -455,14 +465,14 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 			toggleMeasures,
 			startMetronome,
 			stop,
-			handleTempoChange,
-			setTempo,
 		],
 	);
 
 	return (
-		<MetronomeContext.Provider value={value}>
-			{children}
-		</MetronomeContext.Provider>
+		<MetronomeTempoContext.Provider value={tempoValue}>
+			<MetronomeContext.Provider value={playbackValue}>
+				{children}
+			</MetronomeContext.Provider>
+		</MetronomeTempoContext.Provider>
 	);
 }

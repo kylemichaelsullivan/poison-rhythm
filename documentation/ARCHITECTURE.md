@@ -37,7 +37,7 @@ flowchart TB
 | Molecules | domain folders | `PlayModeOptionCard`, `ModalActions`, `ModalPanel`, `MeasureCarouselChrome`, `ContrastGradeBadge`, settings `EnableToggle` |
 | Composers | domain folders | `DifficultyControls`, `MeasureSlider`, `ShowNotes`, `PoisonSection`, `Body` |
 | Hosts | `App` / `Body` | `AboutPoisonRhythmModal`, `DifficultyRegenAckHost`, `DisplayModeModal` |
-| Hooks | `src/hooks/` | `useDisclosure`, `useModalFocusTrap`, `useTimedDismiss`, `useNotationPrefetch`, `useMeasurePlaybackSync`, `useHoverPinPopover`, `useSoftDisableFocus` |
+| Hooks | `src/hooks/` | `useDisclosure`, `useModalFocusTrap`, `useTimedDismiss`, `useNotationPrefetch`, `useMeasureDisplayOptions`, `useMeasurePlaybackSync`, `useHoverPinPopover`, `useSoftDisableFocus` |
 
 Rules of thumb:
 
@@ -49,7 +49,7 @@ Rules of thumb:
 
 Main page shell: `Header` → `Body` (`PoisonSection`, `MeasuresSection`, `PlayControls`, single `DisplayModeModal`) → `Footer`.
 
-Phone-up layout (≈360px primary; 320px must not overflow horizontally): safe-area insets on chrome, ≥44px touch targets on primary controls, near-fullscreen modals on small viewports, and measure beat groups wrapping to a **2×2** grid below `sm` (`MeasureCellGrid` via `MeasureGrid`). Carousel prev/next sit above Play so they do not overlap.
+Phone-up layout (≈360px primary; 320px must not overflow horizontally): safe-area insets on chrome, ≥44px touch targets on primary controls, near-fullscreen Settings sheet on small viewports, and **sixteenth** beat groups wrapping to **2×2** below `sm` so all 16 cells stay visible (`MeasureCellGrid` — quarters/eighths stay four-across; never force 16ths→8ths for viewport size). Carousel prev/next sit above Play so they do not overlap.
 
 | Composer / host | Notable layers / hooks |
 |-----------------|------------------------|
@@ -59,9 +59,10 @@ Phone-up layout (≈360px primary; 320px must not overflow horizontally): safe-a
 | `PoisonSection` | `PoisonSectionHeader`, `PoisonMeasureContent`, `PoisonMeasureFrame` / `HiddenPoisonOverlay` (badge opens Body-owned `DisplayModeModal`) |
 | `Body` | `useSoftDisableFocus`, `useDisclosure` → single `DisplayModeModal` |
 | `Modal` | `ModalScrim`, `ModalPanel`, `ModalCloseButton`, `ModalTitle`, `TimedNoticeProgress` when `dismissAfterMs` is set, `useModalFocusTrap`, `useTimedDismiss` |
-| `MeasureGrid` | `MeasureCellGrid` / lazy `MeasureNotation`, `NotationFallback`, `useNotationPrefetch` |
+| `MeasureGrid` | Prop-driven `display` → `MeasureCellGrid` / lazy `MeasureNotation`, `NotationFallback`, `useNotationPrefetch` |
+| `ColorAccentSettings` | Owns prefs + role/contrast hooks; `ContrastScoreMeter` owns theme; tray memoizes scores on role + partner |
 
-Settings shell: footer **Settings** → lazy `SettingsOverlay` → tabs `Mode` / `Sound` / `Look` / `Colors` over `layout/settings/` atoms (`SettingsGroup`, `EnableToggle`, `When`, …). Color accents persist via `ColorPreferencesProvider` (student-scoped preference keys; null = brand). Main-UI shortcuts remain: Poison/Measures badge → Body-owned `DisplayModeModal`; header ShowNotes; footer metronome for tempo (`CornerModal` `tone='muted'` when metronome muted). Mirrored in Settings: play mode + complexity + practice under Mode; tempo under Sound; theme, display, and feedback under Look; crayon accents under Colors. Difficulty + play-mode badge also live in the title About modal (`AboutPoisonRhythmModal`). See [`COLORS.md`](COLORS.md).
+Settings shell: footer **Settings** → lazy `SettingsOverlay` → tabs `Mode` / `Sound` / `Colors` over `layout/settings/` atoms (`SettingsGroup`, `EnableToggle`, `When`, …). Color accents persist via `ColorPreferencesProvider` (student-scoped preference keys; null = brand); Colors UI is composed by `ColorAccentSettings`. Main-UI shortcuts remain: Poison/Measures badge → Body-owned `DisplayModeModal`; header ShowNotes; footer metronome for tempo (`CornerModal` `tone='muted'` when metronome muted). Mirrored in Settings: display + play mode + complexity + practice under Mode; feedback → playback → tempo under Sound; crayon accents + theme lightbulbs on the contrast meter under Colors. Difficulty + play-mode badge also live in the title About modal (`AboutPoisonRhythmModal`). See [`COLORS.md`](COLORS.md) and [`CONTRAST.md`](CONTRAST.md).
 
 ## State flow
 
@@ -72,14 +73,14 @@ flowchart TB
     ShowNotes
   end
 
-  subgraph prefs [PreferencesContext]
+  subgraph prefs [Preferences slices]
     difficulty
     subdivisionLevel
     tempo
-    mutes
+    soundChannels
   end
 
-  subgraph settings [SettingsContext]
+  subgraph settings [Settings store]
     gameSettings
   end
 
@@ -134,8 +135,8 @@ Defined in `src/lib/settings-schema.ts`, persisted as `poison-rhythm-settings-v1
 When `demoBeforePlay` is enabled:
 
 1. Count-in (optional; Sound → Count-In Before Play)
-2. For **each** carousel measure: **Listening (demo) pass** — plays the current measure so students can hear it; cells highlighted; dashed primary shell + ink (black/white) notes (`data-playback-phase="listening"`)
-3. **Playing (student) pass** — same measure again with solid secondary glow shell + secondary notes (`data-playback-phase="playing"`); if `muteOnStudentPass`, rhythm hits suppressed; metronome continues
+2. For **each** carousel measure: **Listening (demo) pass** — plays the current measure so students can hear it; cells highlighted; dashed primary shell + Secondary notes (`data-playback-phase="listening"`)
+3. **Playing (student) pass** — same measure again with solid secondary glow shell + Dominant notes (`data-playback-phase="playing"`); if `muteOnStudentPass`, rhythm hits suppressed; metronome continues
 4. Advance to the next measure and repeat from step 2
 
 Count-in, Listening, and Playing share a fixed-width shell from `hierarchyBorderClass` (`src/lib/hierarchy-border.ts` via `measure-phase-chrome.ts`) so the measure does not jump between phases; count-in also fades the live measure (`opacity-55`). Dashed = provisional (count-in / listening); solid active = playing. See [`A11Y.md`](A11Y.md).
@@ -195,7 +196,7 @@ flowchart LR
 | `musisync-glyphs.ts` | Duration keys; dotted notes `i`/`j`/`d`; dotted rests = rest + `.` |
 | `events-to-musisync.ts` | Events → MusiSync glyph string |
 | `measure-to-notation.ts` | Flat `NotationStep[]` for overlays and playback cursor |
-| `load-musisync-font.ts` | `@font-face` preload; `useMusiSyncFont` in UI |
+| `load-musisync-font.ts` | `@font-face` + `index.html` preload; `prefetchMusiSyncFont` in `main` warms `q`/`e`/`s`; `useMusiSyncFont` in UI |
 
 Font assets: canonical copies in `src/assets/fonts/`; served from `public/fonts/` as static `/fonts/MusiSync.*` URLs. See [`src/assets/fonts/README.md`](../src/assets/fonts/README.md) for glyph keys and refresh steps.
 

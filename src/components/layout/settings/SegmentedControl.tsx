@@ -13,6 +13,14 @@ const GRID_COLS_CLASS: Record<number, string> = {
 	6: 'grid-cols-6',
 };
 
+const SM_GRID_COLS_CLASS: Record<number, string> = {
+	2: 'sm:grid-cols-2',
+	3: 'sm:grid-cols-3',
+	4: 'sm:grid-cols-4',
+	5: 'sm:grid-cols-5',
+	6: 'sm:grid-cols-6',
+};
+
 type SegmentedControlProps<T> = {
 	options: readonly SegmentOption<T>[];
 	value: T;
@@ -23,6 +31,11 @@ type SegmentedControlProps<T> = {
 	disabled?: boolean;
 	/** Equal-width buttons in a single row (uses CSS grid). */
 	equalWidth?: boolean;
+	/**
+	 * Full-width stacked buttons below `sm`, then a row.
+	 * Implies equal-width grid cells.
+	 */
+	stackBelowSm?: boolean;
 	onChange: (value: T) => void;
 };
 
@@ -34,9 +47,13 @@ export function SegmentedControl<T>({
 	describedBy,
 	disabled = false,
 	equalWidth = false,
+	stackBelowSm = false,
 	onChange,
 }: SegmentedControlProps<T>) {
 	const gridColsClass = GRID_COLS_CLASS[options.length] ?? 'grid-cols-4';
+	const smGridColsClass =
+		SM_GRID_COLS_CLASS[options.length] ?? 'sm:grid-cols-4';
+	const useGrid = equalWidth || stackBelowSm;
 
 	return (
 		<Fieldset
@@ -49,7 +66,11 @@ export function SegmentedControl<T>({
 			<div
 				className={clsx(
 					'gap-2',
-					equalWidth ? clsx('grid', gridColsClass) : 'flex flex-wrap',
+					stackBelowSm
+						? clsx('grid grid-cols-1', smGridColsClass)
+						: equalWidth
+							? clsx('grid', gridColsClass)
+							: 'flex flex-wrap',
 				)}
 			>
 				{options.map((option) => {
@@ -61,8 +82,8 @@ export function SegmentedControl<T>({
 							label={option.label}
 							selected={isSelected}
 							disabled={disabled}
-							grow={!equalWidth && options.length <= 4}
-							className={equalWidth ? 'w-full min-w-0' : undefined}
+							grow={!useGrid && options.length <= 4}
+							className={useGrid ? 'w-full min-w-0' : undefined}
 							onClick={() => onChange(option.value)}
 							key={option.label}
 						/>

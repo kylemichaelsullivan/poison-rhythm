@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import type { ReactNode } from 'react';
 import { focusVisibleRingClassName } from '@/lib/control-classes';
 
-export type SettingsTabId = 'mode' | 'sound' | 'look' | 'colors';
+export type SettingsTabId = 'mode' | 'sound' | 'colors';
 
 export type SettingsTabDefinition = {
 	id: SettingsTabId;
@@ -12,7 +12,6 @@ export type SettingsTabDefinition = {
 export const SETTINGS_TABS: SettingsTabDefinition[] = [
 	{ id: 'mode', label: 'Mode' },
 	{ id: 'sound', label: 'Sound' },
-	{ id: 'look', label: 'Look' },
 	{ id: 'colors', label: 'Colors' },
 ];
 
@@ -32,7 +31,7 @@ export function SettingsTabs({
 	return (
 		<div className='SettingsTabs flex min-h-0 flex-1 flex-col'>
 			<div
-				className='SettingsTabsList grid shrink-0 grid-cols-4 border-b border-mid'
+				className='SettingsTabsList grid shrink-0 grid-cols-3 border-b border-mid bg-white'
 				role='tablist'
 				aria-label='Settings Sections'
 			>
@@ -44,7 +43,7 @@ export function SettingsTabs({
 							type='button'
 							id={`settings-tab-${tab.id}`}
 							className={clsx(
-								'SettingsTab px-1.5 py-2.5 text-sm font-medium transition-colors sm:px-2',
+								'SettingsTab min-h-11 px-1.5 py-2.5 text-sm font-medium transition-colors sm:px-2',
 								focusVisibleRingClassName,
 								isActive
 									? 'border-b-2 border-primary text-primary'
@@ -62,7 +61,7 @@ export function SettingsTabs({
 				})}
 			</div>
 			<div
-				className='SettingsTabPanel flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto py-4 pe-4'
+				className='SettingsTabPanel flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto overscroll-contain px-3 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:gap-6 sm:px-4 sm:py-4 sm:pb-4'
 				id={activePanelId}
 				role='tabpanel'
 				aria-labelledby={`settings-tab-${activeTab}`}

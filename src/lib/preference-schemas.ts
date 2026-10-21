@@ -1,4 +1,9 @@
 import { z } from 'zod';
+import {
+	BRAND_ACCENT_IDS,
+	type BrandAccentId,
+	isBrandAccentId,
+} from './colors/apply-color-prefs';
 import { CRAYON_IDS, type CrayonId, isCrayonId } from './colors/crayola-64';
 import { DIFFICULTY_MAX, DIFFICULTY_MIN } from './difficulty-levels';
 import { BPM_DEFAULT, BPM_MAX, BPM_MIN } from './metronome-defaults';
@@ -134,16 +139,24 @@ export function serializeCountInEnabled(enabled: boolean): string | null {
 	return enabled ? null : 'false';
 }
 
-/** null = Poison Rhythm brand accent (CSS @theme defaults). */
-export type ColorPreference = CrayonId | null;
+/**
+ * null = this role’s Poison Rhythm brand default (CSS @theme).
+ * Brand accent ids pin a brand hex onto either role (needed for swap).
+ */
+export type ColorPreference = CrayonId | BrandAccentId | null;
 
 export const crayonIdSchema = z.enum(
 	CRAYON_IDS as unknown as [CrayonId, ...CrayonId[]],
 );
 
+export const brandAccentIdSchema = z.enum(BRAND_ACCENT_IDS);
+
 export function parseColorPreference(raw: string | null): ColorPreference {
 	if (raw === null) {
 		return null;
+	}
+	if (isBrandAccentId(raw)) {
+		return raw;
 	}
 
 	return isCrayonId(raw) ? raw : null;
@@ -154,6 +167,9 @@ export function serializeColorPreference(
 ): string | null {
 	if (value === null) {
 		return null;
+	}
+	if (isBrandAccentId(value)) {
+		return brandAccentIdSchema.parse(value);
 	}
 
 	return crayonIdSchema.parse(value);

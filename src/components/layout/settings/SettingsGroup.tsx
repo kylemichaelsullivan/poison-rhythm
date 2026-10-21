@@ -8,11 +8,11 @@ type SettingsGroupProps = {
 /** Section block inside a settings tab — title + content with a light rule. */
 export function SettingsGroup({ title, children }: SettingsGroupProps) {
 	return (
-		<section className='SettingsGroup flex flex-col gap-3 border-b border-mid/60 pb-6 last:border-b-0 last:pb-0'>
+		<section className='SettingsGroup flex flex-col gap-2.5 border-b border-mid/60 pb-4 last:border-b-0 last:pb-0 sm:gap-3 sm:pb-6'>
 			<h3 className='text-xs font-semibold uppercase tracking-wide text-muted'>
 				{title}
 			</h3>
-			<div className='flex flex-col gap-3'>{children}</div>
+			<div className='flex flex-col gap-2.5 sm:gap-3'>{children}</div>
 		</section>
 	);
 }

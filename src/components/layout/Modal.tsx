@@ -50,11 +50,16 @@ export function Modal({
 		return null;
 	}
 
+	const sheet = size === 'xl';
+
 	return (
 		<div
 			className={clsx(
 				'Modal fixed inset-0 z-50 flex items-center justify-center',
-				'p-[max(0px,env(safe-area-inset-top))] max-sm:p-0',
+				// Settings sheet is edge-to-edge; smaller modals keep inset so they center as cards.
+				sheet
+					? 'max-sm:p-0'
+					: 'p-4 pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))] pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))]',
 				'sm:p-4 sm:pl-[max(1rem,env(safe-area-inset-left))] sm:pr-[max(1rem,env(safe-area-inset-right))] sm:pt-[max(1rem,env(safe-area-inset-top))] sm:pb-[max(1rem,env(safe-area-inset-bottom))]',
 			)}
 		>
@@ -75,8 +80,19 @@ export function Modal({
 					/>
 				) : null}
 				<ModalCloseButton onClose={onClose} />
-				{title ? <ModalTitle id={titleId}>{title}</ModalTitle> : null}
-				<div className='flex min-h-0 flex-1 flex-col'>{children}</div>
+				{title ? (
+					<ModalTitle id={titleId} sheet={sheet}>
+						{title}
+					</ModalTitle>
+				) : null}
+				<div
+					className={clsx(
+						'flex min-h-0 flex-col',
+						sheet ? 'flex-1' : 'shrink-0',
+					)}
+				>
+					{children}
+				</div>
 			</ModalPanel>
 		</div>
 	);

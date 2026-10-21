@@ -66,7 +66,8 @@ src/components/
 ### DifficultyControls (composer)
 
 - **Purpose**: Difficulty section with play-mode badge + help / Play Modes modals
-- **Uses**: `DifficultyFramedBlock` / `DifficultySettingsBlock`, `DifficultyHelpModal`, `PlayModesModal`, `usePendingDifficulty`, `useDisclosure`
+- **Uses**: `DifficultyFramedBlock` / `DifficultySettingsBlock`, `DifficultyHelpModal`, `PlayModesModal`, `useDisclosure` (local open/close only)
+- **Global bindings**: `DifficultySlider` → `usePendingDifficulty`; `PlayModeOptionList` / mode badge → `useSettings`
 - **Variants**: `framed` (About section box with mode badge) vs compact Settings block (`framed={false}`)
 - **Note**: Lives in the title About modal and Settings → Mode; header ShowNotes remains the quick subdivision control. After the host modal closes with a pending difficulty change, `PendingDifficultyProvider` regenerates the round; `DifficultyRegenAckHost` (App-level) shows a timed acknowledgement (`Modal` `dismissAfterMs`, no OK button).
 
@@ -105,9 +106,10 @@ src/components/
 ### MeasureGrid / MeasureCell
 
 - **Purpose**: 16th-note grid with accent, sticking (L/R), poison overlay, and playback highlighting
-- **Composer**: `MeasureGrid` switches grid vs notation; `MeasureCellGrid` owns the cell layout (`showSticking` prop); `NotationFallback` + `useNotationPrefetch` for lazy notation
-- **Props**: `measure`, optional `richMeasure`, `playback`, `hidden`
-- **Render modes**: `grid` or `notation` (MusiSync via `rhythmRenderMode`)
+- **Composer**: Section composers (`MeasuresSection`, `PoisonMeasureContent`) call `useMeasureDisplayOptions` and pass `display: MeasureDisplayOptions` into `MeasureGrid` / `CurrentMeasureDisplay` / `MeasureHeightReserve`
+- **Leaves**: `MeasureGrid` switches grid vs notation; `MeasureCellGrid` / `MeasureCell` / `MeasureNotation` / `NotationPlaybackCursor` take explicit props (no context)
+- **Props**: `measure`, optional `richMeasure`, `playback`, `hidden`, `display` (render mode, subdivision, feedback/accent/sticking flags, metronome step)
+- **Render modes**: `grid` or `notation` (MusiSync via `display.renderMode`)
 - **Layout**: Four pedagogical beats; wraps to **2×2** beat groups below `sm`
 - **Overlays**: `RhythmAccentMark` / `RhythmAccentOverlay`; `RhythmStickingOverlay`
 
@@ -118,11 +120,14 @@ src/components/
 
 ### Settings (layout/settings)
 
-- **SettingsOverlay**: Four tabs — Mode, Sound, Look, Colors (`SettingsTabs`)
-- **GameSettingsPanel** / **SoundSettingsPanel** / **LookSettingsPanel** / **ColorSettingsPanel**: compose setting atoms (`Look` = theme, display, feedback; `Colors` = `ColorAccentSettings` → `ColorPairPreview` / `ContrastScoreMeter` / `CrayonTray` / `ContrastGradeBadge`)
+- **SettingsOverlay**: Three tabs — Mode, Sound, Colors (`SettingsTabs`)
+- **GameSettingsPanel** / **SoundSettingsPanel** / **ColorSettingsPanel**: compose setting atoms (`Mode` includes Display; `Sound` includes feedback; `Colors` = `ColorAccentSettings`)
+- **Colors:** `ColorAccentSettings` owns prefs + theme + `useColorRoleSelection` / `usePaletteContrast`; prop-drives `ColorPairPreview`, `ContrastScoreMeter` → `ThemeScoreRow`, `CrayonTray` (memoized grades on role + partner hex) → `CrayonTraySleeve` → `CrayonSwatch`, `SuggestedPairings` → `SuggestedPairingRow`, `SwapColorRolesButton`, `ColorRoleTile`
+- **Settings binders:** keyed `useSetting(key)` (store subscription), `useUpdateSetting` (full blob), `usePlaybackMute(channel)`, mute / count-in composers, `MetronomeTempoSlider` via `useMetronomeTempo`, `PlayModeOptionList`, `DifficultySlider`, `FeedbackToggles`, `DisplayModeControls`. Keep props for local UI (crayon edit role, modal open/close) or reusable atoms (`MuteToggle`, `EnableToggle`, `IconToggle`).
+- **Efficiency:** functional `useLocalStorage`; prefs split (complexity / sound / tempo); metronome tempo vs playback contexts; settings keyed store; Colors tray memo + theme isolation
 - **SettingsGroup** / **ConditionalSettingsGroup**: Section dividers inside a tab
-- **Setting utilities**: `NumberSetting`, `OnOffSetting`, `SelectSetting`, `SegmentedControl`, `When`, `useUpdateSetting`
-- **ThemeSetting**, **Fieldset**, **SegmentButton**, **SettingRow**, **EnableToggle** / **IconToggle**, **FieldCaption**
+- **Setting utilities**: `NumberSetting`, `OnOffSetting`, `SelectSetting`, `SegmentedControl`, `When`, `useSetting`, `useUpdateSetting`
+- **Fieldset**, **SegmentButton**, **SettingRow**, **EnableToggle** / **IconToggle**, **FieldCaption**, **ThemeScoreRow**
 - **Canonical grouping**: `SettingsGroup` (do not revive removed `SettingsSection` / `SettingsPanel`)
 
 **Not in Settings as separate dials:** density or syncopation. Subdivision is mirrored (header ShowNotes + Settings → Mode).

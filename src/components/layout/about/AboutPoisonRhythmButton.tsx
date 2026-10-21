@@ -15,14 +15,16 @@ export function AboutPoisonRhythmButton({
 		<button
 			type='button'
 			className={clsx(
-				'AppTitleBrandTrigger rounded-sm',
+				'AppTitleBrandTrigger rounded-sm transition-colors duration-200 ease-out',
 				focusVisibleRingClassName,
 				variant === 'title'
 					? 'max-w-full truncate text-lg font-bold sm:text-2xl'
 					: 'truncate',
 			)}
+			title='About Poison Rhythm'
 			aria-haspopup='dialog'
 			aria-expanded={open}
+			aria-label='About Poison Rhythm'
 			onClick={openAbout}
 		>
 			Poison Rhythm

@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import MinusIcon from '@/assets/svg/minus.svg?react';
 import PlusIcon from '@/assets/svg/plus.svg?react';
 import { Icon } from '@/components/layout/Icon';
+import { useMetronomeTempo } from '@/contexts';
 import {
 	focusVisibleRingClassName,
 	modifyTempoButtonClassName,
@@ -14,19 +15,17 @@ import {
 
 type MetronomeModifyTempoButtonProps = {
 	direction: 'decrease' | 'increase';
-	tempo: number;
-	onTempoChange: (value: number) => void;
 };
 
 /**
  * In-flow beside the control surface when the modal has room; drops to the
  * bottom corners below ~63rem (absolute, so it leaves the flex row).
+ * Tempo context only (not beat flash).
  */
 export function MetronomeModifyTempoButton({
 	direction,
-	tempo,
-	onTempoChange,
 }: MetronomeModifyTempoButtonProps) {
+	const { tempo, handleTempoChange } = useMetronomeTempo();
 	const isDecrease = direction === 'decrease';
 	const label = isDecrease ? 'Decrease Tempo' : 'Increase Tempo';
 
@@ -45,7 +44,7 @@ export function MetronomeModifyTempoButton({
 			title={label}
 			disabled={isDecrease ? tempo <= BPM_MIN : tempo >= BPM_MAX}
 			onClick={() =>
-				onTempoChange(
+				handleTempoChange(
 					isDecrease
 						? decrementTempoByStep(tempo)
 						: incrementTempoByStep(tempo),

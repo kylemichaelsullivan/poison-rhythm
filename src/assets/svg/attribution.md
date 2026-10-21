@@ -17,3 +17,4 @@ Assets in this directory are from the following sources:
 - plus: plus-8138142
 - repeat: reuse-1929746
 - settings: settings-2650525
+- swap: swap-arrow-7969409

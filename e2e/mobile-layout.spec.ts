@@ -1,10 +1,16 @@
 import { expect, test } from '@playwright/test';
-import { generateRound } from './helpers';
+import { generateRound, seedPlaybackPrefs } from './helpers';
 
 test.describe('mobile layout', () => {
 	test('carousel nav does not overlap Play and settings scrolls', async ({
 		page,
 	}) => {
+		// Sixteenths stack to 2×2 on phones; default eighths stay four-across.
+		await seedPlaybackPrefs(page, {
+			countIn: true,
+			demoBeforePlay: false,
+			subdivision: 'sixteenths',
+		});
 		await page.goto('/');
 		await generateRound(page);
 
