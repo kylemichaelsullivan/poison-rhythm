@@ -42,6 +42,38 @@ export function collectHighwayNotes(measures: RhythmMeasure[]): HighwayNote[] {
 	return notes;
 }
 
+/**
+ * Ensures the highway always shows a full viewport of patterns past the poison
+ * (or past the last measure), so emptiness cannot tip off the poison location.
+ * Pads by cycling non-poison measures; playback still uses the unpadded round.
+ */
+export function padMeasuresForHighwayLookahead(
+	measures: RhythmMeasure[],
+	poisonIndex: number,
+	lookaheadMeasures = HIGHWAY_LOOKAHEAD_MEASURES,
+): RhythmMeasure[] {
+	if (measures.length === 0 || lookaheadMeasures <= 0) return measures;
+
+	const anchorIndex =
+		poisonIndex >= 0 && poisonIndex < measures.length
+			? poisonIndex
+			: measures.length - 1;
+	const existingAfter = measures.length - anchorIndex - 1;
+	const needed = Math.max(0, lookaheadMeasures - existingAfter);
+	if (needed === 0) return measures;
+
+	const sources = measures.filter((_, index) => index !== poisonIndex);
+	if (sources.length === 0) return measures;
+
+	const pad: RhythmMeasure[] = [];
+	for (let i = 0; i < needed; i += 1) {
+		const source = sources[(anchorIndex + i) % sources.length];
+		if (!source) continue;
+		pad.push(source);
+	}
+	return pad.length === 0 ? measures : [...measures, ...pad];
+}
+
 /** Fraction of the current measure completed (0–1). */
 export function measureProgressFraction(
 	subdivisionIndex: number,

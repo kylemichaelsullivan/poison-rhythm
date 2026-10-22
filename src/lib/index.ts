@@ -107,6 +107,7 @@ export {
 	highwayProgress,
 	highwayTrackTransform,
 	measureProgressFraction,
+	padMeasuresForHighwayLookahead,
 	scrollAnimationClass,
 } from './scroll-animation';
 export {

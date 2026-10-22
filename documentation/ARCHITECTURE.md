@@ -214,7 +214,7 @@ Playback cursor: `useSmoothNotationCursor` interpolates position across `Notatio
 | `count-in-schedule.ts` | `planCountIn` helper over the playback clock |
 | `measure-playback.ts` | Measure-level step indexing for carousel sync |
 | `playback-state.ts` | Count-in / demo / student pass gating for cell highlight |
-| `scroll-animation.ts` | Beat-synced scroll highway math (`highwayProgress`, lane insets) |
+| `scroll-animation.ts` | Beat-synced scroll highway math (`highwayProgress`, lane insets, `padMeasuresForHighwayLookahead`) |
 | `MetronomeProvider` | Schedules clicks/hits on the audio clock; UI updates via delayed timeouts; **Escape** stops playback (keydown; ignored in inputs/dialogs) |
 
 ## Types

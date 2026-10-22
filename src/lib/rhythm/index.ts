@@ -8,6 +8,7 @@ export {
 	type GenerateRoundOptions,
 	generateAppendBatch,
 	generateRound,
+	TRAILING_DECOYS_AFTER_POISON,
 } from './generate-round';
 export {
 	ALL_BEATS,

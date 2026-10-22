@@ -1,4 +1,5 @@
 import type { SubdivisionLevel } from '@/lib/preference-schemas';
+import { HIGHWAY_LOOKAHEAD_MEASURES } from '@/lib/scroll-animation';
 import type { GameSettings } from '@/lib/settings-schema';
 import { isEndlessMode } from '@/lib/settings-schema';
 import type { RichRhythmMeasure, Round } from '@/types';
@@ -6,6 +7,9 @@ import { richMeasuresEqual } from '@/types';
 import { generateMeasure } from './generate-measure';
 import { shouldInjectPoison } from './poison';
 import { createPRNG, randomSeed } from './prng';
+
+/** Trailing decoys after poison so Scroll cannot tip off by an empty highway. */
+export const TRAILING_DECOYS_AFTER_POISON = HIGHWAY_LOOKAHEAD_MEASURES;
 
 export type GenerateRoundOptions = {
 	difficulty: number;
@@ -54,6 +58,22 @@ function generateDecoy(
 	return measure;
 }
 
+/** Append decoys after poison so a full Scroll viewport stays populated. */
+function appendTrailingDecoys(
+	options: GenerateRoundOptions,
+	seed: number,
+	poisonMeasure: RichRhythmMeasure,
+	measures: RichRhythmMeasure[],
+	count: number = TRAILING_DECOYS_AFTER_POISON,
+): void {
+	let prev = measures[measures.length - 1] ?? poisonMeasure;
+	for (let i = 0; i < count; i += 1) {
+		const decoy = generateDecoy(options, seed + i, poisonMeasure, prev);
+		measures.push(decoy);
+		prev = decoy;
+	}
+}
+
 /** Decoy-only batch when poison is disabled (avoids waiting forever for injection). */
 const POISON_OFF_DEFAULT_BATCH = 8;
 
@@ -89,13 +109,11 @@ function computeDefaultBatch(
 		) {
 			measures.push(cloneMeasure(poisonMeasure));
 			poisonIndex = measures.length - 1;
-			measures.push(
-				generateDecoy(
-					options,
-					seed + index + 1000,
-					poisonMeasure,
-					poisonMeasure,
-				),
+			appendTrailingDecoys(
+				options,
+				seed + index + 1000,
+				poisonMeasure,
+				measures,
 			);
 		} else {
 			const last = measures[measures.length - 1];
@@ -128,10 +146,8 @@ function computeEndlessBatch(
 		if (inject) {
 			measures.push(cloneMeasure(poisonMeasure));
 			if (poisonIndex < 0) poisonIndex = measures.length - 1;
-			// Always leave a following measure so Next preview is never empty.
-			measures.push(
-				generateDecoy(options, seed + i + 1000, poisonMeasure, poisonMeasure),
-			);
+			// Full Scroll viewport of decoys so emptiness cannot tip off poison.
+			appendTrailingDecoys(options, seed + i + 1000, poisonMeasure, measures);
 			previousWasPoison = false;
 		} else {
 			const exclude = i === 0 ? poisonMeasure : measures[measures.length - 1];
@@ -212,14 +228,15 @@ export function generateAppendBatch(
 		if (inject) {
 			const poison = cloneMeasure(poisonMeasure);
 			batch.push(poison);
-			const decoy = generateDecoy(
+			const trailing: RichRhythmMeasure[] = [];
+			appendTrailingDecoys(
 				options,
 				startSeed + i + 1000,
 				poisonMeasure,
-				poisonMeasure,
+				trailing,
 			);
-			batch.push(decoy);
-			prev = decoy;
+			batch.push(...trailing);
+			prev = trailing[trailing.length - 1] ?? poison;
 			previousWasPoison = false;
 		} else {
 			const decoy = generateDecoy(options, startSeed + i, poisonMeasure, prev);

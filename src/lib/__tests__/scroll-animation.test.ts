@@ -7,6 +7,7 @@ import {
 	highwayProgress,
 	highwayTrackTransform,
 	measureProgressFraction,
+	padMeasuresForHighwayLookahead,
 } from '@/lib/scroll-animation';
 import type { RhythmMeasure } from '@/types';
 import { MEASURE_LENGTH, REST_MEASURE } from '@/types';
@@ -92,5 +93,34 @@ describe('highwayNoteTrackInset', () => {
 		expect(highwayNoteTrackInset('down', 1, 160, 16)).toEqual({
 			bottom: `${160 - 8}px`,
 		});
+	});
+});
+
+describe('padMeasuresForHighwayLookahead', () => {
+	const hit: RhythmMeasure = Array.from(
+		{ length: MEASURE_LENGTH },
+		(_, i) => i === 0,
+	);
+	const other: RhythmMeasure = Array.from(
+		{ length: MEASURE_LENGTH },
+		(_, i) => i === 4,
+	);
+
+	test('pads after poison until a full lookahead window', () => {
+		const measures = [hit, other, hit];
+		const padded = padMeasuresForHighwayLookahead(measures, 1, 3);
+		expect(padded.length).toBe(1 + 1 + 3);
+		expect(padded.slice(0, 3)).toEqual(measures);
+	});
+
+	test('is a no-op when enough measures already follow poison', () => {
+		const measures = [hit, other, hit, other, hit];
+		expect(padMeasuresForHighwayLookahead(measures, 1, 3)).toBe(measures);
+	});
+
+	test('pads past the last measure when poison is off', () => {
+		const measures = [hit, other];
+		const padded = padMeasuresForHighwayLookahead(measures, -1, 3);
+		expect(padded.length).toBe(2 + 3);
 	});
 });

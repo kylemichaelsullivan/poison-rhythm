@@ -6,13 +6,20 @@ import {
 	HIGHWAY_LOOKAHEAD_MEASURES,
 	HIGHWAY_PX_PER_MEASURE,
 	highwayNoteTrackInset,
+	padMeasuresForHighwayLookahead,
 } from '@/lib/scroll-animation';
 import type { ScrollDirection } from '@/lib/settings-schema';
 import type { RhythmMeasure } from '@/types';
-import { SCROLL_HIGHWAY_GEM_PX, ScrollHighwayNote } from './ScrollHighwayNote';
+import {
+	SCROLL_HIGHWAY_GEM_ALONG_PX,
+	SCROLL_HIGHWAY_GEM_CROSS_PX,
+	ScrollHighwayNote,
+} from './ScrollHighwayNote';
 
 type ScrollHighwayProps = {
 	measures: RhythmMeasure[];
+	/** Poison index in `measures`; −1 when poison is off. */
+	poisonIndex?: number;
 	direction: Exclude<ScrollDirection, 'none'>;
 	/** True while measures playback is running (includes count-in). */
 	playbackActive: boolean;
@@ -31,6 +38,7 @@ function isVertical(direction: Exclude<ScrollDirection, 'none'>): boolean {
  */
 export function ScrollHighway({
 	measures,
+	poisonIndex = -1,
 	direction,
 	playbackActive,
 	countingIn = false,
@@ -44,10 +52,18 @@ export function ScrollHighway({
 	const vertical = isVertical(direction);
 	const pxPerMeasure = HIGHWAY_PX_PER_MEASURE;
 	const viewportSpan = (HIGHWAY_LOOKAHEAD_MEASURES + 0.5) * pxPerMeasure;
-	const gemPx = SCROLL_HIGHWAY_GEM_PX;
+	const gemAlongPx = SCROLL_HIGHWAY_GEM_ALONG_PX;
+
+	const highwayMeasures = useMemo(
+		() => padMeasuresForHighwayLookahead(measures, poisonIndex),
+		[measures, poisonIndex],
+	);
 
 	// Stable list — never filter by playhead or gems remount and flash.
-	const notes = useMemo(() => collectHighwayNotes(measures), [measures]);
+	const notes = useMemo(
+		() => collectHighwayNotes(highwayMeasures),
+		[highwayMeasures],
+	);
 
 	return (
 		<div
@@ -78,7 +94,10 @@ export function ScrollHighway({
 				style={
 					vertical
 						? { height: `${viewportSpan}px` }
-						: { height: `${gemPx * 4}px` }
+						: {
+								height: `${SCROLL_HIGHWAY_GEM_CROSS_PX * 3}px`,
+								minHeight: `${SCROLL_HIGHWAY_GEM_CROSS_PX * 3}px`,
+							}
 				}
 			>
 				<div
@@ -115,7 +134,7 @@ export function ScrollHighway({
 							direction,
 							note.at,
 							pxPerMeasure,
-							gemPx,
+							gemAlongPx,
 						);
 						return (
 							<div
@@ -128,7 +147,7 @@ export function ScrollHighway({
 								data-note-id={note.id}
 								key={note.id}
 							>
-								<ScrollHighwayNote />
+								<ScrollHighwayNote vertical={vertical} />
 							</div>
 						);
 					})}

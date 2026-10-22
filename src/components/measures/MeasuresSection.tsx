@@ -24,7 +24,7 @@ export function MeasuresSection({
 	onNewPoison,
 	onOpenDisplayMode,
 }: MeasuresSectionProps) {
-	const { measures } = useGame();
+	const { measures, poisonIndex } = useGame();
 	const { settings } = useSettings();
 	const display = useMeasureDisplayOptions();
 	const showNext = settings.showNextMeasure;
@@ -97,6 +97,7 @@ export function MeasuresSection({
 					) : (
 						<MeasureSlider
 							measures={measures}
+							poisonIndex={poisonIndex}
 							displayMeasure={displayMeasure}
 							displayRich={displayRich}
 							nextDisplayMeasure={nextDisplayMeasure}

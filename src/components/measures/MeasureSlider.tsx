@@ -12,6 +12,8 @@ import { ScrollHighway } from './ScrollHighway';
 
 type MeasureSliderProps = {
 	measures: RhythmMeasure[];
+	/** Poison index for Scroll highway lookahead padding. */
+	poisonIndex?: number;
 	displayMeasure: RhythmMeasure;
 	displayRich?: RichRhythmMeasure;
 	nextDisplayMeasure: RhythmMeasure | null;
@@ -59,6 +61,7 @@ function resolvePlaybackLabel({
 
 export function MeasureSlider({
 	measures,
+	poisonIndex = -1,
 	displayMeasure,
 	displayRich,
 	nextDisplayMeasure,
@@ -89,6 +92,7 @@ export function MeasureSlider({
 			<MeasureCarouselChrome live scroll={{ direction: scrollDirection }}>
 				<ScrollHighway
 					measures={measures}
+					poisonIndex={poisonIndex}
 					direction={scrollDirection}
 					playbackActive={isMeasuresRunning}
 					countingIn={isCountingIn}
