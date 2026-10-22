@@ -17,7 +17,7 @@ What the stylesheet does instead:
 - `oklch()` is only assigned inside `@supports (color: oklch(50% 0.1 0))`. Engines older than that skip the block and keep the `@theme` hex. `@property` itself is iOS 16.4+, so the hex initial value is the fallback on engines that understand registration.
 - `color-mix()` is only inside `@supports (color: color-mix(in srgb, red, blue))`.
 - `light-dark()` is iOS 17.5 and newer. Dark mode uses `prefers-color-scheme` (iOS 13 and newer) and `data-theme` instead.
-- Crayon swatch grade stacks (`.ThemeScoreStack`) list Light, then Dark. Dark mode moves the Dark row above Light with flex `order` (`order: -1`). Flex `order` is available in old WebKit. Chrome, Firefox, and Safari on iOS and iPadOS all use WebKit, so they share this rule. It does not use `light-dark()`. The interactive contrast meter keeps Light over Dark always so theme click targets stay put.
+- Contrast meter bars and crayon swatch chips list Light, then Dark, and keep that visual order in every theme. They do not use flex `order` or `light-dark()` to shuffle rows. Chip/bar fills use stable `--color-ink-*` tokens (`bg-ink-100` / `bg-ink-950`) so Dark Mode cannot invert Light chrome into a dark chip.
 
 Recorded support in the stylesheet comment: `oklch()` iOS 15.4+, `color-mix()` iOS 16.2+, `@property` iOS 16.4+, `light-dark()` iOS 17.5+.
 

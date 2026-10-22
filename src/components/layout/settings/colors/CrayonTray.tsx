@@ -96,7 +96,7 @@ export const CrayonTray = memo(function CrayonTray({
 		<fieldset className='CrayonTray flex min-w-0 flex-col gap-3 border-0 p-0'>
 			<legend className='sr-only'>
 				Crayon Colors — each swatch shows a Light Mode grade and a Dark Mode
-				grade if chosen as {roleLabel}. In Dark Mode the Dark grade sits on top.
+				grade if chosen as {roleLabel}. Light sits on top in every theme.
 				Current {roleLabel} is emphasized; current {partnerRoleLabel} is marked
 				more lightly. Prefer A or B in both modes.
 			</legend>

@@ -3,8 +3,11 @@ import DarkIcon from '@/assets/svg/dark.svg?react';
 import LightIcon from '@/assets/svg/light.svg?react';
 import { Icon } from '@/components/layout/Icon';
 import type { ContrastRating } from '@/lib/colors';
-import { contrastGradePasses } from '@/lib/colors';
-import { interactiveInsetChromeClassName } from '@/lib/control-classes';
+import {
+	interactiveInsetChromeClassName,
+	stableDarkInkClassName,
+	stableLightInkClassName,
+} from '@/lib/control-classes';
 import { themeOptionFor } from '@/lib/theme-options';
 
 type ThemeScoreRowProps = {
@@ -16,10 +19,7 @@ type ThemeScoreRowProps = {
 	describedBy?: string;
 };
 
-/**
- * Full-width Light Mode / Dark Mode score bar.
- * Lit bulb when selected; shaded bulb faded when idle. Tap again → Match System.
- */
+/** Full-width Light Mode / Dark Mode score bar (theme lock + grade). */
 export function ThemeScoreRow({
 	mode,
 	rating,
@@ -28,7 +28,6 @@ export function ThemeScoreRow({
 	describedBy,
 }: ThemeScoreRowProps) {
 	const isDark = mode === 'dark';
-	const encourage = contrastGradePasses(rating.grade);
 	const option = themeOptionFor(mode);
 	const systemOption = themeOptionFor(null);
 
@@ -41,11 +40,7 @@ export function ThemeScoreRow({
 				selected && 'ring-2 ring-inset ring-primary',
 				!selected &&
 					(isDark ? 'hover:brightness-125' : 'hover:brightness-[0.97]'),
-				isDark
-					? encourage
-						? 'bg-black text-white'
-						: 'bg-black/80 text-white'
-					: 'bg-chrome text-black',
+				isDark ? stableDarkInkClassName : stableLightInkClassName,
 			)}
 			aria-label={`${option.label}, grade ${rating.grade}, ${rating.ratio.toFixed(1)} to 1`}
 			aria-pressed={selected}
@@ -60,7 +55,7 @@ export function ThemeScoreRow({
 			<span
 				className={clsx(
 					'shrink-0 transition-opacity',
-					selected ? 'opacity-100' : 'opacity-40',
+					selected ? 'opacity-100' : 'opacity-55',
 				)}
 				aria-hidden='true'
 			>

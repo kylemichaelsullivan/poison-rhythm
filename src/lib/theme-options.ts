@@ -38,8 +38,8 @@ export function themeOptionFor(theme: ThemePreference): ThemeOption {
  * - Dark Mode + Dark bar → Match System
  * - Match System + either bar → lock that mode
  *
- * Meter bars stay Light-over-Dark visually (no `.ThemeScoreStack` reorder)
- * so the same bar stays under the pointer across clicks.
+ * Meter bars stay Light-over-Dark visually so the same bar stays under
+ * the pointer across clicks.
  */
 export function nextThemePreference(
 	current: ThemePreference,

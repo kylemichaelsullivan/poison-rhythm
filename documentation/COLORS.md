@@ -36,7 +36,7 @@ Avoid near-identical crayons for both roles — borders disappear and badges los
 
 ## Contrast grades
 
-The meter and each swatch stack two grades: Light Mode, then Dark Mode, with the current mode on top. Swatches show the letter. The meter shows grade + ratio in the same stack shape. Choosing Dominant scores the new color against the current Secondary. Choosing Secondary scores the new color against the current Dominant. See [`CONTRAST.md`](CONTRAST.md) and [`A11Y.md`](A11Y.md).
+The meter and each swatch stack two grades: Light Mode, then Dark Mode. Light stays on top in every theme. Swatches show the letter. The meter shows grade + ratio in the same stack shape. Choosing Dominant scores the new color against the current Secondary. Choosing Secondary scores the new color against the current Dominant. See [`CONTRAST.md`](CONTRAST.md) and [`A11Y.md`](A11Y.md).
 
 **Strongly discourage, do not block:** `ColorAccentSettings` owns prefs (+ role selection) and prop-drives the tray and pairings. The meter (`ContrastScoreMeter`) owns theme so locking Light/Dark does not rescore all 64 crayons. Per-swatch grade badges (`ContrastGradeBadge`) update live when the partner color changes. Role tiles live in `ColorRoleTile`; the swap control (`SwapColorRolesButton`) exchanges Dominant and Secondary; the decorative preview is `ColorPairPlayPreview` (mini measure grid). **A/B** get solid hierarchy borders; **F** is dashed and dimmed. In the tray, the active role’s crayon uses strongest border/shadow; the other role’s crayon stays visible at lighter emphasis (switches when you change Dominant vs Secondary). Suggested Pairings remain the easy recovery.
 

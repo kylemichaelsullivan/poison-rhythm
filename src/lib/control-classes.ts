@@ -76,6 +76,14 @@ export const focusVisibleRingClassName =
 export const interactiveInsetChromeClassName = 'InteractiveInsetChrome';
 
 /**
+ * Light chrome / dark ink that do not invert with page theme. Contrast meter
+ * bars and swatch grade chips stay Light-over-Dark visually in every mode.
+ * Semantic `black` / `white` / `chrome` flip under `data-theme`.
+ */
+export const stableLightInkClassName = 'bg-ink-100 text-ink-950';
+export const stableDarkInkClassName = 'bg-ink-950 text-ink-50';
+
+/**
  * Layout-stable selection outlines for color swatches / pairings.
  * Uses `outline-black` so Light / Dark / System all track `--color-black`
  * (ink flips in dark theme).

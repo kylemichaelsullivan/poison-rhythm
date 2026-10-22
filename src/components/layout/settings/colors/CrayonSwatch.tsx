@@ -96,7 +96,7 @@ export function CrayonSwatch({
 			data-swatch-emphasis={emphasis}
 			data-testid={`crayon-swatch-${name.toLowerCase().replace(/\s+/g, '-')}`}
 		>
-			<span className='ThemeScoreStack pointer-events-none absolute top-0.5 right-0.5 z-10 gap-0.5'>
+			<span className='pointer-events-none absolute top-0.5 right-0.5 z-10 flex flex-col gap-0.5'>
 				<ContrastGradeBadge grade={scores.light.grade} mode='light' />
 				<ContrastGradeBadge grade={scores.dark.grade} mode='dark' />
 			</span>

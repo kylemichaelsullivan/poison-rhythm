@@ -49,7 +49,7 @@ Location: `e2e/`
 | `difficulty-regen-ack.spec.ts` | Difficulty acknowledgement and Account notice: **no OK button**, `0.5rem` theme progress bar, dismiss on `TIMED_NOTICE_DURATION_MS`, **pause while hovered**. Account copy uses `text-wrap: pretty` (no non-breaking spaces) |
 | `a11y.spec.ts` | axe WCAG 2.2 A/AA + best-practice (start screen, round, settings/Sound, metronome, modals, count-in). Runs on **Desktop Chrome** and **mobile** (360×800) projects |
 | `mobile-layout.spec.ts` | 360×800 smoke: carousel nav vs Play overlap, 2-col measure grid, Settings panel scroll |
-| `color-contrast.spec.ts` | Colors meter matches swatch chips plus ratios; Light on top in Light Mode, Dark on top in Dark Mode; Dominant is scored against Secondary and the reverse |
+| `color-contrast.spec.ts` | Colors meter matches swatch chips plus ratios; Light on top in every theme; Dominant is scored against Secondary and the reverse |
 | `notation-scroll.spec.ts` | MusiSync boxes do not vertically overflow |
 | `helpers.ts` | Shared prefs seeding and round-ready wait |
 

@@ -26,13 +26,11 @@ A score is the weaker of the two roles on that theme’s surfaces. For Dominant,
 
 ## Stack order
 
-Markup order is always Light, then Dark. `.ThemeScoreStack` in `src/index.css` sets `order: -1` on `[data-contrast-mode="dark"]` when the page is in Dark Mode (`data-theme="dark"`, or `prefers-color-scheme: dark` unless `data-theme="light"`).
+Markup order is always Light, then Dark. **Visual order matches:** Light stays on top in every theme — meter bars and swatch chips. Do not reorder with flex `order`, React, or `light-dark()`. Theme clicks on the meter must hit the same bar after a preference change.
 
-**Swatches** use that reorder so the current mode’s letter sits on top. Light Mode shows Light over Dark; Dark Mode shows Dark over Light. Do not reorder the DOM in React. Do not use `light-dark()` (iOS 17.5+ only). Flex `order` is the fallback for older WebKit.
+Chip and bar fills use stable `--color-ink-*` (`bg-ink-100` / `bg-ink-950`), not theme-flipping `black` / `white` / `chrome`. Otherwise Dark Mode inverts the Light chip into a dark chip and the stack looks swapped even when Light is still on top.
 
-**The contrast meter does not use `.ThemeScoreStack`.** Its bars stay Light over Dark so theme click targets do not swap when the preference changes (a second tap on Dark Mode must hit Dark Mode again, not the Light Mode bar that jumped into place).
-
-Swatch chips are the letter only. The meter is one rounded box with Light chrome and Dark ink rows flush (no gap). Each row is a theme button: lit or shaded bulb on the left, ratio + letter on the right. Related to the swatch badges, not a copy of them. The weaker grade sets the swatch border. Picks are never blocked. The Play Preview is a mini measure grid (Dominant hits, Secondary borders) with a Secondary step ring on one hit and one rest.
+Swatch chips are the letter only. The meter is one rounded box with Light chrome and Dark ink rows flush (no gap). Each row is a theme button: bulb on the left (lit = this row is locked; shaded = idle), ratio + letter on the right. Related to the swatch badges, not a copy of them. The weaker grade sets the swatch border. Picks are never blocked. The Play Preview is a mini measure grid (Dominant hits, Secondary borders) with a Secondary step ring on one hit and one rest.
 
 ## Theme bars on the meter
 
@@ -46,7 +44,7 @@ Each score row is the theme control for that mode. Labels are **Light Mode**, **
 | Dark Mode | Dark Mode bar | Match System |
 | Match System | either bar | that mode |
 
-Icons reuse the old theme pair: **lit** rayed bulb when that bar is selected, **shaded** bulb faded when not. Selected bars also get an inset primary ring. The caption under the meter is Light Mode / Dark Mode / Match System.
+Icons encode **selection**, not mode identity: **lit** rayed bulb on the locked row, **shaded** bulb on idle rows. Match System shows both shaded; Light Mode lights the Light row; Dark Mode lights the Dark row. Selected bars also get an inset primary ring. Idle bulbs stay at reduced opacity but remain readable (especially the shaded bulb on dark ink). Bar fills use stable `--color-ink-*` tokens (light chrome / dark ink) so they do not invert when the page is in Dark Mode — theme-flipping `black` / `white` / `chrome` would swap the two rows visually. The caption under the meter is Light Mode / Dark Mode / Match System.
 
 ## Default pair
 
@@ -62,5 +60,5 @@ Dominant `#914893` (favicon purple). Secondary `#246028` (green complement). Tha
 - Do not collapse the two scores into one letter on the meter or the swatch.
 - Do not put the mode label on the meter or swatch. Position carries Light vs Dark. The accessible name on the meter still says both modes.
 - Do not reuse `ContrastGradeBadge` for the meter. Swatches own the small chip; the meter is its own compact grade + ratio rows.
-- Do not switch swatch stack order with JavaScript theme state. CSS owns swatch order.
-- Do not put `.ThemeScoreStack` on the interactive meter — stable Light-over-Dark click targets.
+- Do not reorder the Light/Dark stack with JavaScript, flex `order`, or `light-dark()`. Light stays on top.
+- Do not fill meter bars or swatch chips with theme-flipping `black` / `white` / `chrome`.

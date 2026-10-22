@@ -216,7 +216,7 @@ test.describe('color contrast scores', () => {
 		).toHaveAttribute('aria-pressed', 'true');
 	});
 
-	test('dark mode keeps meter Light over Dark; swatches put Dark on top', async ({
+	test('dark mode keeps meter and swatches Light over Dark', async ({
 		page,
 	}) => {
 		await seedTheme(page, 'dark');
@@ -227,12 +227,12 @@ test.describe('color contrast scores', () => {
 		).toEqual(['light', 'dark']);
 		expect(
 			await visualModes(page, '[data-testid="crayon-swatch-yellow"]'),
-		).toEqual(['dark', 'light']);
+		).toEqual(['light', 'dark']);
 
 		await page.getByRole('button', { name: /^Secondary:/ }).click();
 		expect(
 			await visualModes(page, '[data-testid="crayon-swatch-black"]'),
-		).toEqual(['dark', 'light']);
+		).toEqual(['light', 'dark']);
 		await expect(page.getByTestId('crayon-swatch-black')).toHaveAttribute(
 			'aria-label',
 			/if chosen as Secondary/,

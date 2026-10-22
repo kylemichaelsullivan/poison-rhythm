@@ -180,28 +180,6 @@
 }
 
 /*
- * Score stacks list Light, then Dark in the DOM. Dark mode pulls the Dark
- * row above Light with flex order (flexbox, iOS 7+). light-dark() is iOS 17.5+
- * and is not used here. A forced light theme wins over the system scheme.
- */
-.ThemeScoreStack {
-	display: flex;
-	flex-direction: column;
-}
-
-@media (prefers-color-scheme: dark) {
-	:root:not([data-theme="light"])
-		.ThemeScoreStack
-		> [data-contrast-mode="dark"] {
-		order: -1;
-	}
-}
-
-:root[data-theme="dark"] .ThemeScoreStack > [data-contrast-mode="dark"] {
-	order: -1;
-}
-
-/*
  * Brand and ink tokens are registered colors. Custom properties are otherwise
  * untyped, so `--token: #hex; --token: oklch(...)` does not fall back: the
  * oklch() always wins, and a failed substitution blanks the property that

@@ -67,6 +67,7 @@ If a color needs translucency, define it in `@theme` (e.g. `--color-scrim`) — 
 | `controlSurfaceBaseClassName` | Bordered chrome panels (ShowNotes popover, metronome bar) |
 | `sideGutterControlClassName` | Exterior controls in page/modal gutters (carousel nav, tempo ±) |
 | `sideGutterCollapsedReserveClassName` | Host padding when those controls collapse under (~63rem) |
+| `stableLightInkClassName` / `stableDarkInkClassName` | Contrast meter bars and swatch chips (`bg-ink-100` / `bg-ink-950`; does not invert) |
 
 **Side-gutter layout tokens** (`src/index.css` `@theme` — tweak once for site-wide spacing):
 
