@@ -1,11 +1,9 @@
 import { Stack } from '@/components/ui';
 import type { ScrollDirection } from '@/lib/settings-schema';
 import { isScrollDisplayMode } from '@/lib/settings-schema';
+import { ScrollDirectionPad } from './ScrollDirectionPad';
 import { SegmentedControl } from './SegmentedControl';
-import {
-	RENDER_MODE_OPTIONS,
-	SCROLL_DIRECTION_OPTIONS,
-} from './settings-options';
+import { RENDER_MODE_OPTIONS } from './settings-options';
 import { useUpdateSetting } from './useUpdateSetting';
 import { When } from './When';
 
@@ -46,11 +44,9 @@ export function DisplayModeControls() {
 				}}
 			/>
 			<When condition={scrollMode}>
-				<SegmentedControl
-					legend='Direction'
-					options={SCROLL_DIRECTION_OPTIONS}
+				<ScrollDirectionPad
 					value={direction}
-					onChange={(value) => set('scrollDirection', value)}
+					onChange={(next) => set('scrollDirection', next)}
 				/>
 			</When>
 		</Stack>

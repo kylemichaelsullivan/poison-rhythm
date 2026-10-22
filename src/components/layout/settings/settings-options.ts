@@ -1,23 +1,9 @@
-import ArrowDownIcon from '@/assets/svg/arrow-down.svg?react';
-import ArrowLeftIcon from '@/assets/svg/arrow-left.svg?react';
-import ArrowRightIcon from '@/assets/svg/arrow-right.svg?react';
-import ArrowUpIcon from '@/assets/svg/arrow-up.svg?react';
 import type {
 	GameMode,
 	RhythmRenderMode,
-	ScrollDirection,
 	StickingMode,
 } from '@/lib/settings-schema';
 import type { SegmentOption } from './SegmentButton';
-
-export const SCROLL_DIRECTION_OPTIONS: SegmentOption<
-	Exclude<ScrollDirection, 'none'>
->[] = [
-	{ label: 'Down', value: 'down', icon: ArrowDownIcon },
-	{ label: 'Up', value: 'up', icon: ArrowUpIcon },
-	{ label: 'Right', value: 'right', icon: ArrowRightIcon },
-	{ label: 'Left', value: 'left', icon: ArrowLeftIcon },
-];
 
 export const RENDER_MODE_OPTIONS: SegmentOption<RhythmRenderMode>[] = [
 	{ label: 'Grid', value: 'grid' },
