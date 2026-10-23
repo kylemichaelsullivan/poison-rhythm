@@ -14,7 +14,7 @@ Package manager is **bun**, not npm/yarn/pnpm.
 
 ## Commit messages
 
-Follow the `/git-commits` skill ([`.cursor/skills/git-commits/SKILL.md`](.cursor/skills/git-commits/SKILL.md)).
+Follow the `/git-commits` skill and this repo’s overlay ([`.cursor/git-commits.md`](.cursor/git-commits.md)).
 
 **Before committing:** `bun run check` → `bun run test:all` → fix until clean → update docs (`AGENTS.md`, `documentation/*`, `README.md`, relevant `.cursor/*.mdc`).
 
@@ -73,7 +73,7 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 | `e2e/helpers.ts` | Pref seeding + round-ready wait |
 | `documentation/ARCHITECTURE.md` | Engine, state, UI layers |
 | `documentation/TESTING.md` | Test layout, commands, e2e notes |
-| `.cursor/skills/git-commits/` | Commit format + pre-commit gate (`/git-commits`) |
+| `.cursor/git-commits.md` | Commit overlay for `/git-commits` (gate + docs) |
 | `src/assets/fonts/README.md` | MusiSync assets and glyph keys |
 | `.cursor/*.mdc` | Cursor rules (components, React, styling, project) |
 
@@ -91,7 +91,7 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 | [`AGENTS.md`](AGENTS.md) | Agents + contributors: gotchas and pointers |
 | [`documentation/ARCHITECTURE.md`](documentation/ARCHITECTURE.md) | System design |
 | [`documentation/TESTING.md`](documentation/TESTING.md) | How to run and extend tests |
-| [`/git-commits`](.cursor/skills/git-commits/SKILL.md) | Commit conventions + pre-commit gate |
+| [`/git-commits`](.cursor/git-commits.md) | Commit conventions + pre-commit gate |
 | [`src/assets/fonts/README.md`](src/assets/fonts/README.md) | Notation font |
 | [`.cursor/rules.mdc`](.cursor/rules.mdc) | Always-on project rules |
 | [`.cursor/react.mdc`](.cursor/react.mdc) | React / contexts / domain |
