@@ -4,16 +4,14 @@ import {
 	measureToNotationSteps,
 	notationStepsToGlyphString,
 } from '@/lib/notation';
-import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
 import { MeasureNotationGlyph } from './MeasureNotationGlyph';
-import type { MeasureDisplayOptions } from './measure-display-options';
-import {
-	type MeasurePlaybackPhase,
-	measureShellClass,
-} from './measure-phase-chrome';
+import { measureShellClass } from './measure-phase-chrome';
 import { NotationPlaybackCursor } from './NotationPlaybackCursor';
 import { RhythmAccentOverlay } from './RhythmAccentOverlay';
 import { RhythmStickingOverlay } from './RhythmStickingOverlay';
+import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
+import type { MeasureDisplayOptions } from './measure-display-options';
+import type { MeasurePlaybackPhase } from './measure-phase-chrome';
 
 type MeasureNotationProps = {
 	measure: RhythmMeasure;

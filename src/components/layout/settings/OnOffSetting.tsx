@@ -1,5 +1,5 @@
-import type { ToggleSetting } from '@/lib/settings-schema';
 import { EnableToggle } from './EnableToggle';
+import type { ToggleSetting } from '@/lib/settings-schema';
 
 type OnOffSettingProps = {
 	label: string;

@@ -1,11 +1,12 @@
 import AxeBuilder from '@axe-core/playwright';
-import { expect, type Page, test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import {
 	clickPause,
 	clickPlay,
 	generateRound,
 	seedPlaybackPrefs,
 } from './helpers';
+import type { Page } from '@playwright/test';
 
 async function expectNoA11yViolations(
 	page: Page,

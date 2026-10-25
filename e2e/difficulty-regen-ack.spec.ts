@@ -1,6 +1,7 @@
-import { expect, type Page, test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { TIMED_NOTICE_DURATION_MS } from '../src/lib/timed-notice';
 import { generateRound } from './helpers';
+import type { Page } from '@playwright/test';
 
 async function draftDifficulty(page: Page) {
 	await page

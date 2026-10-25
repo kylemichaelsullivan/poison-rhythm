@@ -1,9 +1,11 @@
-import { type ReactNode, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useDelayedClick } from '@/hooks/useDelayedClick';
 import { useDisclosure } from '@/hooks/useDisclosure';
-import { CornerButton, type CornerButtonTone } from './CornerButton';
-import type { SvgIconComponent } from './Icon';
+import { CornerButton } from './CornerButton';
 import { Modal } from './Modal';
+import type { ReactNode } from 'react';
+import type { CornerButtonTone } from './CornerButton';
+import type { SvgIconComponent } from './Icon';
 import type { ModalSize } from './ModalPanel';
 
 type CornerModalProps = {

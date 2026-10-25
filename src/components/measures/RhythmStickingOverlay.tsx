@@ -1,7 +1,7 @@
-import type { NotationStep } from '@/lib/notation';
 import { cellPositionPercent } from '@/lib/subdivision-playback';
 import { MEASURE_LENGTH } from '@/types';
 import { RhythmStickingLabel } from './RhythmStickingLabel';
+import type { NotationStep } from '@/lib/notation';
 
 type RhythmStickingOverlayProps = {
 	steps: NotationStep[];

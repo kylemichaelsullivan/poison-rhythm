@@ -1,6 +1,6 @@
 import { IconButton } from '@/components/ui';
-import type { GameModeHudBadge } from '@/lib/settings-schema';
 import { ModeBadge } from './ModeBadge';
+import type { GameModeHudBadge } from '@/lib/settings-schema';
 
 type ModeBadgeTriggerProps = {
 	badge: GameModeHudBadge;

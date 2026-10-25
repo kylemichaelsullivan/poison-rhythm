@@ -1,10 +1,10 @@
 import { AUDIO_SCHEDULE_LEAD_SEC, COUNT_IN_BEATS } from './metronome-defaults';
-import type { SubdivisionLevel } from './preference-schemas';
 import {
 	isQuarterDownbeat,
 	subdivisionPulseSec,
 	subdivisionStepCount,
 } from './subdivision-playback';
+import type { SubdivisionLevel } from './preference-schemas';
 
 export type PlaybackPhase = 'count-in' | 'playback';
 

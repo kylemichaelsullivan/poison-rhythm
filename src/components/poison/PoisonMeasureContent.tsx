@@ -3,9 +3,9 @@ import { useGame, useMetronome, useSettings } from '@/contexts';
 import { useMeasureDisplayOptions } from '@/hooks/useMeasureDisplayOptions';
 import { shouldHidePoisonDuringPlayback } from '@/lib/rhythm/poison';
 import { isPoisonEnabled } from '@/lib/settings-schema';
-import type { RhythmMeasure } from '@/types';
 import { REST_MEASURE } from '@/types';
 import { PoisonMeasureFrame } from './PoisonMeasureFrame';
+import type { RhythmMeasure } from '@/types';
 
 type PoisonMeasureContentProps = {
 	poisonRhythm: RhythmMeasure | null;

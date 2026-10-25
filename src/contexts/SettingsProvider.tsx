@@ -1,19 +1,19 @@
-import type { ReactNode } from 'react';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import {
 	SettingsContext,
-	type SettingsStoreApi,
 	SettingsStoreContext,
 } from '@/contexts/SettingsContext';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import {
 	DEFAULT_SETTINGS,
-	type GameSettings,
 	parseGameSettings,
 	sanitizeGameSettings,
 	serializeGameSettings,
 } from '@/lib/settings-schema';
 import { STORAGE_KEYS } from '@/lib/storage-keys';
+import type { ReactNode } from 'react';
+import type { SettingsStoreApi } from '@/contexts/SettingsContext';
+import type { GameSettings } from '@/lib/settings-schema';
 
 const getDefaultGameSettings = () => DEFAULT_SETTINGS;
 

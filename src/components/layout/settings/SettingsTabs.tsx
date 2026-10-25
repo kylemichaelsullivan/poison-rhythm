@@ -1,6 +1,6 @@
 import clsx from 'clsx';
-import type { ReactNode } from 'react';
 import { focusVisibleRingClassName } from '@/lib/control-classes';
+import type { ReactNode } from 'react';
 
 export type SettingsTabId = 'mode' | 'sound' | 'colors';
 

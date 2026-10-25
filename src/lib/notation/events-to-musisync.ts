@@ -1,4 +1,5 @@
-import { beamNotesForDisplay, type NotationGlyphToken } from './beam-notes';
+import { beamNotesForDisplay } from './beam-notes';
+import type { NotationGlyphToken } from './beam-notes';
 import type { NotationEvent } from './notation-events';
 
 export type { NotationGlyphToken };

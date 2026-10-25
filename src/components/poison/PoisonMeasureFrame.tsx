@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react';
 import { HiddenPoisonOverlay } from './HiddenPoisonOverlay';
+import type { ReactNode } from 'react';
 
 type PoisonMeasureFrameProps = {
 	hidden: boolean;

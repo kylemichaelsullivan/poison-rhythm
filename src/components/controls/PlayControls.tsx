@@ -1,7 +1,8 @@
 import clsx from 'clsx';
-import { type Ref, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useMetronome } from '@/contexts';
 import { RoundPlayPauseButton } from './RoundPlayPauseButton';
+import type { Ref } from 'react';
 
 type PlayControlsProps = {
 	disabled?: boolean;

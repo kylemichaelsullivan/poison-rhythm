@@ -114,7 +114,7 @@ UI is composed like stacked layers (one concern per file; prefer one root DOM el
 | **Hosts** | `App` / `Body` | Modal hosts beside the tree (`AboutPoisonRhythmModal`, `DifficultyRegenAckHost`, `DisplayModeModal`) |
 | **Hooks** | `src/hooks/` | Side effects out of JSX (`useDisclosure`, `useModalFocusTrap`, `useNotationPrefetch`, `useMeasurePlaybackSync`, …) |
 
-Feature composers should import `@/components/ui` (or existing settings atoms) instead of inventing raw `<button className=…>` markup. Prefer **variants** (`tone`, `size`, `framed`, `slot`) over `className` passthrough. Details: [`.cursor/components.mdc`](.cursor/components.mdc), [`documentation/ARCHITECTURE.md`](documentation/ARCHITECTURE.md).
+Feature composers should import `@/components/ui` (or existing settings atoms) instead of inventing raw `<button className=…>` markup. Prefer **variants** (`tone`, `size`, `framed`, `slot`) over `className` passthrough. Keep **value imports** and **`import type`** on separate statements — Biome `useImportType` (`separatedType`) rejects `import { Foo, type Bar }`. Details: [`.cursor/components.mdc`](.cursor/components.mdc), [`.cursor/rules.mdc`](.cursor/rules.mdc), [`documentation/ARCHITECTURE.md`](documentation/ARCHITECTURE.md).
 
 ### Context modules
 

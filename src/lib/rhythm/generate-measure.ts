@@ -1,6 +1,3 @@
-import type { SubdivisionLevel } from '@/lib/preference-schemas';
-import type { GameSettings } from '@/lib/settings-schema';
-import type { RichRhythmMeasure } from '@/types';
 import { richMeasuresEqual } from '@/types';
 import { applyAccentsAndRests } from './accents-rests';
 import { computeHitCount } from './density';
@@ -8,6 +5,9 @@ import { allowedIndicesForSubdivisionLevel } from './grid';
 import { createPRNG } from './prng';
 import { applySticking } from './sticking';
 import { pickHitIndices } from './syncopation';
+import type { SubdivisionLevel } from '@/lib/preference-schemas';
+import type { GameSettings } from '@/lib/settings-schema';
+import type { RichRhythmMeasure } from '@/types';
 
 /** Cap exclude retries — tiny grids (e.g. quarters) can collapse to one pattern. */
 const MAX_EXCLUDE_ATTEMPTS = 32;

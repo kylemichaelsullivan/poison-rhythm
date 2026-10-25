@@ -2,9 +2,9 @@ import { describe, expect, test } from 'bun:test';
 import {
 	nextThemePreference,
 	THEME_OPTIONS,
-	type ThemePreference,
 	themeOptionFor,
 } from '../theme-options';
+import type { ThemePreference } from '../theme-options';
 
 describe('theme-options', () => {
 	test('lists Match System, Light Mode, and Dark Mode', () => {

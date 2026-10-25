@@ -1,9 +1,9 @@
 import clsx from 'clsx';
-import type { ReactNode } from 'react';
 import { focusVisibleRingClassName } from '@/lib/control-classes';
 import { OptionCardDescription } from './OptionCardDescription';
 import { OptionCardTitle } from './OptionCardTitle';
 import { RadioInput } from './RadioInput';
+import type { ReactNode } from 'react';
 
 type DescribedOptionCardProps<T extends string> = {
 	id: string;

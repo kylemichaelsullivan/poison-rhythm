@@ -1,6 +1,6 @@
 import clsx from 'clsx';
-import type { ReactNode } from 'react';
 import { SectionTitle } from '.';
+import type { ReactNode } from 'react';
 
 type SectionTitleSide = 'start' | 'end';
 

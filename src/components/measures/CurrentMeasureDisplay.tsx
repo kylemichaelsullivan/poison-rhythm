@@ -1,6 +1,6 @@
 import clsx from 'clsx';
-import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
 import { MeasureGrid } from './MeasureGrid';
+import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
 import type { MeasureDisplayOptions } from './measure-display-options';
 import type { MeasurePlaybackPhase } from './measure-phase-chrome';
 

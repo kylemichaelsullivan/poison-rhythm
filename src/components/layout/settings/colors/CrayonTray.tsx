@@ -1,18 +1,14 @@
 import { memo, useMemo } from 'react';
 import {
-	type ColorRole,
 	CRAYOLA_TRAYS,
-	type CrayonId,
 	isBrandAccentId,
 	ratePaletteIfRolePicked,
-	type ThemeContrastScores,
 } from '@/lib/colors';
+import { CrayonTraySleeve } from './CrayonTraySleeve';
+import type { ColorRole, CrayonId, ThemeContrastScores } from '@/lib/colors';
 import type { ColorPreference } from '@/lib/preference-schemas';
 import type { CrayonSwatchEmphasis } from './CrayonSwatch';
-import {
-	CrayonTraySleeve,
-	type CrayonTraySwatchModel,
-} from './CrayonTraySleeve';
+import type { CrayonTraySwatchModel } from './CrayonTraySleeve';
 
 type CrayonTrayProps = {
 	role: ColorRole;

@@ -1,10 +1,10 @@
 import { useId } from 'react';
-import type { ContrastRating } from '@/lib/colors';
 import { worseContrastRating } from '@/lib/colors';
-import type { ThemePreference } from '@/lib/theme-options';
 import { themeOptionFor } from '@/lib/theme-options';
 import { FieldCaption } from '../FieldCaption';
 import { ThemeScoreRow } from './ThemeScoreRow';
+import type { ContrastRating } from '@/lib/colors';
+import type { ThemePreference } from '@/lib/theme-options';
 
 const ROWS = ['light', 'dark'] as const;
 

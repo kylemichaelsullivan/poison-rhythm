@@ -1,4 +1,5 @@
-import { expect, type Page } from '@playwright/test';
+import { expect } from '@playwright/test';
+import type { Page } from '@playwright/test';
 
 export const COUNT_IN_KEY = 'poison-rhythm-count-in-enabled';
 export const SETTINGS_KEY = 'poison-rhythm-settings-v1';

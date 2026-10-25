@@ -12,6 +12,14 @@ Entrypoint for people and coding agents working in this repo. Prefer this file, 
 
 Package manager is **bun**, not npm/yarn/pnpm.
 
+## Imports
+
+Keep **module (value) imports** and **type imports** on separate statements. Never write `import { Foo, type Bar }` or `import { type Baz, qux }`. Use a dedicated `import type { … }` line. Value imports come first; type-only imports follow (alphabetically by path).
+
+Biome enforces this: `style/useImportType` with `style: "separatedType"` (error), and `organizeImports` groups `{ "type": false }` then `{ "type": true }`. `bun run check` / `bun run ci` fail on mixed imports. In the editor, set `js/ts.preferences.preferTypeOnlyAutoImports` so auto-imports emit `import type`.
+
+Full order and examples: [`.cursor/rules.mdc`](.cursor/rules.mdc) (Import Organization).
+
 ## Commit messages
 
 Follow the `/git-commits` skill and this repo’s overlay ([`.cursor/git-commits.md`](.cursor/git-commits.md)).
@@ -71,6 +79,7 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 | `src/lib/colors/contrast.ts` | WCAG ratios mapped to US letter grades A/B/C/F for crayon / pair rating |
 | `src/types/rhythm.ts` | `RhythmMeasure` / `RichRhythmMeasure` + adapters |
 | `e2e/helpers.ts` | Pref seeding + round-ready wait |
+| `biome.json` | Lint/format; `useImportType` `separatedType` + type-import grouping |
 | `documentation/ARCHITECTURE.md` | Engine, state, UI layers |
 | `documentation/TESTING.md` | Test layout, commands, e2e notes |
 | `.cursor/git-commits.md` | Commit overlay for `/git-commits` (gate + docs) |

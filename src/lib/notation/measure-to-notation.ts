@@ -1,7 +1,7 @@
-import type { SubdivisionLevel } from '@/lib/preference-schemas';
-import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
 import { eventsToGlyphTokens } from './events-to-musisync';
 import { measureToNotationEvents } from './notation-events';
+import type { SubdivisionLevel } from '@/lib/preference-schemas';
+import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
 
 /**
  * Overlay-friendly step derived from spelled (+ beamed) notation glyphs.

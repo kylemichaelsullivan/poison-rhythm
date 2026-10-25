@@ -1,7 +1,7 @@
-import type { MeasureDisplayOptions } from '@/components/measures/measure-display-options';
 import { useMetronome, useSettings, useSubdivision } from '@/contexts';
 import { shouldShowVisualFeedback } from '@/lib/audio';
 import { shouldShowAccents, shouldShowSticking } from '@/lib/settings-schema';
+import type { MeasureDisplayOptions } from '@/components/measures/measure-display-options';
 
 /** Derive measure chrome flags once in a section composer. */
 export function useMeasureDisplayOptions(): MeasureDisplayOptions {

@@ -1,22 +1,21 @@
 import clsx from 'clsx';
-import {
-	type ContrastRating,
-	type ThemeContrastScores,
-	worseContrastRating,
-} from '@/lib/colors';
+import { worseContrastRating } from '@/lib/colors';
 import {
 	interactiveInsetChromeClassName,
 	selectionOutlineActiveClassName,
 	selectionOutlinePartnerClassName,
 } from '@/lib/control-classes';
 import {
-	type HierarchyBorderRank,
-	type HierarchyBorderTone,
 	hierarchyBorderClass,
 	hierarchyRankForContrastGrade,
 } from '@/lib/hierarchy-border';
 import { ContrastGradeBadge } from './ContrastGradeBadge';
 import { SelectionCheckMark } from './SelectionCheckMark';
+import type { ContrastRating, ThemeContrastScores } from '@/lib/colors';
+import type {
+	HierarchyBorderRank,
+	HierarchyBorderTone,
+} from '@/lib/hierarchy-border';
 
 /** How strongly this swatch marks a current Dominant/Secondary pick. */
 export type CrayonSwatchEmphasis = 'active' | 'partner' | 'none';

@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react';
 import { SettingsGroup } from './SettingsGroup';
+import type { ReactNode } from 'react';
 
 type ConditionalSettingsGroupProps = {
 	when: boolean;

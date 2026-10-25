@@ -1,4 +1,3 @@
-import type { ReactNode } from 'react';
 import { useCallback, useMemo } from 'react';
 import {
 	ComplexityPreferencesContext,
@@ -27,6 +26,7 @@ import {
 } from '@/lib/preference-storage';
 import { removeStorageItem } from '@/lib/storage';
 import { LEGACY_STORAGE_KEYS, STORAGE_KEYS } from '@/lib/storage-keys';
+import type { ReactNode } from 'react';
 
 export function PreferencesProvider({ children }: { children: ReactNode }) {
 	const [subdivisionLevel, setSubdivisionLevel] = useLocalStorage({

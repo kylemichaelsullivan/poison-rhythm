@@ -1,7 +1,7 @@
 import clsx from 'clsx';
-import type { RefObject } from 'react';
 import { controlSurfaceBaseClassName } from '@/lib/control-classes';
 import { SUBDIVISION_LABELS } from '@/lib/subdivision-levels';
+import type { RefObject } from 'react';
 
 type ShowNotesSliderProps = {
 	value: number;

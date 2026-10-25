@@ -7,7 +7,8 @@ import {
 	WCAG_AA_TEXT,
 	WCAG_AA_UI,
 } from './contrast';
-import { type CrayonId, crayonByIdOrNull } from './crayola-64';
+import { crayonByIdOrNull } from './crayola-64';
+import type { CrayonId } from './crayola-64';
 
 /**
  * Brand defaults when prefs are unset.

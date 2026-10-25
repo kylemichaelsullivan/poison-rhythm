@@ -1,6 +1,6 @@
-import type { GameSettings } from '@/lib/settings-schema';
 import { EnableToggle } from './EnableToggle';
 import { useSetting } from './useSetting';
+import type { GameSettings } from '@/lib/settings-schema';
 
 type GameBooleanKey = {
 	[K in keyof GameSettings]: GameSettings[K] extends boolean ? K : never;

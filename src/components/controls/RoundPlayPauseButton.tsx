@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import type { Ref } from 'react';
 import PauseIcon from '@/assets/svg/pause.svg?react';
 import PlayIcon from '@/assets/svg/play.svg?react';
 import { Icon } from '@/components/layout/Icon';
@@ -8,6 +7,7 @@ import {
 	forcedFocusRingClassName,
 	roundPlayPauseButtonClassName,
 } from '@/lib/control-classes';
+import type { Ref } from 'react';
 
 type RoundPlayPauseButtonProps = {
 	isPlaying: boolean;

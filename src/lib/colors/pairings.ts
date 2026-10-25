@@ -1,14 +1,8 @@
-import {
-	type AccentColorId,
-	BRAND_DOMINANT_HEX,
-	BRAND_SECONDARY_HEX,
-} from './apply-color-prefs';
+import { BRAND_DOMINANT_HEX, BRAND_SECONDARY_HEX } from './apply-color-prefs';
 import { rateColorPairContrast } from './contrast';
-import {
-	type CrayonColor,
-	type CrayonId,
-	crayonByIdOrNull,
-} from './crayola-64';
+import { crayonByIdOrNull } from './crayola-64';
+import type { AccentColorId } from './apply-color-prefs';
+import type { CrayonColor, CrayonId } from './crayola-64';
 
 export type ColorPairing = {
 	id: string;

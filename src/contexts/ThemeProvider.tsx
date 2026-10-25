@@ -1,13 +1,13 @@
-import type { ReactNode } from 'react';
 import { useCallback, useEffect, useMemo, useSyncExternalStore } from 'react';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import {
 	parseThemeSetting,
 	serializeThemeSetting,
-	type ThemeSetting,
 } from '@/lib/preference-schemas';
 import { STORAGE_KEYS } from '@/lib/storage-keys';
+import type { ReactNode } from 'react';
+import type { ThemeSetting } from '@/lib/preference-schemas';
 
 function subscribeToSystemTheme(cb: () => void) {
 	const media = window.matchMedia('(prefers-color-scheme: dark)');

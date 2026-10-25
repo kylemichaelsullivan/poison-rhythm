@@ -1,6 +1,6 @@
 import clsx from 'clsx';
-import type { ReactNode, Ref } from 'react';
 import { modalPanelClassName } from '@/lib/control-classes';
+import type { ReactNode, Ref } from 'react';
 
 export type ModalSize = 'sm' | 'md' | 'lg' | 'xl';
 

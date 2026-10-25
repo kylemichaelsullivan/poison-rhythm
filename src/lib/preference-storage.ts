@@ -1,6 +1,5 @@
 import { BPM_DEFAULT } from './metronome-defaults';
 import {
-	type ColorPreference,
 	parseColorPreference,
 	parseCountInEnabled,
 	parseDifficulty,
@@ -8,7 +7,6 @@ import {
 	parseSubdivisionLevel,
 	parseTempo,
 	parseThemeSetting,
-	type SubdivisionLevel,
 	serializeColorPreference,
 	serializeCountInEnabled,
 	serializeDifficulty,
@@ -16,7 +14,6 @@ import {
 	serializeSubdivisionLevel,
 	serializeTempo,
 	serializeThemeSetting,
-	type ThemeSetting,
 } from './preference-schemas';
 import {
 	readStorageItem,
@@ -24,12 +21,12 @@ import {
 	writeStorageItem,
 } from './storage';
 import { LEGACY_STORAGE_KEYS, STORAGE_KEYS } from './storage-keys';
-
-export type {
+import type {
 	ColorPreference,
 	SubdivisionLevel,
 	ThemeSetting,
 } from './preference-schemas';
+
 export {
 	DEFAULT_DIFFICULTY,
 	DEFAULT_SUBDIVISION_LEVEL,
@@ -40,6 +37,11 @@ export {
 	parseSubdivisionLevel,
 	parseTempo,
 	parseThemeSetting,
+} from './preference-schemas';
+export type {
+	ColorPreference,
+	SubdivisionLevel,
+	ThemeSetting,
 } from './preference-schemas';
 
 export function parseStoredTempo(raw: string | null): number {

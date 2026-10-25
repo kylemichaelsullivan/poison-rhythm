@@ -1,5 +1,4 @@
-import type { SubdivisionLevel } from '@/lib/preference-schemas';
-import { MEASURE_LENGTH, type RhythmMeasure } from '@/types';
+import { MEASURE_LENGTH } from '@/types';
 import {
 	CELLS_PER_BEAT,
 	durationForCells,
@@ -7,6 +6,8 @@ import {
 	minCellUnitForLevel,
 	SPELLING_CELL_LENGTHS,
 } from './duration-units';
+import type { SubdivisionLevel } from '@/lib/preference-schemas';
+import type { RhythmMeasure } from '@/types';
 import type { NotationDuration } from './musisync-glyphs';
 
 export type OnsetSpan = {

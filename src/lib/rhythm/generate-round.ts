@@ -1,11 +1,11 @@
-import type { SubdivisionLevel } from '@/lib/preference-schemas';
-import type { GameSettings } from '@/lib/settings-schema';
 import { isEndlessMode } from '@/lib/settings-schema';
-import type { RichRhythmMeasure, Round } from '@/types';
 import { richMeasuresEqual } from '@/types';
 import { generateMeasure } from './generate-measure';
 import { shouldInjectPoison } from './poison';
 import { createPRNG, randomSeed } from './prng';
+import type { SubdivisionLevel } from '@/lib/preference-schemas';
+import type { GameSettings } from '@/lib/settings-schema';
+import type { RichRhythmMeasure, Round } from '@/types';
 
 export type GenerateRoundOptions = {
 	difficulty: number;

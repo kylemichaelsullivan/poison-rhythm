@@ -141,7 +141,7 @@ src/components/
 - **Context over prop drilling**: Prefer `useGame` / `useSettings` in composers where state is global
 - **Variants over className**: Do not accept `className` on shared components for styling customization
 - **Imports**: Use barrel imports where available (`@/components/ui`, `@/components/controls`, …)
-- **Type imports**: Keep `import type { ... }` on separate lines from component/value imports
+- **Type imports**: Keep `import type { ... }` on separate lines from component/value imports (Biome `useImportType` `separatedType`)
 
 ## Typography
 

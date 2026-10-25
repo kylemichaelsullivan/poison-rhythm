@@ -1,6 +1,6 @@
+import { createEmptyRichMeasure } from '@/types';
 import type { PoisonMode } from '@/lib/settings-schema';
 import type { RichRhythmMeasure } from '@/types';
-import { createEmptyRichMeasure } from '@/types';
 import type { PRNG } from './prng';
 
 /** Base per-measure rate before difficulty scaling (former “normal” frequency). */

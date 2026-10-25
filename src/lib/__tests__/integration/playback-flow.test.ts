@@ -5,9 +5,7 @@ import {
 	shouldProcessMeasureCycle,
 } from '../../measure-playback';
 import { COUNT_IN_BEATS, SCHEDULE_AHEAD_SEC } from '../../metronome-defaults';
-import type { PlaybackClockEvent } from '../../playback-clock';
 import { createPlaybackClock, quarterNoteSec } from '../../playback-clock';
-import type { PlaybackPass, PlaybackSource } from '../../playback-state';
 import {
 	initialPlaybackPass,
 	isMeasuresPlaying,
@@ -15,6 +13,8 @@ import {
 	shouldHighlightPlaybackStep,
 	shouldRunCountIn,
 } from '../../playback-state';
+import type { PlaybackClockEvent } from '../../playback-clock';
+import type { PlaybackPass, PlaybackSource } from '../../playback-state';
 
 type PlaybackSnapshot = {
 	activeSource: PlaybackSource | null;

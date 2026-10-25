@@ -3,8 +3,8 @@ import { MUSISYNC_GLYPH, measureToNotationEvents } from '@/lib/notation';
 import { MUSISYNC_BEAMED } from '@/lib/notation/beam-glyphs';
 import { assignBeamGroups } from '@/lib/notation/beam-groups';
 import { eventsToMusiSyncString } from '@/lib/notation/events-to-musisync';
-import type { NoteSegment } from '@/lib/notation/spell-onsets';
 import { REST_MEASURE } from '@/types';
+import type { NoteSegment } from '@/lib/notation/spell-onsets';
 
 function hits(...cells: number[]): boolean[] {
 	const measure = [...REST_MEASURE];

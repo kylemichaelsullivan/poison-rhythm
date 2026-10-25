@@ -1,12 +1,10 @@
-import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
 import { REST_MEASURE } from '@/types';
-import {
-	CurrentMeasureDisplay,
-	type MeasurePlaybackPhase,
-} from './CurrentMeasureDisplay';
+import { CurrentMeasureDisplay } from './CurrentMeasureDisplay';
 import { MeasureCarouselChrome } from './MeasureCarouselChrome';
-import type { MeasureDisplayOptions } from './measure-display-options';
 import { NextMeasurePreview } from './NextMeasurePreview';
+import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
+import type { MeasurePlaybackPhase } from './CurrentMeasureDisplay';
+import type { MeasureDisplayOptions } from './measure-display-options';
 
 type MeasureSliderProps = {
 	displayMeasure: RhythmMeasure;

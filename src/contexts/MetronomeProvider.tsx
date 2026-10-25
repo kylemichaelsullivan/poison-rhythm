@@ -1,11 +1,4 @@
-import type { ReactNode } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type {
-	MetronomeContextValue,
-	MetronomeTempoContextValue,
-	PlaybackPass,
-	PlaybackSource,
-} from '@/contexts/MetronomeContext';
 import {
 	MetronomeContext,
 	MetronomeTempoContext,
@@ -17,11 +10,9 @@ import {
 } from '@/contexts/PreferencesContext';
 import { useSettings } from '@/contexts/SettingsContext';
 import { createAudioEngine, shouldPlayRhythmAudio } from '@/lib/audio';
-import type { LookaheadScheduler } from '@/lib/lookahead-scheduler';
 import { createLookaheadScheduler } from '@/lib/lookahead-scheduler';
 import { BEAT_FLASH_MS, BPM_MAX, BPM_MIN } from '@/lib/metronome-defaults';
 import { clampTempo } from '@/lib/metronome-tempo';
-import type { PlaybackClockEvent } from '@/lib/playback-clock';
 import {
 	createPlaybackClock,
 	shouldHoldLookaheadAfterEvent,
@@ -34,6 +25,15 @@ import {
 	shouldRunCountIn,
 } from '@/lib/playback-state';
 import { stepHasHit } from '@/lib/subdivision-playback';
+import type { ReactNode } from 'react';
+import type {
+	MetronomeContextValue,
+	MetronomeTempoContextValue,
+	PlaybackPass,
+	PlaybackSource,
+} from '@/contexts/MetronomeContext';
+import type { LookaheadScheduler } from '@/lib/lookahead-scheduler';
+import type { PlaybackClockEvent } from '@/lib/playback-clock';
 import type { RhythmMeasure } from '@/types';
 
 type MetronomeProviderProps = {

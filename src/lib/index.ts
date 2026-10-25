@@ -3,11 +3,6 @@ export {
 	shouldPlayRhythmAudio,
 	shouldShowVisualFeedback,
 } from './audio';
-export type {
-	DifficultyLevel,
-	DifficultyLevelEntry,
-	HitRange,
-} from './difficulty-levels';
 export {
 	DIFFICULTY_LEVELS,
 	DIFFICULTY_MAX,
@@ -22,27 +17,19 @@ export {
 	getGameModeHandler,
 	onMeasureCompleteForMode,
 } from './game-modes';
-export type { LookaheadScheduler } from './lookahead-scheduler';
 export {
 	createLookaheadScheduler,
 	drainDueEvents,
 } from './lookahead-scheduler';
-export type { MeasureCompleteAction } from './measure-playback';
 export {
 	measureCompleteAction,
 	shouldProcessMeasureCycle,
 } from './measure-playback';
-export type {
-	PlaybackClock,
-	PlaybackClockEvent,
-	PlaybackPhase,
-} from './playback-clock';
 export {
 	createPlaybackClock,
 	quarterNoteSec,
 	shouldHoldLookaheadAfterEvent,
 } from './playback-clock';
-export type { PlaybackPass, PlaybackSource } from './playback-state';
 export {
 	initialPlaybackPass,
 	isMeasuresPlaying,
@@ -51,11 +38,6 @@ export {
 	shouldHighlightPlaybackStep,
 	shouldRunCountIn,
 } from './playback-state';
-export type {
-	ColorPreference,
-	SubdivisionLevel,
-	ThemeSetting,
-} from './preference-schemas';
 export {
 	DEFAULT_DIFFICULTY,
 	DEFAULT_SUBDIVISION_LEVEL,
@@ -129,9 +111,27 @@ export {
 	subdivisionPulseSec,
 	subdivisionStepCount,
 } from './subdivision-playback';
-export type { ThemeOption, ThemePreference } from './theme-options';
 export {
 	nextThemePreference,
 	THEME_OPTIONS,
 	themeOptionFor,
 } from './theme-options';
+export type {
+	DifficultyLevel,
+	DifficultyLevelEntry,
+	HitRange,
+} from './difficulty-levels';
+export type { LookaheadScheduler } from './lookahead-scheduler';
+export type { MeasureCompleteAction } from './measure-playback';
+export type {
+	PlaybackClock,
+	PlaybackClockEvent,
+	PlaybackPhase,
+} from './playback-clock';
+export type { PlaybackPass, PlaybackSource } from './playback-state';
+export type {
+	ColorPreference,
+	SubdivisionLevel,
+	ThemeSetting,
+} from './preference-schemas';
+export type { ThemeOption, ThemePreference } from './theme-options';

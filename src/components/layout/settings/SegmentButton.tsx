@@ -1,8 +1,7 @@
-import { Icon, type SvgIconComponent } from '@/components/layout/Icon';
-import {
-	type SegmentControlVariant,
-	segmentControlClassName,
-} from '@/lib/control-classes';
+import { Icon } from '@/components/layout/Icon';
+import { segmentControlClassName } from '@/lib/control-classes';
+import type { SvgIconComponent } from '@/components/layout/Icon';
+import type { SegmentControlVariant } from '@/lib/control-classes';
 
 export type SegmentIcon = {
 	id: string;

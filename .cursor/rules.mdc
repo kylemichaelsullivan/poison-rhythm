@@ -95,6 +95,8 @@ Settings may shape accents, rests, sticking, phrase length, and poison visibilit
   3. Internal project value imports (alphabetically by path, use `@/` alias)
   4. Type-only imports (alphabetically by path; React types from `'react'`, then `@/` paths)
 - **Separate type imports**: Do not mix type and value imports on one line. Use a dedicated `import type { ... } from '...'` line instead of inline `type` in a value import (e.g. avoid `import { Icon, type SvgIconComponent } from '...'`).
+- **Enforced by Biome**: `linter.rules.style.useImportType` is `separatedType` (error). `assist.source.organizeImports` groups value imports first (`{ "type": false }`), then type-only imports (`{ "type": true }`). `bun run check` / `bun run ci` fail on mixed imports.
+- **Editor auto-imports**: Set `js/ts.preferences.preferTypeOnlyAutoImports` so the TypeScript language service emits `import type` instead of inline `type`.
 - **Avoid React namespace**: Import React types directly, avoid `React.` prefix
 - **Named imports**: Use named imports for better tree-shaking
 

@@ -1,10 +1,11 @@
 import clsx from 'clsx';
-import type { Ref } from 'react';
-import { Icon, type SvgIconComponent } from '@/components/layout/Icon';
+import { Icon } from '@/components/layout/Icon';
 import {
 	focusVisibleRingClassName,
 	forcedFocusRingClassName,
 } from '@/lib/control-classes';
+import type { Ref } from 'react';
+import type { SvgIconComponent } from '@/components/layout/Icon';
 
 type ControlButtonProps = {
 	label: string;

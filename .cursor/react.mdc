@@ -178,4 +178,4 @@ Follow the import order in `rules.mdc`:
 3. Internal project value imports
 4. Type-only imports
 
-Keep type imports on separate lines from component/value imports. Do not use inline `type` in a mixed import statement.
+Keep type imports on separate lines from component/value imports. Do not use inline `type` in a mixed import statement. Biome `useImportType` (`separatedType`) and `organizeImports` enforce this — see `biome.json` and `rules.mdc`.

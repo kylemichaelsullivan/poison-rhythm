@@ -1,9 +1,6 @@
 import { useMemo, useState } from 'react';
-import {
-	type ColorRole,
-	resolveDominantHex,
-	resolveSecondaryHex,
-} from '@/lib/colors';
+import { resolveDominantHex, resolveSecondaryHex } from '@/lib/colors';
+import type { ColorRole } from '@/lib/colors';
 import type { ColorPreference } from '@/lib/preference-schemas';
 
 export type ColorRoleSelection = {

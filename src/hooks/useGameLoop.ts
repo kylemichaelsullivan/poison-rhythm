@@ -3,8 +3,8 @@ import { useComplexityPreferences } from '@/contexts';
 import { useSettings } from '@/contexts/SettingsContext';
 import { generateAppendBatch, generateRound } from '@/lib/rhythm';
 import { isEndlessMode } from '@/lib/settings-schema';
-import type { RhythmMeasure, RichRhythmMeasure, Round } from '@/types';
 import { richToRhythmMeasure } from '@/types';
+import type { RhythmMeasure, RichRhythmMeasure, Round } from '@/types';
 
 export function useGameLoop() {
 	const { difficulty, subdivisionLevel } = useComplexityPreferences();

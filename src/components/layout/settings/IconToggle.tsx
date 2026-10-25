@@ -1,6 +1,6 @@
+import { SegmentButton } from './SegmentButton';
 import type { SvgIconComponent } from '@/components/layout/Icon';
 import type { SegmentControlVariant } from '@/lib/control-classes';
-import { SegmentButton } from './SegmentButton';
 
 type IconToggleProps = {
 	pressed: boolean;

@@ -2,13 +2,13 @@ import clsx from 'clsx';
 import DarkIcon from '@/assets/svg/dark.svg?react';
 import LightIcon from '@/assets/svg/light.svg?react';
 import { Icon } from '@/components/layout/Icon';
-import type { ContrastRating } from '@/lib/colors';
 import {
 	interactiveInsetChromeClassName,
 	stableDarkInkClassName,
 	stableLightInkClassName,
 } from '@/lib/control-classes';
 import { themeOptionFor } from '@/lib/theme-options';
+import type { ContrastRating } from '@/lib/colors';
 
 type ThemeScoreRowProps = {
 	mode: 'light' | 'dark';

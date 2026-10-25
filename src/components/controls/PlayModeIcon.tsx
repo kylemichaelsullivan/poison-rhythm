@@ -1,7 +1,7 @@
 import clsx from 'clsx';
-import type { GameMode } from '@/lib/settings-schema';
 import { PlayModeBucketGlyph } from './PlayModeBucketGlyph';
 import { PlayModePoisonGlyph } from './PlayModePoisonGlyph';
+import type { GameMode } from '@/lib/settings-schema';
 
 type PlayModeIconProps = {
 	mode: GameMode;

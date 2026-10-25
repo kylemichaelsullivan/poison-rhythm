@@ -1,13 +1,15 @@
 import clsx from 'clsx';
-import { type ReactNode, useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useModalFocusTrap } from '@/hooks/useModalFocusTrap';
 import { useTimedDismiss } from '@/hooks/useTimedDismiss';
 import { ModalCloseButton } from './ModalCloseButton';
-import { ModalPanel, type ModalSize } from './ModalPanel';
+import { ModalPanel } from './ModalPanel';
 import { ModalScrim } from './ModalScrim';
 import { ModalTitle } from './ModalTitle';
 import { TimedNoticeProgress } from './TimedNoticeProgress';
+import type { ReactNode } from 'react';
+import type { ModalSize } from './ModalPanel';
 
 type ModalProps = {
 	open: boolean;

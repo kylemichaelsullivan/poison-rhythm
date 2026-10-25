@@ -1,7 +1,7 @@
-import type { ReactNode } from 'react';
 import { useCallback, useMemo, useState } from 'react';
 import { usePendingDifficulty } from '@/contexts';
 import { AboutPoisonRhythmContext } from './AboutPoisonRhythmContext';
+import type { ReactNode } from 'react';
 
 export function AboutPoisonRhythmProvider({
 	children,

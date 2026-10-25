@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react';
 import { Row } from '@/components/ui';
+import type { ReactNode } from 'react';
 
 type ModalActionsProps = {
 	children: ReactNode;

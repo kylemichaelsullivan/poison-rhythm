@@ -1,4 +1,5 @@
-import { MEASURE_LENGTH, type RhythmMeasure } from '@/types';
+import { MEASURE_LENGTH } from '@/types';
+import type { RhythmMeasure } from '@/types';
 import type { SubdivisionLevel } from './preference-schemas';
 
 /** Horizontal position (0–100) for a subdivision step within the measure. */

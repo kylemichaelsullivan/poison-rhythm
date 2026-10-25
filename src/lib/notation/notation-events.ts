@@ -1,9 +1,9 @@
-import type { SubdivisionLevel } from '@/lib/preference-schemas';
-import type { RhythmMeasure, RichRhythmMeasure, StickingHand } from '@/types';
 import { assignBeamGroups } from './beam-groups';
-import type { NotationDuration } from './musisync-glyphs';
 import { spellOnsetSegments } from './spell-onsets';
 import { spellRests } from './spell-rests';
+import type { SubdivisionLevel } from '@/lib/preference-schemas';
+import type { RhythmMeasure, RichRhythmMeasure, StickingHand } from '@/types';
+import type { NotationDuration } from './musisync-glyphs';
 
 export type NotationEvent = {
 	startCell: number;

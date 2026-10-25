@@ -1,14 +1,14 @@
-import type { ReactNode } from 'react';
 import { useCallback, useEffect, useMemo } from 'react';
 import { ColorPreferencesContext } from '@/contexts/ColorPreferencesContext';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { applyColorPreferenceVars, swapAccentColors } from '@/lib/colors';
 import {
-	type ColorPreference,
 	parseColorPreference,
 	serializeColorPreference,
 } from '@/lib/preference-schemas';
 import { STORAGE_KEYS } from '@/lib/storage-keys';
+import type { ReactNode } from 'react';
+import type { ColorPreference } from '@/lib/preference-schemas';
 
 export function ColorPreferencesProvider({
 	children,

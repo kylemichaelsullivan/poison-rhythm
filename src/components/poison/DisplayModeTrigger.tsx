@@ -1,6 +1,6 @@
 import { IconButton } from '@/components/ui';
-import type { RhythmRenderMode } from '@/lib/settings-schema';
 import { DisplayModeBadge } from './DisplayModeBadge';
+import type { RhythmRenderMode } from '@/lib/settings-schema';
 
 type DisplayModeTriggerProps = {
 	renderMode: RhythmRenderMode;

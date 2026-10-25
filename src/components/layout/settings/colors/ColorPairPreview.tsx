@@ -1,8 +1,9 @@
-import { type ColorRole, resolveAccentDisplay } from '@/lib/colors';
-import type { ColorPreference } from '@/lib/preference-schemas';
+import { resolveAccentDisplay } from '@/lib/colors';
 import { ColorPairPlayPreview } from './ColorPairPlayPreview';
 import { ColorRoleTile } from './ColorRoleTile';
 import { SwapColorRolesButton } from './SwapColorRolesButton';
+import type { ColorRole } from '@/lib/colors';
+import type { ColorPreference } from '@/lib/preference-schemas';
 
 type ColorPairPreviewProps = {
 	role: ColorRole;
