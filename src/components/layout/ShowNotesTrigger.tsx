@@ -35,6 +35,7 @@ export function ShowNotesTrigger({
 				open && 'ring-2 ring-primary',
 			)}
 			title='Note Subdivisions'
+			data-musisync-ready={fontReady ? 'true' : 'false'}
 			onMouseEnter={() => {
 				// Worst case: finish loading subdivision glyphs on hover.
 				ensureLoaded();

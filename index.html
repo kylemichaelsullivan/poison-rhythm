@@ -18,6 +18,18 @@
 			type="font/woff2"
 			crossorigin
 		/>
+		<script>
+			(() => {
+				if (typeof FontFace === 'undefined' || !document.fonts) return;
+				var face = new FontFace(
+					'MusiSync',
+					'url("/fonts/MusiSync.woff2") format("woff2"), url("/fonts/MusiSync.ttf") format("truetype")',
+					{ display: 'block' },
+				);
+				document.fonts.add(face);
+				face.load().catch(() => {});
+			})();
+		</script>
 	</head>
 	<body>
 		<div id="root"></div>

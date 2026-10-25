@@ -196,7 +196,7 @@ flowchart LR
 | `musisync-glyphs.ts` | Duration keys; dotted notes `i`/`j`/`d`; dotted rests = rest + `.` |
 | `events-to-musisync.ts` | Events → MusiSync glyph string |
 | `measure-to-notation.ts` | Flat `NotationStep[]` for overlays and playback cursor |
-| `load-musisync-font.ts` | `@font-face` + `index.html` preload; `prefetchMusiSyncFont` in `main` warms `q`/`e`/`s`; `useMusiSyncFont` in UI |
+| `load-musisync-font.ts` | `@font-face` (`font-display: block`) + `index.html` preload + inline FontFace; `prefetchMusiSyncFont` in `main` loads **all** duration/beam glyphs; ready = canvas vs matching fallback (never `fonts.check()` on Latin keys); `useMusiSyncFont` in UI |
 
 Font assets: canonical copies in `src/assets/fonts/`; served from `public/fonts/` as static `/fonts/MusiSync.*` URLs. See [`src/assets/fonts/README.md`](../src/assets/fonts/README.md) for glyph keys and refresh steps.
 
@@ -216,6 +216,10 @@ Playback cursor: `useSmoothNotationCursor` interpolates position across `Notatio
 | `playback-state.ts` | Count-in / demo / student pass gating for cell highlight |
 | `scroll-animation.ts` | Scroll-mode animation helpers (dormant; Coming Soon in Display Mode — keep for eventual highway mode) |
 | `MetronomeProvider` | Schedules clicks/hits on the audio clock; UI updates via delayed timeouts; **Escape** stops playback (keydown; ignored in inputs/dialogs) |
+
+## TypeScript imports
+
+Module (value) imports and type imports stay on **separate statements**. Do not write `import { Foo, type Bar }`. Use `import type { Bar }` after the value imports. Biome enforces this (`style/useImportType` `separatedType`; `organizeImports` places `{ "type": true }` after values). Details: [`.cursor/rules.mdc`](../.cursor/rules.mdc) and [`AGENTS.md`](../AGENTS.md).
 
 ## Types
 

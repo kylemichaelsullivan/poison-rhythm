@@ -1,5 +1,8 @@
 import { useLayoutEffect, useRef } from 'react';
-import { MUSISYNC_SUBDIVISION_FONT_SPEC } from '@/lib/notation/load-musisync-font';
+import {
+	MUSISYNC_SUBDIVISION_FONT_SPEC,
+	musisyncGlyphsPaintable,
+} from '@/lib/notation/load-musisync-font';
 
 const BUTTON_SIZE_PX = 44;
 /** Leave chrome breathing room so stems/flags never kiss the border. */
@@ -126,7 +129,7 @@ export function ShowNotesTriggerGlyph({
 		ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 		ctx.clearRect(0, 0, BUTTON_SIZE_PX, BUTTON_SIZE_PX);
 
-		if (!ready) return;
+		if (!ready || !musisyncGlyphsPaintable(glyph)) return;
 
 		const fill = inkFillForTheme(effectiveTheme);
 

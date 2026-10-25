@@ -14,7 +14,9 @@ Beamed groups (see `beam-glyphs.ts`): `n` = two eighths, `y` = four sixteenths, 
 | `MusiSync.ttf` | Truetype fallback |
 | `MusiSync-LICENSE.md` | OFL attribution |
 
-**Served copies** live in [`public/fonts/`](../../../public/fonts/) so the browser loads them as static `/fonts/MusiSync.*` URLs (CSS `@font-face` in `src/index.css`). Do **not** import font files through Vite JS (`new URL` / `?url`) — that creates virtual `?import` modules and fragile hashed URLs.
+**Served copies** live in [`public/fonts/`](../../../public/fonts/) so the browser loads them as static `/fonts/MusiSync.*` URLs (CSS `@font-face` in `src/index.css` with `font-display: block`). Do **not** import font files through Vite JS (`new URL` / `?url`) — that creates virtual `?import` modules and fragile hashed URLs.
+
+`index.html` preloads the woff2 and registers a `FontFace` before the app module runs. `prefetchMusiSyncFont` (`main.tsx`) then `document.fonts.load`s every duration and beamed glyph (`MUSISYNC_ALL_GLYPHS`) so the header ShowNotes trigger never paints fallback `q` / `e` / `s` letters.
 
 When updating the font, replace files here **and** copy into `public/fonts/`.
 

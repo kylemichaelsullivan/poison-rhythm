@@ -37,6 +37,7 @@ Conventions:
 
 - Files: `*.test.ts`
 - Import modules under test with `@/`
+- Keep value imports and `import type` on separate statements (same as app code; Biome `separatedType`)
 - Prefer pure helpers in unit tests; keep React e2e for UI contracts
 
 ## End-to-end (Playwright)
@@ -51,6 +52,7 @@ Location: `e2e/`
 | `mobile-layout.spec.ts` | 360×800 smoke: carousel nav vs Play overlap, 2-col measure grid, Settings panel scroll |
 | `color-contrast.spec.ts` | Colors meter matches swatch chips plus ratios; Light on top in every theme; Dominant is scored against Secondary and the reverse |
 | `notation-scroll.spec.ts` | MusiSync boxes do not vertically overflow |
+| `shownotes-glyph.spec.ts` | Header note indicator paints a MusiSync glyph (not `q`/`e`/`s`) in Light, Dark, and System |
 | `helpers.ts` | Shared prefs seeding and round-ready wait |
 
 ### Playwright projects
@@ -88,6 +90,8 @@ The a11y “start screen” test expects a **seeded** round (`measure-slider`), 
 - Dotted note glyphs: `i` / `j` / `d` — see [`src/assets/fonts/README.md`](../src/assets/fonts/README.md)
 - `[1,2]` (sixteenth + eighth) beams to derived U+E001 (undotted `O`); never alias to stock `O` (`[1,3]`)
 - Lazy `MeasureNotation` + `loadMusiSyncFont` prefetch when display mode is notation (`MeasureGrid` → `useNotationPrefetch`; loading shell is `NotationFallback`)
+- Header ShowNotes trigger: `e2e/shownotes-glyph.spec.ts` asserts the canvas paints a MusiSync note (not a fallback letter) in Light, Dark, and System
+- `MUSISYNC_ALL_GLYPHS` unit test: every duration + beamed key is in the early-load string
 
 ## Scratch artifacts
 

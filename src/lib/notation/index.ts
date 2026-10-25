@@ -26,10 +26,15 @@ export {
 	type NotationGlyphToken,
 } from './events-to-musisync';
 export {
+	ensureMusiSyncFaceRegistered,
 	isMusiSyncFontReady,
 	loadMusiSyncFont,
+	MUSISYNC_ALL_GLYPHS,
+	MUSISYNC_FALLBACK_FONT_SPEC,
+	MUSISYNC_FONT_STACK,
 	MUSISYNC_SUBDIVISION_FONT_SPEC,
 	MUSISYNC_SUBDIVISION_NOTE_GLYPHS,
+	musisyncGlyphsPaintable,
 	prefetchMusiSyncFont,
 } from './load-musisync-font';
 export {
