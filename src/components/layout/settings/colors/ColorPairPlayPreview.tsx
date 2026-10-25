@@ -56,7 +56,7 @@ export function ColorPairPlayPreview({
 						<div
 							key={`preview-cell-${beat + 1}-${offset + 1}`}
 							className={clsx(
-								'relative aspect-square rounded-[3px]',
+								'relative aspect-square rounded-cell',
 								cell.hit ? undefined : 'bg-surface-muted',
 							)}
 							style={{

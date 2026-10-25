@@ -1,13 +1,10 @@
 import clsx from 'clsx';
-import {
-	type ColorThemeMode,
-	type ContrastGrade,
-	contrastGradePasses,
-} from '@/lib/colors';
+import { contrastGradePasses } from '@/lib/colors';
 import {
 	stableDarkInkClassName,
 	stableLightInkClassName,
 } from '@/lib/control-classes';
+import type { ColorThemeMode, ContrastGrade } from '@/lib/colors';
 
 type ContrastGradeBadgeProps = {
 	grade: ContrastGrade;
@@ -30,7 +27,7 @@ export function ContrastGradeBadge({ grade, mode }: ContrastGradeBadgeProps) {
 	return (
 		<span
 			className={clsx(
-				'ContrastGradeBadge pointer-events-none flex size-4 items-center justify-center rounded-sm text-[10px] font-black leading-none',
+				'ContrastGradeBadge pointer-events-none flex size-4 items-center justify-center rounded-sm text-2xs font-black leading-none',
 				gradeBadgeChrome(grade),
 			)}
 			data-contrast-mode={mode}

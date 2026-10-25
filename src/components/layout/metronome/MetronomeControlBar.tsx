@@ -13,8 +13,9 @@ type MetronomeControlBarProps = {
 
 /**
  * Tempo ± sit in-flow beside the control surface (inside the modal) when
- * there is room. Below ~63rem they drop under the surface; pair with
- * `sideGutterCollapsedReserveClassName` so they clear the bar and Tap.
+ * there is room. Below `--breakpoint-gutter` they drop under the surface;
+ * pair with `sideGutterCollapsedReserveClassName` so they clear the bar
+ * and Tap.
  * Play / tempo bind globally inside child composers.
  */
 export function MetronomeControlBar({
@@ -25,7 +26,7 @@ export function MetronomeControlBar({
 			id='beat-selector'
 			tabIndex={-1}
 			className={clsx(
-				'MetronomeContent relative flex w-full items-center gap-[var(--side-gutter-width)]',
+				'MetronomeContent relative flex w-full items-center gap-gutter',
 				sideGutterCollapsedReserveClassName,
 			)}
 		>

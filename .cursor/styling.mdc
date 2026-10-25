@@ -66,17 +66,21 @@ If a color needs translucency, define it in `@theme` (e.g. `--color-scrim`) — 
 | `controlButtonBaseClassName` | Chrome icon/action buttons (`bg-chrome text-black`) |
 | `controlSurfaceBaseClassName` | Bordered chrome panels (ShowNotes popover, metronome bar) |
 | `sideGutterControlClassName` | Exterior controls in page/modal gutters (carousel nav, tempo ±) |
-| `sideGutterCollapsedReserveClassName` | Host padding when those controls collapse under (~63rem) |
+| `sideGutterCollapsedReserveClassName` | Host padding when those controls collapse under (`max-gutter`, 63rem) |
+| `sideGutterInFlowCollapseClassName` | In-flow ± controls that only go absolute at `max-gutter` |
 | `stableLightInkClassName` / `stableDarkInkClassName` | Contrast meter bars and swatch chips (`bg-ink-100` / `bg-ink-950`; does not invert) |
 
 **Side-gutter layout tokens** (`src/index.css` `@theme` — tweak once for site-wide spacing):
 
 | Token | Default | Role |
 |-------|---------|------|
-| `--side-gutter-width` | `1rem` | Gap beside host when controls sit laterally |
+| `--side-gutter-width` | `1rem` | Gap beside host when controls sit laterally (`gap-gutter`) |
 | `--side-gutter-collapse-gap` | `0.75rem` | Gap under host when controls stack below |
-| `--side-gutter-collapse-inset` | `0.5rem` | Inset from host bottom/side corners when stacked |
+| `--side-gutter-collapse-inset` | `0.5rem` | Inset from host bottom/side corners when stacked (`*-gutter-inset`) |
 | `--side-gutter-control-size` | `2.75rem` | Reserved control height (`size-11`) |
+| `--breakpoint-gutter` | `63rem` | Collapse gutter controls (`max-gutter:`) |
+| `--breakpoint-phone` | `360px` | Phone floor (`max-phone:`) |
+| `--breakpoint-tray` | `380px` | Crayon sleeve wrap (`max-tray:`) |
 
 **Pair foreground with background**:
 

@@ -70,7 +70,7 @@
 	/*
 	 * Side-gutter exterior controls (carousel prev/next, metronome ±, …).
 	 * Lateral: sit `width` outside a `relative` host.
-	 * Collapsed (viewport < 63rem): drop under the host with `collapse-gap`
+	 * Collapsed (viewport < `--breakpoint-gutter`): drop under the host with `collapse-gap`
 	 * between the host bottom and the control, plus `collapse-inset` from
 	 * the host’s bottom/side edges. Reserve padding uses
 	 * gap + control-size + inset — see `sideGutterCollapsedReserveClassName`.
@@ -80,6 +80,22 @@
 	--side-gutter-collapse-gap: 0.75rem;
 	--side-gutter-control-size: 2.75rem; /* size-11 */
 	--range-thumb-size: 1rem;
+
+	/*
+	 * Named breakpoints / spacing so layout uses `max-gutter:` and `gap-gutter`
+	 * instead of arbitrary `max-[63rem]:` / `gap-[var(--side-gutter-width)]`.
+	 */
+	--breakpoint-gutter: 63rem;
+	--breakpoint-phone: 360px;
+	--breakpoint-tray: 380px;
+	--spacing-gutter: var(--side-gutter-width);
+	--spacing-gutter-inset: var(--side-gutter-collapse-inset);
+
+	--text-2xs: 0.625rem;
+	--text-3xs: 0.5rem;
+	--text-micro: 0.65rem;
+	--radius-cell: 3px;
+	--outline-width-3: 3px;
 
 	/*
 	 * Elevation: short, low-opacity, slightly purple-tinted — not stacked black.
@@ -102,6 +118,23 @@
 		0 1px 2px var(--shadow-color), 0 0 0.65rem rgba(145, 72, 147, 0.42);
 }
 
+/* Calc-based gutter placement — not expressible as a single spacing token. */
+@utility right-gutter-outside {
+	right: calc(100% + var(--side-gutter-width));
+}
+
+@utility left-gutter-outside {
+	left: calc(100% + var(--side-gutter-width));
+}
+
+@utility pb-gutter-reserve {
+	padding-bottom: calc(
+		var(--side-gutter-collapse-gap) +
+		var(--side-gutter-control-size) +
+		var(--side-gutter-collapse-inset)
+	);
+}
+
 @font-face {
 	font-family: "MusiSync";
 	src:
@@ -109,7 +142,7 @@
 		url("/fonts/MusiSync.ttf") format("truetype");
 	font-weight: normal;
 	font-style: normal;
-	font-display: swap;
+	font-display: block;
 }
 
 :root {
@@ -764,7 +797,7 @@
 	grid-column: span 2;
 }
 
-/* MusiSync notation — static files in public/fonts; preload in index.html */
+/* MusiSync notation — static files in public/fonts; preload + FontFace in index.html */
 .MusiSync {
 	font-family: "MusiSync", ui-monospace, monospace;
 }

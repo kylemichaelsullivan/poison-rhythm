@@ -1,5 +1,6 @@
+import { CrayonSwatch } from './CrayonSwatch';
 import type { CrayonId, ThemeContrastScores } from '@/lib/colors';
-import { CrayonSwatch, type CrayonSwatchEmphasis } from './CrayonSwatch';
+import type { CrayonSwatchEmphasis } from './CrayonSwatch';
 
 export type CrayonTraySwatchModel = {
 	id: CrayonId;
@@ -33,7 +34,7 @@ export function CrayonTraySleeve({
 			<h4 className='text-xs font-semibold uppercase tracking-wide text-muted'>
 				{label}
 			</h4>
-			<div className='grid grid-cols-8 gap-1 max-[380px]:grid-cols-4'>
+			<div className='grid grid-cols-8 gap-1 max-tray:grid-cols-4'>
 				{swatches.map((swatch) => (
 					<CrayonSwatch
 						key={swatch.id}

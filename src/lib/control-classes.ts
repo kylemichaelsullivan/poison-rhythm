@@ -53,15 +53,24 @@ export const appChromeBarFooterClassName =
 	'pb-[max(0.5rem,env(safe-area-inset-bottom))]';
 
 /**
- * When side-gutter controls collapse under their host (`max-[63rem]`), reserve
- * space so absolute controls (anchored with `bottom`) clear the host and
- * whatever follows (PlayControls, Tap, …).
+ * When side-gutter controls collapse under their host (`max-gutter`, 63rem),
+ * reserve space so absolute controls (anchored with `bottom`) clear the host
+ * and whatever follows (PlayControls, Tap, …).
  *
  * Formula: `--side-gutter-collapse-gap` + `--side-gutter-control-size` +
  * `--side-gutter-collapse-inset` (tokens in `src/index.css` `@theme`).
  */
 export const sideGutterCollapsedReserveClassName =
-	'max-[63rem]:pb-[calc(var(--side-gutter-collapse-gap)+var(--side-gutter-control-size)+var(--side-gutter-collapse-inset))]';
+	'max-gutter:pb-gutter-reserve';
+
+const sideGutterCollapseBaseClassName =
+	'max-gutter:top-auto max-gutter:bottom-gutter-inset max-gutter:translate-y-0';
+
+function sideGutterCollapseInsetClassName(side: 'start' | 'end'): string {
+	return side === 'start'
+		? 'max-gutter:right-auto max-gutter:left-gutter-inset'
+		: 'max-gutter:left-auto max-gutter:right-gutter-inset';
+}
 
 export const focusVisibleRingClassName =
 	'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-chrome';
@@ -89,7 +98,7 @@ export const stableDarkInkClassName = 'bg-ink-950 text-ink-50';
  * (ink flips in dark theme).
  */
 export const selectionOutlineActiveClassName =
-	'outline outline-[3px] outline-offset-2 outline-black';
+	'outline outline-3 outline-offset-2 outline-black';
 
 export const selectionOutlinePartnerClassName =
 	'outline outline-2 outline-offset-1 outline-black';
@@ -128,7 +137,7 @@ export const modifyTempoButtonClassName =
 /**
  * Sit a control just outside a `relative` parent’s left (`start`) or right
  * (`end`) edge (`--side-gutter-width`). Optional collapse drops to the bottom
- * corners when the page has no lateral gutter (below ~63rem), with
+ * corners when the page has no lateral gutter (`max-gutter`), with
  * `--side-gutter-collapse-gap` under the host — pair the host with
  * `sideGutterCollapsedReserveClassName`.
  */
@@ -138,13 +147,23 @@ export function sideGutterControlClassName(
 ): string {
 	return clsx(
 		'absolute top-1/2 z-10 -translate-y-1/2',
-		side === 'start'
-			? 'right-[calc(100%+var(--side-gutter-width))]'
-			: 'left-[calc(100%+var(--side-gutter-width))]',
-		collapseBelowGutter &&
-			(side === 'start'
-				? 'max-[63rem]:top-auto max-[63rem]:bottom-[var(--side-gutter-collapse-inset)] max-[63rem]:right-auto max-[63rem]:left-[var(--side-gutter-collapse-inset)] max-[63rem]:translate-y-0'
-				: 'max-[63rem]:top-auto max-[63rem]:bottom-[var(--side-gutter-collapse-inset)] max-[63rem]:left-auto max-[63rem]:right-[var(--side-gutter-collapse-inset)] max-[63rem]:translate-y-0'),
+		side === 'start' ? 'right-gutter-outside' : 'left-gutter-outside',
+		collapseBelowGutter && sideGutterCollapseBaseClassName,
+		collapseBelowGutter && sideGutterCollapseInsetClassName(side),
+	);
+}
+
+/**
+ * In-flow gutter controls (metronome ±) that only become absolute at the
+ * host’s bottom corners below `--breakpoint-gutter`.
+ */
+export function sideGutterInFlowCollapseClassName(
+	side: 'start' | 'end',
+): string {
+	return clsx(
+		'max-gutter:absolute',
+		sideGutterCollapseBaseClassName,
+		sideGutterCollapseInsetClassName(side),
 	);
 }
 

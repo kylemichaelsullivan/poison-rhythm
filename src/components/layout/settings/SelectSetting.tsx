@@ -29,7 +29,7 @@ export function SelectSetting<T extends string>({
 			<div className='flex min-w-0 w-full flex-col items-stretch gap-1 sm:w-auto sm:items-end'>
 				<select
 					className={clsx(
-						'min-h-11 min-w-0 w-full max-w-full rounded border px-2 py-1.5 text-sm sm:max-w-[12rem]',
+						'min-h-11 min-w-0 w-full max-w-full rounded border px-2 py-1.5 text-sm sm:max-w-48',
 						inputSurfaceClassName,
 						disabled && 'cursor-not-allowed opacity-60',
 					)}
@@ -44,7 +44,7 @@ export function SelectSetting<T extends string>({
 					))}
 				</select>
 				{hint ? (
-					<span className='max-w-full text-left text-[0.65rem] text-muted sm:max-w-[12rem] sm:text-right'>
+					<span className='max-w-full text-left text-micro text-muted sm:max-w-48 sm:text-right'>
 						{hint}
 					</span>
 				) : null}
