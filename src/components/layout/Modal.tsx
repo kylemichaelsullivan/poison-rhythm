@@ -3,6 +3,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useModalFocusTrap } from '@/hooks/useModalFocusTrap';
 import { useTimedDismiss } from '@/hooks/useTimedDismiss';
+import { modalCornerControlClassName } from '@/lib/control-classes';
 import { ModalCloseButton } from './ModalCloseButton';
 import { ModalPanel } from './ModalPanel';
 import { ModalScrim } from './ModalScrim';
@@ -24,6 +25,8 @@ type ModalProps = {
 	 * shows a progress bar along the top edge. Omit for a manual dismiss only.
 	 */
 	dismissAfterMs?: number;
+	/** Optional control in the upper-left corner (pairs with the close button). */
+	headerLeading?: ReactNode;
 	children?: ReactNode;
 };
 
@@ -35,6 +38,7 @@ export function Modal({
 	ariaLabel,
 	onClose,
 	dismissAfterMs,
+	headerLeading,
 	children,
 }: ModalProps) {
 	const dialogRef = useRef<HTMLDivElement>(null);
@@ -83,6 +87,16 @@ export function Modal({
 						durationMs={dismissAfterMs}
 						paused={noticePaused}
 					/>
+				) : null}
+				{headerLeading ? (
+					<div
+						className={clsx(
+							'ModalHeaderLeading',
+							modalCornerControlClassName('start'),
+						)}
+					>
+						{headerLeading}
+					</div>
 				) : null}
 				<ModalCloseButton onClose={onClose} />
 				{title ? (

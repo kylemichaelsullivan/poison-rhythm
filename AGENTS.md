@@ -48,8 +48,10 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 10. **Round logic lives in `GameProvider`.** `useGameLoop` exists but is unused by the app shell — prefer extending `GameProvider` / `@/lib/game-modes` / `@/lib/rhythm`.
 11. **Difficulty slider** lives at the bottom of the title About modal (and Settings → Mode). Changing difficulty while a round is active drafts until the host modal closes; then `PendingDifficultyProvider` applies the new difficulty and regenerates the round. `DifficultyRegenAckHost` (mounted in `App`) shows a timed acknowledgement (no OK button; `TIMED_NOTICE_DURATION_MS`, default 2.5s, progress bar on the panel). Providers own state only; modal hosts sit beside the tree. iOS color and animation notes: [`documentation/IOS.md`](documentation/IOS.md).
 12. **Phone-up layout** targets ≈360px (320px no horizontal overflow). Measure beat groups wrap to **2×2** below `sm`. Playwright `mobile` project (360×800) runs `a11y` + `mobile-layout` only.
-13. **Escape stops playback** in `MetronomeProvider` on `keydown` (works while Play/Pause is focused); ignored in text inputs and dialogs.
+13. **Escape stops playback** in `MetronomeProvider` on `keydown` (works while Play/Pause is focused); ignored in text inputs and dialogs. The first-measure left control also cancels its own armed countdown on Escape (same ignore rules).
 14. **One component per file**; composers take context/hooks, molecules take explicit props; **variants over `className`** (`tone`, `size`, `framed`, `slot`). Shared modal chrome: `ModalScrim` / `ModalPanel` / `ModalCloseButton` / `ModalTitle` + `useModalFocusTrap`. **`Modal` portals to `document.body`** so nested dialogs (Difficulty Help / Play Modes inside About or Settings) are not clipped by a parent panel’s `overflow` / `backdrop-filter`. `useModalFocusTrap` only handles Escape/Tab for the topmost `.Modal`. Measure leaves take `display` from `useMeasureDisplayOptions` (wired in `MeasuresSection` / `PoisonMeasureContent`). Settings → Colors: `ColorAccentSettings` owns prefs + theme; meter / tray / pairings / score rows are prop-driven (`CrayonTray` memoizes grades on role + partner so theme taps do not rescore). Prefer `useSetting` / `usePaletteContrast` / `useColorRoleSelection` over ad-hoc wiring; reusable atoms stay props-only (`MuteToggle`, `EnableToggle`, `CrayonSwatch`, `ThemeScoreRow`).
+15. **Button hover / focus is `ButtonLift`**, not fill or ink. Native `:hover` / `:focus` (tablets); optional `ButtonLift-border` for a Dominant edge. Settings chips stay `InteractiveInsetChrome`. Paint range rails only on `::-webkit-slider-runnable-track` / `::-moz-range-track`.
+16. **Carousel ends are not empty gutters.** First measure: `CarouselStartPlayButton` is an empty box at rest (no layout shift) and starts Play after `CAROUSEL_PLAY_DELAY_MS` (click again, outside, or Escape to cancel). Last measure: `CarouselEndMenu` offers New / Reuse / Play. Metronome ± stay in-flow beside the tempo surface — do not collapse them with `max-gutter` (the modal is never that wide).
 
 ## Key paths
 
@@ -63,6 +65,8 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 | `src/components/layout/Modal.tsx` | Modal composer; portals to `document.body`; chrome atoms + `useModalFocusTrap` |
 | `src/components/layout/settings/` | Settings modal (`SettingsOverlay` → Mode / Sound / Colors) |
 | `src/components/controls/PlayControls.tsx` | Play/Pause; `data-count-in-beat` during count-in |
+| `src/components/controls/CarouselStartPlayButton.tsx` | First-measure delayed Play; empty at rest |
+| `src/components/controls/CarouselEndMenu.tsx` | Last-measure New / Reuse / Play |
 | `src/components/measures/MeasureGrid.tsx` | Mode switch + Suspense; prop-driven `display`; grid via `MeasureCellGrid`; prefetch via `useNotationPrefetch` |
 | `src/hooks/useMeasureDisplayOptions.ts` | Derive measure chrome flags once for section composers |
 | `src/components/layout/settings/colors/ColorAccentSettings.tsx` | Colors tab composer; owns prefs + role/contrast hooks; meter owns theme; tray memoized |
@@ -74,7 +78,7 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 | `src/lib/notation/` | Events → spelling → beams → MusiSync glyphs |
 | `src/lib/notation/musisync-glyphs.ts` | Duration glyph map (`i`/`j`/`d` dotted notes) |
 | `src/lib/notation/beam-glyphs.ts` | Beamed patterns (`³`, `O`, `o`, U+E001 for `[1,2]`, `n`, `y`, …) |
-| `src/lib/control-classes.ts` | Shared control classes; side-gutter helpers + `SegmentControlVariant` includes `'header'` |
+| `src/lib/control-classes.ts` | Shared control classes; `ButtonLift` / carousel nav / side-gutter helpers; `SegmentControlVariant` includes `'header'` |
 | `src/lib/hierarchy-border.ts` | Shared border ranks (active / emphasis / structure / provisional) for swatches + measures |
 | `src/lib/colors/contrast.ts` | WCAG ratios mapped to US letter grades A/B/C/F for crayon / pair rating |
 | `src/types/rhythm.ts` | `RhythmMeasure` / `RichRhythmMeasure` + adapters |

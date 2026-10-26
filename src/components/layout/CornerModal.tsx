@@ -35,6 +35,8 @@ type CornerModalProps = {
 	 * shows the timed-notice progress bar. Omit for a manual dismiss only.
 	 */
 	dismissAfterMs?: number;
+	/** Optional control in the upper-left corner of the dialog. */
+	headerLeading?: ReactNode;
 	children?: ReactNode;
 };
 
@@ -52,6 +54,7 @@ export function CornerModal({
 	onDoubleClick,
 	onClose,
 	dismissAfterMs,
+	headerLeading,
 	children,
 }: CornerModalProps) {
 	const { open, onOpen, onClose: closeDisclosure } = useDisclosure();
@@ -78,9 +81,11 @@ export function CornerModal({
 			<Modal
 				open={open}
 				title={title}
+				ariaLabel={title ? undefined : label}
 				fullWidth={fullWidth}
 				size={size}
 				dismissAfterMs={dismissAfterMs}
+				headerLeading={headerLeading}
 				onClose={handleClose}
 			>
 				{lazy ? (open ? children : null) : children}

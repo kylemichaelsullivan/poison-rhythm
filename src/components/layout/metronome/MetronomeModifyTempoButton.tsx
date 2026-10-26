@@ -3,11 +3,7 @@ import MinusIcon from '@/assets/svg/minus.svg?react';
 import PlusIcon from '@/assets/svg/plus.svg?react';
 import { Icon } from '@/components/layout/Icon';
 import { useMetronomeTempo } from '@/contexts';
-import {
-	focusVisibleRingClassName,
-	modifyTempoButtonClassName,
-	sideGutterInFlowCollapseClassName,
-} from '@/lib/control-classes';
+import { modifyTempoButtonClassName } from '@/lib/control-classes';
 import { BPM_MAX, BPM_MIN } from '@/lib/metronome-defaults';
 import {
 	decrementTempoByStep,
@@ -19,9 +15,9 @@ type MetronomeModifyTempoButtonProps = {
 };
 
 /**
- * In-flow beside the control surface when the modal has room; drops to the
- * bottom corners below `--breakpoint-gutter` (absolute, so it leaves the
- * flex row). Tempo context only (not beat flash).
+ * Tempo ± stay in-flow beside the control surface (the modal is always
+ * narrower than `--breakpoint-gutter`, so a gutter-collapse would park them
+ * under the bar on every open). Tempo context only (not beat flash).
  */
 export function MetronomeModifyTempoButton({
 	direction,
@@ -33,12 +29,7 @@ export function MetronomeModifyTempoButton({
 	return (
 		<button
 			type='button'
-			className={clsx(
-				'ModifyTempoButton shrink-0',
-				modifyTempoButtonClassName,
-				focusVisibleRingClassName,
-				sideGutterInFlowCollapseClassName(isDecrease ? 'start' : 'end'),
-			)}
+			className={clsx('ModifyTempoButton shrink-0', modifyTempoButtonClassName)}
 			title={label}
 			disabled={isDecrease ? tempo <= BPM_MIN : tempo >= BPM_MAX}
 			onClick={() =>

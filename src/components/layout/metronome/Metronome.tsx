@@ -7,7 +7,7 @@ export function Metronome() {
 	const { onTap } = useTapTempo();
 
 	return (
-		<div className='Metronome flex flex-col gap-4 w-full self-center'>
+		<div className='Metronome flex min-h-52 w-full flex-col gap-4 self-center'>
 			<SkipLink targetId='beat-selector'>Skip to Beat Selector</SkipLink>
 			<MetronomeTapTempo onTap={onTap} />
 			<MetronomeControlBar />
