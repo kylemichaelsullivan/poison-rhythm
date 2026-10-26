@@ -18,11 +18,11 @@ export function GameSettingsPanel() {
 				/>
 				<GameBooleanSetting
 					setting='demoBeforePlay'
-					label='Preview Before Play'
+					label='Listen Before You Play'
 				/>
 				<GameBooleanSetting
 					setting='muteOnStudentPass'
-					label='Mute on Playing Pass'
+					label='Mute When You Play'
 				/>
 			</SettingsGroup>
 

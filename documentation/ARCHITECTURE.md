@@ -104,7 +104,7 @@ flowchart TB
   round --> measures
 ```
 
-`GameProvider` **sync-seeds** the first round in its `useState` initializer (`createRoundForMode`) so first paint already has measures (avoids empty prompt → flash). `EmptyStartPrompt` remains as a fallback if `round === null`, but normal play never clears the round to null. Prefer extending `GameProvider` over the unused `useGameLoop` hook.
+`GameProvider` **sync-seeds** the first round in its `useState` initializer (`createRoundForMode`) so first paint already has measures (avoids empty prompt → flash). `EmptyStartPrompt` remains as a fallback if `round === null`, but normal play never clears the round to null. Prefer extending `GameProvider` over the unused `useGameLoop` hook. Carousel ends: first-measure left control starts Play after `CAROUSEL_PLAY_DELAY_MS` (cancelable via the button, outside click, or Escape); last-measure right control offers New (`handleNewRound`), Reuse (`handleReuseRound`), or Play (`toggleMeasures`).
 
 ## Complexity model
 
@@ -134,7 +134,7 @@ Defined in `src/lib/settings-schema.ts`, persisted as `poison-rhythm-settings-v1
 
 When `demoBeforePlay` is enabled:
 
-1. Count-in (optional; Sound → Count-In Before Play)
+1. Count-in (optional; Sound → Count-In First)
 2. For **each** carousel measure: **Listening (demo) pass** — plays the current measure so students can hear it; cells highlighted; dashed primary shell + Secondary notes (`data-playback-phase="listening"`)
 3. **Playing (student) pass** — same measure again with solid secondary glow shell + Dominant notes (`data-playback-phase="playing"`); if `muteOnStudentPass`, rhythm hits suppressed; metronome continues
 4. Advance to the next measure and repeat from step 2

@@ -42,6 +42,7 @@ export function Body() {
 
 			<MeasuresSection
 				onNewPoison={handleNewPoison}
+				onReusePoison={handleReuseRound}
 				onOpenDisplayMode={onOpenDisplayMode}
 			/>
 

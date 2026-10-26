@@ -13,7 +13,7 @@ type GameBooleanSettingProps = {
 
 /**
  * Practice boolean from the game-settings blob.
- * `muteOnStudentPass` auto-disables when Preview Before Play is off.
+ * `muteOnStudentPass` auto-disables when Listen Before You Play is off.
  */
 export function GameBooleanSetting({
 	setting,

@@ -139,7 +139,7 @@ Provider tree: `main.tsx` wraps `ThemeProvider` → `ColorPreferencesProvider` �
 
 Count-in and measure playback share one **audio-clock** timeline (`createPlaybackClock` + `createLookaheadScheduler` in `MetronomeProvider`):
 
-1. Optional one-bar quarter-note count-in (Sound → Count-In Before Play)
+1. Optional one-bar quarter-note count-in (Sound → Count-In First)
 2. First playback downbeat is exactly one quarter after the last count-in click (no wall-clock `setTimeout` gap)
 3. Look-ahead schedules clicks/hits slightly ahead of `AudioContext.currentTime`
 4. After each playback bar, look-ahead pauses briefly so React can sync the next measure
@@ -244,8 +244,8 @@ Details: [`documentation/TESTING.md`](documentation/TESTING.md).
 3. Use the header **note subdivision** control (1/4, 1/8, 1/16) to set grid density for generation, display, and playback.
 4. Note the **poison rhythm** in the Poison Rhythm section (hidden when poison mode is off or set to hidden).
 5. Click **New (+)** for a fresh poison and measures, or **Reuse** to keep the same poison and regenerate measures.
-6. Use **Prev/Next** to step through measures and find which one matches the poison.
-7. Use **Play** to hear measures (optional count-in shows beat numbers on the Play control and fades the live measure). With **Preview Before Play** enabled (Settings → Mode), the current measure plays once as a demo (Listening — dashed primary shell and Secondary notes), then again as the student pass (Playing — secondary glow shell and Dominant notes; optionally muted).
+6. Use **Prev/Next** to step through measures and find which one matches the poison. On the first measure, the left control starts Play after a short cancelable countdown (click again, click outside, or Escape to cancel). On the last measure, the right control offers **New** (+), **Reuse** (same poison, new measures), or **Play**.
+7. Use **Play** to hear measures (optional count-in shows beat numbers on the Play control and fades the live measure). With **Listen Before You Play** enabled (Settings → Mode), the current measure plays once as a demo (Listening — dashed primary shell and Secondary notes), then again as the student pass (Playing — secondary glow shell and Dominant notes; optionally muted).
 8. Open the footer **metronome** to set tempo or tap tempo.
 9. Open the footer **Settings** for theme, colors, sound (including tempo), complexity, play/display mode, poison visibility, and practice features (show next measure, demo pass). Difficulty + play mode are in the title **About** modal; other main-page shortcuts remain: Poison **Display Mode** badge, header ShowNotes, footer metronome.
 

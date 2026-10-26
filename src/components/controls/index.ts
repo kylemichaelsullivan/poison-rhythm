@@ -1,5 +1,8 @@
+export { CarouselEndMenu } from './CarouselEndMenu';
 export { CarouselNavButton } from './CarouselNavButton';
 export { CarouselNavButtons } from './CarouselNavButtons';
+export { CarouselPlayDelayProgress } from './CarouselPlayDelayProgress';
+export { CarouselStartPlayButton } from './CarouselStartPlayButton';
 export { ControlButton } from './ControlButton';
 export { ControlButtons } from './ControlButtons';
 export { DescribedOptionCard } from './DescribedOptionCard';

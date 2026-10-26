@@ -8,6 +8,7 @@ import {
 	BRAND_SECONDARY_HEX,
 } from '../colors/apply-color-prefs';
 import {
+	CAROUSEL_PLAY_DELAY_MS,
 	createTimedNoticeClock,
 	freezeTimedNoticeClock,
 	remainingTimedNoticeMs,
@@ -66,6 +67,7 @@ function fakeRoot(): {
 describe('timed notice duration', () => {
 	test('defaults to 2.5 seconds', () => {
 		expect(TIMED_NOTICE_DURATION_MS).toBe(2500);
+		expect(CAROUSEL_PLAY_DELAY_MS).toBe(1500);
 		expect(TIMED_NOTICE_PROGRESS_HEIGHT).toBe('0.5rem');
 	});
 

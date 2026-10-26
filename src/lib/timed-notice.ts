@@ -4,6 +4,9 @@
  */
 export const TIMED_NOTICE_DURATION_MS = 2500;
 
+/** First-measure Play countdown. Click again to cancel. */
+export const CAROUSEL_PLAY_DELAY_MS = 1500;
+
 /** Progress track height. Matches `.TimedNoticeProgress` in `src/index.css`. */
 export const TIMED_NOTICE_PROGRESS_HEIGHT = '0.5rem';
 

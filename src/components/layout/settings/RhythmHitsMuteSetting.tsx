@@ -5,5 +5,5 @@ import { MuteToggle } from './MuteToggle';
 export function RhythmHitsMuteSetting() {
 	const { muted, setMuted } = usePlaybackMute('rhythm');
 
-	return <MuteToggle label='Rhythm Hits' muted={muted} onChange={setMuted} />;
+	return <MuteToggle label='Rhythm Sounds' muted={muted} onChange={setMuted} />;
 }

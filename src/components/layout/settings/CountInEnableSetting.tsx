@@ -7,7 +7,7 @@ export function CountInEnableSetting() {
 
 	return (
 		<EnableToggle
-			label='Count-In Before Play'
+			label='Count-In First'
 			enabled={countInEnabled}
 			onChange={setCountInEnabled}
 		/>
