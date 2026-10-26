@@ -3,7 +3,6 @@ import PauseIcon from '@/assets/svg/pause.svg?react';
 import PlayIcon from '@/assets/svg/play.svg?react';
 import { Icon } from '@/components/layout/Icon';
 import {
-	focusVisibleRingClassName,
 	forcedFocusRingClassName,
 	roundPlayPauseButtonClassName,
 } from '@/lib/control-classes';
@@ -53,7 +52,6 @@ export function RoundPlayPauseButton({
 			type='button'
 			className={clsx(
 				roundPlayPauseButtonClassName,
-				focusVisibleRingClassName,
 				forcedFocusRingClassName,
 				disabled && 'cursor-not-allowed',
 				className,

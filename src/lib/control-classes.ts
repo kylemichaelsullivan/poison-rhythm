@@ -28,8 +28,12 @@ export const inputSurfaceClassName =
  * border to the bar’s complement (Secondary on Header, Dominant on Footer).
  * Flat at rest; elevation only on hover.
  */
+export const buttonLiftClassName = 'ButtonLift';
+
+export const buttonLiftBorderClassName = 'ButtonLift ButtonLift-border';
+
 export const controlButtonBaseClassName =
-	'AppChromeControl border border-mid rounded bg-chrome text-black transition-[colors,box-shadow] duration-200 ease-out hover:border-primary hover:bg-chrome-hover hover:shadow-soft focus-visible:shadow-soft';
+	'AppChromeControl ButtonLift ButtonLift-border border border-mid rounded bg-chrome text-black transition-[border-color,box-shadow] duration-200 ease-out';
 
 export const controlSurfaceBaseClassName =
 	'border border-mid rounded bg-chrome text-black';
@@ -130,10 +134,38 @@ export function focusWithForcedRing(
 }
 
 export const roundPlayPauseButtonClassName =
-	'flex size-12 shrink-0 aspect-square items-center justify-center rounded-full border-4 border-secondary bg-primary p-3 text-on-primary transition-[opacity,box-shadow] hover:opacity-90 hover:shadow-raised focus-visible:shadow-raised disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 aria-disabled:hover:opacity-50';
+	'RoundPlayPauseButton ButtonLift flex size-12 shrink-0 aspect-square items-center justify-center rounded-full border-4 border-secondary bg-primary p-3 text-on-primary transition-[box-shadow] duration-200 ease-out disabled:cursor-not-allowed aria-disabled:cursor-not-allowed disabled:opacity-50 aria-disabled:opacity-50';
 
 export const modifyTempoButtonClassName =
-	'flex size-11 shrink-0 aspect-square items-center justify-center rounded-full border-2 border-primary-border bg-primary p-2 text-on-primary transition-[opacity,box-shadow] hover:opacity-90 hover:shadow-soft focus-visible:shadow-soft disabled:opacity-50';
+	'ButtonLift flex size-11 shrink-0 aspect-square items-center justify-center rounded-full border-2 border-primary-border bg-primary p-2 text-on-primary transition-[box-shadow] duration-200 ease-out disabled:opacity-50';
+
+/** Shared chrome for carousel prev/next and end-of-set actions. */
+export function carouselNavButtonClassName(
+	state: boolean | 'quiet' = false,
+): string {
+	const disabled = state === true;
+	const quiet = state === 'quiet';
+
+	return clsx(
+		'CarouselNavButton ButtonLift ButtonLift-border flex size-11 items-center justify-center rounded-lg border-2 p-1 text-2xl font-bold transition-[border-color,box-shadow] duration-200 ease-out',
+		disabled
+			? 'cursor-not-allowed border-mid bg-surface-muted text-transparent'
+			: quiet
+				? 'cursor-pointer border-mid bg-surface-muted text-transparent'
+				: 'border-secondary bg-surface text-black',
+	);
+}
+
+/** Absolute corner slot on a `ModalPanel` (close on `end`, leading action on `start`). */
+export function modalCornerControlClassName(side: 'start' | 'end'): string {
+	return clsx(
+		'absolute z-20 top-[max(0.35rem,env(safe-area-inset-top))] sm:top-3',
+		side === 'end'
+			? 'right-[max(0.35rem,env(safe-area-inset-right))] sm:right-3'
+			: 'left-[max(0.35rem,env(safe-area-inset-left))] sm:left-3',
+	);
+}
+
 /**
  * Sit a control just outside a `relative` parent’s left (`start`) or right
  * (`end`) edge (`--side-gutter-width`). Optional collapse drops to the bottom
@@ -150,20 +182,6 @@ export function sideGutterControlClassName(
 		side === 'start' ? 'right-gutter-outside' : 'left-gutter-outside',
 		collapseBelowGutter && sideGutterCollapseBaseClassName,
 		collapseBelowGutter && sideGutterCollapseInsetClassName(side),
-	);
-}
-
-/**
- * In-flow gutter controls (metronome ±) that only become absolute at the
- * host’s bottom corners below `--breakpoint-gutter`.
- */
-export function sideGutterInFlowCollapseClassName(
-	side: 'start' | 'end',
-): string {
-	return clsx(
-		'max-gutter:absolute',
-		sideGutterCollapseBaseClassName,
-		sideGutterCollapseInsetClassName(side),
 	);
 }
 
@@ -198,12 +216,9 @@ export function segmentControlClassName(
 				? 'border-2 border-secondary bg-primary text-on-primary'
 				: 'border-primary-border bg-primary text-on-primary'
 			: variant === 'checkbox'
-				? clsx('border-mid bg-light', !disabled && 'hover:bg-surface-muted')
+				? 'border-mid bg-light'
 				: variant === 'header'
 					? 'border-2 border-secondary bg-surface text-black'
-					: clsx(
-							'border-secondary bg-surface-muted text-black',
-							!disabled && 'hover:bg-chrome-hover',
-						),
+					: 'border-secondary bg-surface-muted text-black',
 	);
 }

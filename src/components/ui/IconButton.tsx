@@ -1,5 +1,8 @@
 import clsx from 'clsx';
-import { focusVisibleRingClassName } from '@/lib/control-classes';
+import {
+	buttonLiftBorderClassName,
+	buttonLiftClassName,
+} from '@/lib/control-classes';
 import type { ReactNode, Ref } from 'react';
 
 export type IconButtonVariant = 'info' | 'bare' | 'modalClose';
@@ -17,18 +20,16 @@ type IconButtonProps = {
 
 const variantClassName: Record<IconButtonVariant, string> = {
 	info: clsx(
-		'flex size-11 shrink-0 items-center justify-center rounded-full border border-mid bg-surface-muted text-sm font-semibold leading-none text-dark transition-[colors,box-shadow]',
-		'hover:border-primary hover:bg-primary/10 hover:text-primary hover:shadow-soft',
-		'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface',
+		buttonLiftBorderClassName,
+		'flex size-11 shrink-0 items-center justify-center rounded-full border border-mid bg-surface-muted text-sm font-semibold leading-none text-dark transition-[border-color,box-shadow] duration-200 ease-out',
 	),
 	bare: clsx(
-		'group inline-flex items-center rounded transition-colors',
-		focusVisibleRingClassName,
+		buttonLiftClassName,
+		'group inline-flex items-center rounded transition-[box-shadow] duration-200 ease-out',
 	),
 	modalClose: clsx(
-		'flex min-h-11 min-w-11 items-center justify-center text-xl font-semibold leading-none text-dark transition-colors',
-		'hover:text-primary',
-		'focus-visible:outline-none focus-visible:text-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-white',
+		buttonLiftClassName,
+		'flex min-h-11 min-w-11 items-center justify-center text-xl font-semibold leading-none text-dark transition-[box-shadow] duration-200 ease-out',
 	),
 };
 

@@ -35,11 +35,9 @@ export function ThemeScoreRow({
 		<button
 			type='button'
 			className={clsx(
-				'ThemeScoreRow flex w-full items-center justify-between gap-3 px-3 py-2 text-left transition-[box-shadow,filter]',
+				'ThemeScoreRow flex w-full items-center justify-between gap-3 px-3 py-2 text-left transition-[box-shadow]',
 				interactiveInsetChromeClassName,
 				selected && 'ring-2 ring-inset ring-primary',
-				!selected &&
-					(isDark ? 'hover:brightness-125' : 'hover:brightness-[0.97]'),
 				isDark ? stableDarkInkClassName : stableLightInkClassName,
 			)}
 			aria-label={`${option.label}, grade ${rating.grade}, ${rating.ratio.toFixed(1)} to 1`}

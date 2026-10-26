@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { focusVisibleRingClassName } from '@/lib/control-classes';
+import { buttonLiftClassName } from '@/lib/control-classes';
 
 type MetronomeTapTempoProps = {
 	onTap: () => void;
@@ -11,8 +11,9 @@ export function MetronomeTapTempo({ onTap }: MetronomeTapTempoProps) {
 			<button
 				type='button'
 				className={clsx(
-					'TapTempoButton flex size-24 shrink-0 aspect-square items-center justify-center rounded-full border-2 border-primary-border bg-primary font-medium text-on-primary transition-[opacity,box-shadow] hover:opacity-90 hover:shadow-raised focus-visible:shadow-raised',
-					focusVisibleRingClassName,
+					'TapTempoButton',
+					buttonLiftClassName,
+					'flex size-24 shrink-0 aspect-square items-center justify-center rounded-full border-2 border-primary-border bg-primary font-medium text-on-primary transition-[box-shadow] duration-200 ease-out',
 				)}
 				title='Tap for Tempo'
 				aria-label='Tap for Tempo'

@@ -14,8 +14,7 @@ export function DisplayModeBadge({ renderMode }: DisplayModeBadgeProps) {
 	return (
 		<span
 			className={clsx(
-				'DisplayModeBadge inline-flex items-center rounded border-2 border-secondary bg-surface px-2.5 py-1 text-sm font-bold tracking-wide text-black transition-colors',
-				'group-hover:bg-primary group-hover:text-on-primary group-focus-visible:bg-primary group-focus-visible:text-on-primary',
+				'DisplayModeBadge ButtonLift-group inline-flex items-center rounded border-2 border-secondary bg-surface px-2.5 py-1 text-sm font-bold tracking-wide text-black transition-[border-color,box-shadow] duration-200 ease-out',
 			)}
 			data-testid='display-mode-badge'
 			data-render-mode={renderMode}

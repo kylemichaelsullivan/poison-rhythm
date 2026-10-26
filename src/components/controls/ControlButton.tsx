@@ -1,7 +1,8 @@
 import clsx from 'clsx';
 import { Icon } from '@/components/layout/Icon';
 import {
-	focusVisibleRingClassName,
+	buttonLiftBorderClassName,
+	buttonLiftClassName,
 	forcedFocusRingClassName,
 } from '@/lib/control-classes';
 import type { Ref } from 'react';
@@ -34,23 +35,23 @@ export function ControlButton({
 	ref,
 }: ControlButtonProps) {
 	const isSoftDisabled = disabled && onDisabledClick !== undefined;
-	const base = 'border rounded font-medium px-4 py-2 transition';
+	const base = 'border rounded font-medium px-4 py-2';
 	const styles = disabled
 		? 'border-mid bg-surface-muted text-mid cursor-not-allowed'
 		: variant === 'primary'
-			? 'border-2 border-primary-border bg-primary text-on-primary transition-[opacity,box-shadow] hover:opacity-90 hover:shadow-raised focus-visible:shadow-raised'
-			: 'border-2 border-secondary bg-surface text-black transition-[colors,box-shadow] hover:bg-primary/10 hover:shadow-soft focus-visible:shadow-soft';
+			? clsx(
+					buttonLiftClassName,
+					'border-2 border-primary-border bg-primary text-on-primary transition-[box-shadow] duration-200 ease-out',
+				)
+			: clsx(
+					buttonLiftBorderClassName,
+					'border-2 border-secondary bg-surface text-black transition-[border-color,box-shadow] duration-200 ease-out',
+				);
 
 	return (
 		<button
 			type='button'
-			className={clsx(
-				'ControlButton',
-				base,
-				styles,
-				focusVisibleRingClassName,
-				forcedFocusRingClassName,
-			)}
+			className={clsx('ControlButton', base, styles, forcedFocusRingClassName)}
 			title={title}
 			disabled={disabled && !isSoftDisabled}
 			onClick={disabled ? onDisabledClick : onClick}

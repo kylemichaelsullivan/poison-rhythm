@@ -42,10 +42,8 @@ export function PlayControls({
 		>
 			<RoundPlayPauseButton
 				className={clsx(
-					'PlayControlsButton transition-[opacity,box-shadow] duration-100',
-					isCountingIn && !isLit && 'opacity-55',
-					isCountingIn && isLit && 'opacity-100 ring-2 ring-primary',
-					!isCountingIn && isMeasuresRunning && isLit && 'ring-2 ring-primary',
+					'PlayControlsButton transition-[box-shadow] duration-100',
+					(isCountingIn || isMeasuresRunning) && isLit && 'ring-2 ring-primary',
 				)}
 				isPlaying={isMeasuresRunning && !isCountingIn}
 				label={isMeasuresRunning ? 'Pause' : 'Play'}

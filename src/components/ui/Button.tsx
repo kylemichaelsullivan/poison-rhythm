@@ -1,5 +1,8 @@
 import clsx from 'clsx';
-import { focusVisibleRingClassName } from '@/lib/control-classes';
+import {
+	buttonLiftBorderClassName,
+	buttonLiftClassName,
+} from '@/lib/control-classes';
 import type { ReactNode, Ref } from 'react';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost';
@@ -16,12 +19,18 @@ type ButtonProps = {
 };
 
 const variantClassName: Record<ButtonVariant, string> = {
-	primary:
-		'rounded border-2 border-primary-border bg-primary px-3 py-1.5 text-sm text-on-primary transition-[opacity,box-shadow] hover:opacity-90 hover:shadow-raised focus-visible:shadow-raised',
-	secondary:
-		'rounded border border-mid bg-surface-muted px-3 py-1.5 text-sm text-black transition-[colors,box-shadow] hover:border-primary hover:bg-primary/10 hover:text-primary hover:shadow-soft focus-visible:shadow-soft',
-	ghost:
-		'rounded border border-transparent bg-transparent px-3 py-1.5 text-sm text-dark transition-colors hover:bg-primary/10 hover:text-primary',
+	primary: clsx(
+		buttonLiftClassName,
+		'rounded border-2 border-primary-border bg-primary px-3 py-1.5 text-sm text-on-primary transition-[box-shadow] duration-200 ease-out',
+	),
+	secondary: clsx(
+		buttonLiftBorderClassName,
+		'rounded border border-mid bg-surface-muted px-3 py-1.5 text-sm text-black transition-[border-color,box-shadow] duration-200 ease-out',
+	),
+	ghost: clsx(
+		buttonLiftBorderClassName,
+		'rounded border border-transparent bg-transparent px-3 py-1.5 text-sm text-dark transition-[border-color,box-shadow] duration-200 ease-out',
+	),
 };
 
 export function Button({
@@ -39,7 +48,6 @@ export function Button({
 			className={clsx(
 				'Button',
 				variantClassName[variant],
-				focusVisibleRingClassName,
 				disabled && 'cursor-not-allowed opacity-50',
 			)}
 			title={title}
