@@ -65,7 +65,7 @@ In **Settings → Mode**:
 - **Listen Before You Play** — for each measure: a **Listening** (demo) pass, then a **Playing** (student) pass.
 - **Mute When You Play** — students hear the metronome but not the pattern on the second pass (call-and-response style).
 
-Optional **Count-In First** is under **Settings → Sound**. During count-in, beat numbers show on the Play button.
+Optional **Count-In** is under **Settings → Sound**. During count-in, beat numbers show on the Play button.
 
 ## Display mode (grid vs notation)
 

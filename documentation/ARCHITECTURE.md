@@ -135,7 +135,7 @@ Defined in `src/lib/settings-schema.ts`, persisted as `poison-rhythm-settings-v1
 
 When `demoBeforePlay` is enabled:
 
-1. Count-in (optional; Sound → Count-In First)
+1. Count-in (optional; Sound → Count-In)
 2. For **each** carousel measure: **Listening (demo) pass** — plays the current measure so students can hear it; cells highlighted; dashed primary shell + Secondary notes (`data-playback-phase="listening"`)
 3. **Playing (student) pass** — same measure again with solid secondary glow shell + Dominant notes (`data-playback-phase="playing"`); if `muteOnStudentPass`, rhythm hits suppressed; metronome continues
 4. Advance to the next measure and repeat from step 2

@@ -140,7 +140,7 @@ Provider tree: `main.tsx` wraps `ThemeProvider` → `ColorPreferencesProvider` �
 
 Count-in and measure playback share one **audio-clock** timeline (`createPlaybackClock` + `createLookaheadScheduler` in `MetronomeProvider`):
 
-1. Optional one-bar quarter-note count-in (Sound → Count-In First)
+1. Optional one-bar quarter-note count-in (Sound → Count-In)
 2. First playback downbeat is exactly one quarter after the last count-in click (no wall-clock `setTimeout` gap)
 3. Look-ahead schedules clicks/hits slightly ahead of `AudioContext.currentTime`
 4. After each playback bar, look-ahead pauses briefly so React can sync the next measure
