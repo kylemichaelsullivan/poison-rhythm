@@ -11,6 +11,7 @@ export { EmptyStartPrompt } from './EmptyStartPrompt';
 export { Footer } from './Footer';
 export { Header } from './Header';
 export { Icon } from './Icon';
+export { IntroModalHost, IntroTutorialProvider } from './intro';
 export { Modal } from './Modal';
 export { Section } from './Section';
 export { SectionTitle } from './SectionTitle';

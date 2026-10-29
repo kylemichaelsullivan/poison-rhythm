@@ -3,6 +3,7 @@ import { expect, test } from '@playwright/test';
 import {
 	clickPause,
 	clickPlay,
+	FIRST_VISIT_STORAGE_STATE,
 	generateRound,
 	seedPlaybackPrefs,
 } from './helpers';
@@ -40,6 +41,18 @@ async function expectNoA11yViolations(
 }
 
 test.describe('accessibility', () => {
+	test.describe('first-visit welcome', () => {
+		test.use({ storageState: FIRST_VISIT_STORAGE_STATE });
+
+		test('welcome intro modal has no axe violations', async ({ page }) => {
+			await page.goto('/');
+			await expect(
+				page.getByRole('dialog', { name: 'Welcome to Poison Rhythm' }),
+			).toBeVisible();
+			await expectNoA11yViolations(page, 'welcome intro modal');
+		});
+	});
+
 	test('start screen has no axe violations', async ({ page }) => {
 		await page.goto('/');
 		await expect(page.getByTestId('measure-slider')).toBeVisible();

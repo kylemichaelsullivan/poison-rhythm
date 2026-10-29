@@ -14,6 +14,7 @@ const STUDENT_KEYS = {
 	dominantColor: 'poison-rhythm-dominant-color',
 	secondaryColor: 'poison-rhythm-secondary-color',
 	gameSettings: 'poison-rhythm-settings-v1',
+	introSeen: 'poison-rhythm-intro-seen',
 } as const;
 
 /** Legacy keys kept for one-time migration reads. */
@@ -41,6 +42,7 @@ export const STORAGE_KEYS = {
 	dominantColor: preferenceStorageKey('dominantColor'),
 	secondaryColor: preferenceStorageKey('secondaryColor'),
 	gameSettings: preferenceStorageKey('gameSettings'),
+	introSeen: preferenceStorageKey('introSeen'),
 } as const;
 
 /** @deprecated Use STORAGE_KEYS.muteMetronome */

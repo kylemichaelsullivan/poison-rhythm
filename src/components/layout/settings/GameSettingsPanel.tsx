@@ -1,5 +1,6 @@
 import { DisplayModeControls } from './DisplayModeControls';
 import { GameBooleanSetting } from './GameBooleanSetting';
+import { IntroTutorialSetting } from './IntroTutorialSetting';
 import { SettingRow } from './SettingRow';
 import { SettingsGroup } from './SettingsGroup';
 
@@ -33,6 +34,10 @@ export function GameSettingsPanel() {
 				<SettingRow label='Sticking'>
 					<span className='text-sm italic text-muted'>Coming Soon</span>
 				</SettingRow>
+			</SettingsGroup>
+
+			<SettingsGroup title='Help'>
+				<IntroTutorialSetting />
 			</SettingsGroup>
 		</>
 	);

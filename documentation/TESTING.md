@@ -53,18 +53,20 @@ Location: `e2e/`
 | `color-contrast.spec.ts` | Colors meter matches swatch chips plus ratios; Light on top in every theme; Dominant is scored against Secondary and the reverse |
 | `notation-scroll.spec.ts` | MusiSync boxes do not vertically overflow |
 | `shownotes-glyph.spec.ts` | Header note indicator paints a MusiSync glyph (not `q`/`e`/`s`) in Light, Dark, and System |
+| `intro.spec.ts` | First-visit Simon Says tutorial (two safe bars, then timed poison fail overlays); nav dots jump to a step; Let’s Play / Close do **not** persist unless **Don’t show again** is checked; returning visits skip it unless **Settings → Mode → Welcome Tutorial** |
 | `helpers.ts` | Shared prefs seeding and round-ready wait |
 
 ### Playwright projects
 
 | Project | Viewport | Specs |
 |---------|----------|--------|
-| `chromium` | Desktop Chrome | All `e2e/` except `mobile-layout.spec.ts` |
+| `chromium` | Desktop Chrome | All `e2e/` except `mobile-layout.spec.ts`. Default `storageState` marks the welcome as seen (`poison-rhythm-intro-seen`) |
 | `mobile` | 360×800 (Pixel 5 UA) | `a11y.spec.ts`, `mobile-layout.spec.ts` only |
 
 ### Helpers
 
 - **`seedPlaybackPrefs(page, { countIn, demoBeforePlay, tempo?, subdivision? })`** — `addInitScript` writes localStorage before navigation (`poison-rhythm-*` keys + `poison-rhythm-settings-v1`).
+- **`FIRST_VISIT_STORAGE_STATE`** — empty Playwright storage so the welcome can open (`intro.spec.ts`, a11y welcome case). Default config `storageState` already sets `poison-rhythm-intro-seen`.
 - **`generateRound(page)`** — waits for auto-seeded (or already generated) UI: `measure-slider` visible and Play enabled. Does **not** click New or EmptyStartPrompt.
 - **`clickPlay` / `clickPause`** — scoped to `data-testid="play-controls"`.
 

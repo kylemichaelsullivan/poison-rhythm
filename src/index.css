@@ -1110,6 +1110,16 @@
 	box-shadow: var(--shadow-raised);
 }
 
+.IntroTutorialDot:hover span,
+.IntroTutorialDot:focus-visible span {
+	box-shadow: var(--shadow-control);
+}
+
+.IntroTutorialDot:focus-visible {
+	outline: 2px solid var(--color-mid);
+	outline-offset: 2px;
+}
+
 /*
  * First-measure Play stays an empty box at rest. The glyph is in the tree
  * so hover / focus / arm can reveal it without a layout jump.

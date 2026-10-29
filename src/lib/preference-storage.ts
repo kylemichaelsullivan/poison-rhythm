@@ -160,6 +160,15 @@ export function writeSecondaryColor(value: ColorPreference): void {
 	writePreference(STORAGE_KEYS.secondaryColor, serializeColorPreference(value));
 }
 
+/** First-visit welcome is shown until the student opts to skip it on this device. */
+export function readIntroSeen(): boolean {
+	return readPreference(STORAGE_KEYS.introSeen, parseExplicitTrue);
+}
+
+export function writeIntroSeen(seen: boolean): void {
+	writePreference(STORAGE_KEYS.introSeen, serializeExplicitTrue(seen));
+}
+
 function readTempoFromSearchParams(search: string): number | null {
 	const param = new URLSearchParams(search).get('bpm');
 	if (!param) {

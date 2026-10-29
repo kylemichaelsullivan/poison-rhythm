@@ -18,6 +18,16 @@ export {
 	onMeasureCompleteForMode,
 } from './game-modes';
 export {
+	INTRO_FAIL_REVEAL_MS,
+	INTRO_POISON_BEATS,
+	INTRO_POISON_FAIL_LOSE,
+	INTRO_POISON_FAIL_POISON,
+	INTRO_POISON_PROMPT,
+	INTRO_SIMON_SAYS_PROMPT,
+	INTRO_TUTORIAL_STEPS,
+	quarterNoteMeasure,
+} from './intro-tutorial';
+export {
 	createLookaheadScheduler,
 	drainDueEvents,
 } from './lookahead-scheduler';
@@ -53,6 +63,7 @@ export {
 	readCountInEnabled,
 	readDifficulty,
 	readDominantColor,
+	readIntroSeen,
 	readMuteMetronome,
 	readMutePreference,
 	readMuteRhythmSounds,
@@ -65,6 +76,7 @@ export {
 	writeCountInEnabled,
 	writeDifficulty,
 	writeDominantColor,
+	writeIntroSeen,
 	writeMuteMetronome,
 	writeMutePreference,
 	writeMuteRhythmSounds,
@@ -121,6 +133,7 @@ export type {
 	DifficultyLevelEntry,
 	HitRange,
 } from './difficulty-levels';
+export type { IntroTutorialStepData } from './intro-tutorial';
 export type { LookaheadScheduler } from './lookahead-scheduler';
 export type { MeasureCompleteAction } from './measure-playback';
 export type {

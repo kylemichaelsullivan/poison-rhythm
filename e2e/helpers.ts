@@ -5,6 +5,13 @@ export const COUNT_IN_KEY = 'poison-rhythm-count-in-enabled';
 export const SETTINGS_KEY = 'poison-rhythm-settings-v1';
 export const TEMPO_KEY = 'poison-rhythm-tempo';
 export const SUBDIVISION_KEY = 'poison-rhythm-subdivision';
+export const INTRO_SEEN_KEY = 'poison-rhythm-intro-seen';
+
+/** Empty Playwright storage so the first-visit welcome can open. */
+export const FIRST_VISIT_STORAGE_STATE = {
+	cookies: [],
+	origins: [],
+};
 
 export type PlaybackSeedOptions = {
 	countIn: boolean;

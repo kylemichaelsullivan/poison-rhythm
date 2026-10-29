@@ -9,12 +9,14 @@ import {
 	parseThemeSetting,
 	readCountInEnabled,
 	readDifficulty,
+	readIntroSeen,
 	readMuteMetronome,
 	readStoredTempo,
 	resetPreferenceBootstrapForTests,
 	resolveInitialTempo,
 	writeCountInEnabled,
 	writeDifficulty,
+	writeIntroSeen,
 	writeMuteMetronome,
 	writeStoredTempo,
 	writeThemeSetting,
@@ -120,6 +122,26 @@ describe('count-in preference', () => {
 		writeCountInEnabled(true);
 		expect(localStorage.getItem(LEGACY_STORAGE_KEYS.muteCountIn)).toBeNull();
 		expect(readCountInEnabled()).toBe(true);
+	});
+});
+
+describe('intro-seen preference', () => {
+	afterEach(() => {
+		memoryStore.clear();
+	});
+
+	test('treats a missing key as not yet seen', () => {
+		expect(readIntroSeen()).toBe(false);
+	});
+
+	test('persists seen as true and clears when unseen', () => {
+		writeIntroSeen(true);
+		expect(localStorage.getItem(STORAGE_KEYS.introSeen)).toBe('true');
+		expect(readIntroSeen()).toBe(true);
+
+		writeIntroSeen(false);
+		expect(localStorage.getItem(STORAGE_KEYS.introSeen)).toBeNull();
+		expect(readIntroSeen()).toBe(false);
 	});
 });
 

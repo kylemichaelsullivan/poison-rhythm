@@ -54,8 +54,8 @@ src/components/
 
 ### App (root)
 
-- **Uses**: `GameProvider`; renders Header, Body, Footer
-- **State**: Round and measures via `useGame` in child sections
+- **Uses**: `GameProvider`; renders Header, Body, Footer; mounts `IntroTutorialProvider` + `IntroModalHost` beside the tree
+- **State**: Round and measures via `useGame` in child sections. First-visit welcome persists via `poison-rhythm-intro-seen` only when the student opts out; **Settings → Mode → Welcome Tutorial** replays it
 
 ### Body
 

@@ -78,6 +78,7 @@ src/
 │   ├── controls/     # Difficulty, play modes, New/Reuse, play/pause, carousel nav
 │   ├── layout/       # Chrome, modals, ShowNotes, metronome, settings, about
 │   │   ├── about/    # About modal content
+│   │   ├── intro/    # First-visit welcome (localStorage `poison-rhythm-intro-seen`)
 │   │   ├── button/   # Footer corner triggers (Settings, Metronome, Account)
 │   │   ├── metronome/
 │   │   └── settings/ # SettingsOverlay + Mode / Sound / Colors panels
@@ -111,7 +112,7 @@ UI is composed like stacked layers (one concern per file; prefer one root DOM el
 | **Atoms** | `src/components/ui/` | Single-element primitives (`Button`, `IconButton`, `Caption`, `Stack`, `Row`) |
 | **Molecules** | `controls/`, `measures/`, `layout/`, `layout/settings/` | Composed pieces (`PlayModeOptionCard`, `MeasureCarouselChrome`, `ModalPanel`, `EnableToggle`, `ContrastGradeBadge`) |
 | **Composers** | feature folders | Wire context + hooks (`DifficultyControls`, `MeasureSlider`, `ShowNotes`, `Body`) |
-| **Hosts** | `App` / `Body` | Modal hosts beside the tree (`AboutPoisonRhythmModal`, `DifficultyRegenAckHost`, `DisplayModeModal`) |
+| **Hosts** | `App` / `Body` | Modal hosts beside the tree (`IntroModalHost`, `AboutPoisonRhythmModal`, `DifficultyRegenAckHost`, `DisplayModeModal`) |
 | **Hooks** | `src/hooks/` | Side effects out of JSX (`useDisclosure`, `useModalFocusTrap`, `useNotationPrefetch`, `useMeasurePlaybackSync`, …) |
 
 Feature composers should import `@/components/ui` (or existing settings atoms) instead of inventing raw `<button className=…>` markup. Prefer **variants** (`tone`, `size`, `framed`, `slot`) over `className` passthrough. Keep **value imports** and **`import type`** on separate statements — Biome `useImportType` (`separatedType`) rejects `import { Foo, type Bar }`. Details: [`.cursor/components.mdc`](.cursor/components.mdc), [`.cursor/rules.mdc`](.cursor/rules.mdc), [`documentation/ARCHITECTURE.md`](documentation/ARCHITECTURE.md).
