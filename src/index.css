@@ -36,7 +36,7 @@
 	--color-ink-900: #1a121c;
 	--color-ink-950: #0d090e;
 
-	/* Light semantic colors. Dark counterparts are set on :root below. */
+	/* Light semantic colors. Dark counterparts are `--theme-dark-*` below. */
 	--color-primary: var(--color-brand-purple-deep);
 	--color-on-primary: var(--color-ink-50);
 	/* Deep mint for borders — light mint stays atmosphere-only (gradients). */
@@ -100,7 +100,7 @@
 	/*
 	 * Elevation: short, low-opacity, slightly purple-tinted — not stacked black.
 	 * Shadow colors are rgba so they paint without color-mix(). Dark mode uses
-	 * a white lift (see theme blocks) so hover/focus shadows stay visible.
+	 * a white lift (`--theme-dark-shadow-color`) so hover/focus stay visible.
 	 */
 	--shadow-color: rgba(13, 9, 14, 0.09);
 	--shadow-accent-color: rgba(145, 72, 147, 0.12);
@@ -116,6 +116,52 @@
 	--shadow-secondary-glow: 0 0 0.5rem var(--color-secondary);
 	--shadow-primary-glow:
 		0 1px 2px var(--shadow-color), 0 0 0.65rem rgba(145, 72, 147, 0.42);
+
+	/*
+	 * Dark counterparts and theme-varying paints. Light values above are
+	 * the defaults. The apply blocks on :root only rebind names — do not
+	 * repeat hex / rgba in prefers-color-scheme or [data-theme] rules.
+	 */
+	--theme-dark-primary: var(--color-brand-purple-bright);
+	--theme-dark-on-primary: var(--color-ink-950);
+	--theme-dark-primary-border: var(--color-brand-mint-bright);
+	--theme-dark-secondary: var(--color-brand-mint-bright);
+	--theme-dark-on-secondary: var(--color-ink-950);
+	--theme-dark-secondary-border: var(--color-brand-purple-bright);
+	--theme-dark-title-hover-on-primary: #4a5b4b;
+	--theme-dark-title-hover-on-secondary: #413341;
+	--theme-dark-light: var(--color-ink-800);
+	--theme-dark-mid: #69536c;
+	--theme-dark-dark: var(--color-ink-200);
+	--theme-dark-surface: var(--color-ink-900);
+	--theme-dark-surface-muted: #472a49;
+	--theme-dark-chrome: #2f1c31;
+	--theme-dark-chrome-hover: #4b3b4e;
+	--theme-dark-white: var(--color-ink-950);
+	--theme-dark-black: var(--color-ink-50);
+	--theme-dark-accent: var(--color-brand-mint-bright);
+	--theme-dark-muted: var(--color-ink-300);
+	--theme-dark-shadow-color: rgba(255, 255, 255, 0.22);
+	--theme-dark-shadow-accent-color: rgba(195, 154, 196, 0.18);
+
+	--interactive-inset-shadow: var(--shadow-raised);
+	--theme-dark-interactive-inset-shadow:
+		0 2px 4px rgba(255, 255, 255, 0.4), 0 6px 18px rgba(255, 255, 255, 0.28);
+
+	--play-mode-icon-idle-bg: rgba(250, 249, 252, 0.7);
+	--theme-dark-play-mode-icon-idle-bg: rgba(13, 9, 14, 0.7);
+	--play-mode-icon-bucket-selected-bg: #e4d9e7;
+	--theme-dark-play-mode-icon-bucket-selected-bg: #2b1a2d;
+	--play-mode-icon-poison-selected-bg: #dae7db;
+	--theme-dark-play-mode-icon-poison-selected-bg: #293029;
+	--play-mode-icon-bucket-selected-ring: rgba(145, 72, 147, 0.28);
+	--play-mode-icon-poison-selected-ring: rgba(110, 186, 102, 0.3);
+
+	--range-thumb-ring: 0 0 0 1px rgba(159, 157, 165, 0.4);
+	--settings-scrollbar-thumb: rgba(159, 157, 165, 0.7);
+	--settings-scrollbar-thumb-hover: rgba(67, 65, 73, 0.55);
+	--app-title-brand-glow: drop-shadow(0 0 0.45rem rgba(145, 72, 147, 0.35));
+	--play-mode-bucket-path-glow: drop-shadow(0 1px 1px rgba(145, 72, 147, 0.45));
 }
 
 /* Calc-based gutter placement — not expressible as a single spacing token. */
@@ -150,62 +196,78 @@
 }
 
 /*
- * Dark palette as plain colors. prefers-color-scheme works on iOS 13+.
+ * Apply dark tokens. prefers-color-scheme works on iOS 13+.
  * data-theme forces a side without light-dark() (iOS 17.5+ only).
- * Pre-mixed dark stops are sRGB mixes of the brand hex values.
+ * Values live in @theme (`--theme-dark-*`); these blocks only rebind.
  */
 @media (prefers-color-scheme: dark) {
 	:root:not([data-theme="light"]) {
 		color-scheme: dark;
-		--color-primary: var(--color-brand-purple-bright);
-		--color-on-primary: var(--color-ink-950);
-		--color-primary-border: var(--color-brand-mint-bright);
-		--color-secondary: var(--color-brand-mint-bright);
-		--color-on-secondary: var(--color-ink-950);
-		--color-secondary-border: var(--color-brand-purple-bright);
-		--color-title-hover-on-primary: #4a5b4b;
-		--color-title-hover-on-secondary: #413341;
-		--color-light: var(--color-ink-800);
-		--color-mid: #69536c;
-		--color-dark: var(--color-ink-200);
-		--color-surface: var(--color-ink-900);
-		--color-surface-muted: #472a49;
-		--color-chrome: #2f1c31;
-		--color-chrome-hover: #4b3b4e;
-		--color-white: var(--color-ink-950);
-		--color-black: var(--color-ink-50);
-		--color-accent: var(--color-brand-mint-bright);
-		--color-muted: var(--color-ink-300);
-		/* Light lift so elevation utilities read on dark surfaces. */
-		--shadow-color: rgba(255, 255, 255, 0.22);
-		--shadow-accent-color: rgba(195, 154, 196, 0.18);
+		--color-primary: var(--theme-dark-primary);
+		--color-on-primary: var(--theme-dark-on-primary);
+		--color-primary-border: var(--theme-dark-primary-border);
+		--color-secondary: var(--theme-dark-secondary);
+		--color-on-secondary: var(--theme-dark-on-secondary);
+		--color-secondary-border: var(--theme-dark-secondary-border);
+		--color-title-hover-on-primary: var(--theme-dark-title-hover-on-primary);
+		--color-title-hover-on-secondary: var(
+			--theme-dark-title-hover-on-secondary
+		);
+		--color-light: var(--theme-dark-light);
+		--color-mid: var(--theme-dark-mid);
+		--color-dark: var(--theme-dark-dark);
+		--color-surface: var(--theme-dark-surface);
+		--color-surface-muted: var(--theme-dark-surface-muted);
+		--color-chrome: var(--theme-dark-chrome);
+		--color-chrome-hover: var(--theme-dark-chrome-hover);
+		--color-white: var(--theme-dark-white);
+		--color-black: var(--theme-dark-black);
+		--color-accent: var(--theme-dark-accent);
+		--color-muted: var(--theme-dark-muted);
+		--shadow-color: var(--theme-dark-shadow-color);
+		--shadow-accent-color: var(--theme-dark-shadow-accent-color);
+		--interactive-inset-shadow: var(--theme-dark-interactive-inset-shadow);
+		--play-mode-icon-idle-bg: var(--theme-dark-play-mode-icon-idle-bg);
+		--play-mode-icon-bucket-selected-bg: var(
+			--theme-dark-play-mode-icon-bucket-selected-bg
+		);
+		--play-mode-icon-poison-selected-bg: var(
+			--theme-dark-play-mode-icon-poison-selected-bg
+		);
 	}
 }
 
 :root[data-theme="dark"] {
 	color-scheme: dark;
-	--color-primary: var(--color-brand-purple-bright);
-	--color-on-primary: var(--color-ink-950);
-	--color-primary-border: var(--color-brand-mint-bright);
-	--color-secondary: var(--color-brand-mint-bright);
-	--color-on-secondary: var(--color-ink-950);
-	--color-secondary-border: var(--color-brand-purple-bright);
-	--color-title-hover-on-primary: #4a5b4b;
-	--color-title-hover-on-secondary: #413341;
-	--color-light: var(--color-ink-800);
-	--color-mid: #69536c;
-	--color-dark: var(--color-ink-200);
-	--color-surface: var(--color-ink-900);
-	--color-surface-muted: #472a49;
-	--color-chrome: #2f1c31;
-	--color-chrome-hover: #4b3b4e;
-	--color-white: var(--color-ink-950);
-	--color-black: var(--color-ink-50);
-	--color-accent: var(--color-brand-mint-bright);
-	--color-muted: var(--color-ink-300);
-	/* Light lift so elevation utilities read on dark surfaces. */
-	--shadow-color: rgba(255, 255, 255, 0.22);
-	--shadow-accent-color: rgba(195, 154, 196, 0.18);
+	--color-primary: var(--theme-dark-primary);
+	--color-on-primary: var(--theme-dark-on-primary);
+	--color-primary-border: var(--theme-dark-primary-border);
+	--color-secondary: var(--theme-dark-secondary);
+	--color-on-secondary: var(--theme-dark-on-secondary);
+	--color-secondary-border: var(--theme-dark-secondary-border);
+	--color-title-hover-on-primary: var(--theme-dark-title-hover-on-primary);
+	--color-title-hover-on-secondary: var(--theme-dark-title-hover-on-secondary);
+	--color-light: var(--theme-dark-light);
+	--color-mid: var(--theme-dark-mid);
+	--color-dark: var(--theme-dark-dark);
+	--color-surface: var(--theme-dark-surface);
+	--color-surface-muted: var(--theme-dark-surface-muted);
+	--color-chrome: var(--theme-dark-chrome);
+	--color-chrome-hover: var(--theme-dark-chrome-hover);
+	--color-white: var(--theme-dark-white);
+	--color-black: var(--theme-dark-black);
+	--color-accent: var(--theme-dark-accent);
+	--color-muted: var(--theme-dark-muted);
+	--shadow-color: var(--theme-dark-shadow-color);
+	--shadow-accent-color: var(--theme-dark-shadow-accent-color);
+	--interactive-inset-shadow: var(--theme-dark-interactive-inset-shadow);
+	--play-mode-icon-idle-bg: var(--theme-dark-play-mode-icon-idle-bg);
+	--play-mode-icon-bucket-selected-bg: var(
+		--theme-dark-play-mode-icon-bucket-selected-bg
+	);
+	--play-mode-icon-poison-selected-bg: var(
+		--theme-dark-play-mode-icon-poison-selected-bg
+	);
 }
 
 :root[data-theme="light"] {
@@ -341,76 +403,120 @@
 		--shadow-primary-glow:
 			0 1px 2px var(--shadow-color),
 			0 0 0.65rem color-mix(in srgb, var(--color-primary) 42%, transparent);
-	}
-
-	@media (prefers-color-scheme: dark) {
-		:root:not([data-theme="light"]) {
-			--color-mid: color-mix(
-				in srgb,
-				var(--color-brand-purple-bright) 45%,
-				var(--color-ink-800)
-			);
-			--color-surface: color-mix(
-				in srgb,
-				var(--color-brand-purple) 26%,
-				var(--color-ink-900)
-			);
-			--color-surface-muted: color-mix(
-				in srgb,
-				var(--color-brand-purple) 34%,
-				var(--color-ink-800)
-			);
-			--color-chrome: color-mix(
-				in srgb,
-				var(--color-brand-mint) 22%,
-				var(--color-ink-900)
-			);
-			--color-chrome-hover: color-mix(
-				in srgb,
-				var(--color-brand-mint-bright) 30%,
-				var(--color-ink-800)
-			);
-			--shadow-color: color-mix(in srgb, white 22%, transparent);
-			--shadow-accent-color: color-mix(
-				in srgb,
-				var(--color-brand-purple-bright) 18%,
-				transparent
-			);
-		}
-	}
-
-	:root[data-theme="dark"] {
-		--color-mid: color-mix(
+		--color-surface: color-mix(
+			in srgb,
+			var(--color-brand-purple) 8%,
+			var(--color-ink-100)
+		);
+		--color-surface-muted: color-mix(
+			in srgb,
+			var(--color-brand-purple) 12%,
+			var(--color-ink-200)
+		);
+		--color-chrome: color-mix(
+			in srgb,
+			var(--color-brand-mint) 8%,
+			var(--color-ink-100)
+		);
+		--color-chrome-hover: color-mix(
+			in srgb,
+			var(--color-brand-mint) 14%,
+			var(--color-ink-200)
+		);
+		--shadow-accent-color: color-mix(
+			in srgb,
+			var(--color-brand-purple) 24%,
+			transparent
+		);
+		--theme-dark-mid: color-mix(
 			in srgb,
 			var(--color-brand-purple-bright) 45%,
 			var(--color-ink-800)
 		);
-		--color-surface: color-mix(
+		--theme-dark-surface: color-mix(
 			in srgb,
 			var(--color-brand-purple) 26%,
 			var(--color-ink-900)
 		);
-		--color-surface-muted: color-mix(
+		--theme-dark-surface-muted: color-mix(
 			in srgb,
 			var(--color-brand-purple) 34%,
 			var(--color-ink-800)
 		);
-		--color-chrome: color-mix(
+		--theme-dark-chrome: color-mix(
 			in srgb,
 			var(--color-brand-mint) 22%,
 			var(--color-ink-900)
 		);
-		--color-chrome-hover: color-mix(
+		--theme-dark-chrome-hover: color-mix(
 			in srgb,
 			var(--color-brand-mint-bright) 30%,
 			var(--color-ink-800)
 		);
-		--shadow-color: color-mix(in srgb, white 22%, transparent);
-		--shadow-accent-color: color-mix(
+		--theme-dark-shadow-color: color-mix(in srgb, white 22%, transparent);
+		--theme-dark-shadow-accent-color: color-mix(
 			in srgb,
 			var(--color-brand-purple-bright) 18%,
 			transparent
 		);
+		--play-mode-icon-idle-bg: color-mix(
+			in srgb,
+			var(--color-white) 70%,
+			transparent
+		);
+		--play-mode-icon-bucket-selected-bg: color-mix(
+			in srgb,
+			var(--color-brand-gradient-a) 14%,
+			var(--color-surface)
+		);
+		--play-mode-icon-poison-selected-bg: color-mix(
+			in srgb,
+			var(--color-brand-gradient-b) 18%,
+			var(--color-surface)
+		);
+		--play-mode-icon-bucket-selected-ring: color-mix(
+			in srgb,
+			var(--color-brand-gradient-a) 28%,
+			transparent
+		);
+		--play-mode-icon-poison-selected-ring: color-mix(
+			in srgb,
+			var(--color-brand-gradient-b) 30%,
+			transparent
+		);
+		--range-thumb-ring: 0 0 0 1px
+			color-mix(in srgb, var(--color-mid) 40%, transparent);
+		--settings-scrollbar-thumb: color-mix(
+			in srgb,
+			var(--color-mid) 70%,
+			transparent
+		);
+		--settings-scrollbar-thumb-hover: color-mix(
+			in srgb,
+			var(--color-dark) 55%,
+			transparent
+		);
+		--app-title-brand-glow: drop-shadow(
+			0 0 0.45rem color-mix(in srgb, var(--color-primary) 35%, transparent)
+		);
+		--play-mode-bucket-path-glow: drop-shadow(
+			0 1px 1px
+				color-mix(in srgb, var(--color-brand-gradient-a) 45%, transparent)
+		);
+	}
+
+	html {
+		background-image:
+			radial-gradient(
+				110% 75% at 100% 0%,
+				var(--page-wash-dominant),
+				transparent 52%
+			),
+			radial-gradient(
+				90% 60% at 0% 100%,
+				var(--page-wash-secondary),
+				transparent 48%
+			);
 	}
 }
 
@@ -546,7 +652,7 @@
 		border-radius: 9999px;
 		border: 2px solid var(--color-primary);
 		background: var(--color-white);
-		box-shadow: 0 0 0 1px rgba(159, 157, 165, 0.4);
+		box-shadow: var(--range-thumb-ring);
 	}
 
 	input[type="range"]::-moz-range-track {
@@ -562,7 +668,7 @@
 		border-radius: 9999px;
 		border: 2px solid var(--color-primary);
 		background: var(--color-white);
-		box-shadow: 0 0 0 1px rgba(159, 157, 165, 0.4);
+		box-shadow: var(--range-thumb-ring);
 	}
 }
 
@@ -576,7 +682,7 @@
  */
 .AppTitleBrand {
 	color: var(--color-primary);
-	filter: drop-shadow(0 0 0.45rem rgba(145, 72, 147, 0.35));
+	filter: var(--app-title-brand-glow);
 }
 
 .Header .AppTitleBrandTrigger:hover,
@@ -618,9 +724,9 @@
  * tablets match mouse. Tokens override per surface without restacking
  * Tailwind ring + shadow utilities.
  *
- * Light mode: dark drop + purple accent (via --shadow-*). Dark mode overrides
- * --interactive-inset-shadow to a white lift so active (bright primary) chips
- * still read elevation against dark panels.
+ * Light mode: dark drop + purple accent (via --shadow-*). Dark mode rebinds
+ * --interactive-inset-shadow on :root to a white lift so active (bright
+ * primary) chips still read elevation against dark panels.
  *
  * Exceptions: `.ModalScrim` (full-bleed dismiss) and `.IntroTutorialDot`
  * (quiet marker hover on the inner span).
@@ -628,26 +734,12 @@
 :is(button, .InteractiveInsetChrome) {
 	--interactive-inset-ring-color: var(--color-primary);
 	--interactive-inset-ring-width: 2px;
-	--interactive-inset-shadow:
-		0 2px 4px var(--shadow-color), 0 6px 16px var(--shadow-accent-color);
 	transition: box-shadow 200ms ease-out;
 }
 
 /* Active fill is primary — ring matching fill vanishes; keep the complement edge. */
 :is(button, .InteractiveInsetChrome)[data-chrome-active="true"] {
 	--interactive-inset-ring-color: var(--color-primary-border);
-}
-
-@media (prefers-color-scheme: dark) {
-	:root:not([data-theme="light"]) :is(button, .InteractiveInsetChrome) {
-		--interactive-inset-shadow:
-			0 2px 4px rgba(255, 255, 255, 0.4), 0 6px 18px rgba(255, 255, 255, 0.28);
-	}
-}
-
-:root[data-theme="dark"] :is(button, .InteractiveInsetChrome) {
-	--interactive-inset-shadow:
-		0 2px 4px rgba(255, 255, 255, 0.4), 0 6px 18px rgba(255, 255, 255, 0.28);
 }
 
 :is(button, .InteractiveInsetChrome):is(
@@ -663,61 +755,6 @@
 		inset 0 0 0 var(--interactive-inset-ring-width)
 		var(--interactive-inset-ring-color),
 		var(--interactive-inset-shadow);
-}
-
-@supports (color: color-mix(in srgb, red, blue)) {
-	:root {
-		--color-surface: color-mix(
-			in srgb,
-			var(--color-brand-purple) 8%,
-			var(--color-ink-100)
-		);
-		--color-surface-muted: color-mix(
-			in srgb,
-			var(--color-brand-purple) 12%,
-			var(--color-ink-200)
-		);
-		--color-chrome: color-mix(
-			in srgb,
-			var(--color-brand-mint) 8%,
-			var(--color-ink-100)
-		);
-		--color-chrome-hover: color-mix(
-			in srgb,
-			var(--color-brand-mint) 14%,
-			var(--color-ink-200)
-		);
-		--shadow-accent-color: color-mix(
-			in srgb,
-			var(--color-brand-purple) 24%,
-			transparent
-		);
-	}
-
-	html {
-		background-image:
-			radial-gradient(
-				110% 75% at 100% 0%,
-				var(--page-wash-dominant),
-				transparent 52%
-			),
-			radial-gradient(
-				90% 60% at 0% 100%,
-				var(--page-wash-secondary),
-				transparent 48%
-			);
-	}
-
-	input[type="range"]::-webkit-slider-thumb,
-	input[type="range"]::-moz-range-thumb {
-		box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-mid) 40%, transparent);
-	}
-
-	.AppTitleBrand {
-		filter: drop-shadow(
-			0 0 0.45rem color-mix(in srgb, var(--color-primary) 35%, transparent)
-		);
-	}
 }
 
 @supports ((-webkit-background-clip: text) or (background-clip: text)) {
@@ -890,91 +927,28 @@
 }
 
 .PlayModeIcon:not(.PlayModeIcon--selected) {
-	background-color: rgba(250, 249, 252, 0.7);
-}
-
-@media (prefers-color-scheme: dark) {
-	:root:not([data-theme="light"]) .PlayModeIcon:not(.PlayModeIcon--selected) {
-		background-color: rgba(13, 9, 14, 0.7);
-	}
-}
-
-:root[data-theme="dark"] .PlayModeIcon:not(.PlayModeIcon--selected) {
-	background-color: rgba(13, 9, 14, 0.7);
+	background-color: var(--play-mode-icon-idle-bg);
 }
 
 .PlayModeIcon--bucket.PlayModeIcon--selected {
-	background-color: #e4d9e7;
-	box-shadow: 0 0 0 1px rgba(145, 72, 147, 0.28);
+	background-color: var(--play-mode-icon-bucket-selected-bg);
+	box-shadow: 0 0 0 1px var(--play-mode-icon-bucket-selected-ring);
 }
 
 .PlayModeIcon--poison.PlayModeIcon--selected {
-	background-color: #dae7db;
-	box-shadow: 0 0 0 1px rgba(110, 186, 102, 0.3);
-}
-
-@media (prefers-color-scheme: dark) {
-	:root:not([data-theme="light"]) .PlayModeIcon--bucket.PlayModeIcon--selected {
-		background-color: #2b1a2d;
-	}
-
-	:root:not([data-theme="light"]) .PlayModeIcon--poison.PlayModeIcon--selected {
-		background-color: #293029;
-	}
-}
-
-:root[data-theme="dark"] .PlayModeIcon--bucket.PlayModeIcon--selected {
-	background-color: #2b1a2d;
-}
-
-:root[data-theme="dark"] .PlayModeIcon--poison.PlayModeIcon--selected {
-	background-color: #293029;
-}
-
-@supports (color: color-mix(in srgb, red, blue)) {
-	:root .PlayModeIcon:not(.PlayModeIcon--selected) {
-		background-color: color-mix(in srgb, var(--color-white) 70%, transparent);
-	}
-
-	:root .PlayModeIcon--bucket.PlayModeIcon--selected {
-		background-color: color-mix(
-			in srgb,
-			var(--color-brand-gradient-a) 14%,
-			var(--color-surface)
-		);
-		box-shadow: 0 0 0 1px
-			color-mix(in srgb, var(--color-brand-gradient-a) 28%, transparent);
-	}
-
-	:root .PlayModeIcon--poison.PlayModeIcon--selected {
-		background-color: color-mix(
-			in srgb,
-			var(--color-brand-gradient-b) 18%,
-			var(--color-surface)
-		);
-		box-shadow: 0 0 0 1px
-			color-mix(in srgb, var(--color-brand-gradient-b) 30%, transparent);
-	}
+	background-color: var(--play-mode-icon-poison-selected-bg);
+	box-shadow: 0 0 0 1px var(--play-mode-icon-poison-selected-ring);
 }
 
 .PlayModeBucketIcon__path--active {
-	filter: drop-shadow(0 1px 1px rgba(145, 72, 147, 0.45));
-}
-
-@supports (color: color-mix(in srgb, red, blue)) {
-	.PlayModeBucketIcon__path--active {
-		filter: drop-shadow(
-			0 1px 1px
-				color-mix(in srgb, var(--color-brand-gradient-a) 45%, transparent)
-		);
-	}
+	filter: var(--play-mode-bucket-path-glow);
 }
 
 /* Settings scroll panel: reserve gutter so the bar never sits on checkboxes. */
 .SettingsTabPanel {
 	scrollbar-gutter: stable;
 	scrollbar-width: thin;
-	scrollbar-color: rgba(159, 157, 165, 0.7) transparent;
+	scrollbar-color: var(--settings-scrollbar-thumb) transparent;
 }
 
 .SettingsTabPanel::-webkit-scrollbar {
@@ -986,7 +960,7 @@
 }
 
 .SettingsTabPanel::-webkit-scrollbar-thumb {
-	background: rgba(159, 157, 165, 0.7);
+	background: var(--settings-scrollbar-thumb);
 	border-radius: 9999px;
 	border: 2px solid transparent;
 	background-clip: padding-box;
@@ -994,25 +968,10 @@
 }
 
 .SettingsTabPanel::-webkit-scrollbar-thumb:hover {
-	background: rgba(67, 65, 73, 0.55);
+	background: var(--settings-scrollbar-thumb-hover);
 	background-clip: padding-box;
 	-webkit-background-clip: padding-box;
 	border: 2px solid transparent;
-}
-
-@supports (color: color-mix(in srgb, red, blue)) {
-	.SettingsTabPanel {
-		scrollbar-color: color-mix(in srgb, var(--color-mid) 70%, transparent)
-			transparent;
-	}
-
-	.SettingsTabPanel::-webkit-scrollbar-thumb {
-		background: color-mix(in srgb, var(--color-mid) 70%, transparent);
-	}
-
-	.SettingsTabPanel::-webkit-scrollbar-thumb:hover {
-		background: color-mix(in srgb, var(--color-dark) 55%, transparent);
-	}
 }
 
 /*

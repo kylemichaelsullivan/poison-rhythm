@@ -50,6 +50,6 @@ Color preferences are stored on **student-scoped** preference keys (`poison-rhyt
 - [`A11Y.md`](A11Y.md) — contrast grades, border hierarchy, keyboard
 - [`TEACHERS.md`](TEACHERS.md) — classroom arcs and accessibility tips
 - [`ARCHITECTURE.md`](ARCHITECTURE.md) — providers and settings layers
-- [`src/index.css`](../src/index.css) — brand and semantic color tokens
+- [`src/index.css`](../src/index.css) — brand and semantic color tokens (`--theme-dark-*` counterparts; apply blocks rebind names)
 - [`IOS.md`](IOS.md) — WebKit color fallbacks (hex defaults, crayon hex overrides)
 - [`src/lib/hierarchy-border.ts`](../src/lib/hierarchy-border.ts) — shared border ranks
