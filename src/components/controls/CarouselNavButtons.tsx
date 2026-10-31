@@ -25,9 +25,12 @@ type CarouselNavButtonsProps = {
 
 /**
  * Prev/next sit in the page gutters beside the body column.
- * Below `--breakpoint-gutter` (no lateral gutter), they drop under the
- * section with `sideGutterCollapsedReserveClassName` so they clear PlayControls.
- * First measure: delayed Play. Last measure: New / Reuse / Play.
+ * Children render first so section chrome (Eye, Volume) tabs before
+ * Previous / Next. Gutters stay absolutely positioned, so visual layout
+ * is unchanged. Below `--breakpoint-gutter` (no lateral gutter), they
+ * drop under the section with `sideGutterCollapsedReserveClassName` so
+ * they clear PlayControls. First measure: delayed Play. Last measure:
+ * New / Reuse / Play.
  */
 export function CarouselNavButtons({
 	children,
@@ -50,6 +53,7 @@ export function CarouselNavButtons({
 				sideGutterCollapsedReserveClassName,
 			)}
 		>
+			{children}
 			<div
 				className={sideGutterControlClassName('start', {
 					collapseBelowGutter: true,
@@ -68,7 +72,6 @@ export function CarouselNavButtons({
 					/>
 				)}
 			</div>
-			{children}
 			<div
 				className={sideGutterControlClassName('end', {
 					collapseBelowGutter: true,

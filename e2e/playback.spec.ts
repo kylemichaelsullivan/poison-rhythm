@@ -153,6 +153,35 @@ test.describe('measure playback', () => {
 		).toBeVisible();
 	});
 
+	test('Measures section tabs Eye, Volume, Previous, then Next', async ({
+		page,
+	}) => {
+		await page.goto('/');
+		await generateRound(page);
+
+		const next = page.getByRole('button', { name: 'Next', exact: true });
+		await expect(next).toBeVisible();
+		await next.click();
+
+		const eye = page.getByRole('button', {
+			name: /Next Measure Preview/,
+		});
+		const volume = page.getByRole('button', { name: /Rhythm Sounds/ });
+		const previous = page.getByRole('button', {
+			name: 'Previous',
+			exact: true,
+		});
+
+		await eye.focus();
+		await expect(eye).toBeFocused();
+		await page.keyboard.press('Tab');
+		await expect(volume).toBeFocused();
+		await page.keyboard.press('Tab');
+		await expect(previous).toBeFocused();
+		await page.keyboard.press('Tab');
+		await expect(next).toBeFocused();
+	});
+
 	test('first-measure Play starts after a cancelable delay', async ({
 		page,
 	}) => {

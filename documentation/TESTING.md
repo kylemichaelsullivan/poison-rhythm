@@ -46,7 +46,7 @@ Location: `e2e/`
 
 | Spec | Coverage |
 |------|----------|
-| `playback.spec.ts` | Round ready, count-in highlight gating, **count-in beats on the Play button**, post–count-in highlight, demo pass, **Escape stops playback** (including while Play/Pause is focused), **first-measure delayed Play** (cancel via click / outside), **last-measure New / Reuse / Play** |
+| `playback.spec.ts` | Round ready, count-in highlight gating, **count-in beats on the Play button**, post–count-in highlight, demo pass, **Escape stops playback** (including while Play/Pause is focused), **Measures tab order** (Eye, Volume, Previous, Next), **first-measure delayed Play** (cancel via click / outside), **last-measure New / Reuse / Play** |
 | `difficulty-regen-ack.spec.ts` | Difficulty acknowledgement and Account notice: **no OK button**, `0.5rem` theme progress bar, dismiss on `TIMED_NOTICE_DURATION_MS`, **pause while hovered**. Account copy uses `text-wrap: pretty` (no non-breaking spaces) |
 | `a11y.spec.ts` | axe WCAG 2.2 A/AA + best-practice (start screen, round, settings/Sound, metronome, modals, count-in). Runs on **Desktop Chrome** and **mobile** (360×800) projects |
 | `mobile-layout.spec.ts` | 360×800 smoke: first-measure delayed Play + Next vs Play overlap, last-measure end menu, 2-col measure grid, Settings panel scroll |

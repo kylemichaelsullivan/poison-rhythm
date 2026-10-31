@@ -102,7 +102,7 @@ src/components/
 
 - **MeasuresSection**: Empty state or carousel; `NextMeasureToggle` + `MeasuresSectionHeaderActions`; opens Body-owned `DisplayModeModal` in Bucket mode
 - **MeasureSlider**: Presentational carousel; `live` on chrome for `data-testid="measure-slider"`; playback side effects in `useMeasurePlaybackSync`
-- **Layers**: `NextMeasurePreview`, `CurrentMeasureDisplay` / `measure-phase-chrome` (`data-playback-phase`: idle / count-in / listening / playing — fixed `border-2`; Listening = dashed primary shell + ink notes, Playing = secondary glow shell + secondary notes, count-in faded), `CarouselNavButtons` (first-measure delayed Play; last-measure New / Reuse / Play)
+- **Layers**: `NextMeasurePreview`, `CurrentMeasureDisplay` / `measure-phase-chrome` (`data-playback-phase`: idle / count-in / listening / playing — fixed `border-2`; Listening = dashed primary shell + ink notes, Playing = secondary glow shell + secondary notes, count-in faded), `CarouselNavButtons` (section chrome tabs before Previous / Next; first-measure delayed Play; last-measure New / Reuse / Play)
 
 ### MeasureGrid / MeasureCell
 
