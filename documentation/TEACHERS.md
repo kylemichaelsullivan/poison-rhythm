@@ -17,7 +17,7 @@ It is not a full notation curriculum. **Grid** mode is a piano-roll view; **Nota
 
 ## Five-minute classroom start
 
-1. Open the app — a first-visit welcome is Simon Says: play the measures Simon says, skip the one he didn’t (labeled **Poison Rhythm**). Check **Don’t show again** to skip it next time. Replay it anytime from **Settings → Mode → Welcome Tutorial**. A round is already generated behind it.
+1. Open the app — a first-visit welcome is Simon Says: play the measures Simon says, skip the one he didn’t (labeled **Poison Rhythm**). **Don’t show again** is checked by default so the welcome will not return; uncheck it if you want it next time. Replay it anytime from **Settings → Mode → Welcome Tutorial**. A round is already generated behind it.
 2. Set **Difficulty** (1–5) from the title **About** modal (click the Poison Rhythm title) or **Settings → Mode**; open the **i** control for level plain-language help.
 3. Set **subdivision** in the header ShowNotes control (or Settings → Mode) to 1/4, 1/8, or 1/16 to match what students are ready to see and hear.
 4. Point to the **Poison Rhythm** box so everyone knows the target pattern.

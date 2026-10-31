@@ -24,7 +24,7 @@ export function IntroTutorialNav({
 	return (
 		<div className='grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center'>
 			<div className='justify-self-start'>
-				<Button variant='ghost' disabled={stepIndex === 0} onClick={onBack}>
+				<Button variant='secondary' disabled={stepIndex === 0} onClick={onBack}>
 					Back
 				</Button>
 			</div>

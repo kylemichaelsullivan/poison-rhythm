@@ -1,3 +1,4 @@
+import { Stack } from '@/components/ui';
 import { INTRO_POISON_BEATS, quarterNoteMeasure } from '@/lib/intro-tutorial';
 import { Section } from '../Section';
 import { IntroTutorialFailOverlay } from './IntroTutorialFailOverlay';
@@ -11,13 +12,16 @@ type IntroTutorialStepProps = {
 /** Poison reference on every slide, then the current measure. */
 export function IntroTutorialStep({ step }: IntroTutorialStepProps) {
 	return (
-		<div className='flex flex-col'>
+		<Stack gap='4'>
 			<Section title='Poison Rhythm'>
 				<IntroTutorialMeasure
 					measure={quarterNoteMeasure(INTRO_POISON_BEATS)}
 				/>
 			</Section>
-			<p className='pt-5 pb-1 text-center text-sm font-semibold leading-5 text-black'>
+			<p
+				className='text-center text-sm font-semibold leading-5 text-black'
+				aria-live='polite'
+			>
 				{step.prompt}
 			</p>
 			<Section title='Measure'>
@@ -25,6 +29,6 @@ export function IntroTutorialStep({ step }: IntroTutorialStepProps) {
 					{step.isPoison ? <IntroTutorialFailOverlay /> : null}
 				</IntroTutorialMeasure>
 			</Section>
-		</div>
+		</Stack>
 	);
 }

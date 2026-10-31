@@ -47,13 +47,13 @@ Rules of thumb:
 - Do not add raw `<button className=…>` in composers — use `@/components/ui` or settings atoms
 - **Variants over `className`** on shared components (`tone`, `size`, `framed`, `slot`)
 
-Main page shell: `Header` → `Body` (`PoisonSection`, `MeasuresSection`, `PlayControls`, single `DisplayModeModal`) → `Footer`. `IntroTutorialProvider` owns first-visit / replay state; `IntroModalHost` sits beside the tree in `App`. The welcome stays until the student opts out (`Don’t show again` → `poison-rhythm-intro-seen`). Dismiss without that checkbox only hides the welcome for the current visit. **Settings → Mode → Welcome Tutorial** reopens it.
+Main page shell: `Header` → `Body` (`PoisonSection`, `MeasuresSection`, `PlayControls`, single `DisplayModeModal`) → `Footer`. `IntroTutorialProvider` owns first-visit / replay state; `IntroModalHost` sits beside the tree in `App`. **Don’t show again** is on by default; dismissing with it checked writes `poison-rhythm-intro-seen`. Uncheck it to hide the welcome for the current visit only. **Settings → Mode → Welcome Tutorial** reopens it.
 
 Phone-up layout (≈360px primary; 320px must not overflow horizontally): safe-area insets on chrome, ≥44px touch targets on primary controls, near-fullscreen Settings sheet on small viewports, and **sixteenth** beat groups wrapping to **2×2** below `sm` so all 16 cells stay visible (`MeasureCellGrid` — quarters/eighths stay four-across; never force 16ths→8ths for viewport size). Carousel prev/next sit above Play so they do not overlap.
 
 | Composer / host | Notable layers / hooks |
 |-----------------|------------------------|
-| `IntroModalHost` | `IntroTutorialProvider` + `IntroModal` / `IntroTutorialStep` (quarters `MeasureGrid`) / `IntroSkipToggle`; writes `poison-rhythm-intro-seen` only when skip is checked |
+| `IntroModalHost` | `IntroTutorialProvider` + `IntroModal` / `IntroTutorialStep` (quarters `MeasureGrid`) / `IntroSkipToggle` (checked by default); writes `poison-rhythm-intro-seen` when skip is checked on dismiss |
 | `DifficultyControls` | `DifficultyFramedBlock` / `DifficultySettingsBlock`, help + play-mode modals; regen ack via `DifficultyRegenAckHost` |
 | `MeasureSlider` | `MeasureCarouselChrome` (`live` sets `data-testid="measure-slider"`), `NextMeasurePreview`, `useMeasurePlaybackSync` |
 | `ShowNotes` | `ShowNotesTrigger`, `ShowNotesSlider`, `useHoverPinPopover` |

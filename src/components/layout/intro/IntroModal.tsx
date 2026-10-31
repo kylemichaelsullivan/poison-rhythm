@@ -15,13 +15,13 @@ const LAST_STEP = INTRO_TUTORIAL_STEPS.length - 1;
 
 /** First-visit Simon Says tutorial, then optional skip on this device. */
 export function IntroModal({ open, onClose }: IntroModalProps) {
-	const [skipFuture, setSkipFuture] = useState(false);
+	const [skipFuture, setSkipFuture] = useState(true);
 	const [stepIndex, setStepIndex] = useState(0);
 
 	useEffect(() => {
 		if (!open) {
 			setStepIndex(0);
-			setSkipFuture(false);
+			setSkipFuture(true);
 		}
 	}, [open]);
 

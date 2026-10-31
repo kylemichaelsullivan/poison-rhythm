@@ -6,7 +6,7 @@ const SIMON_SAYS = 'Simon says: “Play this”';
 test.describe('first-visit welcome', () => {
 	test.use({ storageState: FIRST_VISIT_STORAGE_STATE });
 
-	test('walks Simon Says then poison, and stays unless skip is checked', async ({
+	test('walks Simon Says then poison, and stays when skip is unchecked', async ({
 		page,
 	}) => {
 		await page.goto('/');
@@ -23,7 +23,10 @@ test.describe('first-visit welcome', () => {
 		await expect(dialog.getByText(SIMON_SAYS)).toBeVisible();
 		await expect(dialog.getByText('That’s the poison…')).toHaveCount(0);
 		await expect(dialog.getByText('Play it, and you lose!')).toHaveCount(0);
-		await expect(dialog.getByText('Don’t show again')).toBeVisible();
+		const skip = dialog.getByRole('button', { name: /Don’t show again/ });
+		await expect(skip).toHaveAttribute('aria-pressed', 'true');
+		await skip.click();
+		await expect(skip).toHaveAttribute('aria-pressed', 'false');
 
 		await dialog.getByRole('button', { name: 'Next' }).click();
 		await expect(dialog.getByText(SIMON_SAYS)).toBeVisible();
@@ -36,7 +39,9 @@ test.describe('first-visit welcome', () => {
 
 		await dialog.getByRole('button', { name: 'Next' }).click();
 		await expect(dialog.getByText(SIMON_SAYS)).toHaveCount(0);
-		await expect(dialog.getByText('Play this', { exact: true })).toBeVisible();
+		await expect(
+			dialog.getByText('“Play this”', { exact: true }),
+		).toBeVisible();
 		await expect(dialog.getByText('That’s the poison…')).toBeVisible({
 			timeout: 2000,
 		});
@@ -67,16 +72,15 @@ test.describe('first-visit welcome', () => {
 		await expect(page.getByText(SIMON_SAYS)).toBeVisible();
 	});
 
-	test('checking skip on any step remembers this device', async ({ page }) => {
+	test('checked skip by default remembers this device', async ({ page }) => {
 		await page.goto('/');
 		const dialog = page.getByRole('dialog', {
 			name: 'Welcome to Poison Rhythm',
 		});
 		await expect(dialog).toBeVisible();
-		await dialog
-			.locator('label')
-			.filter({ hasText: 'Don’t show again' })
-			.click();
+		await expect(
+			dialog.getByRole('button', { name: /Don’t show again/ }),
+		).toHaveAttribute('aria-pressed', 'true');
 		await dialog.getByRole('button', { name: 'Next' }).click();
 		await dialog.getByRole('button', { name: 'Next' }).click();
 		await dialog.getByRole('button', { name: 'Let’s Play' }).click();
@@ -104,7 +108,9 @@ test.describe('first-visit welcome', () => {
 
 		await dialog.getByRole('button', { name: 'Step 3 of 3' }).click();
 		await expect(dialog.getByText(SIMON_SAYS)).toHaveCount(0);
-		await expect(dialog.getByText('Play this', { exact: true })).toBeVisible();
+		await expect(
+			dialog.getByText('“Play this”', { exact: true }),
+		).toBeVisible();
 		await expect(dialog.getByText('That’s the poison…')).toBeVisible({
 			timeout: 2000,
 		});
@@ -128,6 +134,7 @@ test.describe('first-visit welcome', () => {
 			name: 'Welcome to Poison Rhythm',
 		});
 		await expect(dialog).toBeVisible();
+		await dialog.getByRole('button', { name: /Don’t show again/ }).click();
 		await dialog.getByRole('button', { name: 'Close Modal' }).click();
 		await expect(dialog).toBeHidden();
 		await expect
