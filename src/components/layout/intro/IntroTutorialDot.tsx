@@ -17,7 +17,7 @@ export function IntroTutorialDot({
 	return (
 		<button
 			type='button'
-			className='IntroTutorialDot flex h-11 w-8 shrink-0 items-center justify-center rounded-full'
+			className='IntroTutorialDot flex h-11 w-8 shrink-0 items-center justify-center'
 			onClick={onSelect}
 			aria-current={current ? 'step' : undefined}
 			aria-label={`Step ${step} of ${stepCount}`}
