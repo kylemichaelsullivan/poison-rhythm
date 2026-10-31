@@ -589,15 +589,13 @@
 	color: var(--color-title-hover-on-secondary);
 }
 
-/* Focus ring: primary ring on a primary bar is invisible — use the complement. */
-.Header .AppTitleBrandTrigger:focus-visible {
-	--tw-ring-color: var(--color-secondary);
-	--tw-ring-offset-color: var(--color-primary);
+/* Title trigger uses the same inset chrome as other buttons; complement the bar. */
+.Header .AppTitleBrandTrigger {
+	--interactive-inset-ring-color: var(--color-secondary);
 }
 
-.Footer .AppTitleBrandTrigger:focus-visible {
-	--tw-ring-color: var(--color-primary);
-	--tw-ring-offset-color: var(--color-secondary);
+.Footer .AppTitleBrandTrigger {
+	--interactive-inset-ring-color: var(--color-primary);
 }
 
 /*
@@ -605,27 +603,29 @@
  * header that is a no-op against the bar — prefer Secondary (matches the
  * header edge). Footer already wants Dominant (matches the footer edge).
  */
-.Header .AppChromeControl:hover,
-.Header .AppChromeControl:focus-visible {
-	border-color: var(--color-secondary);
+.Header .AppChromeControl {
+	--interactive-inset-ring-color: var(--color-secondary);
 }
 
-.Footer .AppChromeControl:hover,
-.Footer .AppChromeControl:focus-visible {
-	border-color: var(--color-primary);
+.Footer .AppChromeControl {
+	--interactive-inset-ring-color: var(--color-primary);
 }
 
 /*
- * Settings / segment interactive chrome. Pure CSS :hover / :focus-visible so
- * the lift still paints when JS is busy. Tokens override per surface without
- * restacking Tailwind ring + shadow utilities (those fight over box-shadow).
- * Resting state stays flat — elevation only while hovered or focus-visible.
+ * Global button hover / focus (and `.InteractiveInsetChrome` for non-button
+ * chips). Inset ring + lift only — do not change fill or ink. Shapes stay on
+ * the control (`rounded-full`, `rounded-lg`, …). Native :hover / :focus so
+ * tablets match mouse. Tokens override per surface without restacking
+ * Tailwind ring + shadow utilities.
  *
  * Light mode: dark drop + purple accent (via --shadow-*). Dark mode overrides
  * --interactive-inset-shadow to a white lift so active (bright primary) chips
- * and checkboxes still read elevation against dark panels.
+ * still read elevation against dark panels.
+ *
+ * Exceptions: `.ModalScrim` (full-bleed dismiss) and `.IntroTutorialDot`
+ * (quiet marker hover on the inner span).
  */
-.InteractiveInsetChrome {
+:is(button, .InteractiveInsetChrome) {
 	--interactive-inset-ring-color: var(--color-primary);
 	--interactive-inset-ring-width: 2px;
 	--interactive-inset-shadow:
@@ -634,39 +634,35 @@
 }
 
 /* Active fill is primary — ring matching fill vanishes; keep the complement edge. */
-.InteractiveInsetChrome[data-chrome-active="true"] {
+:is(button, .InteractiveInsetChrome)[data-chrome-active="true"] {
 	--interactive-inset-ring-color: var(--color-primary-border);
 }
 
 @media (prefers-color-scheme: dark) {
-	:root:not([data-theme="light"]) .InteractiveInsetChrome {
+	:root:not([data-theme="light"]) :is(button, .InteractiveInsetChrome) {
 		--interactive-inset-shadow:
 			0 2px 4px rgba(255, 255, 255, 0.4), 0 6px 18px rgba(255, 255, 255, 0.28);
 	}
 }
 
-:root[data-theme="dark"] .InteractiveInsetChrome {
+:root[data-theme="dark"] :is(button, .InteractiveInsetChrome) {
 	--interactive-inset-shadow:
 		0 2px 4px rgba(255, 255, 255, 0.4), 0 6px 18px rgba(255, 255, 255, 0.28);
 }
 
-.InteractiveInsetChrome:hover,
-.InteractiveInsetChrome:focus,
-.InteractiveInsetChrome:focus-visible {
+:is(button, .InteractiveInsetChrome):is(
+		:hover,
+		:focus,
+		:focus-visible,
+		[aria-expanded="true"]
+	):not(:disabled):not([aria-disabled="true"]):not(.ModalScrim):not(
+		.IntroTutorialDot
+	) {
 	outline: none;
 	box-shadow:
 		inset 0 0 0 var(--interactive-inset-ring-width)
 		var(--interactive-inset-ring-color),
 		var(--interactive-inset-shadow);
-}
-
-.InteractiveInsetChrome:disabled:hover,
-.InteractiveInsetChrome:disabled:focus,
-.InteractiveInsetChrome:disabled:focus-visible,
-.InteractiveInsetChrome[aria-disabled="true"]:hover,
-.InteractiveInsetChrome[aria-disabled="true"]:focus,
-.InteractiveInsetChrome[aria-disabled="true"]:focus-visible {
-	box-shadow: none;
 }
 
 @supports (color: color-mix(in srgb, red, blue)) {
@@ -779,7 +775,7 @@
 		background-position: 40% 50%;
 	}
 
-	.InteractiveInsetChrome {
+	:is(button, .InteractiveInsetChrome) {
 		transition: none;
 	}
 }
@@ -1073,51 +1069,17 @@
 	}
 }
 
-/*
- * Button hover / focus: border + shadow only. Do not change fill or ink —
- * the resting pair keeps its contrast. Native :hover / :focus so tablets
- * match mouse (Tailwind `hover:` is fine-pointer gated).
- */
-.ButtonLift:not(:disabled):not([aria-disabled="true"]):hover,
-.ButtonLift:not(:disabled):not([aria-disabled="true"]):focus,
-.ButtonLift:not(:disabled):not([aria-disabled="true"]):focus-visible {
-	box-shadow: var(--shadow-raised);
-}
-
-.ButtonLift-border:not(:disabled):not([aria-disabled="true"]):hover,
-.ButtonLift-border:not(:disabled):not([aria-disabled="true"]):focus,
-.ButtonLift-border:not(:disabled):not([aria-disabled="true"]):focus-visible {
-	border-color: var(--color-primary);
-}
-
-.CarouselNavButton[aria-expanded="true"] {
-	border-color: var(--color-primary);
-	box-shadow: var(--shadow-raised);
-}
-
-.ButtonLift:not(:disabled):not([aria-disabled="true"]):focus-visible {
-	outline: none;
-	box-shadow:
-		0 0 0 2px var(--color-white),
-		0 0 0 4px var(--color-primary),
-		var(--shadow-raised);
-}
-
-.group:hover .ButtonLift-group,
-.group:focus .ButtonLift-group,
-.group:focus-visible .ButtonLift-group {
-	border-color: var(--color-primary);
-	box-shadow: var(--shadow-raised);
-}
-
 .IntroTutorialDot:hover span,
+.IntroTutorialDot:focus span,
 .IntroTutorialDot:focus-visible span {
 	box-shadow: var(--shadow-control);
 }
 
-.IntroTutorialDot:focus-visible {
-	outline: 2px solid var(--color-mid);
-	outline-offset: 2px;
+.IntroTutorialDot:focus-visible span {
+	box-shadow:
+		0 0 0 2px var(--color-white),
+		0 0 0 3px var(--color-primary),
+		var(--shadow-control);
 }
 
 /*

@@ -1,8 +1,4 @@
 import clsx from 'clsx';
-import {
-	buttonLiftBorderClassName,
-	buttonLiftClassName,
-} from '@/lib/control-classes';
 import type { ReactNode, Ref } from 'react';
 
 export type IconButtonVariant = 'info' | 'bare' | 'modalClose';
@@ -19,18 +15,10 @@ type IconButtonProps = {
 };
 
 const variantClassName: Record<IconButtonVariant, string> = {
-	info: clsx(
-		buttonLiftBorderClassName,
-		'flex size-11 shrink-0 items-center justify-center rounded-full border border-mid bg-surface-muted text-sm font-semibold leading-none text-dark transition-[border-color,box-shadow] duration-200 ease-out',
-	),
-	bare: clsx(
-		buttonLiftClassName,
-		'group inline-flex items-center rounded transition-[box-shadow] duration-200 ease-out',
-	),
-	modalClose: clsx(
-		buttonLiftClassName,
-		'flex min-h-11 min-w-11 items-center justify-center text-xl font-semibold leading-none text-dark transition-[box-shadow] duration-200 ease-out',
-	),
+	info: 'flex size-11 shrink-0 items-center justify-center rounded-full border border-mid bg-surface-muted text-sm font-semibold leading-none text-dark',
+	bare: 'inline-flex items-center rounded',
+	modalClose:
+		'flex min-h-11 min-w-11 items-center justify-center text-xl font-semibold leading-none text-dark',
 };
 
 export function IconButton({

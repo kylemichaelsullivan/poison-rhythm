@@ -18,17 +18,24 @@ export function Footer() {
 				'Footer w-full border-t-4 border-primary bg-secondary py-2 text-on-secondary',
 				'grid grid-cols-2 items-center gap-x-3 gap-y-2',
 				'pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))]',
-				'sm:flex sm:justify-between sm:gap-2',
+				'sm:grid-cols-[minmax(0,1fr)_minmax(0,auto)_minmax(0,1fr)] sm:gap-2',
 				appChromeBarFooterClassName,
 			)}
 		>
-			<div className={clsx('order-1', footerActionClassName)}>
+			<div
+				className={clsx('order-1 justify-self-start', footerActionClassName)}
+			>
 				<Metronome />
 			</div>
-			<div className='order-3 col-span-2 flex justify-center sm:order-2 sm:col-auto sm:w-auto'>
+			<div className='order-3 col-span-2 justify-self-center sm:order-2 sm:col-auto'>
 				<Copyright />
 			</div>
-			<div className={clsx('order-2 sm:order-3', footerActionClassName)}>
+			<div
+				className={clsx(
+					'order-2 justify-self-end sm:order-3',
+					footerActionClassName,
+				)}
+			>
 				<Settings />
 			</div>
 		</footer>

@@ -1,8 +1,5 @@
 import clsx from 'clsx';
-import {
-	buttonLiftBorderClassName,
-	darkSurfaceClassName,
-} from '@/lib/control-classes';
+import { darkSurfaceClassName } from '@/lib/control-classes';
 
 type EmptyStartPromptProps = {
 	onClick?: () => void;
@@ -14,8 +11,7 @@ export function EmptyStartPrompt({ onClick }: EmptyStartPromptProps) {
 			type='button'
 			className={clsx(
 				'EmptyStartPrompt',
-				buttonLiftBorderClassName,
-				'flex h-full min-h-0 w-full items-center justify-center rounded-lg border-2 border-dashed border-mid bg-surface p-4 text-center text-dark transition-[border-color,box-shadow] duration-200 ease-out',
+				'flex h-full min-h-0 w-full items-center justify-center rounded-lg border-2 border-dashed border-mid bg-surface p-4 text-center text-dark',
 				darkSurfaceClassName,
 			)}
 			title='Click to Generate'

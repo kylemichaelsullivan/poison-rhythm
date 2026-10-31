@@ -21,19 +21,12 @@ export const inputSurfaceClassName =
 	'border border-mid rounded bg-white text-black focus-within:border-primary';
 
 /**
- * Shared control styles for small UI controls (buttons, popovers, etc.).
+ * Chrome icon/action buttons. Hover / focus is global on `button` in
+ * `src/index.css` (inset ring + lift). Header / footer override the ring to
+ * the bar’s complement (Secondary on Header, Dominant on Footer).
  */
-/**
- * Chrome icon/action buttons. On header/footer bars, CSS overrides the hover
- * border to the bar’s complement (Secondary on Header, Dominant on Footer).
- * Flat at rest; elevation only on hover.
- */
-export const buttonLiftClassName = 'ButtonLift';
-
-export const buttonLiftBorderClassName = 'ButtonLift ButtonLift-border';
-
 export const controlButtonBaseClassName =
-	'AppChromeControl ButtonLift ButtonLift-border border border-mid rounded bg-chrome text-black transition-[border-color,box-shadow] duration-200 ease-out';
+	'AppChromeControl InteractiveInsetChrome border border-mid rounded bg-chrome text-black';
 
 export const controlSurfaceBaseClassName =
 	'border border-mid rounded bg-chrome text-black';
@@ -43,11 +36,22 @@ export const cornerControlButtonClassName =
 	'flex items-center justify-center min-w-11 min-h-11 w-11 h-11';
 
 /**
- * Shared row layout for `<header />` and `<footer />`: flex, even spacing, padding.
- * Horizontal safe-area keeps chrome clear of notches; pair with header/footer extras.
+ * Equal side tracks so header title / footer copyright sit on the screen
+ * center even when the corner controls have different widths.
  */
-export const appChromeBarClassName =
-	'flex justify-between items-center w-full gap-2 py-2 pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))]';
+export const appChromeCenterTrackClassName =
+	'grid-cols-[minmax(0,1fr)_minmax(0,auto)_minmax(0,1fr)]';
+
+/**
+ * Shared row layout for `<header />` and `<footer />`: three-column track,
+ * padding. Horizontal safe-area keeps chrome clear of notches; pair with
+ * header/footer extras.
+ */
+export const appChromeBarClassName = clsx(
+	'grid w-full items-center gap-2 py-2',
+	appChromeCenterTrackClassName,
+	'pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))]',
+);
 /** Top safe-area for the header chrome bar (notch / status bar). */
 export const appChromeBarHeaderClassName =
 	'pt-[max(0.5rem,env(safe-area-inset-top))]';
@@ -80,13 +84,18 @@ export const focusVisibleRingClassName =
 	'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-chrome';
 
 /**
- * Shared Settings interactive chrome (`.InteractiveInsetChrome` in
- * `src/index.css`): inset ring + raised shadow on :hover / :focus-visible via
- * CSS custom properties. Dark mode uses a white lift so active chips still
- * read elevation. Prefer this over stacking Tailwind ring + shadow utilities.
- * Resting chips stay flat.
+ * Same inset ring + lift as global `button` hover / focus. Use on non-button
+ * chips, or to mark a control that already owns the tokens. Dark mode uses a
+ * white lift so active chips still read elevation.
  */
 export const interactiveInsetChromeClassName = 'InteractiveInsetChrome';
+
+/**
+ * Dominant-filled controls (Play, New, Next, tempo ±, …). Pair with
+ * `data-chrome-active` so hover / focus matches header mute chips: inset
+ * complement ring + lift, no fill or ink change.
+ */
+export const primaryFillChromeClassName = interactiveInsetChromeClassName;
 
 /**
  * Light chrome / dark ink that do not invert with page theme. Contrast meter
@@ -134,10 +143,10 @@ export function focusWithForcedRing(
 }
 
 export const roundPlayPauseButtonClassName =
-	'RoundPlayPauseButton ButtonLift flex size-12 shrink-0 aspect-square items-center justify-center rounded-full border-4 border-secondary bg-primary p-3 text-on-primary transition-[box-shadow] duration-200 ease-out disabled:cursor-not-allowed aria-disabled:cursor-not-allowed disabled:opacity-50 aria-disabled:opacity-50';
+	'RoundPlayPauseButton InteractiveInsetChrome flex size-12 shrink-0 aspect-square items-center justify-center rounded-full border border-primary-border bg-primary p-3 text-on-primary disabled:cursor-not-allowed aria-disabled:cursor-not-allowed disabled:opacity-50 aria-disabled:opacity-50';
 
 export const modifyTempoButtonClassName =
-	'ButtonLift flex size-11 shrink-0 aspect-square items-center justify-center rounded-full border-2 border-primary-border bg-primary p-2 text-on-primary transition-[box-shadow] duration-200 ease-out disabled:opacity-50';
+	'InteractiveInsetChrome flex size-11 shrink-0 aspect-square items-center justify-center rounded-full border border-primary-border bg-primary p-2 text-on-primary disabled:opacity-50';
 
 /** Shared chrome for carousel prev/next and end-of-set actions. */
 export function carouselNavButtonClassName(
@@ -147,7 +156,7 @@ export function carouselNavButtonClassName(
 	const quiet = state === 'quiet';
 
 	return clsx(
-		'CarouselNavButton ButtonLift ButtonLift-border flex size-11 items-center justify-center rounded-lg border-2 p-1 text-2xl font-bold transition-[border-color,box-shadow] duration-200 ease-out',
+		'CarouselNavButton InteractiveInsetChrome flex size-11 items-center justify-center rounded-lg border-2 p-1 text-2xl font-bold',
 		disabled
 			? 'cursor-not-allowed border-mid bg-surface-muted text-transparent'
 			: quiet
@@ -186,6 +195,7 @@ export function sideGutterControlClassName(
 }
 
 export type SegmentControlVariant = 'segment' | 'checkbox' | 'header';
+export type SegmentControlSize = 'md' | 'sm';
 
 /** Segment / toggle chip used in settings and similar option rows. */
 export function segmentControlClassName(
@@ -194,18 +204,24 @@ export function segmentControlClassName(
 		disabled = false,
 		grow = true,
 		variant = 'segment',
+		size = 'md',
 		className,
 	}: {
 		disabled?: boolean;
 		/** `true` → flex-1; `'auto'` → flex-auto; `false` → no flex grow. */
 		grow?: boolean | 'auto';
 		variant?: SegmentControlVariant;
+		size?: SegmentControlSize;
 		className?: string;
 	} = {},
 ): string {
 	return clsx(
-		'flex min-h-11 items-center justify-center rounded border p-2 text-sm transition-[colors,box-shadow]',
-		variant === 'header' && 'size-11 shrink-0 p-1.5',
+		'flex items-center justify-center rounded border text-sm transition-[colors,box-shadow]',
+		variant === 'header'
+			? 'size-11 shrink-0 p-1.5'
+			: size === 'sm'
+				? 'size-6 shrink-0 p-0.5'
+				: 'min-h-11 p-2',
 		grow === true && 'flex-1',
 		grow === 'auto' && 'flex-auto',
 		className,

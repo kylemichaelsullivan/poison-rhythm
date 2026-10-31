@@ -1,13 +1,15 @@
 import clsx from 'clsx';
-import { focusVisibleRingClassName } from '@/lib/control-classes';
 import { useAboutPoisonRhythm } from './AboutPoisonRhythmContext';
+import type { ReactNode } from 'react';
 
 type AboutPoisonRhythmButtonProps = {
 	variant?: 'default' | 'title';
+	children?: ReactNode;
 };
 
 export function AboutPoisonRhythmButton({
 	variant = 'default',
+	children = 'Poison Rhythm',
 }: AboutPoisonRhythmButtonProps) {
 	const { open, openAbout } = useAboutPoisonRhythm();
 
@@ -15,8 +17,7 @@ export function AboutPoisonRhythmButton({
 		<button
 			type='button'
 			className={clsx(
-				'AppTitleBrandTrigger rounded-sm transition-colors duration-200 ease-out',
-				focusVisibleRingClassName,
+				'AppTitleBrandTrigger inline-block rounded-sm px-2 py-1 -my-1 transition-colors duration-200 ease-out',
 				variant === 'title'
 					? 'max-w-full truncate text-lg font-bold sm:text-2xl'
 					: 'truncate',
@@ -27,7 +28,7 @@ export function AboutPoisonRhythmButton({
 			aria-label='About Poison Rhythm'
 			onClick={openAbout}
 		>
-			Poison Rhythm
+			{children}
 		</button>
 	);
 }

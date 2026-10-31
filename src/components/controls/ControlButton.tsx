@@ -1,10 +1,6 @@
 import clsx from 'clsx';
 import { Icon } from '@/components/layout/Icon';
-import {
-	buttonLiftBorderClassName,
-	buttonLiftClassName,
-	forcedFocusRingClassName,
-} from '@/lib/control-classes';
+import { primaryFillChromeClassName } from '@/lib/control-classes';
 import type { Ref } from 'react';
 import type { SvgIconComponent } from '@/components/layout/Icon';
 
@@ -40,22 +36,22 @@ export function ControlButton({
 		? 'border-mid bg-surface-muted text-mid cursor-not-allowed'
 		: variant === 'primary'
 			? clsx(
-					buttonLiftClassName,
-					'border-2 border-primary-border bg-primary text-on-primary transition-[box-shadow] duration-200 ease-out',
+					primaryFillChromeClassName,
+					'border-primary-border bg-primary text-on-primary',
 				)
-			: clsx(
-					buttonLiftBorderClassName,
-					'border-2 border-secondary bg-surface text-black transition-[border-color,box-shadow] duration-200 ease-out',
-				);
+			: 'border-2 border-secondary bg-surface text-black';
 
 	return (
 		<button
 			type='button'
-			className={clsx('ControlButton', base, styles, forcedFocusRingClassName)}
+			className={clsx('ControlButton', base, styles)}
 			title={title}
 			disabled={disabled && !isSoftDisabled}
 			onClick={disabled ? onDisabledClick : onClick}
 			aria-disabled={disabled || undefined}
+			data-chrome-active={
+				variant === 'primary' && !disabled ? 'true' : undefined
+			}
 			aria-label={icon ? label : undefined}
 			ref={ref}
 		>

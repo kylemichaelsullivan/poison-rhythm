@@ -32,6 +32,7 @@ export function MetronomeModifyTempoButton({
 			className={clsx('ModifyTempoButton shrink-0', modifyTempoButtonClassName)}
 			title={label}
 			disabled={isDecrease ? tempo <= BPM_MIN : tempo >= BPM_MAX}
+			data-chrome-active='true'
 			onClick={() =>
 				handleTempoChange(
 					isDecrease

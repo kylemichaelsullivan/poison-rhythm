@@ -19,7 +19,7 @@ export function ModeBadge({ badge }: ModeBadgeProps) {
 		>
 			<span
 				className={clsx(
-					'ButtonLift-group relative inline-flex size-11 shrink-0 items-center justify-center rounded-full border-2 border-secondary bg-surface text-black transition-[border-color,box-shadow] duration-200 ease-out',
+					'relative inline-flex size-11 shrink-0 items-center justify-center rounded-full border-2 border-secondary bg-surface text-black',
 				)}
 			>
 				{badge.tone === 'bucket' ? (

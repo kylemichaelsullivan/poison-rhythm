@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { buttonLiftClassName } from '@/lib/control-classes';
 import type { ReactNode } from 'react';
 
 export type SettingsTabId = 'mode' | 'sound' | 'colors';
@@ -46,7 +45,7 @@ export function SettingsTabs({
 								'SettingsTab min-h-11 px-1.5 py-2.5 text-sm font-medium sm:px-2',
 								isActive
 									? 'border-b-2 border-primary text-primary'
-									: clsx('text-muted', buttonLiftClassName),
+									: 'text-muted',
 							)}
 							role='tab'
 							aria-selected={isActive}

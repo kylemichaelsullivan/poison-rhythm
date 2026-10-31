@@ -1,7 +1,10 @@
 import { Icon } from '@/components/layout/Icon';
 import { segmentControlClassName } from '@/lib/control-classes';
 import type { SvgIconComponent } from '@/components/layout/Icon';
-import type { SegmentControlVariant } from '@/lib/control-classes';
+import type {
+	SegmentControlSize,
+	SegmentControlVariant,
+} from '@/lib/control-classes';
 
 export type SegmentIcon = {
 	id: string;
@@ -27,6 +30,7 @@ type SegmentButtonProps = {
 	disabled?: boolean;
 	grow?: boolean | 'auto';
 	variant?: SegmentControlVariant;
+	size?: SegmentControlSize;
 	className?: string;
 };
 
@@ -41,6 +45,7 @@ export function SegmentButton({
 	disabled = false,
 	grow = true,
 	variant = 'segment',
+	size = 'md',
 	className,
 }: SegmentButtonProps) {
 	const iconNodes =
@@ -65,6 +70,7 @@ export function SegmentButton({
 				disabled,
 				grow,
 				variant,
+				size,
 				className,
 			})}
 			disabled={disabled}

@@ -55,11 +55,12 @@ export function CarouselEndMenu({ onReuse, onNew }: CarouselEndMenuProps) {
 				type='button'
 				className={carouselNavButtonClassName()}
 				title='New, Reuse, or Play'
-				aria-label='New, Reuse, or Play'
-				aria-haspopup='menu'
-				aria-expanded={open}
-				data-testid='carousel-end-menu'
 				onClick={() => setOpen(!open)}
+				aria-expanded={open}
+				aria-haspopup='menu'
+				aria-label='New, Reuse, or Play'
+				data-chrome-active={open || undefined}
+				data-testid='carousel-end-menu'
 				ref={triggerRef}
 			>
 				⋯

@@ -1,8 +1,5 @@
 import clsx from 'clsx';
-import {
-	buttonLiftBorderClassName,
-	buttonLiftClassName,
-} from '@/lib/control-classes';
+import { primaryFillChromeClassName } from '@/lib/control-classes';
 import type { ReactNode, Ref } from 'react';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost';
@@ -20,17 +17,13 @@ type ButtonProps = {
 
 const variantClassName: Record<ButtonVariant, string> = {
 	primary: clsx(
-		buttonLiftClassName,
-		'rounded border-2 border-primary-border bg-primary px-3 py-1.5 text-sm text-on-primary transition-[box-shadow] duration-200 ease-out',
+		primaryFillChromeClassName,
+		'rounded border border-primary-border bg-primary px-3 py-1.5 text-sm text-on-primary',
 	),
-	secondary: clsx(
-		buttonLiftBorderClassName,
-		'rounded border border-mid bg-surface-muted px-3 py-1.5 text-sm text-black transition-[border-color,box-shadow] duration-200 ease-out',
-	),
-	ghost: clsx(
-		buttonLiftBorderClassName,
-		'rounded border border-transparent bg-transparent px-3 py-1.5 text-sm text-dark transition-[border-color,box-shadow] duration-200 ease-out',
-	),
+	secondary:
+		'rounded border border-mid bg-surface-muted px-3 py-1.5 text-sm text-black',
+	ghost:
+		'rounded border border-transparent bg-transparent px-3 py-1.5 text-sm text-dark',
 };
 
 export function Button({
@@ -52,6 +45,7 @@ export function Button({
 			)}
 			title={title}
 			disabled={disabled}
+			data-chrome-active={variant === 'primary' ? 'true' : undefined}
 			data-modal-initial-focus={modalInitialFocus ? 'true' : undefined}
 			onClick={onClick}
 			ref={ref}

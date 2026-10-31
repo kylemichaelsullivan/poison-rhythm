@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { buttonLiftBorderClassName } from '@/lib/control-classes';
 import { HiddenPoisonLabel } from './HiddenPoisonLabel';
 
 type HiddenPoisonOverlayProps = {
@@ -23,9 +22,8 @@ export function HiddenPoisonOverlay({
 				type='button'
 				className={clsx(
 					'HiddenPoisonOverlay',
-					buttonLiftBorderClassName,
 					overlayClassName,
-					'cursor-pointer transition-[border-color,box-shadow] duration-200 ease-out',
+					'cursor-pointer',
 				)}
 				title='Always Show'
 				aria-label='Always Show Poison Rhythm'

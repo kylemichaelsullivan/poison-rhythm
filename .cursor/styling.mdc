@@ -90,7 +90,7 @@ If a color needs translucency, define it in `@theme` (e.g. `--color-scrim`) — 
 - Settings-style panels (`settingsPanelClassName`, `bg-light`): `text-dark`
 - Primary/accent controls (`bg-primary`): `text-white`
 - Muted captions: `text-mid`
-- Borders and hovers: `border-mid`, `ButtonLift` / `ButtonLift-border` (shadow + optional Dominant border). Do not change fill or ink on `:hover` / `:focus`
+- Borders: `border-mid` at rest. Hover / focus is global on `button` (inset ring + lift in `src/index.css`). Do not change fill or ink on `:hover` / `:focus`. Keep the control’s shape.
 
 ```tsx
 import clsx from 'clsx';
