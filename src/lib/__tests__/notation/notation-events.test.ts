@@ -124,6 +124,21 @@ describe('measureToNotationEvents', () => {
 			},
 		]);
 		expect(eventsToMusiSyncString(events)).toBe(MUSISYNC_GLYPH.wholeRest);
+		expect(MUSISYNC_GLYPH.wholeRest).toBe('W');
+	});
+
+	test('empty first half is a half rest glyph, not a whole rest', () => {
+		const events = measureToNotationEvents(hits(8), undefined, 'sixteenths');
+		expect(events[0]).toMatchObject({
+			kind: 'rest',
+			duration: 'half',
+			startCell: 0,
+			durationCells: 8,
+		});
+		expect(eventsToMusiSyncString(events)).toBe(
+			`${MUSISYNC_GLYPH.halfRest}${MUSISYNC_GLYPH.halfNote}`,
+		);
+		expect(MUSISYNC_GLYPH.halfRest).toBe('H');
 	});
 
 	test('quarters on 1 and 3 → two half notes', () => {

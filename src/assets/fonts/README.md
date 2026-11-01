@@ -2,7 +2,7 @@
 
 Poison Rhythm uses [MusiSync](https://www.fontspace.com/musisync-font-f3723) by Robert Allgeyer (SIL Open Font License 1.1) for **Notation** render mode.
 
-Duration keys follow Allgeyer’s conventional mnemonic (`musisyncGlyphFor` in `src/lib/notation/musisync-glyphs.ts`): notes `w`/`h`/`q`/`e`/`s`, rests `H`/`W`/`Q`/`E`/`S`. Dotted notes use dedicated glyphs `i` / `j` / `d` (eighth / quarter / half); dotted rests compose rest + `.`. Digits are not duration glyphs.
+Duration keys follow Allgeyer’s conventional mnemonic (`musisyncGlyphFor` in `src/lib/notation/musisync-glyphs.ts`): notes `w`/`h`/`q`/`e`/`s`, rests `W`/`H`/`Q`/`E`/`S`. Dotted notes use dedicated glyphs `i` / `j` / `d` (eighth / quarter / half); dotted rests compose rest + `.`. Digits are not duration glyphs.
 
 Beamed groups (see `beam-glyphs.ts`): `n` = two eighths, `y` = four sixteenths, `³` = three sixteenths, `m` = eighth + two sixteenths, `M` = two sixteenths + eighth, `¾` = sixteenth + eighth + sixteenth, `o` = dotted eighth + sixteenth, `O` = sixteenth + dotted eighth, U+E001 = sixteenth + eighth (derived undotted `O`; stock MusiSync has no `[1,2]`), `§` = three eighths, `Y` = four eighths.
 

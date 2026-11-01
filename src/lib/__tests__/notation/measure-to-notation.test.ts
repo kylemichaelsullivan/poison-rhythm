@@ -17,6 +17,10 @@ function hits(...cells: number[]): boolean[] {
 
 describe('musisyncGlyphFor', () => {
 	test('uses conventional MusiSync duration keys', () => {
+		expect(musisyncGlyphFor('note', 'whole')).toBe('w');
+		expect(musisyncGlyphFor('rest', 'whole')).toBe('W');
+		expect(musisyncGlyphFor('note', 'half')).toBe('h');
+		expect(musisyncGlyphFor('rest', 'half')).toBe('H');
 		expect(musisyncGlyphFor('note', 'quarter')).toBe('q');
 		expect(musisyncGlyphFor('rest', 'quarter')).toBe('Q');
 		expect(musisyncGlyphFor('note', 'eighth')).toBe('e');
@@ -80,6 +84,12 @@ describe('measureToNotationSteps', () => {
 		const steps = measureToNotationSteps(REST_MEASURE, undefined, 'sixteenths');
 		expect(steps).toHaveLength(1);
 		expect(steps[0]?.hit).toBe(false);
-		expect(steps[0]?.glyph).toBe('H');
+		expect(steps[0]?.glyph).toBe('W');
+	});
+
+	test('empty first half is a half rest, not a whole rest', () => {
+		const steps = measureToNotationSteps(hits(8), undefined, 'sixteenths');
+		expect(notationStepsToGlyphString(steps)).toBe('Hh');
+		expect(steps[0]).toMatchObject({ hit: false, glyph: 'H' });
 	});
 });
