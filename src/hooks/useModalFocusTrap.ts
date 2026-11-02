@@ -11,7 +11,7 @@ const FOCUSABLE_SELECTOR = [
 ].join(', ');
 
 /**
- * When `open`, moves focus into the dialog, traps Tab, closes on Escape, and
+ * When `open`, moves focus into the dialog, traps Tab, closes on Escape and
  * restores focus to the previously focused element on cleanup.
  */
 export function useModalFocusTrap(

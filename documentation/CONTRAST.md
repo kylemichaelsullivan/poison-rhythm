@@ -2,7 +2,7 @@
 
 How the grade stack works while someone picks a Dominant or Secondary crayon. Agents changing this UI should follow this file. The skill is [`.cursor/skills/color-contrast/SKILL.md`](../.cursor/skills/color-contrast/SKILL.md).
 
-**Composition:** `ColorAccentSettings` owns `useColorPreferences` (+ `useColorRoleSelection` / `usePaletteContrast`) and prop-drives `ColorPairPreview`, `CrayonTray`, and `SuggestedPairings`. `ContrastScoreMeter` owns `useTheme` so Light/Dark taps do not rescore the 64-crayon tray. Tray grades memoize on role + partner hex. Do not re-bind prefs on presentational leaves (`ThemeScoreRow`, `CrayonSwatch`, …).
+**Composition:** `ColorAccentSettings` owns `useColorPreferences` (+ `useColorRoleSelection` / `usePaletteContrast`) and prop-drives `ColorPairPreview`, `CrayonTray` and `SuggestedPairings`. `ContrastScoreMeter` owns `useTheme` so Light/Dark taps do not rescore the 64-crayon tray. Tray grades memoize on role + partner hex. Do not re-bind prefs on presentational leaves (`ThemeScoreRow`, `CrayonSwatch`, …).
 
 Letter thresholds live in [`A11Y.md`](A11Y.md). Product notes live in [`COLORS.md`](COLORS.md).
 
@@ -26,7 +26,7 @@ A score is the weaker of the two roles on that theme’s surfaces. For Dominant,
 
 ## Stack order
 
-Markup order is always Light, then Dark. **Visual order matches:** Light stays on top in every theme — meter bars and swatch chips. Do not reorder with flex `order`, React, or `light-dark()`. Theme clicks on the meter must hit the same bar after a preference change.
+Markup order is always Light, then Dark. **Visual order matches:** Light stays on top in every theme — meter bars and swatch chips. Do not reorder with flex `order`, React or `light-dark()`. Theme clicks on the meter must hit the same bar after a preference change.
 
 Chip and bar fills use stable `--color-ink-*` (`bg-ink-100` / `bg-ink-950`), not theme-flipping `black` / `white` / `chrome`. Otherwise Dark Mode inverts the Light chip into a dark chip and the stack looks swapped even when Light is still on top.
 
@@ -34,7 +34,7 @@ Swatch chips are the letter only. The meter is one rounded box with Light chrome
 
 ## Theme bars on the meter
 
-Each score row is the theme control for that mode. Labels are **Light Mode**, **Dark Mode**, and **Match System**. Preference (not effective appearance) drives taps:
+Each score row is the theme control for that mode. Labels are **Light Mode**, **Dark Mode** and **Match System**. Preference (not effective appearance) drives taps:
 
 | Current preference | Tap | Next preference |
 |--------------------|-----|-----------------|
@@ -60,5 +60,5 @@ Dominant `#914893` (favicon purple). Secondary `#246028` (green complement). Tha
 - Do not collapse the two scores into one letter on the meter or the swatch.
 - Do not put the mode label on the meter or swatch. Position carries Light vs Dark. The accessible name on the meter still says both modes.
 - Do not reuse `ContrastGradeBadge` for the meter. Swatches own the small chip; the meter is its own compact grade + ratio rows.
-- Do not reorder the Light/Dark stack with JavaScript, flex `order`, or `light-dark()`. Light stays on top.
+- Do not reorder the Light/Dark stack with JavaScript, flex `order` or `light-dark()`. Light stays on top.
 - Do not fill meter bars or swatch chips with theme-flipping `black` / `white` / `chrome`.

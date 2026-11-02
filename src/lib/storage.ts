@@ -25,7 +25,7 @@ export function writeStorageItem(key: string, value: string): void {
 		globalThis.localStorage.setItem(key, value);
 		notifyStorageListeners(key);
 	} catch {
-		// Quota exceeded, private mode, or disabled storage.
+		// Quota exceeded, private mode or disabled storage.
 	}
 }
 

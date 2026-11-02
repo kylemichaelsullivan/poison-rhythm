@@ -2,7 +2,7 @@ type AboutBrandHeaderProps = {
 	version: string;
 };
 
-/** Brand block for the About modal: icon, title, and version. */
+/** Brand block for the About modal: icon, title and version. */
 export function AboutBrandHeader({ version }: AboutBrandHeaderProps) {
 	return (
 		<div className='AboutBrandHeader flex flex-col items-center gap-3 pt-1'>

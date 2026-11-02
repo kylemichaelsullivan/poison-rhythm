@@ -15,7 +15,7 @@ export const MUSISYNC_SUBDIVISION_NOTE_GLYPHS = [
 	MUSISYNC_GLYPH.sixteenthNote,
 ].join('');
 
-/** Every duration, rest, dot, and beamed glyph the app can paint. */
+/** Every duration, rest, dot and beamed glyph the app can paint. */
 export const MUSISYNC_ALL_GLYPHS = Array.from(
 	new Set([
 		...Object.values(MUSISYNC_GLYPH),

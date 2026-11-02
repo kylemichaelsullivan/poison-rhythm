@@ -41,4 +41,4 @@ cp src/assets/fonts/MusiSync.woff2 public/fonts/MusiSync.woff2
 
 ## License
 
-See [MusiSync-LICENSE.md](./MusiSync-LICENSE.md) for OFL attribution, commercial-use terms, and warranty disclaimers.
+See [MusiSync-LICENSE.md](./MusiSync-LICENSE.md) for OFL attribution, commercial-use terms and warranty disclaimers.

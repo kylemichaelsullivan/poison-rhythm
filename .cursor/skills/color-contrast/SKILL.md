@@ -5,12 +5,12 @@ description: >-
   the current Secondary, or Secondary against the current Dominant, with a
   Light Mode score and a Dark Mode score. Use when changing the contrast
   meter, crayon swatches, grade badges, ratePaletteThemes,
-  ratePaletteIfRolePicked, or color accessibility copy.
+  ratePaletteIfRolePicked or color accessibility copy.
 ---
 
 # Color Contrast
 
-Read [`documentation/CONTRAST.md`](../../../documentation/CONTRAST.md) before editing the meter, tray, or palette grades. That file is the contract. Do not restate a shorter version in code comments and let this skill drift from it.
+Read [`documentation/CONTRAST.md`](../../../documentation/CONTRAST.md) before editing the meter, tray or palette grades. That file is the contract. Do not restate a shorter version in code comments and let this skill drift from it.
 
 ## While you change the UI
 

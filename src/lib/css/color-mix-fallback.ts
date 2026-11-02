@@ -53,7 +53,7 @@ export function firstSafeMixColor(inner: string): string | null {
 	return color;
 }
 
-/** Replace every color-mix() with a hex, rgb, or var() color. Null if any mix is unsafe. */
+/** Replace every color-mix() with a hex, rgb or var() color. Null if any mix is unsafe. */
 export function colorMixFallbackValue(value: string): string | null {
 	if (!value.includes('color-mix(')) return null;
 	let output = '';

@@ -28,7 +28,7 @@ type CornerModalProps = {
 	 * this instead and does not open the modal.
 	 */
 	onDoubleClick?: () => void;
-	/** Called after the modal closes (X, scrim, Escape, or timed dismiss). */
+	/** Called after the modal closes (X, scrim, Escape or timed dismiss). */
 	onClose?: () => void;
 	/**
 	 * When set, the dialog dismisses itself after this many milliseconds and

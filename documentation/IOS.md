@@ -53,11 +53,11 @@ The difficulty acknowledgement (`dismissAfterMs` on `Modal`, duration `TIMED_NOT
 
 - `background-attachment: fixed` on `html` is often ignored or janky on iOS. It is already in the page wash and is unchanged by the notice.
 - `100vh` includes the browser chrome. Full-height shells in this app use `dvh`. The notice does not size itself from the viewport.
-- `text-wrap: pretty` avoids a one-word last line. Paragraphs, lists, and headings declare `balance` first, then `pretty`. An engine that drops `pretty` keeps `balance`. Speculative on older WebKit: `pretty` is newer than `balance`, and neither property exists on very old iOS, so a one-word last line can still appear there.
+- `text-wrap: pretty` avoids a one-word last line. Paragraphs, lists and headings declare `balance` first, then `pretty`. An engine that drops `pretty` keeps `balance`. Speculative on older WebKit: `pretty` is newer than `balance`, and neither property exists on very old iOS, so a one-word last line can still appear there.
 
 ## What to run
 
-`src/lib/__tests__/timed-notice.test.ts` fails if the duration, the `0.5rem` height, the hex defaults, the crayon hex overrides, or the gradient fallbacks drift. `e2e/difficulty-regen-ack.spec.ts` fails if the OK button returns, the notice does not dismiss itself, or hovering fails to pause it.
+`src/lib/__tests__/timed-notice.test.ts` fails if the duration, the `0.5rem` height, the hex defaults, the crayon hex overrides or the gradient fallbacks drift. `e2e/difficulty-regen-ack.spec.ts` fails if the OK button returns, the notice does not dismiss itself or hovering fails to pause it.
 
 ## Related
 

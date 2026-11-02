@@ -617,7 +617,7 @@
 	/*
 	 * Text entry can be selected so a value can be replaced. -webkit-user-drag
 	 * blocks dragging that selection out in Chromium and Safari. Firefox still
-	 * fires dragstart (see main.tsx). Range, check, and radio stay off this
+	 * fires dragstart (see main.tsx). Range, check and radio stay off this
 	 * rule so a thumb drag is not treated as a value drag.
 	 */
 	input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):not(
@@ -982,7 +982,7 @@
 }
 
 /*
- * Timed notice fill. Height, solid color, and both gradient syntaxes are
+ * Timed notice fill. Height, solid color and both gradient syntaxes are
  * asserted in src/lib/__tests__/timed-notice.test.ts.
  * Stops are theme variables (hex in @theme; hex again when crayon prefs apply).
  * No color-mix() or oklch() here — see documentation/IOS.md.

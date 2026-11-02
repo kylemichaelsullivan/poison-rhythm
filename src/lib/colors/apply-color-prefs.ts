@@ -28,7 +28,7 @@ const BRAND_ACCENTS: Record<BrandAccentId, { hex: string; name: string }> = {
 	'poison-mint': { hex: BRAND_SECONDARY_HEX, name: 'Poison Mint' },
 };
 
-/** Stored accent: crayon, explicit brand token, or null (role’s brand default). */
+/** Stored accent: crayon, explicit brand token or null (role’s brand default). */
 export type AccentColorId = CrayonId | BrandAccentId | null;
 
 export function isBrandAccentId(

@@ -29,7 +29,7 @@ describe('measureCompleteAction', () => {
 		).toBe('advance');
 	});
 
-	test('stops on poison, game-mode halt, or the last measure', () => {
+	test('stops on poison, game-mode halt or the last measure', () => {
 		expect(
 			measureCompleteAction({
 				currentIndex: 1,

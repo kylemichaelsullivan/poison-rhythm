@@ -32,7 +32,7 @@ const PREVIEW_BEATS: readonly (readonly PreviewCell[])[] = [
 /**
  * Decorative mini-grid using the current color pair.
  * Mirrors MeasureCellGrid: secondary shell/beat borders, dominant hit fills,
- * muted rests, and a secondary ring on one hit and one rest (active step).
+ * muted rests and a secondary ring on one hit and one rest (active step).
  */
 export function ColorPairPlayPreview({
 	dominantHex,

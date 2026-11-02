@@ -7,7 +7,7 @@ import {
 import type { ThemePreference } from '../theme-options';
 
 describe('theme-options', () => {
-	test('lists Match System, Light Mode, and Dark Mode', () => {
+	test('lists Match System, Light Mode and Dark Mode', () => {
 		expect(THEME_OPTIONS.map((option) => option.label)).toEqual([
 			'Match System',
 			'Light Mode',

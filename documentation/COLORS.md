@@ -1,6 +1,6 @@
 # Color Preferences — Poison Rhythm
 
-Classroom-facing notes on **Settings → Colors**: dominant/secondary from a Crayola 64 tray, letter-grade contrast, and why Brand stays the default.
+Classroom-facing notes on **Settings → Colors**: dominant/secondary from a Crayola 64 tray, letter-grade contrast and why Brand stays the default.
 
 For full accessibility policy (grades, border hierarchy, keyboard), see [`A11Y.md`](A11Y.md). Theme (light/dark/system) lives on the Colors contrast meter; display mode is under **Settings → Mode**. For agents and schema wiring, see [`AGENTS.md`](../AGENTS.md).
 
@@ -17,7 +17,7 @@ Unset preferences keep the shipped **Poison Rhythm** purple + mint tokens from t
 
 - **Recognition** — the potion purple / deep mint look is the product signal on projected screens and shared devices.
 - **Classroom consistency** — one default pair means every station looks familiar when students rotate.
-- **Product pair** — Favicon purple (`#914893`) is the light-mode primary, with deep mint (`#246028`) as the green complement. That mint clears grade **A** on light and dark surfaces; the purple clears **B** in Light Mode and **A** in Dark Mode. Suggested Pairings are grade **A** (7:1 between the two colors) across yellow, green, blue, orange, pink, cyan, violet, and earth.
+- **Product pair** — Favicon purple (`#914893`) is the light-mode primary, with deep mint (`#246028`) as the green complement. That mint clears grade **A** on light and dark surfaces; the purple clears **B** in Light Mode and **A** in Dark Mode. Suggested Pairings are grade **A** (7:1 between the two colors) across yellow, green, blue, orange, pink, cyan, violet and earth.
 
 The Colors tab marks **Poison Rhythm** as Recommended in Suggested Pairings.
 

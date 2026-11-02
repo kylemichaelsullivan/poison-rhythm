@@ -7,7 +7,7 @@ type UseDisclosureResult = {
 	setOpen: (open: boolean) => void;
 };
 
-/** Boolean open/close state for modals, popovers, and similar disclosure UI. */
+/** Boolean open/close state for modals, popovers and similar disclosure UI. */
 export function useDisclosure(initialOpen = false): UseDisclosureResult {
 	const [open, setOpen] = useState(initialOpen);
 	const onOpen = useCallback(() => setOpen(true), []);

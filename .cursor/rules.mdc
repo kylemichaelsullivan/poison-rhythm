@@ -12,7 +12,8 @@ alwaysApply: true
 - Use **TypeScript** with strict configuration
 - Follow **Vite + React** architecture
 - Use typographic apostrophe ’ instead of straight apostrophe ' in ALL user-facing text
-- Prefer Title Case for titles, labels, `title`/`alt`, and short accessible names; sentence case for body copy and hints
+- Do not use the Oxford comma (`A, B and C` / `A, B or C`, not `A, B, and C` / `A, B, or C`)
+- Prefer Title Case for titles, labels, `title`/`alt` and short accessible names; sentence case for body copy and hints
 
 ## Package Management
 
@@ -62,16 +63,16 @@ src/
 e2e/                        # Playwright e2e + axe a11y
 ```
 
-Compose UI as atoms → molecules → composers; put side effects in hooks. See `.cursor/components.mdc`, `documentation/ARCHITECTURE.md`, and `AGENTS.md`.
+Compose UI as atoms → molecules → composers; put side effects in hooks. See `.cursor/components.mdc`, `documentation/ARCHITECTURE.md` and `AGENTS.md`.
 
 ## Rhythm Complexity
 
-Do **not** add Settings dials for density, syncopation, or subdivision. Complexity is owned by:
+Do **not** add Settings dials for density, syncopation or subdivision. Complexity is owned by:
 
 - **Difficulty slider (1–5)** — hit count and placement bias (`PreferencesContext`)
 - **Header ShowNotes subdivision** — generation/display/playback grid (`subdivisionLevel` in prefs)
 
-Settings may shape accents, rests, sticking, phrase length, and poison visibility — not duplicate the above.
+Settings may shape accents, rests, sticking, phrase length and poison visibility — not duplicate the above.
 
 ## Testing
 
@@ -199,6 +200,6 @@ export function ComponentName({
 ### Progress Updates
 
 - **Meaningful updates only**: Avoid inane progress updates and status reports
-- **Focus on substance**: Communicate actual progress, blockers, or decisions that matter
+- **Focus on substance**: Communicate actual progress, blockers or decisions that matter
 - **No busy work updates**: Don't report on routine tasks or obvious progress
 - **Efficiency**: Respect time by being concise and relevant
