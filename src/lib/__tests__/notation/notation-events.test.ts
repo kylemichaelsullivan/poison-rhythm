@@ -161,10 +161,9 @@ describe('measureToNotationEvents', () => {
 		expect(events.every((e) => !e.tieContinuation)).toBe(true);
 	});
 
-	test('eighth rest then eighth on beat 1', () => {
+	test('isolated hit on the & of 1 is a dotted quarter', () => {
 		const events = measureToNotationEvents(hits(2), undefined, 'eighths');
-		const glyphs = eventsToMusiSyncString(events);
-		expect(glyphs.startsWith('Ee')).toBe(true);
+		expect(eventsToMusiSyncString(events)).toBe('EjH');
 		expect(events[0]).toMatchObject({
 			kind: 'rest',
 			duration: 'eighth',
@@ -172,9 +171,45 @@ describe('measureToNotationEvents', () => {
 		});
 		expect(events[1]).toMatchObject({
 			kind: 'note',
-			duration: 'eighth',
+			duration: 'dottedQuarter',
 			startCell: 2,
 			tieContinuation: undefined,
+		});
+	});
+
+	test('hit on the & of 2 starts with a dotted quarter rest', () => {
+		const events = measureToNotationEvents(hits(6, 12), undefined, 'eighths');
+		expect(events[0]).toMatchObject({
+			kind: 'rest',
+			duration: 'dottedQuarter',
+			startCell: 0,
+			durationCells: 6,
+		});
+		expect(eventsToMusiSyncString(events)).toBe(
+			`${MUSISYNC_GLYPH.quarterRest}${MUSISYNC_GLYPH.augmentationDot}e${MUSISYNC_GLYPH.quarterRest}q`,
+		);
+	});
+
+	test('eighth–quarter–eighth syncopation in each half-bar', () => {
+		expect(
+			eventsToMusiSyncString(
+				measureToNotationEvents(hits(0, 2, 6), undefined, 'eighths'),
+			),
+		).toBe('eqeH');
+		expect(
+			eventsToMusiSyncString(
+				measureToNotationEvents(hits(8, 10, 14), undefined, 'eighths'),
+			),
+		).toBe('Heqe');
+	});
+
+	test('eighth rest then dotted quarter completes the first half-bar', () => {
+		const events = measureToNotationEvents(hits(2, 8), undefined, 'eighths');
+		expect(eventsToMusiSyncString(events)).toBe('Ejh');
+		expect(events[1]).toMatchObject({
+			kind: 'note',
+			duration: 'dottedQuarter',
+			startCell: 2,
 		});
 	});
 

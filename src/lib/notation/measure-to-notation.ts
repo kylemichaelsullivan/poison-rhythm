@@ -19,7 +19,7 @@ export type NotationStep = {
 };
 
 /**
- * Spell the measure with contemporary conventions and MusiSync beaming,
+ * Spell the measure with conventional 4/4 notation and MusiSync beaming,
  * then flatten to overlay-friendly steps (one per visual glyph).
  */
 export function measureToNotationSteps(

@@ -192,7 +192,7 @@ flowchart LR
 | Module | Role |
 |--------|------|
 | `notation-events.ts` | Boolean grid → timed note/rest events |
-| `spell-onsets.ts` / `spell-rests.ts` | Contemporary duration spelling per subdivision level |
+| `spell-onsets.ts` / `spell-rests.ts` | Conventional 4/4 duration spelling per subdivision level |
 | `duration-units.ts` | Cell ↔ duration mapping |
 | `beam-groups.ts` / `beam-notes.ts` / `beam-glyphs.ts` | Beamed eighth/sixteenth groups (exact patterns; `[1,2]` → derived U+E001, not stock `O`) |
 | `musisync-glyphs.ts` | Duration keys; dotted notes `i`/`j`/`d`; dotted rests = rest + `.` |

@@ -107,7 +107,8 @@ export function splitSpanAtBeats(
 
 /**
  * Longest legal note (including dotted values) that fits at `cell`.
- * Syncopated / short values must stay within the current beat when required.
+ * Off-beat quarters and dotted quarters are allowed when they stay inside
+ * a half-bar (classic syncopation); short values stay within the beat.
  */
 function chooseNoteLength(cell: number, remaining: number): number {
 	for (const candidate of SPELLING_CELL_LENGTHS) {
@@ -138,12 +139,20 @@ function isLegalNote(cell: number, length: number): boolean {
 	}
 
 	if (length === 6) {
-		// Dotted quarter: start on a beat; may cross into the next beat
-		return cell % CELLS_PER_BEAT === 0;
+		if (cell % CELLS_PER_BEAT === 0) {
+			// On a beat, including beat 2 (may cross the mid-bar)
+			return true;
+		}
+		// On “&”: eighth + dotted quarter completing a half-bar
+		return cell % 2 === 0 && !(cell < HALF_BAR_CELL && end > HALF_BAR_CELL);
 	}
 
 	if (length === 4) {
-		return cell % CELLS_PER_BEAT === 0;
+		if (cell % CELLS_PER_BEAT === 0) {
+			return true;
+		}
+		// Syncopated quarter on “&” (eighth–quarter–eighth); not across mid-bar
+		return cell % 2 === 0 && !(cell < HALF_BAR_CELL && end > HALF_BAR_CELL);
 	}
 
 	// Dotted eighth / eighth / sixteenth: stay within the current beat

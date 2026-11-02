@@ -20,7 +20,7 @@ type OccupiedSpan = {
 };
 
 /**
- * Spell rests into gaps not covered by note segments, using contemporary
+ * Spell rests into gaps not covered by note segments, using conventional
  * 4/4 rest consolidation (whole / half-bar / beat-bounded greedy).
  */
 export function spellRests(noteSegments: NoteSegment[]): RestSegment[] {
@@ -123,17 +123,17 @@ export function spellGap(
 }
 
 /**
- * Longest legal rest (including dotted eighth within a beat).
- * Does not cross mid-bar except for half/whole rests; does not use dotted
- * quarters/halves for rests (prefer plain beat-bounded rests).
+ * Longest legal rest (dotted quarter on a half-bar, dotted eighth on a
+ * beat, eighth on a beat or “&”). Does not cross mid-bar except for
+ * half/whole rests; does not use dotted half rests in 4/4.
  */
 function chooseRestLength(cell: number, remaining: number): number {
 	for (const candidate of SPELLING_CELL_LENGTHS) {
 		if (candidate > remaining) {
 			continue;
 		}
-		// Prefer not to use dotted quarter/half rests in 4/4
-		if (candidate === 6 || candidate === 12) {
+		// Prefer not to use dotted half rests in 4/4
+		if (candidate === 12) {
 			continue;
 		}
 		if (isLegalRest(cell, candidate)) {
@@ -154,14 +154,29 @@ function isLegalRest(cell: number, length: number): boolean {
 		return cell === 0 || cell === HALF_BAR_CELL;
 	}
 
+	if (length === 6) {
+		// Dotted quarter rest: start of a half-bar (beat 1 or 3)
+		return cell === 0 || cell === HALF_BAR_CELL;
+	}
+
 	if (length === 4) {
 		return cell % CELLS_PER_BEAT === 0;
 	}
 
-	// Dotted eighth / eighth / sixteenth: must stay within the current beat
+	if (length === 3) {
+		// Dotted eighth rest: on a beat only (not on “e”)
+		return cell % CELLS_PER_BEAT === 0;
+	}
+
+	// Eighth / sixteenth: must stay within the current beat
 	const beatEnd = (Math.floor(cell / CELLS_PER_BEAT) + 1) * CELLS_PER_BEAT;
 	if (end > beatEnd) {
 		return false;
+	}
+
+	if (length === 2) {
+		// Eighth rest: on a beat or “&”, not on “e” / “a”
+		return cell % 2 === 0;
 	}
 
 	if (cell < HALF_BAR_CELL && end > HALF_BAR_CELL) {

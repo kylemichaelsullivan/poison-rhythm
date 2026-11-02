@@ -37,6 +37,8 @@ describe('dotted notes', () => {
 			MUSISYNC_GLYPH.dottedHalfNote,
 		);
 		expect(musisyncGlyphFor('rest', 'dottedEighth')).toBe('E.');
+		expect(musisyncGlyphFor('rest', 'dottedQuarter')).toBe('Q.');
+		expect(musisyncGlyphFor('rest', 'dottedHalf')).toBe('H.');
 	});
 
 	test('dotted eighth + sixteenth beams to MusiSync o', () => {

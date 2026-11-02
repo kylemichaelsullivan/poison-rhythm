@@ -17,7 +17,7 @@ export type NotationEvent = {
 };
 
 /**
- * Spell a measure into contemporary 4/4 notation events
+ * Spell a measure into conventional 4/4 notation events
  * (duration-filled notes, beat-split ties, consolidated rests, beam groups).
  */
 export function measureToNotationEvents(
