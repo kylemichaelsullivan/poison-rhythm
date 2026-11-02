@@ -22,12 +22,11 @@ function persistValue<T>(
 	cacheRef: { current: { raw: string | null; value: T } | null },
 ) {
 	const encoded = serialize(next);
+	cacheRef.current = { raw: encoded, value: next };
 	if (encoded === null) {
 		removeStorageItem(key);
-		cacheRef.current = { raw: null, value: next };
 	} else {
 		writeStorageItem(key, encoded);
-		cacheRef.current = { raw: encoded, value: next };
 	}
 }
 

@@ -66,7 +66,6 @@ export async function seedPlaybackPrefs(
 					rhythmRenderMode: 'grid',
 					showNextMeasure: true,
 					demoBeforePlay,
-					muteOnStudentPass: false,
 					endlessInitialBatch: 8,
 					endlessAppendBatch: 8,
 					endlessPrefetchRemaining: 3,

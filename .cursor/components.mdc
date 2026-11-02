@@ -42,7 +42,7 @@ src/components/
 
 - **Remove unnecessary wrapper divs**: Don't create wrapper divs that add DOM complexity without benefit
 - **Simplify component structure**: Remove redundant nesting when possible
-- **Keep meaningful wrappers**: Retain wrappers that serve styling, semantic, or layout purposes (`Stack`, `Row`, `Section`, `PoisonMeasureFrame`)
+- **Keep meaningful wrappers**: Retain wrappers that serve styling, semantic or layout purposes (`Stack`, `Row`, `Section`, `PoisonMeasureFrame`)
 
 ### Spacing Guidelines
 
@@ -85,7 +85,7 @@ src/components/
 
 ### ui/ atoms
 
-- **Button**: text actions (`primary` | `secondary` | `ghost`)
+- **Button**: text actions (`primary` | `secondary` | `ghost`); `grow` fills row space (`true` → flex-1, `'auto'` → flex-auto)
 - **IconButton**: glyph/icon-only (`info` | `bare` | `modalClose`)
 - **Caption**: muted helper `<p>` (`xs` | `sm`)
 - **Stack** / **Row**: vertical / horizontal flex+gap layout layers
@@ -100,13 +100,13 @@ src/components/
 
 ### MeasuresSection / MeasureSlider
 
-- **MeasuresSection**: Empty state or carousel; `NextMeasureToggle` + `MeasuresSectionHeaderActions`; opens Body-owned `DisplayModeModal` in Bucket mode
+- **MeasuresSection**: Empty state or carousel; `NextMeasureToggle` + `MeasuresSectionHeaderActions` (`VolumeMenu`); opens Body-owned `DisplayModeModal` in Bucket mode
 - **MeasureSlider**: Presentational carousel; `live` on chrome for `data-testid="measure-slider"`; playback side effects in `useMeasurePlaybackSync`
-- **Layers**: `NextMeasurePreview`, `CurrentMeasureDisplay` / `measure-phase-chrome` (`data-playback-phase`: idle / count-in / listening / playing — fixed `border-2`; Listening = dashed primary shell + ink notes, Playing = secondary glow shell + secondary notes, count-in faded), `CarouselNavButtons` (section chrome tabs before Previous / Next; first-measure delayed Play; last-measure New / Reuse / Play)
+- **Layers**: `NextMeasurePreview`, `CurrentMeasureDisplay` / `measure-phase-chrome` (`data-playback-phase`: idle / count-in / listening / playing — fixed `border-2`; Listening = dashed primary shell + ink notes, Playing = secondary glow shell + secondary notes, count-in faded), `CarouselNavButtons` (section chrome tabs before Previous Measure / Next Measure; first-measure delayed Play; last-measure New / Reuse / Play)
 
 ### MeasureGrid / MeasureCell
 
-- **Purpose**: 16th-note grid with accent, sticking (L/R), poison overlay, and playback highlighting
+- **Purpose**: 16th-note grid with accent, sticking (L/R), poison overlay and playback highlighting
 - **Composer**: Section composers (`MeasuresSection`, `PoisonMeasureContent`) call `useMeasureDisplayOptions` and pass `display: MeasureDisplayOptions` into `MeasureGrid` / `CurrentMeasureDisplay` / `MeasureHeightReserve`
 - **Leaves**: `MeasureGrid` switches grid vs notation; `MeasureCellGrid` / `MeasureCell` / `MeasureNotation` / `NotationPlaybackCursor` take explicit props (no context)
 - **Props**: `measure`, optional `richMeasure`, `playback`, `hidden`, `display` (render mode, subdivision, feedback/accent/sticking flags, metronome step)
@@ -124,7 +124,7 @@ src/components/
 - **SettingsOverlay**: Three tabs — Mode, Sound, Colors (`SettingsTabs`)
 - **GameSettingsPanel** / **SoundSettingsPanel** / **ColorSettingsPanel**: compose setting atoms (`Mode` includes Display; `Sound` includes feedback; `Colors` = `ColorAccentSettings`)
 - **Colors:** `ColorAccentSettings` owns prefs + theme + `useColorRoleSelection` / `usePaletteContrast`; prop-drives `ColorPairPreview`, `ContrastScoreMeter` → `ThemeScoreRow`, `CrayonTray` (memoized grades on role + partner hex) → `CrayonTraySleeve` → `CrayonSwatch`, `SuggestedPairings` → `SuggestedPairingRow`, `SwapColorRolesButton`, `ColorRoleTile`
-- **Settings binders:** keyed `useSetting(key)` (store subscription), `useUpdateSetting` (full blob), `usePlaybackMute(channel)`, mute / count-in composers, `MetronomeTempoSlider` via `useMetronomeTempo`, `PlayModeOptionList`, `DifficultySlider`, `FeedbackToggles`, `DisplayModeControls`. Keep props for local UI (crayon edit role, modal open/close) or reusable atoms (`MuteToggle`, `EnableToggle`, `IconToggle`).
+- **Settings binders:** keyed `useSetting(key)` (store subscription), `useUpdateSetting` (full blob), `usePlaybackMute(channel)` (`metronome` / `playback` / `preview`), mute / count-in composers, `MetronomeTempoSlider` via `useMetronomeTempo`, `PlayModeOptionList`, `DifficultySlider`, `FeedbackToggles`, `DisplayModeControls`. Keep props for local UI (crayon edit role, modal open/close) or reusable atoms (`MuteToggle`, `EnableToggle`, `IconToggle`). Volume is mirrored: Measures `VolumeMenu` + Settings → Sound.
 - **Efficiency:** functional `useLocalStorage`; prefs split (complexity / sound / tempo); metronome tempo vs playback contexts; settings keyed store; Colors tray memo + theme isolation
 - **SettingsGroup** / **ConditionalSettingsGroup**: Section dividers inside a tab
 - **Setting utilities**: `NumberSetting`, `OnOffSetting`, `SelectSetting`, `SegmentedControl`, `When`, `useSetting`, `useUpdateSetting`
@@ -146,7 +146,8 @@ src/components/
 ## Typography
 
 - **Typographic apostrophe**: Use ’ instead of ' in all user-facing text
-- **Title Case**: Prefer Title Case for titles, control labels, `title`/`alt`, and short `aria-label` names; sentence case for descriptions and hints
+- **No Oxford comma**: Serial lists are `A, B and C` / `A, B or C` (not `A, B, and C` / `A, B, or C`)
+- **Title Case**: Prefer Title Case for titles, control labels, `title`/`alt` and short `aria-label` names; sentence case for descriptions and hints
 
 ## Accessibility
 

@@ -12,10 +12,11 @@ export function ClickOutside({
 }: ClickOutsideProps) {
 	useEffect(() => {
 		const fn = (e: MouseEvent) => {
-			if (
-				wrapperRef.current &&
-				!wrapperRef.current.contains(e.target as Node)
-			) {
+			const target = e.target as Node;
+			if (target instanceof Element && target.closest('.Modal') !== null) {
+				return;
+			}
+			if (wrapperRef.current && !wrapperRef.current.contains(target)) {
 				onClickOutside(e);
 			}
 		};

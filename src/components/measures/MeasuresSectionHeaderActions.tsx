@@ -1,4 +1,4 @@
-import { PlaybackVolumeButton } from '@/components/controls';
+import { VolumeMenu } from '@/components/controls';
 import { DisplayModeTrigger } from '@/components/poison';
 import { Row } from '@/components/ui';
 import type { RhythmRenderMode } from '@/lib/settings-schema';
@@ -17,7 +17,7 @@ export function MeasuresSectionHeaderActions({
 }: MeasuresSectionHeaderActionsProps) {
 	return (
 		<Row gap='2' align='center'>
-			<PlaybackVolumeButton />
+			<VolumeMenu />
 			{showDisplayModeTrigger ? (
 				<DisplayModeTrigger
 					renderMode={renderMode}

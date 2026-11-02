@@ -19,6 +19,7 @@ export function IntroTutorialDot({
 			type='button'
 			className='IntroTutorialDot flex h-11 w-8 shrink-0 items-center justify-center'
 			onClick={onSelect}
+			title={`Go to Welcome Step ${step} of ${stepCount}`}
 			aria-current={current ? 'step' : undefined}
 			aria-label={`Step ${step} of ${stepCount}`}
 		>

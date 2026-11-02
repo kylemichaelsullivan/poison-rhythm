@@ -10,6 +10,8 @@ type ButtonProps = {
 	variant?: ButtonVariant;
 	title?: string;
 	disabled?: boolean;
+	/** Fill available row space (`true` → flex-1, `'auto'` → flex-auto). */
+	grow?: boolean | 'auto';
 	/** Marks this control as the preferred initial focus target inside a Modal. */
 	modalInitialFocus?: boolean;
 	ref?: Ref<HTMLButtonElement>;
@@ -32,6 +34,7 @@ export function Button({
 	variant = 'secondary',
 	title,
 	disabled = false,
+	grow = false,
 	modalInitialFocus = false,
 	ref,
 }: ButtonProps) {
@@ -41,6 +44,8 @@ export function Button({
 			className={clsx(
 				'Button',
 				variantClassName[variant],
+				grow === true && 'flex-1 whitespace-nowrap',
+				grow === 'auto' && 'flex-auto whitespace-nowrap',
 				disabled && 'cursor-not-allowed opacity-50',
 			)}
 			title={title}

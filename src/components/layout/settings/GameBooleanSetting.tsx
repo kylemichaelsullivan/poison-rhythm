@@ -1,5 +1,6 @@
 import { EnableToggle } from './EnableToggle';
 import { useSetting } from './useSetting';
+import type { SvgIconComponent } from '@/components/layout/Icon';
 import type { GameSettings } from '@/lib/settings-schema';
 
 type GameBooleanKey = {
@@ -9,26 +10,23 @@ type GameBooleanKey = {
 type GameBooleanSettingProps = {
 	setting: GameBooleanKey;
 	label: string;
+	icon?: SvgIconComponent;
 };
 
-/**
- * Practice boolean from the game-settings blob.
- * `muteOnStudentPass` auto-disables when Listen Before You Play is off.
- */
+/** Practice boolean from the game-settings blob. */
 export function GameBooleanSetting({
 	setting,
 	label,
+	icon,
 }: GameBooleanSettingProps) {
 	const [enabled, setEnabled] = useSetting(setting);
-	const [demoBeforePlay] = useSetting('demoBeforePlay');
-	const disabled = setting === 'muteOnStudentPass' && !demoBeforePlay;
 
 	return (
 		<EnableToggle
 			label={label}
 			enabled={enabled}
-			disabled={disabled}
 			onChange={setEnabled}
+			icon={icon}
 		/>
 	);
 }

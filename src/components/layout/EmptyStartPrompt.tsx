@@ -14,7 +14,7 @@ export function EmptyStartPrompt({ onClick }: EmptyStartPromptProps) {
 				'flex h-full min-h-0 w-full items-center justify-center rounded-lg border-2 border-dashed border-mid bg-surface p-4 text-center text-dark',
 				darkSurfaceClassName,
 			)}
-			title='Click to Generate'
+			title='Click to Generate a Round'
 			onClick={onClick}
 		>
 			Click to Generate

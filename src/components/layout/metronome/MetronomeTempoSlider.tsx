@@ -26,7 +26,7 @@ export function MetronomeTempoSlider() {
 					max={BPM_MAX}
 					step={BPM_INPUT_STEP}
 					list={TEMPO_DATALIST_ID}
-					title='Set Tempo'
+					title={`Set Tempo (${tempo} BPM)`}
 					value={tempo}
 					onChange={(e) => handleTempoChange(Number(e.target.value))}
 					aria-label='Beats per Minute'

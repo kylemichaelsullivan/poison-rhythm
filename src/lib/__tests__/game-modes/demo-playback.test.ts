@@ -9,20 +9,24 @@ describe('demo playback audio gating', () => {
 		expect(shouldPlayRhythmAudio('demo', false, false)).toBe(true);
 	});
 
-	test('student pass muted when muteOnStudentPass is on', () => {
-		expect(shouldPlayRhythmAudio('student', true, false)).toBe(false);
+	test('student pass muted when Playback is muted', () => {
+		expect(shouldPlayRhythmAudio('student', false, true)).toBe(false);
 	});
 
-	test('student pass plays when muteOnStudentPass is off', () => {
+	test('student pass plays when Playback is unmuted', () => {
 		expect(shouldPlayRhythmAudio('student', false, false)).toBe(true);
+	});
+
+	test('demo pass muted when Preview is muted', () => {
+		expect(shouldPlayRhythmAudio('demo', true, true)).toBe(false);
+	});
+
+	test('demo pass plays when Preview is unmuted even if Playback is muted', () => {
+		expect(shouldPlayRhythmAudio('demo', false, true)).toBe(true);
 	});
 
 	test('rhythm sounds are independent of visual feedback mode', () => {
 		expect(shouldPlayRhythmAudio('demo', false, false)).toBe(true);
-	});
-
-	test('muteRhythmSounds silences hits', () => {
-		expect(shouldPlayRhythmAudio('demo', false, true)).toBe(false);
 	});
 
 	test('shouldShowVisualFeedback for visual and both', () => {

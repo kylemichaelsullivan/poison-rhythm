@@ -7,7 +7,8 @@ const STUDENT_KEYS = {
 	theme: 'poison-rhythm-theme',
 	subdivision: 'poison-rhythm-subdivision',
 	muteMetronome: 'poison-rhythm-mute-metronome',
-	muteRhythm: 'poison-rhythm-mute-rhythm',
+	mutePlayback: 'poison-rhythm-mute-playback',
+	mutePreview: 'poison-rhythm-mute-preview',
 	countInEnabled: 'poison-rhythm-count-in-enabled',
 	difficulty: 'poison-rhythm-difficulty',
 	tempo: 'poison-rhythm-tempo',
@@ -20,6 +21,7 @@ const STUDENT_KEYS = {
 /** Legacy keys kept for one-time migration reads. */
 export const LEGACY_STORAGE_KEYS = {
 	muteCountIn: 'poison-rhythm-mute-count-in',
+	muteRhythm: 'poison-rhythm-mute-rhythm',
 } as const;
 
 export type PreferenceKeyName = keyof typeof STUDENT_KEYS;
@@ -35,7 +37,8 @@ export const STORAGE_KEYS = {
 	theme: preferenceStorageKey('theme'),
 	subdivision: preferenceStorageKey('subdivision'),
 	muteMetronome: preferenceStorageKey('muteMetronome'),
-	muteRhythm: preferenceStorageKey('muteRhythm'),
+	mutePlayback: preferenceStorageKey('mutePlayback'),
+	mutePreview: preferenceStorageKey('mutePreview'),
 	countInEnabled: preferenceStorageKey('countInEnabled'),
 	difficulty: preferenceStorageKey('difficulty'),
 	tempo: preferenceStorageKey('tempo'),
@@ -51,5 +54,5 @@ export const MUTE_METRONOME_STORAGE_KEY = STORAGE_KEYS.muteMetronome;
 export const MUTE_COUNT_IN_STORAGE_KEY = LEGACY_STORAGE_KEYS.muteCountIn;
 /** @deprecated Use STORAGE_KEYS.countInEnabled */
 export const COUNT_IN_ENABLED_STORAGE_KEY = STORAGE_KEYS.countInEnabled;
-/** @deprecated Use STORAGE_KEYS.muteRhythm */
-export const MUTE_RHYTHM_STORAGE_KEY = STORAGE_KEYS.muteRhythm;
+/** @deprecated Use STORAGE_KEYS.mutePlayback / STORAGE_KEYS.mutePreview */
+export const MUTE_RHYTHM_STORAGE_KEY = LEGACY_STORAGE_KEYS.muteRhythm;

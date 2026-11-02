@@ -91,7 +91,6 @@ export const gameSettingsSchema = z.object({
 	rhythmRenderMode: rhythmRenderModeSchema,
 	showNextMeasure: z.boolean(),
 	demoBeforePlay: z.boolean(),
-	muteOnStudentPass: z.boolean(),
 	endless: z.boolean(),
 	endlessInitialBatch: z.number().int().min(1).max(64),
 	endlessAppendBatch: z.number().int().min(1).max(64),
@@ -114,7 +113,6 @@ export const DEFAULT_SETTINGS: GameSettings = {
 	rhythmRenderMode: 'grid',
 	showNextMeasure: false,
 	demoBeforePlay: false,
-	muteOnStudentPass: false,
 	endless: false,
 	endlessInitialBatch: 8,
 	endlessAppendBatch: 8,
@@ -155,9 +153,10 @@ function migrateRawGameSettings(value: unknown): unknown {
 			record.scrollDirection = 'down';
 		}
 	}
-	// Focus modes / poison frequency removed; strip so stored values don’t fail.
+	// Focus modes / poison frequency / student-pass mute removed; strip so stored values don’t fail.
 	delete record.focusMode;
 	delete record.poisonFrequency;
+	delete record.muteOnStudentPass;
 	return record;
 }
 
@@ -166,9 +165,6 @@ export function sanitizeGameSettings(
 ): GameSettings {
 	const migrated = migrateRawGameSettings(partial) as Partial<GameSettings>;
 	const merged = { ...DEFAULT_SETTINGS, ...migrated };
-	if (!merged.demoBeforePlay) {
-		merged.muteOnStudentPass = false;
-	}
 	// Phrase length is unused; keep schema key but always generate single measures.
 	merged.phraseLength = 1;
 	// Rests toggle is unused; density already leaves gaps.
@@ -206,10 +202,6 @@ export function isEndlessMode(settings: GameSettings): boolean {
 
 export function isBucketTrainerMode(settings: GameSettings): boolean {
 	return settings.gameMode === 'bucketTrainer';
-}
-
-export function shouldShowMuteOnStudentPass(settings: GameSettings): boolean {
-	return settings.demoBeforePlay;
 }
 
 /**

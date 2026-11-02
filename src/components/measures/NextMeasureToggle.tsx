@@ -13,7 +13,9 @@ export function NextMeasureToggle() {
 					? 'Next Measure Preview: Visible'
 					: 'Next Measure Preview: Hidden'
 			}
-			title={visible ? 'Hide Next Measure' : 'Show Next Measure'}
+			title={
+				visible ? 'Click to Hide Next Measure' : 'Click to Show Next Measure'
+			}
 			pressed={visible}
 			pressedIcon={EyeIcon}
 			unpressedIcon={EyeIcon}

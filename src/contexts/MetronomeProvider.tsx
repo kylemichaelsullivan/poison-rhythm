@@ -71,7 +71,7 @@ function shouldIgnoreEscapeStop(target: EventTarget | null) {
 export function MetronomeProvider({ children }: MetronomeProviderProps) {
 	const { subdivisionLevel } = useSubdivision();
 	const { tempo, setTempo } = useTempoPreference();
-	const { muteMetronome, countInEnabled, muteRhythmSounds } =
+	const { muteMetronome, countInEnabled, mutePlayback, mutePreview } =
 		useSoundPreferences();
 	const { settings } = useSettings();
 	const [activeSource, setActiveSource] = useState<PlaybackSource | null>(null);
@@ -86,12 +86,14 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 	const previewMeasureRef = useRef<RhythmMeasure | null>(null);
 	const muteMetronomeRef = useRef(muteMetronome);
 	const countInEnabledRef = useRef(countInEnabled);
-	const muteRhythmSoundsRef = useRef(muteRhythmSounds);
+	const mutePlaybackRef = useRef(mutePlayback);
+	const mutePreviewRef = useRef(mutePreview);
 	const settingsRef = useRef(settings);
 	const activeSourceRef = useRef(activeSource);
 	muteMetronomeRef.current = muteMetronome;
 	countInEnabledRef.current = countInEnabled;
-	muteRhythmSoundsRef.current = muteRhythmSounds;
+	mutePlaybackRef.current = mutePlayback;
+	mutePreviewRef.current = mutePreview;
 	settingsRef.current = settings;
 	activeSourceRef.current = activeSource;
 
@@ -241,12 +243,11 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 					playbackMeasureRef.current,
 				);
 				if (measure && stepHasHit(measure, subdivisionLevel, step)) {
-					const s = settingsRef.current;
 					if (
 						shouldPlayRhythmAudio(
 							passForEvent,
-							s.muteOnStudentPass,
-							muteRhythmSoundsRef.current,
+							mutePreviewRef.current,
+							mutePlaybackRef.current,
 						)
 					) {
 						engine.scheduleHit(event.audioTime);

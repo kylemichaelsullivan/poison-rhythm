@@ -26,7 +26,7 @@ type CarouselNavButtonsProps = {
 /**
  * Prev/next sit in the page gutters beside the body column.
  * Children render first so section chrome (Eye, Volume) tabs before
- * Previous / Next. Gutters stay absolutely positioned, so visual layout
+ * Previous Measure / Next Measure. Gutters stay absolutely positioned, so visual layout
  * is unchanged. Below `--breakpoint-gutter` (no lateral gutter), they
  * drop under the section with `sideGutterCollapsedReserveClassName` so
  * they clear PlayControls. First measure: delayed Play. Last measure:

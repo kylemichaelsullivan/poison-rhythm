@@ -33,11 +33,18 @@ export function PoisonVisibilityToggle({
 				enabled={visible}
 				disabled={disabled}
 				onChange={onChange}
+				title={
+					visible
+						? 'Click to Hide Poison During Playback'
+						: 'Click to Always Show Poison Rhythm'
+				}
 			/>
 		);
 	}
 
-	const actionLabel = visible ? 'Hide During Playback' : 'Always Show';
+	const actionLabel = visible
+		? 'Click to Hide Poison During Playback'
+		: 'Click to Always Show Poison Rhythm';
 
 	return (
 		<IconToggle

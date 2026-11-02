@@ -48,7 +48,13 @@ export function PlayControls({
 				isPlaying={isMeasuresRunning && !isCountingIn}
 				label={isMeasuresRunning ? 'Pause' : 'Play'}
 				countBeat={isCountingIn ? countInBeat : null}
-				title={disabled ? 'Click + Start' : undefined}
+				title={
+					disabled
+						? 'Click to Generate a Round'
+						: isMeasuresRunning
+							? 'Pause Playback'
+							: 'Play Measures'
+				}
 				disabled={disabled}
 				onClick={toggleMeasures}
 				onDisabledClick={onDisabledClick}

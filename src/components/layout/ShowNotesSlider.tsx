@@ -36,6 +36,7 @@ export function ShowNotesSlider({
 				max={2}
 				step={1}
 				value={value}
+				title={`Note Subdivisions (${SUBDIVISION_LABELS[value]})`}
 				aria-label='Note Subdivisions'
 				aria-valuemin={0}
 				aria-valuemax={2}

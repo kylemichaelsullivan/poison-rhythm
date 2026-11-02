@@ -5,7 +5,5 @@ import { MuteToggle } from './MuteToggle';
 export function MetronomeMuteSetting() {
 	const { muted, setMuted } = usePlaybackMute('metronome');
 
-	return (
-		<MuteToggle label='Metronome Click' muted={muted} onChange={setMuted} />
-	);
+	return <MuteToggle label='Metronome' muted={muted} onChange={setMuted} />;
 }

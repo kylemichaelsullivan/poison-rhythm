@@ -12,7 +12,7 @@ export function CarouselNavButton({
 	disabled = false,
 }: CarouselNavButtonProps) {
 	const label = direction === 'prev' ? '←' : '→';
-	const title = direction === 'prev' ? 'Previous' : 'Next';
+	const title = direction === 'prev' ? 'Previous Measure' : 'Next Measure';
 
 	return (
 		<button

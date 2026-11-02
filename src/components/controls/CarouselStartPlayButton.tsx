@@ -67,7 +67,8 @@ export function CarouselStartPlayButton({
 				'CarouselStartPlayButton relative overflow-hidden',
 			)}
 			disabled={isPlaying}
-			aria-label={armed ? 'Cancel Play' : 'Play After a Moment'}
+			title={armed ? 'Cancel Delayed Play' : 'Play Measures'}
+			aria-label={armed ? 'Cancel Delayed Play' : 'Play Measures'}
 			aria-pressed={armed}
 			data-testid='carousel-start-play'
 			data-armed={armed ? 'true' : 'false'}

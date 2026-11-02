@@ -17,7 +17,7 @@ export function DisplayModeTrigger({
 		<IconButton
 			variant='bare'
 			label='Change Display Mode'
-			title='Display Mode'
+			title='Change Display Mode'
 			popup='dialog'
 			onClick={onClick}
 		>

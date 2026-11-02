@@ -159,16 +159,19 @@ test.describe('measure playback', () => {
 		await page.goto('/');
 		await generateRound(page);
 
-		const next = page.getByRole('button', { name: 'Next', exact: true });
+		const next = page.getByRole('button', {
+			name: 'Next Measure',
+			exact: true,
+		});
 		await expect(next).toBeVisible();
 		await next.click();
 
 		const eye = page.getByRole('button', {
 			name: /Next Measure Preview/,
 		});
-		const volume = page.getByRole('button', { name: /Rhythm Sounds/ });
+		const volume = page.getByRole('button', { name: 'Volume', exact: true });
 		const previous = page.getByRole('button', {
-			name: 'Previous',
+			name: 'Previous Measure',
 			exact: true,
 		});
 
@@ -180,6 +183,168 @@ test.describe('measure playback', () => {
 		await expect(previous).toBeFocused();
 		await page.keyboard.press('Tab');
 		await expect(next).toBeFocused();
+	});
+
+	test('Volume menu confirms Preview mute while Playback is on', async ({
+		page,
+	}) => {
+		await page.goto('/');
+		await generateRound(page);
+
+		const volume = page.getByRole('button', { name: 'Volume', exact: true });
+		await volume.click();
+
+		const menu = page.getByRole('dialog', { name: 'Volume', exact: true });
+		await expect(menu).toBeVisible();
+
+		await menu.getByRole('button', { name: 'Preview: Mute' }).click();
+		const confirm = page.getByRole('dialog', { name: 'Mute Preview Only?' });
+		await expect(confirm).toBeVisible();
+		await expect(
+			confirm.getByRole('button', { name: 'Mute Both' }),
+		).toBeVisible();
+		await confirm.getByRole('button', { name: 'Cancel' }).click();
+		await expect(confirm).toBeHidden();
+		await expect(
+			menu.getByRole('button', { name: 'Preview: Mute' }),
+		).toBeVisible();
+
+		await menu.getByRole('button', { name: 'Preview: Mute' }).click();
+		await page
+			.getByRole('dialog', { name: 'Mute Preview Only?' })
+			.getByRole('button', { name: 'Mute Preview' })
+			.click();
+		await expect(
+			menu.getByRole('button', { name: 'Preview: Unmute' }),
+		).toBeVisible();
+		await expect(
+			menu.getByRole('button', { name: 'Playback: Mute' }),
+		).toBeVisible();
+	});
+
+	test('Volume menu Mute Both silences Playback and Preview', async ({
+		page,
+	}) => {
+		await page.goto('/');
+		await generateRound(page);
+
+		const volume = page.getByRole('button', { name: 'Volume', exact: true });
+		await volume.click();
+
+		const menu = page.getByRole('dialog', { name: 'Volume', exact: true });
+		await expect(menu).toBeVisible();
+
+		await menu.getByRole('button', { name: 'Preview: Mute' }).click();
+		await page
+			.getByRole('dialog', { name: 'Mute Preview Only?' })
+			.getByRole('button', { name: 'Mute Both' })
+			.click();
+		await expect(
+			menu.getByRole('button', { name: 'Preview: Unmute' }),
+		).toBeVisible();
+		await expect(
+			menu.getByRole('button', { name: 'Playback: Unmute' }),
+		).toBeVisible();
+		await expect(
+			menu.getByRole('button', { name: 'Metronome: Mute' }),
+		).toBeVisible();
+	});
+
+	test('Volume trigger mutes all channels while the menu is open', async ({
+		page,
+	}) => {
+		await page.addInitScript(() => {
+			window.localStorage.setItem('poison-rhythm-mute-playback', 'true');
+			window.localStorage.setItem('poison-rhythm-mute-preview', 'true');
+		});
+		await page.goto('/');
+		await generateRound(page);
+
+		const volume = page.getByRole('button', { name: 'Volume', exact: true });
+		await volume.click();
+		const menu = page.getByRole('dialog', { name: 'Volume', exact: true });
+		await expect(menu).toBeVisible();
+		await expect(
+			menu.getByRole('button', { name: 'Metronome: Mute' }),
+		).toBeVisible();
+
+		await volume.click();
+		await expect(
+			menu.getByRole('button', { name: 'Metronome: Unmute' }),
+		).toBeVisible();
+		await expect(
+			menu.getByRole('button', { name: 'Playback: Unmute' }),
+		).toBeVisible();
+		await expect(
+			menu.getByRole('button', { name: 'Preview: Unmute' }),
+		).toBeVisible();
+
+		await volume.click();
+		await expect(
+			menu.getByRole('button', { name: 'Metronome: Mute' }),
+		).toBeVisible();
+		await expect(
+			menu.getByRole('button', { name: 'Playback: Unmute' }),
+		).toBeVisible();
+		await expect(
+			menu.getByRole('button', { name: 'Preview: Unmute' }),
+		).toBeVisible();
+	});
+
+	test('Volume trigger unmutes all when there is nothing to restore', async ({
+		page,
+	}) => {
+		await page.addInitScript(() => {
+			window.localStorage.setItem('poison-rhythm-mute-metronome', 'true');
+			window.localStorage.setItem('poison-rhythm-mute-playback', 'true');
+			window.localStorage.setItem('poison-rhythm-mute-preview', 'true');
+		});
+		await page.goto('/');
+		await generateRound(page);
+
+		const volume = page.getByRole('button', { name: 'Volume', exact: true });
+		await volume.click();
+		const menu = page.getByRole('dialog', { name: 'Volume', exact: true });
+		await expect(
+			menu.getByRole('button', { name: 'Metronome: Unmute' }),
+		).toBeVisible();
+
+		await volume.click();
+		await expect(
+			menu.getByRole('button', { name: 'Metronome: Mute' }),
+		).toBeVisible();
+		await expect(
+			menu.getByRole('button', { name: 'Playback: Mute' }),
+		).toBeVisible();
+		await expect(
+			menu.getByRole('button', { name: 'Preview: Mute' }),
+		).toBeVisible();
+	});
+
+	test('Volume menu restores Playback and Preview together without confirm', async ({
+		page,
+	}) => {
+		await page.addInitScript(() => {
+			window.localStorage.setItem('poison-rhythm-mute-playback', 'true');
+			window.localStorage.setItem('poison-rhythm-mute-preview', 'true');
+		});
+		await page.goto('/');
+		await generateRound(page);
+
+		const volume = page.getByRole('button', { name: 'Volume', exact: true });
+		await volume.click();
+		const menu = page.getByRole('dialog', { name: 'Volume', exact: true });
+		await menu.getByRole('button', { name: 'Playback: Unmute' }).click();
+
+		await expect(
+			page.getByRole('dialog', { name: 'Unmute Playback?' }),
+		).toHaveCount(0);
+		await expect(
+			menu.getByRole('button', { name: 'Playback: Mute' }),
+		).toBeVisible();
+		await expect(
+			menu.getByRole('button', { name: 'Preview: Mute' }),
+		).toBeVisible();
 	});
 
 	test('first-measure Play starts after a cancelable delay', async ({
@@ -243,7 +408,10 @@ test.describe('measure playback', () => {
 		await page.goto('/');
 		await generateRound(page);
 
-		const next = page.getByRole('button', { name: 'Next', exact: true });
+		const next = page.getByRole('button', {
+			name: 'Next Measure',
+			exact: true,
+		});
 		for (let step = 0; step < 20 && (await next.isVisible()); step += 1) {
 			await next.click();
 		}

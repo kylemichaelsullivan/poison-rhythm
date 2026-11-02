@@ -1,3 +1,5 @@
+import EarIcon from '@/assets/svg/ear.svg?react';
+import EyeIcon from '@/assets/svg/eye.svg?react';
 import { DisplayModeControls } from './DisplayModeControls';
 import { GameBooleanSetting } from './GameBooleanSetting';
 import { IntroTutorialSetting } from './IntroTutorialSetting';
@@ -16,14 +18,12 @@ export function GameSettingsPanel() {
 				<GameBooleanSetting
 					setting='showNextMeasure'
 					label='Show Next Measure'
+					icon={EyeIcon}
 				/>
 				<GameBooleanSetting
 					setting='demoBeforePlay'
 					label='Listen Before You Play'
-				/>
-				<GameBooleanSetting
-					setting='muteOnStudentPass'
-					label='Mute When You Play'
+					icon={EarIcon}
 				/>
 			</SettingsGroup>
 

@@ -25,6 +25,7 @@ export function SubdivisionSetting() {
 				max={2}
 				step={1}
 				value={value}
+				title={`Note Subdivisions (${SUBDIVISION_LABELS[value]})`}
 				aria-label='Note Subdivisions'
 				aria-valuemin={0}
 				aria-valuemax={2}

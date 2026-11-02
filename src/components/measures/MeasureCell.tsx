@@ -52,6 +52,7 @@ export function MeasureCell({
 	const showStepHighlight = isCurrentStep && showVisual;
 	const showAccentMark = showAccents && accent && value;
 	const showStickingLabel = showSticking && sticking && value;
+	const cellTitle = value ? (accent ? 'Accent Hit' : 'Hit') : 'Rest';
 
 	return (
 		<div
@@ -61,7 +62,7 @@ export function MeasureCell({
 				showStepHighlight && measureHitHighlightClass(phase),
 				hidden && value && 'opacity-0',
 			)}
-			title={value ? (accent ? 'Accent Hit' : 'Hit') : 'Rest'}
+			title={showStepHighlight ? `${cellTitle} (current)` : cellTitle}
 			data-cell-index={index}
 			data-highlighted={showStepHighlight ? 'true' : undefined}
 		>

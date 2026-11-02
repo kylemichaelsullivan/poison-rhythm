@@ -50,20 +50,15 @@ describe('settings-schema', () => {
 		expect(parseGameSettings(legacy)).toEqual(DEFAULT_SETTINGS);
 	});
 
-	test('muteOnStudentPass cleared when demoBeforePlay is off', () => {
-		const result = sanitizeGameSettings({
-			demoBeforePlay: false,
-			muteOnStudentPass: true,
-		});
-		expect(result.muteOnStudentPass).toBe(false);
-	});
-
-	test('muteOnStudentPass preserved when demoBeforePlay is on', () => {
-		const result = sanitizeGameSettings({
+	test('strips legacy muteOnStudentPass from stored JSON', () => {
+		const legacy = JSON.stringify({
+			...DEFAULT_SETTINGS,
 			demoBeforePlay: true,
 			muteOnStudentPass: true,
 		});
-		expect(result.muteOnStudentPass).toBe(true);
+		const parsed = parseGameSettings(legacy);
+		expect(parsed.demoBeforePlay).toBe(true);
+		expect('muteOnStudentPass' in parsed).toBe(false);
 	});
 
 	test('serialize and parse round-trip', () => {
@@ -134,23 +129,19 @@ describe('settings-schema', () => {
 			rhythmRenderMode: 'scroll',
 			scrollDirection: 'none',
 			demoBeforePlay: true,
-			muteOnStudentPass: true,
 		});
 		const parsed = parseGameSettings(legacy);
 		expect(parsed.rhythmRenderMode).toBe('grid');
 		expect(parsed.scrollDirection).toBe('down');
 		expect(parsed.demoBeforePlay).toBe(true);
-		expect(parsed.muteOnStudentPass).toBe(true);
 	});
 
 	test('parseGameSettings preserves demoBeforePlay when other keys are partial', () => {
 		const partial = JSON.stringify({
 			demoBeforePlay: true,
-			muteOnStudentPass: true,
 		});
 		const parsed = parseGameSettings(partial);
 		expect(parsed.demoBeforePlay).toBe(true);
-		expect(parsed.muteOnStudentPass).toBe(true);
 		expect(parsed.players).toBe(DEFAULT_SETTINGS.players);
 	});
 

@@ -46,13 +46,13 @@ Location: `e2e/`
 
 | Spec | Coverage |
 |------|----------|
-| `playback.spec.ts` | Round ready, count-in highlight gating, **count-in beats on the Play button**, post–count-in highlight, demo pass, **Escape stops playback** (including while Play/Pause is focused), **Measures tab order** (Eye, Volume, Previous, Next), **first-measure delayed Play** (cancel via click / outside), **last-measure New / Reuse / Play** |
+| `playback.spec.ts` | Round ready, count-in highlight gating, **count-in beats on the Play button**, post–count-in highlight, demo pass, **Escape stops playback** (including while Play/Pause is focused), **Measures tab order** (Eye, Volume, Previous Measure, Next Measure), **Volume menu Preview-only mute confirm** (Cancel / Mute Preview / Mute Both), **speaker mutes all while the menu is open**, **speaker restores the previous mix or unmutes all**, **Playback unmute restores Preview when both were muted**, **first-measure delayed Play** (cancel via click / outside), **last-measure New / Reuse / Play** |
 | `difficulty-regen-ack.spec.ts` | Difficulty acknowledgement and Account notice: **no OK button**, `0.5rem` theme progress bar, dismiss on `TIMED_NOTICE_DURATION_MS`, **pause while hovered**. Account copy uses `text-wrap: pretty` (no non-breaking spaces) |
 | `a11y.spec.ts` | axe WCAG 2.2 A/AA + best-practice (start screen, round, settings/Sound, metronome, modals, count-in). Runs on **Desktop Chrome** and **mobile** (360×800) projects |
 | `mobile-layout.spec.ts` | 360×800 smoke: first-measure delayed Play + Next vs Play overlap, last-measure end menu, 2-col measure grid, Settings panel scroll |
 | `color-contrast.spec.ts` | Colors meter matches swatch chips plus ratios; Light on top in every theme; Dominant is scored against Secondary and the reverse |
 | `notation-scroll.spec.ts` | MusiSync boxes do not vertically overflow |
-| `shownotes-glyph.spec.ts` | Header note indicator paints a MusiSync glyph (not `q`/`e`/`s`) in Light, Dark, and System |
+| `shownotes-glyph.spec.ts` | Header note indicator paints a MusiSync glyph (not `q`/`e`/`s`) in Light, Dark and System |
 | `intro.spec.ts` | First-visit Simon Says tutorial (two safe bars, then timed poison fail overlays); nav dots jump to a step; **Don’t show again** is checked by default so Let’s Play persists; uncheck it for session-only dismiss; returning visits skip it unless **Settings → Mode → Welcome Tutorial** |
 | `helpers.ts` | Shared prefs seeding and round-ready wait |
 
@@ -92,7 +92,7 @@ The a11y “start screen” test expects a **seeded** round (`measure-slider`), 
 - Dotted note glyphs: `i` / `j` / `d` — see [`src/assets/fonts/README.md`](../src/assets/fonts/README.md)
 - `[1,2]` (sixteenth + eighth) beams to derived U+E001 (undotted `O`); never alias to stock `O` (`[1,3]`)
 - Lazy `MeasureNotation` + `loadMusiSyncFont` prefetch when display mode is notation (`MeasureGrid` → `useNotationPrefetch`; loading shell is `NotationFallback`)
-- Header ShowNotes trigger: `e2e/shownotes-glyph.spec.ts` asserts the canvas paints a MusiSync note (not a fallback letter) in Light, Dark, and System
+- Header ShowNotes trigger: `e2e/shownotes-glyph.spec.ts` asserts the canvas paints a MusiSync note (not a fallback letter) in Light, Dark and System
 - `MUSISYNC_ALL_GLYPHS` unit test: every duration + beamed key is in the early-load string
 
 ## Scratch artifacts

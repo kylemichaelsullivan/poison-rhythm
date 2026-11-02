@@ -8,7 +8,11 @@ export function IntroTutorialSetting() {
 
 	return (
 		<SettingRow label='Welcome Tutorial'>
-			<Button variant='secondary' onClick={openIntro}>
+			<Button
+				variant='secondary'
+				title='Show Welcome Tutorial'
+				onClick={openIntro}
+			>
 				Show Welcome
 			</Button>
 		</SettingRow>

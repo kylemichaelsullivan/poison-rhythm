@@ -24,7 +24,12 @@ export function IntroTutorialNav({
 	return (
 		<div className='grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center'>
 			<div className='justify-self-start'>
-				<Button variant='secondary' disabled={stepIndex === 0} onClick={onBack}>
+				<Button
+					variant='secondary'
+					title='Go to Previous Welcome Step'
+					disabled={stepIndex === 0}
+					onClick={onBack}
+				>
 					Back
 				</Button>
 			</div>
@@ -35,11 +40,21 @@ export function IntroTutorialNav({
 			/>
 			<div className='justify-self-end'>
 				{last ? (
-					<Button variant='primary' modalInitialFocus onClick={onPlay}>
+					<Button
+						variant='primary'
+						title='Close Welcome and Start Playing'
+						modalInitialFocus
+						onClick={onPlay}
+					>
 						Let’s Play
 					</Button>
 				) : (
-					<Button variant='primary' modalInitialFocus onClick={onNext}>
+					<Button
+						variant='primary'
+						title='Go to Next Welcome Step'
+						modalInitialFocus
+						onClick={onNext}
+					>
 						Next
 					</Button>
 				)}

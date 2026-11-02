@@ -15,7 +15,11 @@ export function IntroSkipToggle({ checked, onChange }: IntroSkipToggleProps) {
 		<Row justify='center' gap='2' fullWidth>
 			<IconToggle
 				label={`Don’t show again: ${actionLabel}`}
-				title={`Click to ${actionLabel}`}
+				title={
+					checked
+						? 'Click to Show Welcome Next Time'
+						: 'Click to Hide Welcome Next Time'
+				}
 				pressed={checked}
 				pressedIcon={CheckmarkIcon}
 				variant='checkbox'

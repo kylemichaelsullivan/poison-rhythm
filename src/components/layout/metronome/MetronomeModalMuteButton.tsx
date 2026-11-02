@@ -1,5 +1,5 @@
-import FullVolumeIcon from '@/assets/svg/full-volume.svg?react';
-import MuteIcon from '@/assets/svg/mute.svg?react';
+import Volume0Icon from '@/assets/svg/volume-0.svg?react';
+import Volume2Icon from '@/assets/svg/volume-2.svg?react';
 import { Icon } from '@/components/layout/Icon';
 import { IconButton } from '@/components/ui';
 import { usePlaybackMute } from '@/contexts';
@@ -16,7 +16,7 @@ export function MetronomeModalMuteButton() {
 			title={`Click to ${actionLabel} Metronome`}
 			onClick={() => setMuted(!muted)}
 		>
-			<Icon svg={muted ? MuteIcon : FullVolumeIcon} />
+			<Icon svg={muted ? Volume0Icon : Volume2Icon} />
 		</IconButton>
 	);
 }

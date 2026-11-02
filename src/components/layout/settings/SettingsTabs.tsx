@@ -48,6 +48,7 @@ export function SettingsTabs({
 									: 'text-muted',
 							)}
 							role='tab'
+							title={`${tab.label} Settings`}
 							aria-selected={isActive}
 							aria-controls={activePanelId}
 							tabIndex={isActive ? 0 : -1}

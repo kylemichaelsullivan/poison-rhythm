@@ -16,7 +16,11 @@ export function ModeBadgeTrigger({ badge, onClick }: ModeBadgeTriggerProps) {
 					? `Play Mode: ${badge.label}, Endless. Change Play Mode`
 					: `Play Mode: ${badge.label}. Change Play Mode`
 			}
-			title='Change Play Mode'
+			title={
+				badge.endless && badge.tone !== 'bucket'
+					? `Change Play Mode (${badge.label}, Endless)`
+					: `Change Play Mode (${badge.label})`
+			}
 			popup='dialog'
 			onClick={onClick}
 		>

@@ -13,7 +13,7 @@ type CarouselEndMenuProps = {
 	onNew: () => void;
 };
 
-/** Last-measure actions: New, Reuse, or Play. */
+/** Last-measure actions: New, Reuse or Play. */
 export function CarouselEndMenu({ onReuse, onNew }: CarouselEndMenuProps) {
 	const { open, onClose, setOpen } = useDisclosure();
 	const rootRef = useRef<HTMLDivElement>(null);
@@ -54,11 +54,11 @@ export function CarouselEndMenu({ onReuse, onNew }: CarouselEndMenuProps) {
 			<button
 				type='button'
 				className={carouselNavButtonClassName()}
-				title='New, Reuse, or Play'
+				title='New, Reuse or Play Measures'
 				onClick={() => setOpen(!open)}
 				aria-expanded={open}
 				aria-haspopup='menu'
-				aria-label='New, Reuse, or Play'
+				aria-label='New, Reuse or Play Measures'
 				data-chrome-active={open || undefined}
 				data-testid='carousel-end-menu'
 				ref={triggerRef}
@@ -96,6 +96,7 @@ export function CarouselEndMenu({ onReuse, onNew }: CarouselEndMenuProps) {
 						)}
 						isPlaying={isMeasuresRunning && !isCountingIn}
 						label={isMeasuresRunning ? 'Pause' : 'Play'}
+						title={isMeasuresRunning ? 'Pause Playback' : 'Play Measures'}
 						countBeat={isCountingIn ? countInBeat : null}
 						onClick={() => {
 							onClose();

@@ -63,14 +63,14 @@ export function MeasureNotation({
 					isMeasuresPlaying={display.isMeasuresPlaying}
 				/>
 				<section
-					// biome-ignore lint/a11y/noNoninteractiveTabindex: keyboard users must focus horizontal overflow
-					tabIndex={0}
 					className={clsx(
 						'MeasureNotationLine MusiSync text-current focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface',
 						!fontReady && 'invisible',
 					)}
 					aria-label='Rhythm Notation'
 					data-glyphs={glyphString}
+					// biome-ignore lint/a11y/noNoninteractiveTabindex: keyboard users must focus horizontal overflow
+					tabIndex={0}
 				>
 					{steps.map((step) => (
 						<MeasureNotationGlyph key={step.stepIndex} glyph={step.glyph} />

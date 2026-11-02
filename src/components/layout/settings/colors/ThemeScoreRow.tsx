@@ -43,7 +43,11 @@ export function ThemeScoreRow({
 			aria-label={`${option.label}, grade ${rating.grade}, ${rating.ratio.toFixed(1)} to 1`}
 			aria-pressed={selected}
 			aria-describedby={describedBy}
-			title={selected ? systemOption.label : option.label}
+			title={
+				selected
+					? `Click to ${systemOption.label} — ${option.label} Grade ${rating.grade} (${rating.ratio.toFixed(1)}:1)`
+					: `Click to Lock ${option.label} — Grade ${rating.grade} (${rating.ratio.toFixed(1)}:1)`
+			}
 			data-contrast-mode={mode}
 			data-contrast-grade={rating.grade}
 			data-contrast-ratio={rating.ratio.toFixed(1)}

@@ -17,7 +17,10 @@ test.describe('mobile layout', () => {
 		const play = page.getByTestId('play-controls').getByRole('button').first();
 		await expect(play).toBeVisible();
 
-		const next = page.getByRole('button', { name: 'Next', exact: true });
+		const next = page.getByRole('button', {
+			name: 'Next Measure',
+			exact: true,
+		});
 		const startPlay = page.getByTestId('carousel-start-play');
 		const endMenu = page.getByTestId('carousel-end-menu');
 
@@ -50,7 +53,7 @@ test.describe('mobile layout', () => {
 		}
 		await expect(endMenu).toBeVisible();
 		await expect(
-			page.getByRole('button', { name: 'Previous', exact: true }),
+			page.getByRole('button', { name: 'Previous Measure', exact: true }),
 		).toBeEnabled();
 
 		const measureGrid = page.locator('.MeasureCellGrid').first();

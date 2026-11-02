@@ -25,7 +25,7 @@ export function HiddenPoisonOverlay({
 					overlayClassName,
 					'cursor-pointer',
 				)}
-				title='Always Show'
+				title='Always Show Poison Rhythm'
 				aria-label='Always Show Poison Rhythm'
 				onClick={onClick}
 			>

@@ -146,12 +146,13 @@ export function createAudioEngine(): AudioEngine {
 /** Rhythm hit sounds follow mute prefs, not visual feedback mode (see Sound settings). */
 export function shouldPlayRhythmAudio(
 	playbackPass: 'demo' | 'student',
-	muteOnStudentPass: boolean,
-	muteRhythmSounds: boolean,
+	mutePreview: boolean,
+	mutePlayback: boolean,
 ): boolean {
-	if (muteRhythmSounds) return false;
-	if (playbackPass === 'student' && muteOnStudentPass) return false;
-	return true;
+	if (playbackPass === 'demo') {
+		return !mutePreview;
+	}
+	return !mutePlayback;
 }
 
 export function shouldShowVisualFeedback(
