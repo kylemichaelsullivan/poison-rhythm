@@ -60,6 +60,19 @@ describe('spell-onsets', () => {
 		]);
 	});
 
+	test('half note on beat 2 covers beats 2–3', () => {
+		const segments = splitSpanAtBeats(4, 8, 4);
+		expect(segments).toEqual([
+			{
+				startCell: 4,
+				durationCells: 8,
+				duration: 'half',
+				tieContinuation: false,
+				onsetCell: 4,
+			},
+		]);
+	});
+
 	test('adjacent sixteenth hits stay separate onsets without ties', () => {
 		const segments = spellOnsetSegments(hits(0, 1), 'sixteenths');
 		expect(segments).toHaveLength(2);

@@ -135,7 +135,9 @@ function isLegalNote(cell: number, length: number): boolean {
 	}
 
 	if (length === 8) {
-		return cell === 0 || cell === HALF_BAR_CELL;
+		// Half note on beat 1, 2 or 3 (beat 2 covers 2–3 instead of
+		// dotted quarter + leftover eighth rest)
+		return cell === 0 || cell === CELLS_PER_BEAT || cell === HALF_BAR_CELL;
 	}
 
 	if (length === 6) {

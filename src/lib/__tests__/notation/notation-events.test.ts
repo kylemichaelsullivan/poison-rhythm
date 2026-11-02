@@ -161,6 +161,28 @@ describe('measureToNotationEvents', () => {
 		expect(events.every((e) => !e.tieContinuation)).toBe(true);
 	});
 
+	test('rest on 1, hit on 2 then two eighths on 4 is quarter rest, half, n', () => {
+		const events = measureToNotationEvents(
+			hits(4, 12, 14),
+			undefined,
+			'eighths',
+		);
+		expect(events[0]).toMatchObject({
+			kind: 'rest',
+			duration: 'quarter',
+			startCell: 0,
+		});
+		expect(events[1]).toMatchObject({
+			kind: 'note',
+			duration: 'half',
+			startCell: 4,
+			durationCells: 8,
+		});
+		expect(eventsToMusiSyncString(events)).toBe(
+			`${MUSISYNC_GLYPH.quarterRest}h${MUSISYNC_BEAMED.twoEighths}`,
+		);
+	});
+
 	test('isolated hit on the & of 1 is a dotted quarter', () => {
 		const events = measureToNotationEvents(hits(2), undefined, 'eighths');
 		expect(eventsToMusiSyncString(events)).toBe('EjH');
