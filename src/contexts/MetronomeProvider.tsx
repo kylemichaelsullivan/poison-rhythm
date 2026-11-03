@@ -50,10 +50,16 @@ function isTextInputTarget(target: EventTarget | null) {
 	);
 }
 
+/** True while a portaled `.Modal` overlay is mounted (focus may sit on `body`). */
+function isAppModalOpen() {
+	return document.querySelector('.Modal') !== null;
+}
+
 /** Space/Enter/arrows should not fire while focus is on controls or dialogs. */
 function isEditableTarget(target: EventTarget | null) {
 	return (
 		isTextInputTarget(target) ||
+		isAppModalOpen() ||
 		(target instanceof HTMLElement &&
 			target.closest('button, a[href], [role="button"], [role="dialog"]') !==
 				null)

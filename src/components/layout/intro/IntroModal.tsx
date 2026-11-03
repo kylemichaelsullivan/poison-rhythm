@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Stack } from '@/components/ui';
-import { INTRO_TUTORIAL_STEPS } from '@/lib/intro-tutorial';
+import {
+	INTRO_PLAY_HALO_AFTER_MS,
+	INTRO_TUTORIAL_STEPS,
+} from '@/lib/intro-tutorial';
 import { Modal } from '../Modal';
 import { IntroSkipToggle } from './IntroSkipToggle';
 import { IntroTutorialNav } from './IntroTutorialNav';
@@ -13,17 +16,45 @@ type IntroModalProps = {
 
 const LAST_STEP = INTRO_TUTORIAL_STEPS.length - 1;
 
+function prefersReducedMotion(): boolean {
+	return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
 /** First-visit Simon Says tutorial, then optional skip on this device. */
 export function IntroModal({ open, onClose }: IntroModalProps) {
 	const [skipFuture, setSkipFuture] = useState(true);
 	const [stepIndex, setStepIndex] = useState(0);
+	const [playHalo, setPlayHalo] = useState(false);
+	const onLastStep = stepIndex >= LAST_STEP;
 
 	useEffect(() => {
 		if (!open) {
 			setStepIndex(0);
 			setSkipFuture(true);
+			setPlayHalo(false);
 		}
 	}, [open]);
+
+	useEffect(() => {
+		if (!open || !onLastStep) {
+			setPlayHalo(false);
+			return;
+		}
+
+		if (prefersReducedMotion()) {
+			setPlayHalo(true);
+			return;
+		}
+
+		setPlayHalo(false);
+		const timer = window.setTimeout(() => {
+			setPlayHalo(true);
+		}, INTRO_PLAY_HALO_AFTER_MS);
+
+		return () => {
+			window.clearTimeout(timer);
+		};
+	}, [open, onLastStep]);
 
 	const dismiss = useCallback(() => {
 		onClose(skipFuture);
@@ -44,6 +75,7 @@ export function IntroModal({ open, onClose }: IntroModalProps) {
 	useEffect(() => {
 		if (!open) return;
 
+		// Arrow keys only — never touch Enter/Space; those activate the focused CTA.
 		function handleKeyDown(e: KeyboardEvent) {
 			if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
 
@@ -52,6 +84,11 @@ export function IntroModal({ open, onClose }: IntroModalProps) {
 
 			if (e.key === 'ArrowLeft') {
 				goBack();
+				return;
+			}
+			if (onLastStep) {
+				// Right Arrow dismisses only after fail copy + Let’s Play halo.
+				if (playHalo) dismiss();
 				return;
 			}
 			goNext();
@@ -69,7 +106,7 @@ export function IntroModal({ open, onClose }: IntroModalProps) {
 			window.removeEventListener('keydown', handleKeyDown, true);
 			window.removeEventListener('keyup', handleKeyUp, true);
 		};
-	}, [open, goBack, goNext]);
+	}, [open, goBack, goNext, onLastStep, playHalo, dismiss]);
 
 	const step = INTRO_TUTORIAL_STEPS[stepIndex] ?? INTRO_TUTORIAL_STEPS[0];
 
@@ -86,6 +123,7 @@ export function IntroModal({ open, onClose }: IntroModalProps) {
 				<IntroTutorialNav
 					stepIndex={stepIndex}
 					stepCount={INTRO_TUTORIAL_STEPS.length}
+					playHalo={playHalo}
 					onBack={goBack}
 					onNext={goNext}
 					onPlay={dismiss}

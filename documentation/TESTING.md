@@ -53,7 +53,7 @@ Location: `e2e/`
 | `color-contrast.spec.ts` | Colors meter matches swatch chips plus ratios; Light on top in every theme; Dominant is scored against Secondary and the reverse |
 | `notation-scroll.spec.ts` | MusiSync boxes do not vertically overflow |
 | `shownotes-glyph.spec.ts` | Header note indicator paints a MusiSync glyph (not `q`/`e`/`s`) in Light, Dark and System |
-| `intro.spec.ts` | First-visit Simon Says tutorial (two safe bars, then timed poison fail overlays); nav dots jump to a step; **Don’t show again** is checked by default so Let’s Play persists; uncheck it for session-only dismiss; returning visits skip it unless **Settings → Mode → Welcome Tutorial** |
+| `intro.spec.ts` | First-visit Simon Says tutorial (two safe bars, then timed poison fail overlays); nav dots jump to a step; Arrow Left/Right move steps; Enter closes on Let’s Play before the halo; Arrow Right closes only after the halo; **Don’t show again** is checked by default so Let’s Play persists; uncheck it for session-only dismiss; returning visits skip it unless **Settings → Mode → Welcome Tutorial** |
 | `helpers.ts` | Shared prefs seeding and round-ready wait |
 
 ### Playwright projects

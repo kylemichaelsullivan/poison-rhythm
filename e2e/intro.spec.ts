@@ -155,6 +155,46 @@ test.describe('first-visit welcome', () => {
 			dialog.getByRole('button', { name: 'Step 2 of 3' }),
 		).toHaveAttribute('aria-current', 'step');
 		await expect(dialog.getByRole('button', { name: 'Next' })).toBeVisible();
+
+		await page.keyboard.press('ArrowRight');
+		await expect(
+			dialog.getByRole('button', { name: 'Let’s Play' }),
+		).toBeVisible();
+		// ArrowRight on the last step is inert until fail copy lands and the halo starts.
+		await page.keyboard.press('ArrowRight');
+		await expect(dialog).toBeVisible();
+		// Enter activates Let’s Play immediately — not gated on the halo.
+		await page.keyboard.press('Enter');
+		await expect(dialog).toBeHidden();
+	});
+
+	test('arrow right closes only after the Let’s Play halo', async ({
+		page,
+	}) => {
+		await page.goto('/');
+		const dialog = page.getByRole('dialog', {
+			name: 'Welcome to Poison Rhythm',
+		});
+		await expect(dialog).toBeVisible();
+		await dialog.getByRole('button', { name: 'Step 3 of 3' }).click();
+		await expect(
+			dialog.getByRole('button', { name: 'Let’s Play' }),
+		).toBeVisible();
+
+		await page.keyboard.press('ArrowRight');
+		await expect(dialog).toBeVisible();
+
+		await expect(dialog.getByText('That’s the Poison…')).toBeVisible({
+			timeout: 2000,
+		});
+		await expect(dialog.getByText('Play it, and you lose!')).toBeVisible({
+			timeout: 2000,
+		});
+		await expect(dialog.locator('.IntroPlayHalo')).toBeVisible({
+			timeout: 2000,
+		});
+		await page.keyboard.press('ArrowRight');
+		await expect(dialog).toBeHidden();
 	});
 
 	test('close button only remembers this device when skip is checked', async ({
