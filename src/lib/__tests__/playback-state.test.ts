@@ -4,6 +4,7 @@ import {
 	isMeasuresPlaying,
 	measureForPlaybackPass,
 	nextPassAfterBar,
+	shouldHighlightNotationPlayback,
 	shouldHighlightPlaybackStep,
 	shouldRunCountIn,
 } from '../playback-state';
@@ -101,6 +102,40 @@ describe('playback-state', () => {
 				cellStep: 0,
 				subdivisionIndex: 0,
 				showVisual: true,
+			}),
+		).toBe(false);
+	});
+
+	test('shouldHighlightNotationPlayback gates on play + visual feedback', () => {
+		expect(
+			shouldHighlightNotationPlayback({
+				playbackEnabled: true,
+				isMeasuresPlaying: true,
+				showVisual: true,
+			}),
+		).toBe(true);
+
+		expect(
+			shouldHighlightNotationPlayback({
+				playbackEnabled: true,
+				isMeasuresPlaying: false,
+				showVisual: true,
+			}),
+		).toBe(false);
+
+		expect(
+			shouldHighlightNotationPlayback({
+				playbackEnabled: false,
+				isMeasuresPlaying: true,
+				showVisual: true,
+			}),
+		).toBe(false);
+
+		expect(
+			shouldHighlightNotationPlayback({
+				playbackEnabled: true,
+				isMeasuresPlaying: true,
+				showVisual: false,
 			}),
 		).toBe(false);
 	});

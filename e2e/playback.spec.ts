@@ -101,6 +101,37 @@ test.describe('measure playback', () => {
 		await clickPause(page);
 	});
 
+	test('colors the active notation glyph after count-in', async ({ page }) => {
+		await seedPlaybackPrefs(page, {
+			countIn: true,
+			demoBeforePlay: false,
+			tempo: 180,
+			subdivision: 'quarters',
+			rhythmRenderMode: 'notation',
+		});
+		await page.goto('/');
+		await generateRound(page);
+
+		const slider = page.getByTestId('measure-slider');
+		const playControls = page.getByTestId('play-controls');
+
+		await clickPlay(page);
+		await expect(playControls).toHaveAttribute('data-counting-in', 'true');
+		await expect(
+			slider.locator('.MeasureNotationGlyph[data-active="true"]'),
+		).toHaveCount(0);
+
+		await expect(playControls).toHaveAttribute('data-counting-in', 'false', {
+			timeout: 8_000,
+		});
+		await expect(
+			slider.locator('.MeasureNotationGlyph[data-active="true"]'),
+		).toHaveCount(1, { timeout: 1_000 });
+		await expect(playControls).toHaveAttribute('data-measures-playing', 'true');
+
+		await clickPause(page);
+	});
+
 	test('preview before play highlights measure during demo pass', async ({
 		page,
 	}) => {

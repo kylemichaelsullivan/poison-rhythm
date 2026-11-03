@@ -47,6 +47,7 @@ export {
 	isMeasuresPlaying,
 	measureForPlaybackPass,
 	nextPassAfterBar,
+	shouldHighlightNotationPlayback,
 	shouldHighlightPlaybackStep,
 	shouldRunCountIn,
 } from './playback-state';
@@ -124,12 +125,14 @@ export {
 	SUBDIVISION_LEVELS,
 } from './subdivision-levels';
 export {
+	cellsPerSubdivisionPulse,
 	cellToSubdivisionStep,
 	isQuarterDownbeat,
 	stepHasHit,
 	subdivisionPulseDivisor,
 	subdivisionPulseSec,
 	subdivisionStepCount,
+	subdivisionStepToCell,
 } from './subdivision-playback';
 export {
 	nextThemePreference,

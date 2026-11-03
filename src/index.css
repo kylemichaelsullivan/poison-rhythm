@@ -866,10 +866,6 @@
 	width: 100%;
 }
 
-.NotationPlaybackCursor {
-	z-index: 1;
-}
-
 .RhythmStickingOverlay {
 	padding-inline: 0.75rem;
 }

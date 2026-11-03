@@ -108,7 +108,7 @@ src/components/
 
 - **Purpose**: 16th-note grid with accent, sticking (L/R), poison overlay and playback highlighting
 - **Composer**: Section composers (`MeasuresSection`, `PoisonMeasureContent`) call `useMeasureDisplayOptions` and pass `display: MeasureDisplayOptions` into `MeasureGrid` / `CurrentMeasureDisplay` / `MeasureHeightReserve`
-- **Leaves**: `MeasureGrid` switches grid vs notation; `MeasureCellGrid` / `MeasureCell` / `MeasureNotation` / `NotationPlaybackCursor` take explicit props (no context)
+- **Leaves**: `MeasureGrid` switches grid vs notation; `MeasureCellGrid` / `MeasureCell` / `MeasureNotation` take explicit props (no context)
 - **Props**: `measure`, optional `richMeasure`, `playback`, `hidden`, `display` (render mode, subdivision, feedback/accent/sticking flags, metronome step)
 - **Render modes**: `grid` or `notation` (MusiSync via `display.renderMode`)
 - **Layout**: Four pedagogical beats; wraps to **2×2** beat groups below `sm`

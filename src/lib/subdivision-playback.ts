@@ -81,6 +81,25 @@ export function cellToSubdivisionStep(
 	}
 }
 
+/** Sixteenth-cells covered by one subdivision pulse. */
+export function cellsPerSubdivisionPulse(level: SubdivisionLevel): number {
+	return MEASURE_LENGTH / subdivisionStepCount(level);
+}
+
+/**
+ * Map a (possibly fractional) subdivision step to the sixteenth-cell under
+ * the playhead. Fractional steps enable duration-accurate glyph highlight
+ * at coarse levels (e.g. dotted quarter = 1.5 beats at quarters).
+ */
+export function subdivisionStepToCell(
+	level: SubdivisionLevel,
+	step: number,
+): number {
+	const cellsPerPulse = cellsPerSubdivisionPulse(level);
+	const cell = Math.floor(step * cellsPerPulse);
+	return Math.max(0, Math.min(MEASURE_LENGTH - 1, cell));
+}
+
 export function isQuarterDownbeat(
 	level: SubdivisionLevel,
 	stepIndex: number,

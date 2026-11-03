@@ -35,6 +35,17 @@ export function shouldHighlightPlaybackStep(options: {
 	);
 }
 
+/** Whether notation glyphs should color the active token during playback. */
+export function shouldHighlightNotationPlayback(options: {
+	playbackEnabled: boolean;
+	isMeasuresPlaying: boolean;
+	showVisual: boolean;
+}): boolean {
+	return (
+		options.playbackEnabled && options.isMeasuresPlaying && options.showVisual
+	);
+}
+
 /** Which pass follows count-in (or immediate start when count-in is off). */
 export function initialPlaybackPass(demoBeforePlay: boolean): PlaybackPass {
 	return demoBeforePlay ? 'demo' : 'student';

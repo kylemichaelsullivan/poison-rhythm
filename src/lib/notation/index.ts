@@ -47,6 +47,7 @@ export {
 	measureToNotationSteps,
 	type NotationStep,
 	notationStepsToGlyphString,
+	tokenCellSpan,
 } from './measure-to-notation';
 export {
 	durationGlyphsForLevel,
@@ -59,3 +60,7 @@ export {
 	measureToNotationEvents,
 	type NotationEvent,
 } from './notation-events';
+export {
+	activeNotationStepIndex,
+	buildNotationCellStepMap,
+} from './notation-playback';

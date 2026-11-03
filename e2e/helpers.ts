@@ -18,6 +18,7 @@ export type PlaybackSeedOptions = {
 	demoBeforePlay: boolean;
 	tempo?: number;
 	subdivision?: 'quarters' | 'eighths' | 'sixteenths';
+	rhythmRenderMode?: 'grid' | 'notation';
 };
 
 export async function seedPlaybackPrefs(
@@ -30,6 +31,7 @@ export async function seedPlaybackPrefs(
 			demoBeforePlay,
 			tempo,
 			subdivision,
+			rhythmRenderMode,
 			countInKey,
 			settingsKey,
 			tempoKey,
@@ -63,7 +65,7 @@ export async function seedPlaybackPrefs(
 					poisonMode: 'visible',
 					gameMode: 'default',
 					endless: false,
-					rhythmRenderMode: 'grid',
+					rhythmRenderMode,
 					showNextMeasure: true,
 					demoBeforePlay,
 					endlessInitialBatch: 8,
@@ -77,6 +79,7 @@ export async function seedPlaybackPrefs(
 			demoBeforePlay: options.demoBeforePlay,
 			tempo: options.tempo,
 			subdivision: options.subdivision,
+			rhythmRenderMode: options.rhythmRenderMode ?? 'grid',
 			countInKey: COUNT_IN_KEY,
 			settingsKey: SETTINGS_KEY,
 			tempoKey: TEMPO_KEY,

@@ -122,7 +122,7 @@ Provider tree in `main.tsx`: `ThemeProvider` → `ColorPreferencesProvider` → 
 - **PoisonSection**: Composer; `PoisonSectionHeader`, `PoisonMeasureContent` / `PoisonMeasureFrame` / `HiddenPoisonOverlay`
 - **MeasuresSection / MeasureSlider**: `NextMeasureToggle`, `MeasuresSectionHeaderActions`, carousel chrome + `useMeasurePlaybackSync`
 - **ShowNotes**: Subdivision popover; `useHoverPinPopover` + `ShowNotesTrigger`
-- **MeasureGrid / MeasureCell**: `MeasureCellGrid` or lazy notation; `useNotationPrefetch` + `useMusiSyncFont` + `useSmoothNotationCursor`
+- **MeasureGrid / MeasureCell**: `MeasureCellGrid` or lazy notation; `useNotationPrefetch` + `useMusiSyncFont` + `useSubdivisionProgress` / `useActiveNotationStepIndex`
 - **Metronome**: Footer `CornerModal` (`tone='muted'` when muted) for tempo, tap tempo and metronome playback
 - **Settings**: Footer corner modal → lazy `SettingsOverlay` with Mode / Sound / Colors tabs
 - **Entrypoint docs**: Prefer `AGENTS.md` for gotchas; `documentation/TESTING.md` for e2e helper semantics
