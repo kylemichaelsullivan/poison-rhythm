@@ -7,14 +7,17 @@ import {
 
 type FailPhase = 'idle' | 'poison' | 'lose';
 
-const lineClassName =
-	'rounded bg-white px-2 py-0.5 text-center text-sm font-semibold leading-5 text-primary';
+const LOSE_EMPHASIS = 'lose';
+const [loseBefore, loseAfter] = INTRO_POISON_FAIL_LOSE.split(LOSE_EMPHASIS);
+
+const chipClassName =
+	'rounded bg-white px-2 py-1 text-center text-sm font-semibold leading-5 text-primary';
 
 function prefersReducedMotion(): boolean {
 	return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-/** Timed fail stamps over the last-slide measure. */
+/** Timed fail stamps centered over the Measure section. */
 export function IntroTutorialFailOverlay() {
 	const [phase, setPhase] = useState<FailPhase>('idle');
 
@@ -38,12 +41,16 @@ export function IntroTutorialFailOverlay() {
 	}, []);
 
 	return (
-		<output className='IntroTutorialFailOverlay pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-1'>
+		<output className='IntroTutorialFailOverlay pointer-events-none absolute inset-0 flex flex-col items-center justify-around py-4'>
 			{phase === 'idle' ? null : (
-				<span className={lineClassName}>{INTRO_POISON_FAIL_POISON}</span>
+				<span className={chipClassName}>{INTRO_POISON_FAIL_POISON}</span>
 			)}
 			{phase === 'lose' ? (
-				<span className={lineClassName}>{INTRO_POISON_FAIL_LOSE}</span>
+				<span className={chipClassName}>
+					{loseBefore}
+					<span className='IntroLoseUnderline'>{LOSE_EMPHASIS}</span>
+					{loseAfter}
+				</span>
 			) : null}
 		</output>
 	);

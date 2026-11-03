@@ -24,11 +24,12 @@ export function IntroTutorialStep({ step }: IntroTutorialStepProps) {
 			>
 				{step.prompt}
 			</p>
-			<Section title='Measure'>
-				<IntroTutorialMeasure measure={quarterNoteMeasure(step.beats)}>
-					{step.isPoison ? <IntroTutorialFailOverlay /> : null}
-				</IntroTutorialMeasure>
-			</Section>
+			<div className='relative overflow-hidden rounded-lg'>
+				<Section title='Measure'>
+					<IntroTutorialMeasure measure={quarterNoteMeasure(step.beats)} />
+				</Section>
+				{step.isPoison ? <IntroTutorialFailOverlay /> : null}
+			</div>
 		</Stack>
 	);
 }

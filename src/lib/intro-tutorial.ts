@@ -17,10 +17,15 @@ export const INTRO_POISON_BEATS = [0, 2] as const;
 
 export const INTRO_SIMON_SAYS_PROMPT = 'Simon says: “Play this”';
 export const INTRO_POISON_PROMPT = '“Play this”';
-export const INTRO_POISON_FAIL_POISON = 'That’s the poison…';
+export const INTRO_POISON_FAIL_POISON = 'That’s the Poison…';
 export const INTRO_POISON_FAIL_LOSE = 'Play it, and you lose!';
 /** Delay before each last-slide fail line. Lose appears after a second beat. */
 export const INTRO_FAIL_REVEAL_MS = 1000;
+/** Left→right underline on “lose” (keep in sync with `.IntroLoseUnderline` in CSS). */
+export const INTRO_LOSE_UNDERLINE_MS = 600;
+/** Let’s Play halo after both fail lines and the lose underline have landed. */
+export const INTRO_PLAY_HALO_AFTER_MS =
+	INTRO_FAIL_REVEAL_MS * 2 + INTRO_LOSE_UNDERLINE_MS;
 
 export type IntroTutorialStepData = {
 	id: string;

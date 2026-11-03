@@ -981,6 +981,61 @@
 	opacity: 1;
 }
 
+/* Welcome fail line: underline “lose” left → right (scaleX, not width). */
+.IntroLoseUnderline {
+	position: relative;
+}
+
+.IntroLoseUnderline::after {
+	content: "";
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	height: 0.125rem;
+	transform-origin: left center;
+	transform: scaleX(0);
+	background-color: currentColor;
+	animation-name: intro-lose-underline;
+	/* INTRO_LOSE_UNDERLINE_MS */
+	animation-duration: 0.6s;
+	animation-timing-function: ease-out;
+	animation-fill-mode: forwards;
+}
+
+@keyframes intro-lose-underline {
+	from {
+		transform: scaleX(0);
+	}
+	to {
+		transform: scaleX(1);
+	}
+}
+
+/* Welcome Let’s Play: soft Secondary halo after fail copy lands. */
+.IntroPlayHalo {
+	display: inline-flex;
+	border-radius: 0.25rem;
+	animation-name: intro-play-halo;
+	animation-duration: 1.8s;
+	animation-timing-function: ease-in-out;
+	animation-iteration-count: infinite;
+}
+
+@keyframes intro-play-halo {
+	0%,
+	100% {
+		box-shadow:
+			0 0 0 1px var(--color-secondary),
+			0 0 4px transparent;
+	}
+	50% {
+		box-shadow:
+			0 0 0 3px var(--color-secondary),
+			0 0 10px var(--color-secondary);
+	}
+}
+
 /*
  * Timed notice fill. Height, solid color and both gradient syntaxes are
  * asserted in src/lib/__tests__/timed-notice.test.ts.
@@ -1056,5 +1111,17 @@
 	.CarouselPlayDelayProgress {
 		animation: none;
 		transform: scaleX(1);
+	}
+
+	.IntroLoseUnderline::after {
+		animation: none;
+		transform: scaleX(1);
+	}
+
+	.IntroPlayHalo {
+		animation: none;
+		box-shadow:
+			0 0 0 2px var(--color-secondary),
+			0 0 8px var(--color-secondary);
 	}
 }

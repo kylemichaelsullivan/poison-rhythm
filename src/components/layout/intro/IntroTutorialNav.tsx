@@ -1,4 +1,7 @@
+import clsx from 'clsx';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui';
+import { INTRO_PLAY_HALO_AFTER_MS } from '@/lib/intro-tutorial';
 import { IntroTutorialDots } from './IntroTutorialDots';
 
 type IntroTutorialNavProps = {
@@ -10,6 +13,10 @@ type IntroTutorialNavProps = {
 	onSelectStep: (index: number) => void;
 };
 
+function prefersReducedMotion(): boolean {
+	return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
 /** Back / dots / Next or Let’s Play for the welcome tutorial. */
 export function IntroTutorialNav({
 	stepIndex,
@@ -20,6 +27,28 @@ export function IntroTutorialNav({
 	onSelectStep,
 }: IntroTutorialNavProps) {
 	const last = stepIndex >= stepCount - 1;
+	const [playHalo, setPlayHalo] = useState(false);
+
+	useEffect(() => {
+		if (!last) {
+			setPlayHalo(false);
+			return;
+		}
+
+		if (prefersReducedMotion()) {
+			setPlayHalo(true);
+			return;
+		}
+
+		setPlayHalo(false);
+		const timer = window.setTimeout(() => {
+			setPlayHalo(true);
+		}, INTRO_PLAY_HALO_AFTER_MS);
+
+		return () => {
+			window.clearTimeout(timer);
+		};
+	}, [last]);
 
 	return (
 		<div className='grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center'>
@@ -40,14 +69,16 @@ export function IntroTutorialNav({
 			/>
 			<div className='justify-self-end'>
 				{last ? (
-					<Button
-						variant='primary'
-						title='Close Welcome and Start Playing'
-						modalInitialFocus
-						onClick={onPlay}
-					>
-						Let’s Play
-					</Button>
+					<span className={clsx(playHalo && 'IntroPlayHalo')}>
+						<Button
+							variant='primary'
+							title='Close Welcome and Start Playing'
+							modalInitialFocus
+							onClick={onPlay}
+						>
+							Let’s Play
+						</Button>
+					</span>
 				) : (
 					<Button
 						variant='primary'

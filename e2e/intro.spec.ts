@@ -21,7 +21,7 @@ test.describe('first-visit welcome', () => {
 			dialog.getByRole('heading', { name: 'Measure' }),
 		).toBeVisible();
 		await expect(dialog.getByText(SIMON_SAYS)).toBeVisible();
-		await expect(dialog.getByText('That’s the poison…')).toHaveCount(0);
+		await expect(dialog.getByText('That’s the Poison…')).toHaveCount(0);
 		await expect(dialog.getByText('Play it, and you lose!')).toHaveCount(0);
 		const skip = dialog.getByRole('button', { name: /Don’t show again/ });
 		await expect(skip).toHaveAttribute('aria-pressed', 'true');
@@ -42,7 +42,7 @@ test.describe('first-visit welcome', () => {
 		await expect(
 			dialog.getByText('“Play this”', { exact: true }),
 		).toBeVisible();
-		await expect(dialog.getByText('That’s the poison…')).toBeVisible({
+		await expect(dialog.getByText('That’s the Poison…')).toBeVisible({
 			timeout: 2000,
 		});
 		await expect(dialog.getByText('Play it, and you lose!')).toBeVisible({
@@ -111,7 +111,7 @@ test.describe('first-visit welcome', () => {
 		await expect(
 			dialog.getByText('“Play this”', { exact: true }),
 		).toBeVisible();
-		await expect(dialog.getByText('That’s the poison…')).toBeVisible({
+		await expect(dialog.getByText('That’s the Poison…')).toBeVisible({
 			timeout: 2000,
 		});
 		await expect(dialog.getByText('Play it, and you lose!')).toBeVisible({
@@ -123,6 +123,37 @@ test.describe('first-visit welcome', () => {
 
 		await dialog.getByRole('button', { name: 'Step 1 of 3' }).click();
 		await expect(dialog.getByText(SIMON_SAYS)).toBeVisible();
+		await expect(dialog.getByRole('button', { name: 'Next' })).toBeVisible();
+	});
+
+	test('arrow keys move between steps', async ({ page }) => {
+		await page.goto('/');
+		const dialog = page.getByRole('dialog', {
+			name: 'Welcome to Poison Rhythm',
+		});
+		await expect(dialog).toBeVisible();
+		await expect(
+			dialog.getByRole('button', { name: 'Step 1 of 3' }),
+		).toHaveAttribute('aria-current', 'step');
+
+		await page.keyboard.press('ArrowRight');
+		await expect(
+			dialog.getByRole('button', { name: 'Step 2 of 3' }),
+		).toHaveAttribute('aria-current', 'step');
+		await expect(dialog.getByText(SIMON_SAYS)).toBeVisible();
+
+		await page.keyboard.press('ArrowRight');
+		await expect(
+			dialog.getByRole('button', { name: 'Step 3 of 3' }),
+		).toHaveAttribute('aria-current', 'step');
+		await expect(
+			dialog.getByRole('button', { name: 'Let’s Play' }),
+		).toBeVisible();
+
+		await page.keyboard.press('ArrowLeft');
+		await expect(
+			dialog.getByRole('button', { name: 'Step 2 of 3' }),
+		).toHaveAttribute('aria-current', 'step');
 		await expect(dialog.getByRole('button', { name: 'Next' })).toBeVisible();
 	});
 

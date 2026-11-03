@@ -1,6 +1,8 @@
 import { describe, expect, test } from 'bun:test';
 import {
 	INTRO_FAIL_REVEAL_MS,
+	INTRO_LOSE_UNDERLINE_MS,
+	INTRO_PLAY_HALO_AFTER_MS,
 	INTRO_POISON_BEATS,
 	INTRO_POISON_FAIL_LOSE,
 	INTRO_POISON_FAIL_POISON,
@@ -47,9 +49,13 @@ describe('intro tutorial steps', () => {
 		]);
 		expect(INTRO_TUTORIAL_STEPS[0]?.prompt).toBe(INTRO_SIMON_SAYS_PROMPT);
 		expect(INTRO_TUTORIAL_STEPS[2]?.prompt).toBe(INTRO_POISON_PROMPT);
-		expect(INTRO_POISON_FAIL_POISON).toBe('That’s the poison…');
+		expect(INTRO_POISON_FAIL_POISON).toBe('That’s the Poison…');
 		expect(INTRO_POISON_FAIL_LOSE).toBe('Play it, and you lose!');
 		expect(INTRO_FAIL_REVEAL_MS).toBe(1000);
+		expect(INTRO_LOSE_UNDERLINE_MS).toBe(600);
+		expect(INTRO_PLAY_HALO_AFTER_MS).toBe(
+			INTRO_FAIL_REVEAL_MS * 2 + INTRO_LOSE_UNDERLINE_MS,
+		);
 		expect(INTRO_TUTORIAL_STEPS[2]?.beats).toEqual(INTRO_POISON_BEATS);
 	});
 });
