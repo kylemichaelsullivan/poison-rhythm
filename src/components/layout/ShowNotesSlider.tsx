@@ -1,7 +1,7 @@
 import clsx from 'clsx';
-import type { RefObject } from 'react';
 import { controlSurfaceBaseClassName } from '@/lib/control-classes';
 import { SUBDIVISION_LABELS } from '@/lib/subdivision-levels';
+import type { RefObject } from 'react';
 
 type ShowNotesSliderProps = {
 	value: number;
@@ -36,6 +36,7 @@ export function ShowNotesSlider({
 				max={2}
 				step={1}
 				value={value}
+				title={`Note Subdivisions (${SUBDIVISION_LABELS[value]})`}
 				aria-label='Note Subdivisions'
 				aria-valuemin={0}
 				aria-valuemax={2}

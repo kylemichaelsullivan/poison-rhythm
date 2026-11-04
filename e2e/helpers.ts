@@ -1,9 +1,17 @@
-import { expect, type Page } from '@playwright/test';
+import { expect } from '@playwright/test';
+import type { Page } from '@playwright/test';
 
 export const COUNT_IN_KEY = 'poison-rhythm-count-in-enabled';
 export const SETTINGS_KEY = 'poison-rhythm-settings-v1';
 export const TEMPO_KEY = 'poison-rhythm-tempo';
 export const SUBDIVISION_KEY = 'poison-rhythm-subdivision';
+export const INTRO_SEEN_KEY = 'poison-rhythm-intro-seen';
+
+/** Empty Playwright storage so the first-visit welcome can open. */
+export const FIRST_VISIT_STORAGE_STATE = {
+	cookies: [],
+	origins: [],
+};
 
 export type PlaybackSeedOptions = {
 	countIn: boolean;
@@ -62,7 +70,6 @@ export async function seedPlaybackPrefs(
 					rhythmRenderMode,
 					showNextMeasure: true,
 					demoBeforePlay,
-					muteOnStudentPass: false,
 					endlessInitialBatch: 8,
 					endlessAppendBatch: 8,
 					endlessPrefetchRemaining: 3,

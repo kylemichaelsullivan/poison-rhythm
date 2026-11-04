@@ -1,4 +1,3 @@
-import type { ReactNode } from 'react';
 import { useCallback, useMemo } from 'react';
 import {
 	ComplexityPreferencesContext,
@@ -24,11 +23,15 @@ import {
 	parseSubdivisionLevel,
 	readCountInEnabled,
 	resolveInitialTempo,
+	resolveRhythmMutes,
 } from '@/lib/preference-storage';
 import { removeStorageItem } from '@/lib/storage';
 import { LEGACY_STORAGE_KEYS, STORAGE_KEYS } from '@/lib/storage-keys';
+import type { ReactNode } from 'react';
 
 export function PreferencesProvider({ children }: { children: ReactNode }) {
+	resolveRhythmMutes();
+
 	const [subdivisionLevel, setSubdivisionLevel] = useLocalStorage({
 		key: STORAGE_KEYS.subdivision,
 		parse: parseSubdivisionLevel,
@@ -50,12 +53,22 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
 		getDefault: readCountInEnabled,
 	});
 
-	const [muteRhythmSounds, setMuteRhythmSounds] = useLocalStorage({
-		key: STORAGE_KEYS.muteRhythm,
+	const [mutePlayback, setMutePlaybackState] = useLocalStorage({
+		key: STORAGE_KEYS.mutePlayback,
 		parse: parseExplicitTrue,
 		serialize: serializeExplicitTrue,
 		getDefault: () => false,
 	});
+
+	const [mutePreview, setMutePreviewState] = useLocalStorage({
+		key: STORAGE_KEYS.mutePreview,
+		parse: parseExplicitTrue,
+		serialize: serializeExplicitTrue,
+		getDefault: () => false,
+	});
+
+	const setMutePlayback = setMutePlaybackState;
+	const setMutePreview = setMutePreviewState;
 
 	const [difficulty, setDifficulty] = useLocalStorage({
 		key: STORAGE_KEYS.difficulty,
@@ -104,16 +117,20 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
 			setMuteMetronome,
 			countInEnabled,
 			setCountInEnabled,
-			muteRhythmSounds,
-			setMuteRhythmSounds,
+			mutePlayback,
+			setMutePlayback,
+			mutePreview,
+			setMutePreview,
 		}),
 		[
 			muteMetronome,
 			setMuteMetronome,
 			countInEnabled,
 			setCountInEnabled,
-			muteRhythmSounds,
-			setMuteRhythmSounds,
+			mutePlayback,
+			setMutePlayback,
+			mutePreview,
+			setMutePreview,
 		],
 	);
 

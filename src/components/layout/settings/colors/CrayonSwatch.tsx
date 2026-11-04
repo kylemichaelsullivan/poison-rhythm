@@ -1,22 +1,21 @@
 import clsx from 'clsx';
-import {
-	type ContrastRating,
-	type ThemeContrastScores,
-	worseContrastRating,
-} from '@/lib/colors';
+import { worseContrastRating } from '@/lib/colors';
 import {
 	interactiveInsetChromeClassName,
 	selectionOutlineActiveClassName,
 	selectionOutlinePartnerClassName,
 } from '@/lib/control-classes';
 import {
-	type HierarchyBorderRank,
-	type HierarchyBorderTone,
 	hierarchyBorderClass,
 	hierarchyRankForContrastGrade,
 } from '@/lib/hierarchy-border';
 import { ContrastGradeBadge } from './ContrastGradeBadge';
 import { SelectionCheckMark } from './SelectionCheckMark';
+import type { ContrastRating, ThemeContrastScores } from '@/lib/colors';
+import type {
+	HierarchyBorderRank,
+	HierarchyBorderTone,
+} from '@/lib/hierarchy-border';
 
 /** How strongly this swatch marks a current Dominant/Secondary pick. */
 export type CrayonSwatchEmphasis = 'active' | 'partner' | 'none';
@@ -96,7 +95,7 @@ export function CrayonSwatch({
 			data-swatch-emphasis={emphasis}
 			data-testid={`crayon-swatch-${name.toLowerCase().replace(/\s+/g, '-')}`}
 		>
-			<span className='ThemeScoreStack pointer-events-none absolute top-0.5 right-0.5 z-10 gap-0.5'>
+			<span className='pointer-events-none absolute top-0.5 right-0.5 z-10 flex flex-col gap-0.5'>
 				<ContrastGradeBadge grade={scores.light.grade} mode='light' />
 				<ContrastGradeBadge grade={scores.dark.grade} mode='dark' />
 			</span>

@@ -20,10 +20,10 @@ export function DifficultySlider({ showValue = true }: DifficultySliderProps) {
 				min={DIFFICULTY_MIN}
 				max={DIFFICULTY_MAX}
 				step={1}
-				title='Difficulty'
+				title={`Set Difficulty (Level ${sliderValue})`}
 				value={sliderValue}
 				onChange={(e) => onDifficultyChange(Number(e.target.value))}
-				aria-label='Difficulty'
+				aria-label={`Difficulty Level ${sliderValue}`}
 				aria-valuemin={DIFFICULTY_MIN}
 				aria-valuemax={DIFFICULTY_MAX}
 				aria-valuenow={sliderValue}

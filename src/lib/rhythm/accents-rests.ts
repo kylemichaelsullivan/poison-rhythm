@@ -1,6 +1,6 @@
+import { createEmptyRichMeasure } from '@/types';
 import type { ToggleSetting } from '@/lib/settings-schema';
 import type { RichRhythmMeasure } from '@/types';
-import { createEmptyRichMeasure } from '@/types';
 import type { PRNG } from './prng';
 
 export function applyAccentsAndRests(

@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { focusVisibleRingClassName } from '@/lib/control-classes';
 import { HiddenPoisonLabel } from './HiddenPoisonLabel';
 
 type HiddenPoisonOverlayProps = {
@@ -24,10 +23,9 @@ export function HiddenPoisonOverlay({
 				className={clsx(
 					'HiddenPoisonOverlay',
 					overlayClassName,
-					'cursor-pointer transition hover:border-primary hover:bg-primary/10',
-					focusVisibleRingClassName,
+					'cursor-pointer',
 				)}
-				title='Always Show'
+				title='Always Show Poison Rhythm'
 				aria-label='Always Show Poison Rhythm'
 				onClick={onClick}
 			>

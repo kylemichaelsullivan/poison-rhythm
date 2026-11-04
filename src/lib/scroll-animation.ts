@@ -1,9 +1,9 @@
 import { COUNT_IN_BEATS } from '@/lib/metronome-defaults';
+import { subdivisionStepCount } from '@/lib/subdivision-playback';
+import { MEASURE_LENGTH } from '@/types';
 import type { SubdivisionLevel } from '@/lib/preference-schemas';
 import type { ScrollDirection } from '@/lib/settings-schema';
-import { subdivisionStepCount } from '@/lib/subdivision-playback';
 import type { RhythmMeasure } from '@/types';
-import { MEASURE_LENGTH } from '@/types';
 
 /** How far ahead (in measures) notes remain visible on the highway. */
 export const HIGHWAY_LOOKAHEAD_MEASURES = 3;

@@ -12,7 +12,7 @@ type SelectionCheckMarkProps = {
 
 /**
  * Non-color selection cue (shape + ink chip). Uses theme `black`/`white` so it
- * stays readable in Light, Dark, and System.
+ * stays readable in Light, Dark and System.
  */
 export function SelectionCheckMark({
 	size = 'sm',

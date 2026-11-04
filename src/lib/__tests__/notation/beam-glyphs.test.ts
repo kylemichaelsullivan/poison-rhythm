@@ -32,6 +32,10 @@ describe('beamedGlyphForDurations', () => {
 		expect(beamedGlyphForDurations([1, 2])).toBe(
 			MUSISYNC_BEAMED.sixteenthEighth,
 		);
+		expect(beamedGlyphForDurations([2, 1])).toBe(
+			MUSISYNC_BEAMED.eighthSixteenth,
+		);
+		expect(beamedGlyphForDurations([1, 1])).toBe(MUSISYNC_BEAMED.twoSixteenths);
 		expect(beamedGlyphForDurations([2, 2, 2])).toBe(
 			MUSISYNC_BEAMED.threeEighths,
 		);
@@ -42,8 +46,17 @@ describe('beamedGlyphForDurations', () => {
 
 	test('returns undefined for unmatched or singleton patterns', () => {
 		expect(beamedGlyphForDurations([2])).toBeUndefined();
-		expect(beamedGlyphForDurations([1, 1])).toBeUndefined();
 		expect(beamedGlyphForDurations([4, 4])).toBeUndefined();
+	});
+
+	test('maps eighth + sixteenth and two sixteenths to derived PUA glyphs', () => {
+		expect(beamedGlyphForDurations([2, 1])).toBe(
+			MUSISYNC_BEAMED.eighthSixteenth,
+		);
+		expect(beamedGlyphForDurations([1, 1])).toBe(MUSISYNC_BEAMED.twoSixteenths);
+		expect(MUSISYNC_BEAMED.eighthSixteenth).not.toBe(
+			MUSISYNC_BEAMED.dottedEighthSixteenth,
+		);
 	});
 
 	test('maps three sixteenths to MusiSync superscript-3 glyph', () => {

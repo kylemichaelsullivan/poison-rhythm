@@ -2,13 +2,13 @@ import { useCallback } from 'react';
 import { useColorPreferences, useTheme } from '@/contexts';
 import { useColorRoleSelection } from '@/hooks/useColorRoleSelection';
 import { usePaletteContrast } from '@/hooks/usePaletteContrast';
-import type { ColorPairing, CrayonId } from '@/lib/colors';
 import { nextThemePreference, themeOptionFor } from '@/lib/theme-options';
 import { SettingsGroup } from '../SettingsGroup';
 import { ColorPairPreview } from './ColorPairPreview';
 import { ContrastScoreMeter } from './ContrastScoreMeter';
 import { CrayonTray } from './CrayonTray';
 import { SuggestedPairings } from './SuggestedPairings';
+import type { ColorPairing, CrayonId } from '@/lib/colors';
 
 /**
  * Settings → Colors composer. Owns palette prefs + theme; children are

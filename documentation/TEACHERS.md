@@ -17,11 +17,11 @@ It is not a full notation curriculum. **Grid** mode is a piano-roll view; **Nota
 
 ## Five-minute classroom start
 
-1. Open the app — a round is already generated (measures + poison appear immediately).
+1. Open the app — a first-visit welcome is Simon Says: play the measures Simon says, skip the one he didn’t (labeled **Poison Rhythm**). **Don’t show again** is checked by default so the welcome will not return; uncheck it if you want it next time. Replay it anytime from **Settings → Mode → Welcome Tutorial**. A round is already generated behind it.
 2. Set **Difficulty** (1–5) from the title **About** modal (click the Poison Rhythm title) or **Settings → Mode**; open the **i** control for level plain-language help.
-3. Set **subdivision** in the header ShowNotes control (or Settings → Mode) to 1/4, 1/8, or 1/16 to match what students are ready to see and hear.
+3. Set **subdivision** in the header ShowNotes control (or Settings → Mode) to 1/4, 1/8 or 1/16 to match what students are ready to see and hear.
 4. Point to the **Poison Rhythm** box so everyone knows the target pattern.
-5. Use **Prev / Next** to walk measures together, or **Play** so the class hears them (count-in beats appear on the Play control when count-in is on).
+5. Use **Prev / Next** to walk measures together, or **Play** so the class hears them (count-in beats appear on the Play control when count-in is on). The first-measure left control starts Play after a short cancelable countdown; the last-measure right control offers **New**, **Reuse** (same poison, new measures) or **Play**.
 6. Click **New** for a fresh poison and set of measures, or **Reuse** to keep the same poison and regenerate decoys.
 
 ## Difficulty (what changes)
@@ -62,10 +62,10 @@ Former separate Memory / Mirror play modes are gone; use **Poison Rhythm** mode 
 
 In **Settings → Mode**:
 
-- **Preview Before Play** — for each measure: a **Listening** (demo) pass, then a **Playing** (student) pass.
-- **Mute Rhythm Hits on Playing Pass** — students hear the metronome but not the pattern on the second pass (call-and-response style).
+- **Listen Before You Play** — for each measure: a **Listening** (demo) pass, then a **Playing** (student) pass.
+- **Volume** (Measures speaker, also Settings → Sound) — mute **Metronome**, **Playback** (the student pass) or **Preview** (the Listening pass). Click the speaker while the menu is open to mute all three; click again to restore the previous mix, or unmute all if there is nothing to restore. Mute Playback and leave Preview on for call-and-response. Muting Preview while Playback stays on asks for confirmation: Mute Preview, Mute Both or Cancel. If Playback and Preview are both muted, turning Playback on restores Preview too.
 
-Optional **Count-In Before Play** is under **Settings → Sound**. During count-in, beat numbers show on the Play button.
+Optional **Count-In** is under **Settings → Sound**. During count-in, beat numbers show on the Play button.
 
 ## Display mode
 
@@ -83,7 +83,7 @@ From the badge on the Poison Rhythm section, or **Settings → Mode → Display*
 
 **Compare & contrast (10–15 min)** — Subdivision 1/8, difficulty 2–3. Reuse the same poison while regenerating decoys so students practice *discrimination*, not memorizing one set.
 
-**Memory challenge** — Same as above, but Eye → hidden during playback. Preview Before Play on; mute the Playing pass so students must internalize the Listening pass.
+**Memory challenge** — Same as above, but Eye → hidden during playback. Listen Before You Play on; mute Playback (leave Preview on) so students must internalize the Listening pass.
 
 **Bucket groove** — Bucket Drumming mode, raise difficulty gradually; set tempo from the footer metronome or **Settings → Sound**.
 
@@ -114,5 +114,5 @@ bun run printables:student-record
 
 ## What this guide is not
 
-- It does not replace your curriculum sequence (stickings, accents, and multi-bar phrases are Coming Soon in Settings).
-- It does not document commit messages, architecture, or test commands — see [`/git-commits`](../.cursor/skills/git-commits/SKILL.md), [ARCHITECTURE.md](ARCHITECTURE.md), and [TESTING.md](TESTING.md).
+- It does not replace your curriculum sequence (stickings, accents and multi-bar phrases are Coming Soon in Settings).
+- It does not document commit messages, architecture or test commands — see [`/git-commits`](../.cursor/git-commits.md), [ARCHITECTURE.md](ARCHITECTURE.md) and [TESTING.md](TESTING.md).

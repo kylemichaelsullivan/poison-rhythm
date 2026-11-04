@@ -1,6 +1,6 @@
+import { DescribedOptionCard } from './DescribedOptionCard';
 import type { ReactNode } from 'react';
 import type { GameMode } from '@/lib/settings-schema';
-import { DescribedOptionCard } from './DescribedOptionCard';
 
 type PlayModeOptionCardProps = {
 	id: string;

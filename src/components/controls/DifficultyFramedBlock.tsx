@@ -1,9 +1,10 @@
 import { Section } from '@/components/layout';
 import { useSettings } from '@/contexts';
-import { type GameModeHudBadge, gameModeHudBadge } from '@/lib/settings-schema';
+import { gameModeHudBadge } from '@/lib/settings-schema';
 import { DifficultySlider } from './DifficultySlider';
 import { InfoGlyphButton } from './InfoGlyphButton';
 import { ModeBadgeTrigger } from './ModeBadgeTrigger';
+import type { GameModeHudBadge } from '@/lib/settings-schema';
 
 const POISON_BADGE: GameModeHudBadge = {
 	label: 'Poison',

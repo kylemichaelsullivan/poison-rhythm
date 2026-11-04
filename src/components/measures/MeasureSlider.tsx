@@ -1,14 +1,12 @@
-import type { ScrollDirection } from '@/lib/settings-schema';
-import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
 import { REST_MEASURE } from '@/types';
-import {
-	CurrentMeasureDisplay,
-	type MeasurePlaybackPhase,
-} from './CurrentMeasureDisplay';
+import { CurrentMeasureDisplay } from './CurrentMeasureDisplay';
 import { MeasureCarouselChrome } from './MeasureCarouselChrome';
-import type { MeasureDisplayOptions } from './measure-display-options';
 import { NextMeasurePreview } from './NextMeasurePreview';
 import { ScrollHighway } from './ScrollHighway';
+import type { ScrollDirection } from '@/lib/settings-schema';
+import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
+import type { MeasurePlaybackPhase } from './CurrentMeasureDisplay';
+import type { MeasureDisplayOptions } from './measure-display-options';
 
 type MeasureSliderProps = {
 	measures: RhythmMeasure[];

@@ -1,7 +1,8 @@
 import clsx from 'clsx';
-import { type Ref, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useMetronome } from '@/contexts';
 import { RoundPlayPauseButton } from './RoundPlayPauseButton';
+import type { Ref } from 'react';
 
 type PlayControlsProps = {
 	disabled?: boolean;
@@ -41,15 +42,19 @@ export function PlayControls({
 		>
 			<RoundPlayPauseButton
 				className={clsx(
-					'PlayControlsButton transition-[opacity,box-shadow] duration-100',
-					isCountingIn && !isLit && 'opacity-55',
-					isCountingIn && isLit && 'opacity-100 ring-2 ring-primary',
-					!isCountingIn && isMeasuresRunning && isLit && 'ring-2 ring-primary',
+					'PlayControlsButton transition-[box-shadow] duration-100',
+					(isCountingIn || isMeasuresRunning) && isLit && 'ring-2 ring-primary',
 				)}
 				isPlaying={isMeasuresRunning && !isCountingIn}
 				label={isMeasuresRunning ? 'Pause' : 'Play'}
 				countBeat={isCountingIn ? countInBeat : null}
-				title={disabled ? 'Click + Start' : undefined}
+				title={
+					disabled
+						? 'Click to Generate a Round'
+						: isMeasuresRunning
+							? 'Pause Playback'
+							: 'Play Measures'
+				}
 				disabled={disabled}
 				onClick={toggleMeasures}
 				onDisabledClick={onDisabledClick}

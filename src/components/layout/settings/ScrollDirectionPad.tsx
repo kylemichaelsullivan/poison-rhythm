@@ -3,10 +3,10 @@ import ArrowDownIcon from '@/assets/svg/arrow-down.svg?react';
 import ArrowLeftIcon from '@/assets/svg/arrow-left.svg?react';
 import ArrowRightIcon from '@/assets/svg/arrow-right.svg?react';
 import ArrowUpIcon from '@/assets/svg/arrow-up.svg?react';
-import type { SvgIconComponent } from '@/components/layout/Icon';
-import type { ScrollDirection } from '@/lib/settings-schema';
 import { Fieldset } from './Fieldset';
 import { SegmentButton } from './SegmentButton';
+import type { SvgIconComponent } from '@/components/layout/Icon';
+import type { ScrollDirection } from '@/lib/settings-schema';
 
 type ScrollDir = Exclude<ScrollDirection, 'none'>;
 

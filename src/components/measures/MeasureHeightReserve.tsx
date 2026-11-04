@@ -1,5 +1,5 @@
-import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
 import { MeasureGrid } from './MeasureGrid';
+import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
 import type { MeasureDisplayOptions } from './measure-display-options';
 
 type MeasureHeightReserveProps = {

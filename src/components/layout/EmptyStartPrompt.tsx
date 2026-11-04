@@ -10,10 +10,11 @@ export function EmptyStartPrompt({ onClick }: EmptyStartPromptProps) {
 		<button
 			type='button'
 			className={clsx(
-				'EmptyStartPrompt flex h-full min-h-0 w-full items-center justify-center rounded-lg border-2 border-dashed border-mid bg-surface p-4 text-center text-dark transition-[colors,box-shadow] hover:border-primary hover:bg-primary/10 hover:shadow-raised focus-visible:shadow-raised',
+				'EmptyStartPrompt',
+				'flex h-full min-h-0 w-full items-center justify-center rounded-lg border-2 border-dashed border-mid bg-surface p-4 text-center text-dark',
 				darkSurfaceClassName,
 			)}
-			title='Click to Generate'
+			title='Click to Generate a Round'
 			onClick={onClick}
 		>
 			Click to Generate

@@ -1,12 +1,12 @@
-import type { SubdivisionLevel } from '@/lib/preference-schemas';
 import { HIGHWAY_LOOKAHEAD_MEASURES } from '@/lib/scroll-animation';
-import type { GameSettings } from '@/lib/settings-schema';
 import { isEndlessMode } from '@/lib/settings-schema';
-import type { RichRhythmMeasure, Round } from '@/types';
 import { richMeasuresEqual } from '@/types';
 import { generateMeasure } from './generate-measure';
 import { shouldInjectPoison } from './poison';
 import { createPRNG, randomSeed } from './prng';
+import type { SubdivisionLevel } from '@/lib/preference-schemas';
+import type { GameSettings } from '@/lib/settings-schema';
+import type { RichRhythmMeasure, Round } from '@/types';
 
 /** Trailing decoys after poison so Scroll cannot tip off by an empty highway. */
 export const TRAILING_DECOYS_AFTER_POISON = HIGHWAY_LOOKAHEAD_MEASURES;

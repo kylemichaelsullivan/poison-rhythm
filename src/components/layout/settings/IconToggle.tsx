@@ -1,6 +1,9 @@
-import type { SvgIconComponent } from '@/components/layout/Icon';
-import type { SegmentControlVariant } from '@/lib/control-classes';
 import { SegmentButton } from './SegmentButton';
+import type { SvgIconComponent } from '@/components/layout/Icon';
+import type {
+	SegmentControlSize,
+	SegmentControlVariant,
+} from '@/lib/control-classes';
 
 type IconToggleProps = {
 	pressed: boolean;
@@ -15,6 +18,7 @@ type IconToggleProps = {
 	/** Fill available row space (`true` → flex-1, `'auto'` → flex-auto). */
 	grow?: boolean | 'auto';
 	variant?: SegmentControlVariant;
+	size?: SegmentControlSize;
 };
 
 export function IconToggle({
@@ -28,6 +32,7 @@ export function IconToggle({
 	selectedWhenPressed = true,
 	grow = false,
 	variant = 'segment',
+	size = 'md',
 }: IconToggleProps) {
 	const icon = pressed ? pressedIcon : unpressedIcon;
 
@@ -41,6 +46,7 @@ export function IconToggle({
 			grow={grow}
 			disabled={disabled}
 			variant={variant}
+			size={size}
 			onClick={() => onPressedChange?.(!pressed)}
 		/>
 	);

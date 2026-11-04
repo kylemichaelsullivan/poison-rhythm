@@ -1,4 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
+import { STORAGE_KEYS } from './src/lib/storage-keys';
 
 export default defineConfig({
 	testDir: './e2e',
@@ -11,6 +12,16 @@ export default defineConfig({
 	use: {
 		baseURL: 'http://127.0.0.1:4173',
 		trace: 'on-first-retry',
+		// Returning-visit default so existing specs are not blocked by the welcome.
+		storageState: {
+			cookies: [],
+			origins: [
+				{
+					origin: 'http://127.0.0.1:4173',
+					localStorage: [{ name: STORAGE_KEYS.introSeen, value: 'true' }],
+				},
+			],
+		},
 	},
 	projects: [
 		{

@@ -20,10 +20,10 @@ export type NotationGlyphKind = 'note' | 'rest';
 
 export const MUSISYNC_GLYPH = {
 	wholeNote: 'w',
-	wholeRest: 'H',
+	wholeRest: 'W',
 	dottedHalfNote: 'd',
 	halfNote: 'h',
-	halfRest: 'W',
+	halfRest: 'H',
 	dottedQuarterNote: 'j',
 	quarterNote: 'q',
 	quarterRest: 'Q',

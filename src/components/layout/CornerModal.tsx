@@ -1,9 +1,11 @@
-import { type ReactNode, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useDelayedClick } from '@/hooks/useDelayedClick';
 import { useDisclosure } from '@/hooks/useDisclosure';
-import { CornerButton, type CornerButtonTone } from './CornerButton';
-import type { SvgIconComponent } from './Icon';
+import { CornerButton } from './CornerButton';
 import { Modal } from './Modal';
+import type { ReactNode } from 'react';
+import type { CornerButtonTone } from './CornerButton';
+import type { SvgIconComponent } from './Icon';
 import type { ModalSize } from './ModalPanel';
 
 type CornerModalProps = {
@@ -26,13 +28,15 @@ type CornerModalProps = {
 	 * this instead and does not open the modal.
 	 */
 	onDoubleClick?: () => void;
-	/** Called after the modal closes (X, scrim, Escape, or timed dismiss). */
+	/** Called after the modal closes (X, scrim, Escape or timed dismiss). */
 	onClose?: () => void;
 	/**
 	 * When set, the dialog dismisses itself after this many milliseconds and
 	 * shows the timed-notice progress bar. Omit for a manual dismiss only.
 	 */
 	dismissAfterMs?: number;
+	/** Optional control in the upper-left corner of the dialog. */
+	headerLeading?: ReactNode;
 	children?: ReactNode;
 };
 
@@ -50,6 +54,7 @@ export function CornerModal({
 	onDoubleClick,
 	onClose,
 	dismissAfterMs,
+	headerLeading,
 	children,
 }: CornerModalProps) {
 	const { open, onOpen, onClose: closeDisclosure } = useDisclosure();
@@ -76,9 +81,11 @@ export function CornerModal({
 			<Modal
 				open={open}
 				title={title}
+				ariaLabel={title ? undefined : label}
 				fullWidth={fullWidth}
 				size={size}
 				dismissAfterMs={dismissAfterMs}
+				headerLeading={headerLeading}
 				onClose={handleClose}
 			>
 				{lazy ? (open ? children : null) : children}

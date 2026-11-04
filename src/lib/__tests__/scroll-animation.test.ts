@@ -9,8 +9,8 @@ import {
 	measureProgressFraction,
 	padMeasuresForHighwayLookahead,
 } from '@/lib/scroll-animation';
-import type { RhythmMeasure } from '@/types';
 import { MEASURE_LENGTH, REST_MEASURE } from '@/types';
+import type { RhythmMeasure } from '@/types';
 
 describe('HIGHWAY_LOOKAHEAD_MEASURES', () => {
 	test('is a fixed window (tempo drives scroll rate)', () => {

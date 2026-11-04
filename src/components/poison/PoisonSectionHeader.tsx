@@ -1,6 +1,6 @@
 import { PoisonVisibilityToggle } from '@/components/layout/settings/PoisonVisibilityToggle';
-import type { RhythmRenderMode } from '@/lib/settings-schema';
 import { DisplayModeTrigger } from './DisplayModeTrigger';
+import type { RhythmRenderMode } from '@/lib/settings-schema';
 
 type PoisonSectionHeaderProps =
 	| {

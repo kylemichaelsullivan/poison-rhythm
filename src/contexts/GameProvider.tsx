@@ -1,16 +1,13 @@
-import type { MutableRefObject, ReactNode } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { GameContext } from '@/contexts/GameContext';
 import { useComplexityPreferences } from '@/contexts/PreferencesContext';
 import { useSettings } from '@/contexts/SettingsContext';
-import {
-	createRoundForMode,
-	onMeasureCompleteForMode,
-	type VisualHint,
-} from '@/lib/game-modes';
+import { createRoundForMode, onMeasureCompleteForMode } from '@/lib/game-modes';
 import { isEndlessMode } from '@/lib/settings-schema';
-import type { RhythmMeasure, Round } from '@/types';
 import { richToRhythmMeasure } from '@/types';
+import type { MutableRefObject, ReactNode } from 'react';
+import type { VisualHint } from '@/lib/game-modes';
+import type { RhythmMeasure, Round } from '@/types';
 
 type RhythmModule = typeof import('@/lib/rhythm');
 

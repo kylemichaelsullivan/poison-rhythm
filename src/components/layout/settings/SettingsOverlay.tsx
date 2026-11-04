@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { ColorSettingsPanel } from './ColorSettingsPanel';
 import { GameSettingsPanel } from './GameSettingsPanel';
-import { type SettingsTabId, SettingsTabs } from './SettingsTabs';
+import { SettingsTabs } from './SettingsTabs';
 import { SoundSettingsPanel } from './SoundSettingsPanel';
+import type { SettingsTabId } from './SettingsTabs';
 
 export function SettingsOverlay() {
 	const [activeTab, setActiveTab] = useState<SettingsTabId>('mode');

@@ -37,7 +37,7 @@ alwaysApply: false
 
 Each context is split across two files so Vite Fast Refresh works (a module must export either React components or non-components, not both):
 
-- **`*Context.ts`** — `createContext`, types, and consumer hook
+- **`*Context.ts`** — `createContext`, types and consumer hook
 - **`*Provider.tsx`** — provider component only
 
 Import hooks and providers from `@/contexts`.
@@ -53,7 +53,7 @@ Import hooks and providers from `@/contexts`.
 Provider tree in `main.tsx`: `ThemeProvider` → `ColorPreferencesProvider` → `SettingsProvider` → `PreferencesProvider` → `MetronomeProvider` → `App`. `App.tsx` wraps content in `GameProvider` → `PendingDifficultyProvider` → `AboutPoisonRhythmProvider` (memoized `AppContent` so About open/close does not re-render the shell), then mounts `AboutPoisonRhythmModal` and `DifficultyRegenAckHost` beside the shell. **Providers own state only**; modal hosts sit next to the tree.
 
 - **Local state**: Use `useState` and `useCallback` in hooks or parent components
-- **Composition**: `App` renders `Header`, `Body`, and `Footer`; `Body` composes game sections, play controls, and the single `DisplayModeModal`
+- **Composition**: `App` renders `Header`, `Body` and `Footer`; `Body` composes game sections, play controls and the single `DisplayModeModal`
 - **No global store required**: Current app is small; avoid adding Zustand or similar unless state grows significantly
 - **Context slices**: Prefer `useSubdivision` / `useDifficulty` / `useSoundPreferences` / `useTempoPreference` / `useMetronomeTempo` / `useSetting(key)` over bag hooks so unrelated updates do not re-render measure or mute UI
 
@@ -63,7 +63,7 @@ Provider tree in `main.tsx`: `ThemeProvider` → `ColorPreferencesProvider` → 
 
 - **Proper ARIA labels**: Include appropriate ARIA labels and roles where needed
 - **Keyboard navigation**: Support keyboard navigation with proper tabIndex and button semantics
-- **Focus management**: Use native focusable elements for controls; modals must move, trap, and restore focus
+- **Focus management**: Use native focusable elements for controls; modals must move, trap and restore focus
 - **Semantic HTML**: Use semantic HTML (buttons, headings, sections)
 
 ### Error and Loading
@@ -76,7 +76,7 @@ Provider tree in `main.tsx`: `ThemeProvider` → `ColorPreferencesProvider` → 
 ### Rhythm complexity
 
 - **Difficulty (1–5)**: Hit count and placement bias — title About modal + Settings → Mode (`DifficultyControls` / `PendingDifficultyProvider` + `DifficultyRegenAckHost`)
-- **Subdivision**: Header ShowNotes + Settings → Mode → `subdivisionLevel` — drives generation, display, and playback
+- **Subdivision**: Header ShowNotes + Settings → Mode → `subdivisionLevel` — drives generation, display and playback
 - **Do not** add Settings dials for density or syncopation as separate fields (subdivision is mirrored, not a third independent control)
 
 ### Rhythm types and generation
@@ -107,8 +107,8 @@ Provider tree in `main.tsx`: `ThemeProvider` → `ColorPreferencesProvider` → 
 
 - **audio/audio-engine**: `createAudioEngine`, `scheduleClick`, `scheduleHit`, `cancelScheduled` (future notes only), `shouldCancelScheduledSource`, `shouldPlayRhythmAudio`, `shouldShowVisualFeedback`
 - **playback-clock** / **lookahead-scheduler**: Continuous audio-clock timeline for count-in → playback (no wall-clock join gap)
-- **feedbackMode** (Settings): Gates visual blinker, poison overlay, and rhythm hit sounds
-- **Demo before play**: MetronomeContext runs demo pass then student pass; `muteOnStudentPass` suppresses rhythm audio on pass 2
+- **feedbackMode** (Settings): Gates visual blinker, poison overlay and rhythm hit sounds
+- **Demo before play**: MetronomeContext runs demo pass then student pass; `mutePreview` / `mutePlayback` gate hits per pass. Preview-only mute (Playback still on) asks for confirmation (Mute Preview, Mute Both or Cancel). Unmuting Playback while Preview is muted restores both channels (no confirm).
 - **Count-in**: Optional one-bar quarter-note lead-in; live measure uses dashed faded shell + sr-only “Counting In”; Play control exposes `data-count-in-beat` / `data-counting-in`
 - **Escape**: Stops measure/metronome playback on `keydown` even when a control is focused; ignored in text inputs and dialogs
 
@@ -117,20 +117,21 @@ Provider tree in `main.tsx`: `ThemeProvider` → `ColorPreferencesProvider` → 
 - **App**: `GameProvider` → `PendingDifficultyProvider` → `AboutPoisonRhythmProvider`; memoized `AppContent` + `AboutPoisonRhythmModal` + `DifficultyRegenAckHost`
 - **Body**: Composer; soft-disable focus via `useSoftDisableFocus`; owns single `DisplayModeModal`
 - **ui/**: Elemental atoms (`Button`, `IconButton` including `modalClose`, `Caption`, `Stack`, `Row`)
-- **Modal**: Composer over `ModalScrim` / `ModalPanel` / `ModalCloseButton` / `ModalTitle` + `useModalFocusTrap`
+- **Modal**: Composer over `ModalScrim` / `ModalPanel` / `ModalCloseButton` / `ModalTitle` + `useModalFocusTrap`; portals to `document.body` (nested dialogs escape parent overflow / backdrop-filter)
 - **DifficultyControls**: `DifficultyFramedBlock` / `DifficultySettingsBlock` + help / play-mode modals; regen ack via `DifficultyRegenAckHost`
 - **PoisonSection**: Composer; `PoisonSectionHeader`, `PoisonMeasureContent` / `PoisonMeasureFrame` / `HiddenPoisonOverlay`
 - **MeasuresSection / MeasureSlider**: `NextMeasureToggle`, `MeasuresSectionHeaderActions`, carousel chrome + `useMeasurePlaybackSync`
 - **ShowNotes**: Subdivision popover; `useHoverPinPopover` + `ShowNotesTrigger`
-- **MeasureGrid / MeasureCell**: `MeasureCellGrid` or lazy notation; `useNotationPrefetch` + `useMusiSyncFont` + `useSmoothNotationCursor`
-- **Metronome**: Footer `CornerModal` (`tone='muted'` when muted) for tempo, tap tempo, and metronome playback
+- **MeasureGrid / MeasureCell**: `MeasureCellGrid` or lazy notation; `useNotationPrefetch` + `useMusiSyncFont` + `useSubdivisionProgress` / `useActiveNotationStepIndex`
+- **Metronome**: Footer `CornerModal` (`tone='muted'` when muted) for tempo, tap tempo and metronome playback
 - **Settings**: Footer corner modal → lazy `SettingsOverlay` with Mode / Sound / Colors tabs
 - **Entrypoint docs**: Prefer `AGENTS.md` for gotchas; `documentation/TESTING.md` for e2e helper semantics
 
 ### Typography
 
 - **Typographic apostrophe**: Use ’ instead of ' in all user-facing text
-- **Title Case**: Prefer Title Case for titles, labels, `title`/`alt`, and short accessible names; sentence case for body copy and hints
+- **No Oxford comma**: Serial lists are `A, B and C` / `A, B or C` (not `A, B, and C` / `A, B, or C`)
+- **Title Case**: Prefer Title Case for titles, labels, `title`/`alt` and short accessible names; sentence case for body copy and hints
 - **Consistent spacing**: Prefer `Stack` / `Row` or flex/gap patterns
 
 ## File Organization
@@ -178,4 +179,4 @@ Follow the import order in `rules.mdc`:
 3. Internal project value imports
 4. Type-only imports
 
-Keep type imports on separate lines from component/value imports. Do not use inline `type` in a mixed import statement.
+Keep type imports on separate lines from component/value imports. Do not use inline `type` in a mixed import statement. Biome `useImportType` (`separatedType`) and `organizeImports` enforce this — see `biome.json` and `rules.mdc`.

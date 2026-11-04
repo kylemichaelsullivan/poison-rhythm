@@ -8,6 +8,7 @@ import {
 	BRAND_SECONDARY_HEX,
 } from '../colors/apply-color-prefs';
 import {
+	CAROUSEL_PLAY_DELAY_MS,
 	createTimedNoticeClock,
 	freezeTimedNoticeClock,
 	remainingTimedNoticeMs,
@@ -24,7 +25,8 @@ const indexCss = readFileSync(
 );
 
 function braceBlock(source: string, header: string): string {
-	const start = source.indexOf(header);
+	const escaped = header.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+	const start = source.search(new RegExp(`^${escaped}`, 'm'));
 	if (start < 0) throw new Error(`missing ${header}`);
 	const open = source.indexOf('{', start);
 	let depth = 0;
@@ -40,7 +42,7 @@ function braceBlock(source: string, header: string): string {
 }
 
 function noticeCss(): string {
-	const start = indexCss.indexOf('.TimedNoticeProgress {');
+	const start = indexCss.search(/^\.TimedNoticeProgress \{/m);
 	if (start < 0) throw new Error('missing .TimedNoticeProgress');
 	return indexCss.slice(start);
 }
@@ -66,6 +68,7 @@ function fakeRoot(): {
 describe('timed notice duration', () => {
 	test('defaults to 2.5 seconds', () => {
 		expect(TIMED_NOTICE_DURATION_MS).toBe(2500);
+		expect(CAROUSEL_PLAY_DELAY_MS).toBe(1500);
 		expect(TIMED_NOTICE_PROGRESS_HEIGHT).toBe('0.5rem');
 	});
 
@@ -102,7 +105,7 @@ describe('timed notice duration', () => {
 
 describe('timed notice colors on iOS', () => {
 	test('brand defaults in @theme are hex, with oklch only as a later upgrade', () => {
-		const theme = braceBlock(indexCss, '@theme');
+		const theme = braceBlock(indexCss, '@theme {');
 		expect(theme).toContain(`--color-primary: var(--color-brand-purple-deep);`);
 		expect(theme).toContain(`--color-secondary: var(--color-brand-mint-deep);`);
 		expect(theme).toContain(

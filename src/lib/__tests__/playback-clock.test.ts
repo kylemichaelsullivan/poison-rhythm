@@ -5,12 +5,12 @@ import {
 	COUNT_IN_BEATS,
 	SCHEDULE_AHEAD_SEC,
 } from '../metronome-defaults';
-import type { PlaybackClock, PlaybackClockEvent } from '../playback-clock';
 import {
 	createPlaybackClock,
 	quarterNoteSec,
 	shouldHoldLookaheadAfterEvent,
 } from '../playback-clock';
+import type { PlaybackClock, PlaybackClockEvent } from '../playback-clock';
 
 function collect(clock: PlaybackClock, count: number) {
 	return Array.from({ length: count }, () => clock.advance());

@@ -2,7 +2,8 @@ import { MetronomeTempoSlider } from '@/components/layout/metronome/MetronomeTem
 import { CountInEnableSetting } from './CountInEnableSetting';
 import { FeedbackToggles } from './FeedbackToggles';
 import { MetronomeMuteSetting } from './MetronomeMuteSetting';
-import { RhythmHitsMuteSetting } from './RhythmHitsMuteSetting';
+import { PlaybackMuteSetting } from './PlaybackMuteSetting';
+import { PreviewMuteSetting } from './PreviewMuteSetting';
 import { SettingsGroup } from './SettingsGroup';
 
 /** Settings → Sound. Each control binds its own global prefs / settings. */
@@ -15,7 +16,8 @@ export function SoundSettingsPanel() {
 
 			<SettingsGroup title='Playback'>
 				<MetronomeMuteSetting />
-				<RhythmHitsMuteSetting />
+				<PlaybackMuteSetting />
+				<PreviewMuteSetting />
 				<CountInEnableSetting />
 			</SettingsGroup>
 

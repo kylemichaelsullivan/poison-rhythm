@@ -1,11 +1,12 @@
 import clsx from 'clsx';
-import type { ReactNode } from 'react';
 import SettingsIcon from '@/assets/svg/settings.svg?react';
 import {
 	controlButtonBaseClassName,
 	cornerControlButtonClassName,
 } from '@/lib/control-classes';
-import { Icon, type SvgIconComponent } from './Icon';
+import { Icon } from './Icon';
+import type { ReactNode } from 'react';
+import type { SvgIconComponent } from './Icon';
 
 export type CornerButtonTone = 'default' | 'muted';
 

@@ -1,6 +1,6 @@
 import clsx from 'clsx';
+import { primaryFillChromeClassName } from '@/lib/control-classes';
 import type { ReactNode, Ref } from 'react';
-import { focusVisibleRingClassName } from '@/lib/control-classes';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost';
 
@@ -10,18 +10,22 @@ type ButtonProps = {
 	variant?: ButtonVariant;
 	title?: string;
 	disabled?: boolean;
+	/** Fill available row space (`true` → flex-1, `'auto'` → flex-auto). */
+	grow?: boolean | 'auto';
 	/** Marks this control as the preferred initial focus target inside a Modal. */
 	modalInitialFocus?: boolean;
 	ref?: Ref<HTMLButtonElement>;
 };
 
 const variantClassName: Record<ButtonVariant, string> = {
-	primary:
-		'rounded border-2 border-primary-border bg-primary px-3 py-1.5 text-sm text-on-primary transition-[opacity,box-shadow] hover:opacity-90 hover:shadow-raised focus-visible:shadow-raised',
+	primary: clsx(
+		primaryFillChromeClassName,
+		'rounded border border-primary-border bg-primary px-3 py-1.5 text-sm text-on-primary',
+	),
 	secondary:
-		'rounded border border-mid bg-surface-muted px-3 py-1.5 text-sm text-black transition-[colors,box-shadow] hover:border-primary hover:bg-primary/10 hover:text-primary hover:shadow-soft focus-visible:shadow-soft',
+		'rounded border border-mid bg-surface-muted px-3 py-1.5 text-sm text-black',
 	ghost:
-		'rounded border border-transparent bg-transparent px-3 py-1.5 text-sm text-dark transition-colors hover:bg-primary/10 hover:text-primary',
+		'rounded border border-transparent bg-transparent px-3 py-1.5 text-sm text-dark',
 };
 
 export function Button({
@@ -30,6 +34,7 @@ export function Button({
 	variant = 'secondary',
 	title,
 	disabled = false,
+	grow = false,
 	modalInitialFocus = false,
 	ref,
 }: ButtonProps) {
@@ -39,11 +44,13 @@ export function Button({
 			className={clsx(
 				'Button',
 				variantClassName[variant],
-				focusVisibleRingClassName,
+				grow === true && 'flex-1 whitespace-nowrap',
+				grow === 'auto' && 'flex-auto whitespace-nowrap',
 				disabled && 'cursor-not-allowed opacity-50',
 			)}
 			title={title}
 			disabled={disabled}
+			data-chrome-active={variant === 'primary' ? 'true' : undefined}
 			data-modal-initial-focus={modalInitialFocus ? 'true' : undefined}
 			onClick={onClick}
 			ref={ref}

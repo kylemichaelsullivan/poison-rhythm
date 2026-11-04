@@ -1,21 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
 import { useMetronome, useMetronomeTempo, useSubdivision } from '@/contexts';
-import {
-	smoothSubdivisionPositionPercent,
-	subdivisionPositionPercent,
-	subdivisionPulseMs,
-} from '@/lib/subdivision-playback';
+import { subdivisionPulseMs } from '@/lib/subdivision-playback';
 
-/** Tempo-synced playhead position (0–100) that glides across the notation line. */
-export function useSmoothNotationCursor(active: boolean): number {
+/**
+ * Fractional subdivision step for playhead consumers.
+ * When active, glides `subdivisionIndex → subdivisionIndex+1` over one pulse;
+ * when inactive, returns the discrete index.
+ */
+export function useSubdivisionProgress(active: boolean): number {
 	const { subdivisionIndex } = useMetronome();
 	const { tempo } = useMetronomeTempo();
 	const { subdivisionLevel } = useSubdivision();
 	const pulseMs = subdivisionPulseMs(tempo, subdivisionLevel);
 	const beatStartRef = useRef(performance.now());
-	const [leftPct, setLeftPct] = useState(() =>
-		subdivisionPositionPercent(subdivisionIndex, subdivisionLevel),
-	);
+	const [step, setStep] = useState(subdivisionIndex);
 
 	// Reset the glide origin whenever the beat index advances.
 	// biome-ignore lint/correctness/useExhaustiveDependencies: subdivisionIndex triggers a beat-clock reset
@@ -26,9 +24,7 @@ export function useSmoothNotationCursor(active: boolean): number {
 
 	useEffect(() => {
 		if (!active) {
-			setLeftPct(
-				subdivisionPositionPercent(subdivisionIndex, subdivisionLevel),
-			);
+			setStep(subdivisionIndex);
 			return;
 		}
 
@@ -38,16 +34,13 @@ export function useSmoothNotationCursor(active: boolean): number {
 				(performance.now() - beatStartRef.current) / pulseMs,
 				1,
 			);
-			const virtualStep = subdivisionIndex + beatFraction;
-			setLeftPct(
-				smoothSubdivisionPositionPercent(virtualStep, subdivisionLevel),
-			);
+			setStep(subdivisionIndex + beatFraction);
 			rafId = requestAnimationFrame(tick);
 		};
 
 		rafId = requestAnimationFrame(tick);
 		return () => cancelAnimationFrame(rafId);
-	}, [active, pulseMs, subdivisionIndex, subdivisionLevel]);
+	}, [active, pulseMs, subdivisionIndex]);
 
-	return leftPct;
+	return step;
 }

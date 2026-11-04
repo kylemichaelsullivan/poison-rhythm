@@ -1,4 +1,6 @@
+import clsx from 'clsx';
 import { IconButton } from '@/components/ui';
+import { modalCornerControlClassName } from '@/lib/control-classes';
 
 type ModalCloseButtonProps = {
 	onClose: () => void;
@@ -7,7 +9,9 @@ type ModalCloseButtonProps = {
 /** Absolute-positioned X control for modal panels. */
 export function ModalCloseButton({ onClose }: ModalCloseButtonProps) {
 	return (
-		<div className='ModalCloseButton absolute top-[max(0.35rem,env(safe-area-inset-top))] right-[max(0.35rem,env(safe-area-inset-right))] z-20 sm:top-3 sm:right-3'>
+		<div
+			className={clsx('ModalCloseButton', modalCornerControlClassName('end'))}
+		>
 			<IconButton variant='modalClose' label='Close Modal' onClick={onClose}>
 				X
 			</IconButton>

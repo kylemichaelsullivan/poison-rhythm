@@ -1,9 +1,9 @@
 import clsx from 'clsx';
-import type { ReactNode } from 'react';
 import { focusVisibleRingClassName } from '@/lib/control-classes';
 import { OptionCardDescription } from './OptionCardDescription';
 import { OptionCardTitle } from './OptionCardTitle';
 import { RadioInput } from './RadioInput';
+import type { ReactNode } from 'react';
 
 type DescribedOptionCardProps<T extends string> = {
 	id: string;
@@ -37,7 +37,7 @@ export function DescribedOptionCard<T extends string>({
 				'DescribedOptionCard overflow-hidden rounded-lg border-2 transition-colors',
 				selected
 					? 'border-primary bg-primary/10'
-					: 'border-mid/80 bg-surface-muted hover:border-primary/45 hover:bg-chrome hover:shadow-raised',
+					: 'border-mid/80 bg-surface-muted hover:border-primary hover:shadow-raised',
 			)}
 		>
 			<label

@@ -15,9 +15,13 @@ export function Header() {
 				appChromeBarHeaderClassName,
 			)}
 		>
-			<ShowNotes />
+			<div className='justify-self-start'>
+				<ShowNotes />
+			</div>
 			<AppTitle />
-			<ActionButton />
+			<div className='justify-self-end'>
+				<ActionButton />
+			</div>
 		</header>
 	);
 }

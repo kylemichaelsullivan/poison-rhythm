@@ -1,4 +1,5 @@
-import { MEASURE_LENGTH, type RhythmMeasure } from '@/types';
+import { MEASURE_LENGTH } from '@/types';
+import type { RhythmMeasure } from '@/types';
 
 export function rhythmsEqual(a: RhythmMeasure, b: RhythmMeasure): boolean {
 	if (a.length !== b.length) return false;

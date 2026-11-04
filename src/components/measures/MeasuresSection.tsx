@@ -1,10 +1,11 @@
+import { useCallback } from 'react';
 import { CarouselNavButtons } from '@/components/controls';
 import {
 	EmptyStartPrompt,
 	Section,
 	StableContentFrame,
 } from '@/components/layout';
-import { useGame, useSettings } from '@/contexts';
+import { useGame, useMetronome, useSettings } from '@/contexts';
 import { useMeasureDisplayOptions } from '@/hooks/useMeasureDisplayOptions';
 import { useMeasurePlaybackSync } from '@/hooks/useMeasurePlaybackSync';
 import { isBucketTrainerMode } from '@/lib/settings-schema';
@@ -17,11 +18,13 @@ import { NextMeasureToggle } from './NextMeasureToggle';
 
 type MeasuresSectionProps = {
 	onNewPoison: () => void;
+	onReusePoison: () => void;
 	onOpenDisplayMode: () => void;
 };
 
 export function MeasuresSection({
 	onNewPoison,
+	onReusePoison,
 	onOpenDisplayMode,
 }: MeasuresSectionProps) {
 	const { measures, poisonIndex } = useGame();
@@ -44,8 +47,14 @@ export function MeasuresSection({
 		scrollMode,
 		scrollDirection,
 	} = useMeasurePlaybackSync();
+	const { toggleMeasures } = useMetronome();
 
 	const hasMeasures = measures.length > 0;
+	const atFirst = hasMeasures && safeIndex === 0;
+	const atLast = hasMeasures && safeIndex >= measuresLength - 1;
+	const startPlay = useCallback(() => {
+		toggleMeasures();
+	}, [toggleMeasures]);
 
 	const spacer = scrollMode ? (
 		<MeasureCarouselChrome scroll={{ direction: scrollDirection }}>
@@ -79,6 +88,10 @@ export function MeasuresSection({
 			}
 			canGoPrev={hasMeasures && safeIndex > 0}
 			canGoNext={hasMeasures && safeIndex < measuresLength - 1}
+			onStartPlay={atFirst ? startPlay : undefined}
+			isPlaying={isMeasuresRunning}
+			onReuse={atLast ? onReusePoison : undefined}
+			onNew={atLast ? onNewPoison : undefined}
 		>
 			<Section
 				title='Measures'

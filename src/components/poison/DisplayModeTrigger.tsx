@@ -1,6 +1,6 @@
 import { IconButton } from '@/components/ui';
-import type { RhythmRenderMode } from '@/lib/settings-schema';
 import { DisplayModeBadge } from './DisplayModeBadge';
+import type { RhythmRenderMode } from '@/lib/settings-schema';
 
 type DisplayModeTriggerProps = {
 	renderMode: RhythmRenderMode;
@@ -17,7 +17,7 @@ export function DisplayModeTrigger({
 		<IconButton
 			variant='bare'
 			label='Change Display Mode'
-			title='Display Mode'
+			title='Change Display Mode'
 			popup='dialog'
 			onClick={onClick}
 		>

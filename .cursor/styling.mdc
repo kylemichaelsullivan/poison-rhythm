@@ -9,14 +9,15 @@ alwaysApply: false
 ## Typography
 
 - **Apostrophes**: ALL user-facing text MUST use the typographic apostrophe ’ instead of the straight apostrophe '
-- **Orphans**: Do not glue words with non-breaking spaces. Paragraphs, list items, and headings set `text-wrap: balance` then `text-wrap: pretty` in `src/index.css`. Unsupported `pretty` is dropped and `balance` remains. Use the `text-pretty` utility only when an element is not one of those.
-- **Titles & alt text**: Prefer Title Case for titles, section headings, control labels, `title`, `alt`, and short `aria-label` / accessible names (e.g. `Show Next Measure`, `Visual Feedback`). Leave short prepositions lowercase when they sit mid-phrase (`Tap for Tempo`, `Click to Generate`). Body copy, captions, hints, and descriptions stay sentence case.
+- **No Oxford comma**: Serial lists omit the comma before the final *and* / *or* (`A, B and C`, not `A, B, and C`). Applies to user-facing copy, docs and comments.
+- **Orphans**: Do not glue words with non-breaking spaces. Paragraphs, list items and headings set `text-wrap: balance` then `text-wrap: pretty` in `src/index.css`. Unsupported `pretty` is dropped and `balance` remains. Use the `text-pretty` utility only when an element is not one of those.
+- **Titles & alt text**: Prefer Title Case for titles, section headings, control labels, `title`, `alt` and short `aria-label` / accessible names (e.g. `Show Next Measure`, `Visual Feedback`). Leave short prepositions lowercase when they sit mid-phrase (`Tap for Tempo`, `Click to Generate a Round`). Toggle tooltips name the setting (`Click to Disable Show Next Measure`, not `Click to Disable`). Body copy, captions, hints and descriptions stay sentence case.
 - **Consistency**: Maintain consistent typography throughout the application
 
 ## Tailwind CSS
 
 - **Custom utilities**: Use or extend utilities from `src/index.css` (e.g. `.grid-cols-16`) when needed
-- **Theme color utilities**: Use the project’s defined color tokens for all UI colors — do not hardcode hex/rgb/oklch in components, reach for raw Tailwind palette names (`stone-*`, `cyan-*`, etc.), or apply opacity modifiers to color utilities (no `bg-light/60`, `bg-dark/50`, etc.)
+- **Theme color utilities**: Use the project’s defined color tokens for all UI colors — do not hardcode hex/rgb/oklch in components, reach for raw Tailwind palette names (`stone-*`, `cyan-*`, etc.) or apply opacity modifiers to color utilities (no `bg-light/60`, `bg-dark/50`, etc.)
 - **Shared surface classes**: Prefer the reusable `*ClassName` constants in `src/lib/control-classes.ts` for repeated background/foreground pairings
 - **Direct strings**: Use direct strings for simple cases without conditionals
 - **No margins**: Avoid using Tailwind margin classes (`m-*`, `mx-*`, `my-*`, `mt-*`, `mr-*`, `mb-*`, `ml-*`)
@@ -35,7 +36,7 @@ alwaysApply: false
 
 ### Color & Theme
 
-Theme tokens are defined in `src/index.css` (`@theme`) as hex and rgba, then exposed as Tailwind utilities. Dark mode swaps those tokens with `prefers-color-scheme` and `data-theme` (iOS 13+). `oklch()` and `color-mix()` are upgrades inside `@supports` only — Chrome on iOS is WebKit, and caniuse puts `light-dark()` at iOS 17.5, `@property` at 16.4, `color-mix()` at 16.2, and `oklch()` at 15.4. Do not put a second `oklch()` or `light-dark()` value on the same `@theme` token; the build keeps only the last one. Do not stack `#hex` and `oklch()` on an untyped custom property — the `oklch()` replaces the hex. Brand and ink tokens are `@property` colors whose `initial-value` is the sRGB hex. iOS notes (experienced and speculative) live in [`documentation/IOS.md`](../documentation/IOS.md).
+Theme tokens are defined in `src/index.css` (`@theme`) as hex and rgba, then exposed as Tailwind utilities. Light values are the defaults. Dark counterparts live beside them as `--theme-dark-*` (and a few component paints such as `--play-mode-icon-*`). Two apply blocks on `:root` rebind the semantic names — `prefers-color-scheme` (iOS 13+) and `data-theme` — and must not repeat hex or rgba. Component rules consume `var(--token)` only; do not add light/dark color overrides further down the sheet. `oklch()` and `color-mix()` are upgrades inside `@supports` only — they rewrite token values on `:root`, including `--theme-dark-*`, never inside media queries. Chrome on iOS is WebKit, and caniuse puts `light-dark()` at iOS 17.5, `@property` at 16.4, `color-mix()` at 16.2 and `oklch()` at 15.4. Do not put a second `oklch()` or `light-dark()` value on the same `@theme` token; the build keeps only the last one. Do not stack `#hex` and `oklch()` on an untyped custom property — the `oklch()` replaces the hex. Brand and ink tokens are `@property` colors whose `initial-value` is the sRGB hex. iOS notes (experienced and speculative) live in [`documentation/IOS.md`](../documentation/IOS.md).
 
 The timed-notice bar (`.TimedNoticeProgress`) is `0.5rem` tall and animates with `scaleX`, not `width`. Its gradient stops are `var(--color-primary)` and `var(--color-secondary)` only: a solid `background-color` first, then `-webkit-linear-gradient(left, …)`, then `linear-gradient(to right, …)`. Do not put `color-mix()` or `oklch()` in that rule.
 
@@ -65,17 +66,21 @@ If a color needs translucency, define it in `@theme` (e.g. `--color-scrim`) — 
 | `inputSurfaceClassName` | Text/number inputs on themed backgrounds |
 | `controlButtonBaseClassName` | Chrome icon/action buttons (`bg-chrome text-black`) |
 | `controlSurfaceBaseClassName` | Bordered chrome panels (ShowNotes popover, metronome bar) |
-| `sideGutterControlClassName` | Exterior controls in page/modal gutters (carousel nav, tempo ±) |
-| `sideGutterCollapsedReserveClassName` | Host padding when those controls collapse under (~63rem) |
+| `sideGutterControlClassName` | Exterior controls in page gutters (carousel nav) |
+| `sideGutterCollapsedReserveClassName` | Host padding when those controls collapse under (`max-gutter`, 63rem) |
+| `stableLightInkClassName` / `stableDarkInkClassName` | Contrast meter bars and swatch chips (`bg-ink-100` / `bg-ink-950`; does not invert) |
 
 **Side-gutter layout tokens** (`src/index.css` `@theme` — tweak once for site-wide spacing):
 
 | Token | Default | Role |
 |-------|---------|------|
-| `--side-gutter-width` | `1rem` | Gap beside host when controls sit laterally |
+| `--side-gutter-width` | `1rem` | Gap beside host when controls sit laterally (`gap-gutter`) |
 | `--side-gutter-collapse-gap` | `0.75rem` | Gap under host when controls stack below |
-| `--side-gutter-collapse-inset` | `0.5rem` | Inset from host bottom/side corners when stacked |
+| `--side-gutter-collapse-inset` | `0.5rem` | Inset from host bottom/side corners when stacked (`*-gutter-inset`) |
 | `--side-gutter-control-size` | `2.75rem` | Reserved control height (`size-11`) |
+| `--breakpoint-gutter` | `63rem` | Collapse gutter controls (`max-gutter:`) |
+| `--breakpoint-phone` | `360px` | Phone floor (`max-phone:`) |
+| `--breakpoint-tray` | `380px` | Crayon sleeve wrap (`max-tray:`) |
 
 **Pair foreground with background**:
 
@@ -86,7 +91,7 @@ If a color needs translucency, define it in `@theme` (e.g. `--color-scrim`) — 
 - Settings-style panels (`settingsPanelClassName`, `bg-light`): `text-dark`
 - Primary/accent controls (`bg-primary`): `text-white`
 - Muted captions: `text-mid`
-- Borders and hovers: `border-mid`, `hover:border-primary`, `hover:bg-mid` or `hover:bg-chrome-hover`
+- Borders: `border-mid` at rest. Hover / focus is global on `button` (inset ring + lift in `src/index.css`). Do not change fill or ink on `:hover` / `:focus`. Keep the control’s shape.
 
 ```tsx
 import clsx from 'clsx';
@@ -203,7 +208,7 @@ className='flex items-center gap-2';
 - **Atomic layers**: Prefer one root element per component; compose upward (see `.cursor/components.mdc`)
 - **Avoid superfluous wrappers**: Don't create unnecessary wrapper divs that add DOM complexity
 - **Simplify nesting**: Remove redundant wrapper elements when possible
-- **Keep meaningful wrappers**: Retain wrappers that serve styling, semantic, or organizational purposes (`Stack`, `Row`, `Section`, `PoisonMeasureFrame`)
+- **Keep meaningful wrappers**: Retain wrappers that serve styling, semantic or organizational purposes (`Stack`, `Row`, `Section`, `PoisonMeasureFrame`)
 
 #### Wrapper Removal Examples
 
@@ -223,8 +228,8 @@ className='flex items-center gap-2';
 
 ## CSS Best Practices
 
-- **No asset dragging**: Images, inline icons, and other media (`img`, `svg`, `picture`, `video`, `canvas`, `audio`) are not draggable. Global `-webkit-user-drag: none` lives in `src/index.css`; `main.tsx` cancels `dragstart` for Firefox. Set `draggable={false}` on `<img>` elements as well.
-- **Selection is opt-in**: `html` sets `-webkit-user-select: none` and `user-select: none`. Text-entry `input`s and `textarea` set `user-select: text`. Those fields also set `-webkit-user-drag: none`, and `main.tsx` cancels `dragstart` on them, so a selected value cannot be dragged out. Range, checkbox, and radio inputs are excluded. Do not add `select-none` on labels or chrome.
+- **No asset dragging**: Images, inline icons and other media (`img`, `svg`, `picture`, `video`, `canvas`, `audio`) are not draggable. Global `-webkit-user-drag: none` lives in `src/index.css`; `main.tsx` cancels `dragstart` for Firefox. Set `draggable={false}` on `<img>` elements as well.
+- **Selection is opt-in**: `html` sets `-webkit-user-select: none` and `user-select: none`. Text-entry `input`s and `textarea` set `user-select: text`. Those fields also set `-webkit-user-drag: none`, and `main.tsx` cancels `dragstart` on them, so a selected value cannot be dragged out. Range, checkbox and radio inputs are excluded. Do not add `select-none` on labels or chrome.
 - **Theme colors only**: Define palette values in `src/index.css` `@theme`; consume them via Tailwind utilities or `control-classes.ts` helpers in components
 - **No !important**: Avoid using `!important` declarations in CSS
 - **TypeScript**: Avoid using the `any` type in TypeScript code

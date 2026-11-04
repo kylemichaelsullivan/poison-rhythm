@@ -1,6 +1,5 @@
 import { BPM_DEFAULT } from './metronome-defaults';
 import {
-	type ColorPreference,
 	parseColorPreference,
 	parseCountInEnabled,
 	parseDifficulty,
@@ -8,7 +7,6 @@ import {
 	parseSubdivisionLevel,
 	parseTempo,
 	parseThemeSetting,
-	type SubdivisionLevel,
 	serializeColorPreference,
 	serializeCountInEnabled,
 	serializeDifficulty,
@@ -16,7 +14,6 @@ import {
 	serializeSubdivisionLevel,
 	serializeTempo,
 	serializeThemeSetting,
-	type ThemeSetting,
 } from './preference-schemas';
 import {
 	readStorageItem,
@@ -24,12 +21,12 @@ import {
 	writeStorageItem,
 } from './storage';
 import { LEGACY_STORAGE_KEYS, STORAGE_KEYS } from './storage-keys';
-
-export type {
+import type {
 	ColorPreference,
 	SubdivisionLevel,
 	ThemeSetting,
 } from './preference-schemas';
+
 export {
 	DEFAULT_DIFFICULTY,
 	DEFAULT_SUBDIVISION_LEVEL,
@@ -40,6 +37,11 @@ export {
 	parseSubdivisionLevel,
 	parseTempo,
 	parseThemeSetting,
+} from './preference-schemas';
+export type {
+	ColorPreference,
+	SubdivisionLevel,
+	ThemeSetting,
 } from './preference-schemas';
 
 export function parseStoredTempo(raw: string | null): number {
@@ -93,12 +95,122 @@ export function writeMuteMetronome(muted: boolean): void {
 	writePreference(STORAGE_KEYS.muteMetronome, serializeExplicitTrue(muted));
 }
 
-export function readMuteRhythmSounds(): boolean {
-	return readPreference(STORAGE_KEYS.muteRhythm, parseExplicitTrue);
+export function readMutePlayback(): boolean {
+	return readPreference(STORAGE_KEYS.mutePlayback, parseExplicitTrue);
 }
 
+export function writeMutePlayback(muted: boolean): void {
+	writePreference(STORAGE_KEYS.mutePlayback, serializeExplicitTrue(muted));
+}
+
+export function readMutePreview(): boolean {
+	return readPreference(STORAGE_KEYS.mutePreview, parseExplicitTrue);
+}
+
+export function writeMutePreview(muted: boolean): void {
+	writePreference(STORAGE_KEYS.mutePreview, serializeExplicitTrue(muted));
+}
+
+export type RhythmMuteState = {
+	mutePlayback: boolean;
+	mutePreview: boolean;
+};
+
+/** Stored Playback / Preview flags as-is (Preview-only mute is allowed). */
+export function coerceRhythmMutes(
+	mutePlayback: boolean,
+	mutePreview: boolean,
+): RhythmMuteState {
+	return { mutePlayback, mutePreview };
+}
+
+function peekLegacyMuteOnStudentPass(): boolean {
+	const raw = readStorageItem(STORAGE_KEYS.gameSettings);
+	if (raw === null) {
+		return false;
+	}
+
+	try {
+		const parsed = JSON.parse(raw) as unknown;
+		return (
+			Boolean(parsed) &&
+			typeof parsed === 'object' &&
+			!Array.isArray(parsed) &&
+			(parsed as { muteOnStudentPass?: unknown }).muteOnStudentPass === true
+		);
+	} catch {
+		return false;
+	}
+}
+
+function stripLegacyMuteOnStudentPass(): void {
+	const raw = readStorageItem(STORAGE_KEYS.gameSettings);
+	if (raw === null) {
+		return;
+	}
+
+	try {
+		const parsed = JSON.parse(raw) as unknown;
+		if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+			return;
+		}
+		const record = parsed as Record<string, unknown>;
+		if (!('muteOnStudentPass' in record)) {
+			return;
+		}
+		delete record.muteOnStudentPass;
+		writeStorageItem(STORAGE_KEYS.gameSettings, JSON.stringify(record));
+	} catch {
+		// Corrupt settings fall back in parseGameSettings.
+	}
+}
+
+let rhythmMutesResolved: RhythmMuteState | null = null;
+
+/**
+ * Resolve Playback / Preview mutes once per load.
+ * Migrates legacy `muteRhythm` (both muted) and `muteOnStudentPass` (Playback only).
+ */
+export function resolveRhythmMutes(): RhythmMuteState {
+	if (rhythmMutesResolved !== null) {
+		return rhythmMutesResolved;
+	}
+
+	const playbackRaw = readStorageItem(STORAGE_KEYS.mutePlayback);
+	const previewRaw = readStorageItem(STORAGE_KEYS.mutePreview);
+	const hasNewKeys = playbackRaw !== null || previewRaw !== null;
+
+	let mutePlayback: boolean;
+	let mutePreview: boolean;
+
+	if (hasNewKeys) {
+		mutePlayback = parseExplicitTrue(playbackRaw);
+		mutePreview = parseExplicitTrue(previewRaw);
+	} else {
+		const legacyRhythm = parseExplicitTrue(
+			readStorageItem(LEGACY_STORAGE_KEYS.muteRhythm),
+		);
+		const legacyStudent = peekLegacyMuteOnStudentPass();
+		mutePlayback = legacyRhythm || legacyStudent;
+		mutePreview = legacyRhythm;
+		writeMutePlayback(mutePlayback);
+		writeMutePreview(mutePreview);
+		removeStorageItem(LEGACY_STORAGE_KEYS.muteRhythm);
+	}
+
+	stripLegacyMuteOnStudentPass();
+	rhythmMutesResolved = { mutePlayback, mutePreview };
+	return rhythmMutesResolved;
+}
+
+/** @deprecated Use readMutePlayback */
+export function readMuteRhythmSounds(): boolean {
+	return readMutePlayback();
+}
+
+/** @deprecated Use writeMutePlayback */
 export function writeMuteRhythmSounds(muted: boolean): void {
-	writePreference(STORAGE_KEYS.muteRhythm, serializeExplicitTrue(muted));
+	writeMutePlayback(muted);
 }
 
 /** Count-in is enabled unless explicitly stored as false (legacy mute key honored once). */
@@ -158,6 +270,15 @@ export function writeSecondaryColor(value: ColorPreference): void {
 	writePreference(STORAGE_KEYS.secondaryColor, serializeColorPreference(value));
 }
 
+/** First-visit welcome is shown until the student opts to skip it on this device. */
+export function readIntroSeen(): boolean {
+	return readPreference(STORAGE_KEYS.introSeen, parseExplicitTrue);
+}
+
+export function writeIntroSeen(seen: boolean): void {
+	writePreference(STORAGE_KEYS.introSeen, serializeExplicitTrue(seen));
+}
+
 function readTempoFromSearchParams(search: string): number | null {
 	const param = new URLSearchParams(search).get('bpm');
 	if (!param) {
@@ -187,6 +308,7 @@ let initialTempoResolved: number | null = null;
 /** @internal Test helper */
 export function resetPreferenceBootstrapForTests(): void {
 	initialTempoResolved = null;
+	rhythmMutesResolved = null;
 }
 
 /** URL ?bpm= overrides storage once; param is stripped from the address bar. */
@@ -217,7 +339,7 @@ export function readMutePreference(key: string): boolean {
 	return readPreference(key, parseExplicitTrue);
 }
 
-/** @deprecated Use writeMuteMetronome / writeMuteRhythmSounds */
+/** @deprecated Use writeMuteMetronome / writeMutePlayback */
 export function writeMutePreference(key: string, muted: boolean): void {
 	writePreference(key, serializeExplicitTrue(muted));
 }

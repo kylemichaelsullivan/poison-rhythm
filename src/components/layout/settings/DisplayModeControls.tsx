@@ -1,11 +1,11 @@
 import { Stack } from '@/components/ui';
-import type { ScrollDirection } from '@/lib/settings-schema';
 import { isScrollDisplayMode } from '@/lib/settings-schema';
 import { ScrollDirectionPad } from './ScrollDirectionPad';
 import { SegmentedControl } from './SegmentedControl';
 import { RENDER_MODE_OPTIONS } from './settings-options';
 import { useUpdateSetting } from './useUpdateSetting';
 import { When } from './When';
+import type { ScrollDirection } from '@/lib/settings-schema';
 
 /** Exclusive display mode: Grid, Notation, or Scroll (Guitar Hero–style highway). */
 export function DisplayModeControls() {

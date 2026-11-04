@@ -11,6 +11,7 @@ type RowProps = {
 	justify?: RowAlign | 'between';
 	/** Stretch to parent width so flex-auto / flex-1 children can fill. */
 	fullWidth?: boolean;
+	wrap?: boolean;
 };
 
 const gapClassName: Record<RowGap, string> = {
@@ -39,12 +40,14 @@ export function Row({
 	align = 'center',
 	justify = 'start',
 	fullWidth = false,
+	wrap = false,
 }: RowProps) {
 	return (
 		<div
 			className={clsx(
 				'Row flex',
 				fullWidth && 'w-full',
+				wrap && 'flex-wrap',
 				gapClassName[gap],
 				alignClassName[align],
 				justifyClassName[justify],

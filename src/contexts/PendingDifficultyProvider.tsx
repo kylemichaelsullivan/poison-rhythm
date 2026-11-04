@@ -1,11 +1,9 @@
-import type { ReactNode } from 'react';
 import { useCallback, useMemo, useState } from 'react';
 import { useGame } from '@/contexts/GameContext';
-import {
-	PendingDifficultyContext,
-	type PendingDifficultyContextValue,
-} from '@/contexts/PendingDifficultyContext';
+import { PendingDifficultyContext } from '@/contexts/PendingDifficultyContext';
 import { useDifficulty } from '@/contexts/PreferencesContext';
+import type { ReactNode } from 'react';
+import type { PendingDifficultyContextValue } from '@/contexts/PendingDifficultyContext';
 
 export function PendingDifficultyProvider({
 	children,

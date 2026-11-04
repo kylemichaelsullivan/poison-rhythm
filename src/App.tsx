@@ -7,6 +7,8 @@ import {
 	Body,
 	Footer,
 	Header,
+	IntroModalHost,
+	IntroTutorialProvider,
 } from '@/components/layout';
 import { GameProvider, PendingDifficultyProvider } from '@/contexts';
 import { pageSurfaceClassName } from '@/lib/control-classes';
@@ -31,9 +33,12 @@ function App() {
 		<GameProvider>
 			<PendingDifficultyProvider>
 				<AboutPoisonRhythmProvider>
-					<AppContent />
-					<AboutPoisonRhythmModal />
-					<DifficultyRegenAckHost />
+					<IntroTutorialProvider>
+						<AppContent />
+						<IntroModalHost />
+						<AboutPoisonRhythmModal />
+						<DifficultyRegenAckHost />
+					</IntroTutorialProvider>
 				</AboutPoisonRhythmProvider>
 			</PendingDifficultyProvider>
 		</GameProvider>

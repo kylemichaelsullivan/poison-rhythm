@@ -1,13 +1,9 @@
 import clsx from 'clsx';
-import type { Ref } from 'react';
 import PauseIcon from '@/assets/svg/pause.svg?react';
 import PlayIcon from '@/assets/svg/play.svg?react';
 import { Icon } from '@/components/layout/Icon';
-import {
-	focusVisibleRingClassName,
-	forcedFocusRingClassName,
-	roundPlayPauseButtonClassName,
-} from '@/lib/control-classes';
+import { roundPlayPauseButtonClassName } from '@/lib/control-classes';
+import type { Ref } from 'react';
 
 type RoundPlayPauseButtonProps = {
 	isPlaying: boolean;
@@ -53,8 +49,6 @@ export function RoundPlayPauseButton({
 			type='button'
 			className={clsx(
 				roundPlayPauseButtonClassName,
-				focusVisibleRingClassName,
-				forcedFocusRingClassName,
 				disabled && 'cursor-not-allowed',
 				className,
 			)}
@@ -63,6 +57,7 @@ export function RoundPlayPauseButton({
 			onClick={disabled ? onDisabledClick : onClick}
 			aria-disabled={disabled || undefined}
 			aria-label={accessibleName}
+			data-chrome-active={disabled ? undefined : 'true'}
 			data-count-beat={showCount ? String(countBeat) : undefined}
 			ref={ref}
 		>

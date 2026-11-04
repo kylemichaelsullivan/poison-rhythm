@@ -5,8 +5,8 @@ import {
 	rhythmsEqual,
 	shouldProcessMeasureCycle,
 } from '@/lib';
-import type { ScrollDirection } from '@/lib/settings-schema';
 import { isEndlessMode, isScrollDisplayMode } from '@/lib/settings-schema';
+import type { ScrollDirection } from '@/lib/settings-schema';
 import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
 
 type UseMeasurePlaybackSyncResult = {

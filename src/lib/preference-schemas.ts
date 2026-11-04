@@ -1,12 +1,10 @@
 import { z } from 'zod';
-import {
-	BRAND_ACCENT_IDS,
-	type BrandAccentId,
-	isBrandAccentId,
-} from './colors/apply-color-prefs';
-import { CRAYON_IDS, type CrayonId, isCrayonId } from './colors/crayola-64';
+import { BRAND_ACCENT_IDS, isBrandAccentId } from './colors/apply-color-prefs';
+import { CRAYON_IDS, isCrayonId } from './colors/crayola-64';
 import { DIFFICULTY_MAX, DIFFICULTY_MIN } from './difficulty-levels';
 import { BPM_DEFAULT, BPM_MAX, BPM_MIN } from './metronome-defaults';
+import type { BrandAccentId } from './colors/apply-color-prefs';
+import type { CrayonId } from './colors/crayola-64';
 import type { ThemePreference } from './theme-options';
 
 export const storedThemeSchema = z.enum(['light', 'dark']);

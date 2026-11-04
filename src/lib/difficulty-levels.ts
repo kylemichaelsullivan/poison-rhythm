@@ -70,5 +70,6 @@ export function hitRangeForLevel(
 
 export function formatDifficultyHelpText(entry: DifficultyLevelEntry): string {
 	const [min, max] = entry.hits;
-	return `${entry.summary} (${min}–${max} on 1/16; scales with subdivision), ${entry.description}`;
+	// Hit ranges are sixteenth-calibrated; caption covers subdivision scaling.
+	return `${entry.summary} (${min}–${max}), ${entry.description}`;
 }

@@ -16,8 +16,10 @@ export type SoundPreferencesValue = {
 	setMuteMetronome: (muted: boolean) => void;
 	countInEnabled: boolean;
 	setCountInEnabled: (enabled: boolean) => void;
-	muteRhythmSounds: boolean;
-	setMuteRhythmSounds: (muted: boolean) => void;
+	mutePlayback: boolean;
+	setMutePlayback: (muted: boolean) => void;
+	mutePreview: boolean;
+	setMutePreview: (muted: boolean) => void;
 };
 
 export type TempoPreferencesValue = {
@@ -33,7 +35,7 @@ export type PlaybackPreferencesValue = SoundPreferencesValue &
 export type PreferencesContextValue = ComplexityPreferencesValue &
 	PlaybackPreferencesValue;
 
-export type PlaybackMuteChannel = 'metronome' | 'rhythm';
+export type PlaybackMuteChannel = 'metronome' | 'playback' | 'preview';
 
 export const ComplexityPreferencesContext =
 	createContext<ComplexityPreferencesValue | null>(null);
@@ -105,12 +107,17 @@ export function usePlaybackMute(channel: PlaybackMuteChannel) {
 	const {
 		muteMetronome,
 		setMuteMetronome,
-		muteRhythmSounds,
-		setMuteRhythmSounds,
+		mutePlayback,
+		setMutePlayback,
+		mutePreview,
+		setMutePreview,
 	} = useSoundPreferences();
 
 	if (channel === 'metronome') {
 		return { muted: muteMetronome, setMuted: setMuteMetronome } as const;
 	}
-	return { muted: muteRhythmSounds, setMuted: setMuteRhythmSounds } as const;
+	if (channel === 'preview') {
+		return { muted: mutePreview, setMuted: setMutePreview } as const;
+	}
+	return { muted: mutePlayback, setMuted: setMutePlayback } as const;
 }

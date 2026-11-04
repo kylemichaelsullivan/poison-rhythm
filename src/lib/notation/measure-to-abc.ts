@@ -1,7 +1,8 @@
+import { cellsForDuration } from './duration-units';
+import { measureToNotationEvents } from './notation-events';
 import type { SubdivisionLevel } from '@/lib/preference-schemas';
 import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
-import { cellsForDuration } from './duration-units';
-import { measureToNotationEvents, type NotationEvent } from './notation-events';
+import type { NotationEvent } from './notation-events';
 
 export type AbcTuneOptions = {
 	title?: string;

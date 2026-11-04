@@ -3,8 +3,8 @@ import {
 	ratePaletteThemes,
 	resolveDominantHex,
 	resolveSecondaryHex,
-	type ThemeContrastScores,
 } from '@/lib/colors';
+import type { ThemeContrastScores } from '@/lib/colors';
 import type { ColorPreference } from '@/lib/preference-schemas';
 
 /** Memoized Light/Dark pair grades for the current Dominant/Secondary prefs. */

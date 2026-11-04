@@ -6,10 +6,10 @@ import {
 } from '@/components/layout';
 import { MeasureHeightReserve } from '@/components/measures';
 import { useMeasureDisplayOptions } from '@/hooks/useMeasureDisplayOptions';
-import type { RhythmMeasure } from '@/types';
 import { REST_MEASURE } from '@/types';
 import { PoisonMeasureContent } from './PoisonMeasureContent';
 import { PoisonSectionHeader } from './PoisonSectionHeader';
+import type { RhythmMeasure } from '@/types';
 
 type PoisonSectionProps = {
 	poisonRhythm: RhythmMeasure | null;

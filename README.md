@@ -2,7 +2,7 @@
 
 A rhythm training game where you identify the hidden “poison” rhythm among randomly generated measures.
 
-**Teachers:** see [`documentation/TEACHERS.md`](documentation/TEACHERS.md) for classroom start, modes, and lesson arcs.
+**Teachers:** see [`documentation/TEACHERS.md`](documentation/TEACHERS.md) for classroom start, modes and lesson arcs.
 
 ## Stack
 
@@ -78,6 +78,7 @@ src/
 │   ├── controls/     # Difficulty, play modes, New/Reuse, play/pause, carousel nav
 │   ├── layout/       # Chrome, modals, ShowNotes, metronome, settings, about
 │   │   ├── about/    # About modal content
+│   │   ├── intro/    # First-visit welcome (localStorage `poison-rhythm-intro-seen`)
 │   │   ├── button/   # Footer corner triggers (Settings, Metronome, Account)
 │   │   ├── metronome/
 │   │   └── settings/ # SettingsOverlay + Mode / Sound / Colors panels
@@ -111,16 +112,16 @@ UI is composed like stacked layers (one concern per file; prefer one root DOM el
 | **Atoms** | `src/components/ui/` | Single-element primitives (`Button`, `IconButton`, `Caption`, `Stack`, `Row`) |
 | **Molecules** | `controls/`, `measures/`, `layout/`, `layout/settings/` | Composed pieces (`PlayModeOptionCard`, `MeasureCarouselChrome`, `ModalPanel`, `EnableToggle`, `ContrastGradeBadge`) |
 | **Composers** | feature folders | Wire context + hooks (`DifficultyControls`, `MeasureSlider`, `ShowNotes`, `Body`) |
-| **Hosts** | `App` / `Body` | Modal hosts beside the tree (`AboutPoisonRhythmModal`, `DifficultyRegenAckHost`, `DisplayModeModal`) |
+| **Hosts** | `App` / `Body` | Modal hosts beside the tree (`IntroModalHost`, `AboutPoisonRhythmModal`, `DifficultyRegenAckHost`, `DisplayModeModal`) |
 | **Hooks** | `src/hooks/` | Side effects out of JSX (`useDisclosure`, `useModalFocusTrap`, `useNotationPrefetch`, `useMeasurePlaybackSync`, …) |
 
-Feature composers should import `@/components/ui` (or existing settings atoms) instead of inventing raw `<button className=…>` markup. Prefer **variants** (`tone`, `size`, `framed`, `slot`) over `className` passthrough. Details: [`.cursor/components.mdc`](.cursor/components.mdc), [`documentation/ARCHITECTURE.md`](documentation/ARCHITECTURE.md).
+Feature composers should import `@/components/ui` (or existing settings atoms) instead of inventing raw `<button className=…>` markup. Prefer **variants** (`tone`, `size`, `framed`, `slot`) over `className` passthrough. Keep **value imports** and **`import type`** on separate statements — Biome `useImportType` (`separatedType`) rejects `import { Foo, type Bar }`. Details: [`.cursor/components.mdc`](.cursor/components.mdc), [`.cursor/rules.mdc`](.cursor/rules.mdc), [`documentation/ARCHITECTURE.md`](documentation/ARCHITECTURE.md).
 
 ### Context modules
 
 Context state lives under `src/contexts/`. Each module is split for Vite Fast Refresh (HMR):
 
-- **`*Context.ts`** — context object, types, and hook (`useGame`, `useSettings`, etc.)
+- **`*Context.ts`** — context object, types and hook (`useGame`, `useSettings`, etc.)
 - **`*Provider.tsx`** — provider component only
 
 Import from the barrel: `@/contexts`.
@@ -139,7 +140,7 @@ Provider tree: `main.tsx` wraps `ThemeProvider` → `ColorPreferencesProvider` �
 
 Count-in and measure playback share one **audio-clock** timeline (`createPlaybackClock` + `createLookaheadScheduler` in `MetronomeProvider`):
 
-1. Optional one-bar quarter-note count-in (Sound → Count-In Before Play)
+1. Optional one-bar quarter-note count-in (Sound → Count-In)
 2. First playback downbeat is exactly one quarter after the last count-in click (no wall-clock `setTimeout` gap)
 3. Look-ahead schedules clicks/hits slightly ahead of `AudioContext.currentTime`
 4. After each playback bar, look-ahead pauses briefly so React can sync the next measure
@@ -151,7 +152,7 @@ Complexity is controlled by **difficulty** and **subdivision** (not separate den
 | Control | Location | Effect |
 |---------|----------|--------|
 | **Difficulty slider (1–5)** | Title About modal + Settings → Mode | Hit count range and placement bias (downbeats at level 1, full 16th grid at level 5) |
-| **Subdivision (1/4, 1/8, 1/16)** | Header ShowNotes + Settings → Mode | Which grid positions can receive hits during generation, display, and playback |
+| **Subdivision (1/4, 1/8, 1/16)** | Header ShowNotes + Settings → Mode | Which grid positions can receive hits during generation, display and playback |
 
 The rhythm engine (`src/lib/rhythm/`) accepts both `difficulty` and `subdivisionLevel` when generating measures. Settings may add accents and sticking on top — but not separate density or syncopation dials.
 
@@ -161,10 +162,10 @@ The rhythm engine (`src/lib/rhythm/`) accepts both `difficulty` and `subdivision
 
 | Area | Controls |
 |------|----------|
-| Mode | Display (grid / notation; Scroll Coming Soon), play mode + Endless, complexity (difficulty, subdivision), practice (Show Poison?, show next, preview pass, mute on pass) |
-| Sound | Visual/audio feedback, metronome mute, rhythm mute, count-in, tempo |
+| Mode | Display (grid / notation; Scroll Coming Soon), play mode + Endless, complexity (difficulty, subdivision), practice (Show Poison?, show next, preview pass) |
+| Sound | Visual/audio feedback, Metronome / Playback / Preview mute, count-in, tempo |
 | Colors | Dominant / secondary Crayola accents + Light/Dark theme toggles on the contrast meter; see [`documentation/COLORS.md`](documentation/COLORS.md) and [`documentation/A11Y.md`](documentation/A11Y.md) |
-| Main-page shortcuts | Poison Display Mode badge, header ShowNotes, footer metronome |
+| Main-page shortcuts | Poison Display Mode badge, header ShowNotes, Measures Volume menu, footer metronome |
 
 Settings modal tabs: **Mode**, **Sound**, **Colors** (`SettingsTabs`).
 
@@ -232,7 +233,7 @@ Coverage includes:
 - Playback clock / look-ahead (count-in → playback join with no timer gap)
 - Difficulty levels, subdivision playback, metronome tempo/tap
 - Theme options and preference storage
-- Playwright: seeded round ready, count-in highlight gating, count-in beats on Play, Escape-to-stop, demo pass, notation overflow, mobile layout smoke (360×800)
+- Playwright: seeded round ready, count-in highlight gating, count-in beats on Play, Escape-to-stop, demo pass, notation active-glyph color, notation overflow, mobile layout smoke (360×800)
 - Axe: start screen (seeded round), generated round, settings (incl. Sound), metronome, modals, count-in on **desktop and mobile** (WCAG 2.2 A/AA + best-practice)
 
 Details: [`documentation/TESTING.md`](documentation/TESTING.md).
@@ -241,13 +242,13 @@ Details: [`documentation/TESTING.md`](documentation/TESTING.md).
 
 1. On load, a **round is already generated** (no empty “Click to Generate” step). Measures and poison appear immediately.
 2. Use the **difficulty slider** (1–5) to set complexity. Open the **i** help control for level details.
-3. Use the header **note subdivision** control (1/4, 1/8, 1/16) to set grid density for generation, display, and playback.
+3. Use the header **note subdivision** control (1/4, 1/8, 1/16) to set grid density for generation, display and playback.
 4. Note the **poison rhythm** in the Poison Rhythm section (hidden when poison mode is off or set to hidden).
 5. Click **New (+)** for a fresh poison and measures, or **Reuse** to keep the same poison and regenerate measures.
-6. Use **Prev/Next** to step through measures and find which one matches the poison.
-7. Use **Play** to hear measures (optional count-in shows beat numbers on the Play control and fades the live measure). With **Preview Before Play** enabled (Settings → Mode), the current measure plays once as a demo (Listening — dashed primary shell and Secondary notes), then again as the student pass (Playing — secondary glow shell and Dominant notes; optionally muted).
+6. Use **Prev/Next** to step through measures and find which one matches the poison. On the first measure, the left control starts Play after a short cancelable countdown (click again, click outside or Escape to cancel). On the last measure, the right control offers **New** (+), **Reuse** (same poison, new measures) or **Play**.
+7. Use **Play** to hear measures (optional count-in shows beat numbers on the Play control and fades the live measure). With **Listen Before You Play** enabled (Settings → Mode), the current measure plays once as a demo (Listening — dashed primary shell and Secondary notes), then again as the student pass (Playing — secondary glow shell and Dominant notes). Mute **Playback** from the Measures Volume menu to silence the student pass.
 8. Open the footer **metronome** to set tempo or tap tempo.
-9. Open the footer **Settings** for theme, colors, sound (including tempo), complexity, play/display mode, poison visibility, and practice features (show next measure, demo pass). Difficulty + play mode are in the title **About** modal; other main-page shortcuts remain: Poison **Display Mode** badge, header ShowNotes, footer metronome.
+9. Open the footer **Settings** for theme, colors, sound (including tempo), complexity, play/display mode, poison visibility and practice features (show next measure, demo pass). Difficulty + play mode are in the title **About** modal; other main-page shortcuts remain: Poison **Display Mode** badge, header ShowNotes, footer metronome.
 
 ## Documentation
 
@@ -257,8 +258,8 @@ Details: [`documentation/TESTING.md`](documentation/TESTING.md).
 - [`documentation/A11Y.md`](documentation/A11Y.md) — contrast grades, border hierarchy, keyboard / a11y
 - [`documentation/printables/student-record.pdf`](documentation/printables/student-record.pdf) — printable student practice log
 - [`documentation/ARCHITECTURE.md`](documentation/ARCHITECTURE.md) — engine, state, settings, notation, UI composition
-- [`documentation/TESTING.md`](documentation/TESTING.md) — unit, integration, and Playwright guidance
-- [`.cursor/skills/git-commits/SKILL.md`](.cursor/skills/git-commits/SKILL.md) — commit message conventions and pre-commit gate (`/git-commits`)
+- [`documentation/TESTING.md`](documentation/TESTING.md) — unit, integration and Playwright guidance
+- [`.cursor/git-commits.md`](.cursor/git-commits.md) — this repo’s overlay for `/git-commits` (gate + docs)
 - [`src/assets/fonts/README.md`](src/assets/fonts/README.md) — MusiSync font assets and glyph keys
 - [`.cursor/rules.mdc`](.cursor/rules.mdc) — project rules for Cursor
 - [`.cursor/react.mdc`](.cursor/react.mdc) — React, contexts, atomic component standards

@@ -1,11 +1,11 @@
 import { lazy, Suspense } from 'react';
 import { useNotationPrefetch } from '@/hooks/useNotationPrefetch';
+import { MeasureCellGrid } from './MeasureCellGrid';
+import { NotationFallback } from './NotationFallback';
 import type { RhythmRenderMode } from '@/lib/settings-schema';
 import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
-import { MeasureCellGrid } from './MeasureCellGrid';
 import type { MeasureDisplayOptions } from './measure-display-options';
 import type { MeasurePlaybackPhase } from './measure-phase-chrome';
-import { NotationFallback } from './NotationFallback';
 
 const measureNotationImport = () =>
 	import('./MeasureNotation').then((module) => ({

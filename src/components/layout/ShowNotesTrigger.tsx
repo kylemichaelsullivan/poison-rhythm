@@ -34,7 +34,8 @@ export function ShowNotesTrigger({
 				'relative flex min-h-11 min-w-11 w-11 h-11 items-center justify-center overflow-hidden p-0 text-black',
 				open && 'ring-2 ring-primary',
 			)}
-			title='Note Subdivisions'
+			title='Choose Which Note Subdivisions to Show'
+			data-musisync-ready={fontReady ? 'true' : 'false'}
 			onMouseEnter={() => {
 				// Worst case: finish loading subdivision glyphs on hover.
 				ensureLoaded();

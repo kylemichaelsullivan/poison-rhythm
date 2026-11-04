@@ -32,7 +32,7 @@ const PREVIEW_BEATS: readonly (readonly PreviewCell[])[] = [
 /**
  * Decorative mini-grid using the current color pair.
  * Mirrors MeasureCellGrid: secondary shell/beat borders, dominant hit fills,
- * muted rests, and a secondary ring on one hit and one rest (active step).
+ * muted rests and a secondary ring on one hit and one rest (active step).
  */
 export function ColorPairPlayPreview({
 	dominantHex,
@@ -56,7 +56,7 @@ export function ColorPairPlayPreview({
 						<div
 							key={`preview-cell-${beat + 1}-${offset + 1}`}
 							className={clsx(
-								'relative aspect-square rounded-[3px]',
+								'relative aspect-square rounded-cell',
 								cell.hit ? undefined : 'bg-surface-muted',
 							)}
 							style={{

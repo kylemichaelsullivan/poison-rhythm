@@ -25,6 +25,14 @@
 		"enabled": true,
 		"rules": {
 			"recommended": true,
+			"style": {
+				"useImportType": {
+					"level": "error",
+					"options": {
+						"style": "separatedType"
+					}
+				}
+			},
 			"suspicious": {
 				"noArrayIndexKey": "warn"
 			}
@@ -45,7 +53,12 @@
 		"enabled": true,
 		"actions": {
 			"source": {
-				"organizeImports": "on"
+				"organizeImports": {
+					"level": "on",
+					"options": {
+						"groups": [{ "type": false }, { "type": true }]
+					}
+				}
 			}
 		}
 	}

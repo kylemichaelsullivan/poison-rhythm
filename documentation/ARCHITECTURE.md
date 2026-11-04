@@ -1,6 +1,6 @@
 # Architecture
 
-Overview of Poison Rhythm’s engine, state, settings, and UI composition. See [README.md](../README.md) for getting started, [AGENTS.md](../AGENTS.md) for agent gotchas, and [TESTING.md](TESTING.md) for test suites. Cursor conventions: [`.cursor/components.mdc`](../.cursor/components.mdc), [`.cursor/react.mdc`](../.cursor/react.mdc).
+Overview of Poison Rhythm’s engine, state, settings and UI composition. See [README.md](../README.md) for getting started, [AGENTS.md](../AGENTS.md) for agent gotchas and [TESTING.md](TESTING.md) for test suites. Cursor conventions: [`.cursor/components.mdc`](../.cursor/components.mdc), [`.cursor/react.mdc`](../.cursor/react.mdc).
 
 ## UI composition
 
@@ -36,7 +36,7 @@ flowchart TB
 | Atoms | `src/components/ui/` | `Button`, `IconButton`, `Caption`, `Stack`, `Row` |
 | Molecules | domain folders | `PlayModeOptionCard`, `ModalActions`, `ModalPanel`, `MeasureCarouselChrome`, `ContrastGradeBadge`, settings `EnableToggle` |
 | Composers | domain folders | `DifficultyControls`, `MeasureSlider`, `ShowNotes`, `PoisonSection`, `Body` |
-| Hosts | `App` / `Body` | `AboutPoisonRhythmModal`, `DifficultyRegenAckHost`, `DisplayModeModal` |
+| Hosts | `App` / `Body` | `IntroModalHost`, `AboutPoisonRhythmModal`, `DifficultyRegenAckHost`, `DisplayModeModal` |
 | Hooks | `src/hooks/` | `useDisclosure`, `useModalFocusTrap`, `useTimedDismiss`, `useNotationPrefetch`, `useMeasureDisplayOptions`, `useMeasurePlaybackSync`, `useHoverPinPopover`, `useSoftDisableFocus` |
 
 Rules of thumb:
@@ -47,22 +47,24 @@ Rules of thumb:
 - Do not add raw `<button className=…>` in composers — use `@/components/ui` or settings atoms
 - **Variants over `className`** on shared components (`tone`, `size`, `framed`, `slot`)
 
-Main page shell: `Header` → `Body` (`PoisonSection`, `MeasuresSection`, `PlayControls`, single `DisplayModeModal`) → `Footer`.
+Main page shell: `Header` → `Body` (`PoisonSection`, `MeasuresSection`, `PlayControls`, single `DisplayModeModal`) → `Footer`. `IntroTutorialProvider` owns first-visit / replay state; `IntroModalHost` sits beside the tree in `App`. **Don’t show again** is on by default; dismissing with it checked writes `poison-rhythm-intro-seen`. Uncheck it to hide the welcome for the current visit only. **Settings → Mode → Welcome Tutorial** reopens it.
 
-Phone-up layout (≈360px primary; 320px must not overflow horizontally): safe-area insets on chrome, ≥44px touch targets on primary controls, near-fullscreen Settings sheet on small viewports, and **sixteenth** beat groups wrapping to **2×2** below `sm` so all 16 cells stay visible (`MeasureCellGrid` — quarters/eighths stay four-across; never force 16ths→8ths for viewport size). Carousel prev/next sit above Play so they do not overlap.
+Phone-up layout (≈360px primary; 320px must not overflow horizontally): safe-area insets on chrome, ≥44px touch targets on primary controls, near-fullscreen Settings sheet on small viewports and **sixteenth** beat groups wrapping to **2×2** below `sm` so all 16 cells stay visible (`MeasureCellGrid` — quarters/eighths stay four-across; never force 16ths→8ths for viewport size). Carousel prev/next sit above Play so they do not overlap.
 
 | Composer / host | Notable layers / hooks |
 |-----------------|------------------------|
+| `IntroModalHost` | `IntroTutorialProvider` + `IntroModal` / `IntroTutorialStep` (quarters `MeasureGrid`) / `IntroSkipToggle` (checked by default); writes `poison-rhythm-intro-seen` when skip is checked on dismiss |
 | `DifficultyControls` | `DifficultyFramedBlock` / `DifficultySettingsBlock`, help + play-mode modals; regen ack via `DifficultyRegenAckHost` |
-| `MeasureSlider` | `MeasureCarouselChrome` (`live` sets `data-testid="measure-slider"`), `NextMeasurePreview`, `useMeasurePlaybackSync` |
+| `MeasureSlider` | `MeasureCarouselChrome` (`live` sets `data-testid="measure-slider"`), `NextMeasurePreview` / `ScrollHighway`, `useMeasurePlaybackSync` |
 | `ShowNotes` | `ShowNotesTrigger`, `ShowNotesSlider`, `useHoverPinPopover` |
+| `VolumeMenu` | `VolumeMenuTrigger`, `VolumeMenuPanel`, `useHoverPinPopover`; Metronome / Playback / Preview mutes; click speaker while open mutes all, click again restores the last mix or unmutes all |
 | `PoisonSection` | `PoisonSectionHeader`, `PoisonMeasureContent`, `PoisonMeasureFrame` / `HiddenPoisonOverlay` (badge opens Body-owned `DisplayModeModal`) |
 | `Body` | `useSoftDisableFocus`, `useDisclosure` → single `DisplayModeModal` |
-| `Modal` | `ModalScrim`, `ModalPanel`, `ModalCloseButton`, `ModalTitle`, `TimedNoticeProgress` when `dismissAfterMs` is set, `useModalFocusTrap`, `useTimedDismiss` |
+| `Modal` | Portals to `document.body`; `ModalScrim`, `ModalPanel`, `ModalCloseButton`, `ModalTitle`, `TimedNoticeProgress` when `dismissAfterMs` is set, `useModalFocusTrap` (topmost `.Modal` only), `useTimedDismiss` |
 | `MeasureGrid` | Prop-driven `display` → `MeasureCellGrid` / lazy `MeasureNotation`, `NotationFallback`, `useNotationPrefetch` |
 | `ColorAccentSettings` | Owns prefs + role/contrast hooks; `ContrastScoreMeter` owns theme; tray memoizes scores on role + partner |
 
-Settings shell: footer **Settings** → lazy `SettingsOverlay` → tabs `Mode` / `Sound` / `Colors` over `layout/settings/` atoms (`SettingsGroup`, `EnableToggle`, `When`, …). Color accents persist via `ColorPreferencesProvider` (student-scoped preference keys; null = brand); Colors UI is composed by `ColorAccentSettings`. Main-UI shortcuts remain: Poison/Measures badge → Body-owned `DisplayModeModal`; header ShowNotes; footer metronome for tempo (`CornerModal` `tone='muted'` when metronome muted). Mirrored in Settings: display + play mode + complexity + practice under Mode; feedback → playback → tempo under Sound; crayon accents + theme lightbulbs on the contrast meter under Colors. Difficulty + play-mode badge also live in the title About modal (`AboutPoisonRhythmModal`). See [`COLORS.md`](COLORS.md) and [`CONTRAST.md`](CONTRAST.md).
+Settings shell: footer **Settings** → lazy `SettingsOverlay` → tabs `Mode` / `Sound` / `Colors` over `layout/settings/` atoms (`SettingsGroup`, `EnableToggle`, `When`, …). Color accents persist via `ColorPreferencesProvider` (student-scoped preference keys; null = brand); Colors UI is composed by `ColorAccentSettings`. Main-UI shortcuts remain: Poison/Measures badge → Body-owned `DisplayModeModal`; header ShowNotes; Measures **Volume** menu (Metronome / Playback / Preview); footer metronome for tempo (`CornerModal` `tone='muted'` when metronome muted). Mirrored in Settings: display + play mode + complexity + practice under Mode; feedback → mute channels → tempo under Sound; crayon accents + theme lightbulbs on the contrast meter under Colors. Difficulty + play-mode badge also live in the title About modal (`AboutPoisonRhythmModal`). See [`COLORS.md`](COLORS.md) and [`CONTRAST.md`](CONTRAST.md).
 
 ## State flow
 
@@ -104,7 +106,7 @@ flowchart TB
   round --> measures
 ```
 
-`GameProvider` **sync-seeds** the first round in its `useState` initializer (`createRoundForMode`) so first paint already has measures (avoids empty prompt → flash). `EmptyStartPrompt` remains as a fallback if `round === null`, but normal play never clears the round to null. Prefer extending `GameProvider` over the unused `useGameLoop` hook.
+`GameProvider` **sync-seeds** the first round in its `useState` initializer (`createRoundForMode`) so first paint already has measures (avoids empty prompt → flash). `EmptyStartPrompt` remains as a fallback if `round === null`, but normal play never clears the round to null. Prefer extending `GameProvider` over the unused `useGameLoop` hook. Carousel ends: first-measure left control starts Play after `CAROUSEL_PLAY_DELAY_MS` (cancelable via the button, outside click or Escape); last-measure right control offers New (`handleNewRound`), Reuse (`handleReuseRound`) or Play (`toggleMeasures`).
 
 ## Complexity model
 
@@ -124,7 +126,7 @@ Defined in `src/lib/settings-schema.ts`, persisted as `poison-rhythm-settings-v1
 | Category | Fields |
 |----------|--------|
 | General | `players`, `feedbackMode`; `rhythmRenderMode` (`grid` \| `notation` \| `scroll`); `scrollDirection` when mode is Scroll; `scrollSpeed` (schema retained) |
-| Practice | `showNextMeasure`, `demoBeforePlay`, `muteOnStudentPass` |
+| Practice | `showNextMeasure`, `demoBeforePlay` |
 | Rhythm | `accents`, `sticking`, `phraseLength` (Coming Soon in Settings); `rests` (unused; always off) |
 | Poison | `poisonMode` (Eye toggle on Poison section + Settings → Mode → Practice) |
 | Game mode | `gameMode` |
@@ -134,12 +136,12 @@ Defined in `src/lib/settings-schema.ts`, persisted as `poison-rhythm-settings-v1
 
 When `demoBeforePlay` is enabled:
 
-1. Count-in (optional; Sound → Count-In Before Play)
+1. Count-in (optional; Sound → Count-In)
 2. For **each** carousel measure: **Listening (demo) pass** — plays the current measure so students can hear it; cells highlighted; dashed primary shell + Secondary notes (`data-playback-phase="listening"`)
-3. **Playing (student) pass** — same measure again with solid secondary glow shell + Dominant notes (`data-playback-phase="playing"`); if `muteOnStudentPass`, rhythm hits suppressed; metronome continues
+3. **Playing (student) pass** — same measure again with solid secondary glow shell + Dominant notes (`data-playback-phase="playing"`); if Playback is muted, rhythm hits are suppressed; metronome continues unless it is muted too
 4. Advance to the next measure and repeat from step 2
 
-Count-in, Listening, and Playing share a fixed-width shell from `hierarchyBorderClass` (`src/lib/hierarchy-border.ts` via `measure-phase-chrome.ts`) so the measure does not jump between phases; count-in also fades the live measure (`opacity-55`). Dashed = provisional (count-in / listening); solid active = playing. See [`A11Y.md`](A11Y.md).
+Count-in, Listening and Playing share a fixed-width shell from `hierarchyBorderClass` (`src/lib/hierarchy-border.ts` via `measure-phase-chrome.ts`) so the measure does not jump between phases; count-in also fades the live measure (`opacity-55`). Dashed = provisional (count-in / listening); solid active = playing. See [`A11Y.md`](A11Y.md).
 
 Implemented in `MetronomeProvider` with `playbackPass`: `'demo' | 'student'` and `setPlaybackMeasure` (current carousel cell).
 
@@ -183,26 +185,27 @@ flowchart LR
   beam[beam-groups / beam-glyphs]
   tokens[eventsToGlyphTokens]
   steps[measureToNotationSteps]
-  ui[MeasureNotation + NotationPlaybackCursor]
+  ui[MeasureNotation]
   measure --> events --> spell --> beam --> tokens --> steps --> ui
 ```
 
 | Module | Role |
 |--------|------|
 | `notation-events.ts` | Boolean grid → timed note/rest events |
-| `spell-onsets.ts` / `spell-rests.ts` | Contemporary duration spelling per subdivision level |
+| `spell-onsets.ts` / `spell-rests.ts` | Conventional 4/4 duration spelling per subdivision level |
 | `duration-units.ts` | Cell ↔ duration mapping |
-| `beam-groups.ts` / `beam-notes.ts` / `beam-glyphs.ts` | Beamed eighth/sixteenth groups (exact patterns; `[1,2]` → derived U+E001, not stock `O`) |
+| `beam-groups.ts` / `beam-notes.ts` / `beam-glyphs.ts` | Beamed eighth/sixteenth groups (exact patterns; `[1,2]`/`[2,1]`/`[1,1]` → derived U+E001–E003, not stock dotted `O`/`o`) |
 | `musisync-glyphs.ts` | Duration keys; dotted notes `i`/`j`/`d`; dotted rests = rest + `.` |
 | `events-to-musisync.ts` | Events → MusiSync glyph string |
-| `measure-to-notation.ts` | Flat `NotationStep[]` for overlays and playback cursor |
-| `load-musisync-font.ts` | `@font-face` + `index.html` preload; `prefetchMusiSyncFont` in `main` warms `q`/`e`/`s`; `useMusiSyncFont` in UI |
+| `measure-to-notation.ts` | Flat `NotationStep[]` with `startCell` / `durationCells` for overlays and playback |
+| `notation-playback.ts` | Length-16 cell→glyph `stepIndex` map for active-token highlight |
+| `load-musisync-font.ts` | `@font-face` (`font-display: block`) + `index.html` preload + inline FontFace; `prefetchMusiSyncFont` in `main` loads **all** duration/beam glyphs; ready = canvas vs matching fallback (never `fonts.check()` on Latin keys); `useMusiSyncFont` in UI |
 
 Font assets: canonical copies in `src/assets/fonts/`; served from `public/fonts/` as static `/fonts/MusiSync.*` URLs. See [`src/assets/fonts/README.md`](../src/assets/fonts/README.md) for glyph keys and refresh steps.
 
 `MeasureGrid` lazy-loads `MeasureNotation` and prefetches the chunk + MusiSync font via `useNotationPrefetch` when `rhythmRenderMode === 'notation'` (`NotationFallback` shell instead of flashing the cell grid). Grid layout lives in `MeasureCellGrid` (takes `showSticking` as a prop).
 
-Playback cursor: `useSmoothNotationCursor` interpolates position across `NotationStep` indices; `NotationPlaybackCursor` highlights the active glyph during demo/student passes.
+Playback follow: `useSubdivisionProgress` + `subdivisionStepToCell` + `buildNotationCellStepMap` keep the active `MeasureNotationGlyph` (`data-active`) colored for its full spelled duration (Secondary on listening, Dominant on playing; inactive tokens stay full ink).
 
 ## Audio engine
 
@@ -217,6 +220,10 @@ Playback cursor: `useSmoothNotationCursor` interpolates position across `Notatio
 | `scroll-animation.ts` | Beat-synced scroll highway math (`highwayProgress`, lane insets, `padMeasuresForHighwayLookahead`) |
 | `MetronomeProvider` | Schedules clicks/hits on the audio clock; UI updates via delayed timeouts; **Escape** stops playback (keydown; ignored in inputs/dialogs) |
 
+## TypeScript imports
+
+Module (value) imports and type imports stay on **separate statements**. Do not write `import { Foo, type Bar }`. Use `import type { Bar }` after the value imports. Biome enforces this (`style/useImportType` `separatedType`; `organizeImports` places `{ "type": true }` after values). Details: [`.cursor/rules.mdc`](../.cursor/rules.mdc) and [`AGENTS.md`](../AGENTS.md).
+
 ## Types
 
 | Type | Description |
@@ -230,7 +237,7 @@ Adapters: `rhythmToRichMeasure`, `richToRhythmMeasure` in `src/types/rhythm.ts`.
 
 ## Tests
 
-Full inventory, helper semantics, and count-in UI contracts: [TESTING.md](TESTING.md).
+Full inventory, helper semantics and count-in UI contracts: [TESTING.md](TESTING.md).
 
 | Command | Suite |
 |---------|--------|

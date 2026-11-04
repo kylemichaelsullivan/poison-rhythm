@@ -1,10 +1,10 @@
 import { useId } from 'react';
-import type { ContrastRating } from '@/lib/colors';
 import { worseContrastRating } from '@/lib/colors';
-import type { ThemePreference } from '@/lib/theme-options';
 import { themeOptionFor } from '@/lib/theme-options';
 import { FieldCaption } from '../FieldCaption';
 import { ThemeScoreRow } from './ThemeScoreRow';
+import type { ContrastRating } from '@/lib/colors';
+import type { ThemePreference } from '@/lib/theme-options';
 
 const ROWS = ['light', 'dark'] as const;
 
@@ -19,9 +19,8 @@ type ContrastScoreMeterProps = {
 
 /**
  * Light/Dark grades for the chosen pair in one joined box. Each row is a
- * theme button. Visual order stays Light over Dark (no `.ThemeScoreStack`
- * reorder) so click targets do not swap when the theme changes. Swatches
- * still use `.ThemeScoreStack` for current-mode-on-top.
+ * theme button. Visual order stays Light over Dark, matching swatch chips,
+ * so click targets do not swap when the theme changes.
  */
 export function ContrastScoreMeter({
 	light,

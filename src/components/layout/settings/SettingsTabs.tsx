@@ -1,6 +1,5 @@
 import clsx from 'clsx';
 import type { ReactNode } from 'react';
-import { focusVisibleRingClassName } from '@/lib/control-classes';
 
 export type SettingsTabId = 'mode' | 'sound' | 'colors';
 
@@ -43,13 +42,13 @@ export function SettingsTabs({
 							type='button'
 							id={`settings-tab-${tab.id}`}
 							className={clsx(
-								'SettingsTab min-h-11 px-1.5 py-2.5 text-sm font-medium transition-colors sm:px-2',
-								focusVisibleRingClassName,
+								'SettingsTab min-h-11 px-1.5 py-2.5 text-sm font-medium sm:px-2',
 								isActive
 									? 'border-b-2 border-primary text-primary'
-									: 'text-muted hover:text-primary',
+									: 'text-muted',
 							)}
 							role='tab'
+							title={`${tab.label} Settings`}
 							aria-selected={isActive}
 							aria-controls={activePanelId}
 							tabIndex={isActive ? 0 : -1}

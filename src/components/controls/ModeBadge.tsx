@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 import { sectionTitleClassName } from '@/components/layout/SectionTitle';
-import type { GameModeHudBadge } from '@/lib/settings-schema';
 import { PlayModeBucketGlyph } from './PlayModeBucketGlyph';
 import { PlayModePoisonGlyph } from './PlayModePoisonGlyph';
+import type { GameModeHudBadge } from '@/lib/settings-schema';
 
 type ModeBadgeProps = {
 	badge: GameModeHudBadge;
@@ -19,9 +19,7 @@ export function ModeBadge({ badge }: ModeBadgeProps) {
 		>
 			<span
 				className={clsx(
-					'relative inline-flex size-11 shrink-0 items-center justify-center rounded-full border-2 border-secondary bg-surface text-black transition-[colors,box-shadow]',
-					'group-hover:bg-primary group-hover:text-on-primary group-hover:shadow-soft',
-					'group-focus-visible:border-primary',
+					'relative inline-flex size-11 shrink-0 items-center justify-center rounded-full border-2 border-secondary bg-surface text-black',
 				)}
 			>
 				{badge.tone === 'bucket' ? (
@@ -31,7 +29,7 @@ export function ModeBadge({ badge }: ModeBadgeProps) {
 				)}
 				{badge.endless ? (
 					<span
-						className='pointer-events-none absolute top-0.5 right-0.5 flex size-3.5 items-center justify-center rounded-full bg-surface-muted text-[10px] font-bold leading-none text-dark ring-1 ring-mid'
+						className='pointer-events-none absolute top-0.5 right-0.5 flex size-3.5 items-center justify-center rounded-full bg-surface-muted text-2xs font-bold leading-none text-dark ring-1 ring-mid'
 						aria-hidden
 					>
 						∞

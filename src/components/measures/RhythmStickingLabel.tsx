@@ -6,7 +6,7 @@ type RhythmStickingLabelProps = {
 export function RhythmStickingLabel({ hand }: RhythmStickingLabelProps) {
 	return (
 		<span
-			className='RhythmStickingLabel text-[0.5rem] font-bold leading-none text-dark'
+			className='RhythmStickingLabel text-3xs font-bold leading-none text-dark'
 			aria-hidden
 		>
 			{hand}

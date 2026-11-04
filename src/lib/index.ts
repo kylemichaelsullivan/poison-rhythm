@@ -3,11 +3,6 @@ export {
 	shouldPlayRhythmAudio,
 	shouldShowVisualFeedback,
 } from './audio';
-export type {
-	DifficultyLevel,
-	DifficultyLevelEntry,
-	HitRange,
-} from './difficulty-levels';
 export {
 	DIFFICULTY_LEVELS,
 	DIFFICULTY_MAX,
@@ -22,40 +17,40 @@ export {
 	getGameModeHandler,
 	onMeasureCompleteForMode,
 } from './game-modes';
-export type { LookaheadScheduler } from './lookahead-scheduler';
+export {
+	INTRO_FAIL_REVEAL_MS,
+	INTRO_LOSE_UNDERLINE_MS,
+	INTRO_PLAY_HALO_AFTER_MS,
+	INTRO_POISON_BEATS,
+	INTRO_POISON_FAIL_LOSE,
+	INTRO_POISON_FAIL_POISON,
+	INTRO_POISON_PROMPT,
+	INTRO_SIMON_SAYS_PROMPT,
+	INTRO_TUTORIAL_STEPS,
+	quarterNoteMeasure,
+} from './intro-tutorial';
 export {
 	createLookaheadScheduler,
 	drainDueEvents,
 } from './lookahead-scheduler';
-export type { MeasureCompleteAction } from './measure-playback';
 export {
 	measureCompleteAction,
 	shouldProcessMeasureCycle,
 } from './measure-playback';
-export type {
-	PlaybackClock,
-	PlaybackClockEvent,
-	PlaybackPhase,
-} from './playback-clock';
 export {
 	createPlaybackClock,
 	quarterNoteSec,
 	shouldHoldLookaheadAfterEvent,
 } from './playback-clock';
-export type { PlaybackPass, PlaybackSource } from './playback-state';
 export {
 	initialPlaybackPass,
 	isMeasuresPlaying,
 	measureForPlaybackPass,
 	nextPassAfterBar,
+	shouldHighlightNotationPlayback,
 	shouldHighlightPlaybackStep,
 	shouldRunCountIn,
 } from './playback-state';
-export type {
-	ColorPreference,
-	SubdivisionLevel,
-	ThemeSetting,
-} from './preference-schemas';
 export {
 	DEFAULT_DIFFICULTY,
 	DEFAULT_SUBDIVISION_LEVEL,
@@ -68,23 +63,31 @@ export {
 	serializeThemeSetting,
 } from './preference-schemas';
 export {
+	coerceRhythmMutes,
 	readCountInEnabled,
 	readDifficulty,
 	readDominantColor,
+	readIntroSeen,
 	readMuteMetronome,
+	readMutePlayback,
 	readMutePreference,
+	readMutePreview,
 	readMuteRhythmSounds,
 	readSecondaryColor,
 	readStoredTempo,
 	readSubdivisionLevel,
 	readThemeSetting,
 	resolveInitialTempo,
+	resolveRhythmMutes,
 	stripBpmSearchParam,
 	writeCountInEnabled,
 	writeDifficulty,
 	writeDominantColor,
+	writeIntroSeen,
 	writeMuteMetronome,
+	writeMutePlayback,
 	writeMutePreference,
+	writeMutePreview,
 	writeMuteRhythmSounds,
 	writeSecondaryColor,
 	writeStoredTempo,
@@ -131,16 +134,37 @@ export {
 	SUBDIVISION_LEVELS,
 } from './subdivision-levels';
 export {
+	cellsPerSubdivisionPulse,
 	cellToSubdivisionStep,
 	isQuarterDownbeat,
 	stepHasHit,
 	subdivisionPulseDivisor,
 	subdivisionPulseSec,
 	subdivisionStepCount,
+	subdivisionStepToCell,
 } from './subdivision-playback';
-export type { ThemeOption, ThemePreference } from './theme-options';
 export {
 	nextThemePreference,
 	THEME_OPTIONS,
 	themeOptionFor,
 } from './theme-options';
+export type {
+	DifficultyLevel,
+	DifficultyLevelEntry,
+	HitRange,
+} from './difficulty-levels';
+export type { IntroTutorialStepData } from './intro-tutorial';
+export type { LookaheadScheduler } from './lookahead-scheduler';
+export type { MeasureCompleteAction } from './measure-playback';
+export type {
+	PlaybackClock,
+	PlaybackClockEvent,
+	PlaybackPhase,
+} from './playback-clock';
+export type { PlaybackPass, PlaybackSource } from './playback-state';
+export type {
+	ColorPreference,
+	SubdivisionLevel,
+	ThemeSetting,
+} from './preference-schemas';
+export type { ThemeOption, ThemePreference } from './theme-options';

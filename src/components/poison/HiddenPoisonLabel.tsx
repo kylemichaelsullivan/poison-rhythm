@@ -1,7 +1,7 @@
-import type { ReactNode } from 'react';
 import EyeIcon from '@/assets/svg/eye.svg?react';
 import { Icon } from '@/components/layout/Icon';
 import { Row } from '@/components/ui';
+import type { ReactNode } from 'react';
 
 type HiddenPoisonLabelProps = {
 	children: ReactNode;

@@ -1,7 +1,7 @@
-import type { SubdivisionLevel } from '@/lib/preference-schemas';
 import { generateRound } from '@/lib/rhythm';
-import type { GameSettings } from '@/lib/settings-schema';
 import { isEndlessMode } from '@/lib/settings-schema';
+import type { SubdivisionLevel } from '@/lib/preference-schemas';
+import type { GameSettings } from '@/lib/settings-schema';
 import type { Round } from '@/types';
 
 export type GameModeContext = {

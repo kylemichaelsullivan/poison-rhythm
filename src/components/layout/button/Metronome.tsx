@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import MetronomeIcon from '@/assets/svg/metronome.svg?react';
 import { useMetronomeTempo, usePlaybackMute } from '@/contexts';
 import { CornerModal } from '../CornerModal';
+import { MetronomeModalMuteButton } from '../metronome/MetronomeModalMuteButton';
 
 const MetronomeContent = lazy(() =>
 	import('../metronome/Metronome').then((module) => ({
@@ -37,8 +38,13 @@ export function Metronome() {
 			}
 			size='lg'
 			lazy
+			headerLeading={<MetronomeModalMuteButton />}
 		>
-			<Suspense fallback={null}>
+			<Suspense
+				fallback={
+					<div className='Metronome min-h-52 w-full' aria-hidden='true' />
+				}
+			>
 				<MetronomeContent />
 			</Suspense>
 		</CornerModal>

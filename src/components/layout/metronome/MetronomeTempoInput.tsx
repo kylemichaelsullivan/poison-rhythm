@@ -72,7 +72,7 @@ export function MetronomeTempoInput({
 			pattern='[0-9]*'
 			min={BPM_MIN}
 			max={BPM_MAX}
-			title='Set Tempo'
+			title={`Set Tempo (${tempo} BPM)`}
 			aria-label='Beats per Minute'
 			value={inputValue}
 			onFocus={(e) => {

@@ -37,6 +37,8 @@ describe('dotted notes', () => {
 			MUSISYNC_GLYPH.dottedHalfNote,
 		);
 		expect(musisyncGlyphFor('rest', 'dottedEighth')).toBe('E.');
+		expect(musisyncGlyphFor('rest', 'dottedQuarter')).toBe('Q.');
+		expect(musisyncGlyphFor('rest', 'dottedHalf')).toBe('H.');
 	});
 
 	test('dotted eighth + sixteenth beams to MusiSync o', () => {
@@ -72,6 +74,32 @@ describe('dotted notes', () => {
 		expect(eventsToMusiSyncString(events)).toBe(
 			`qS${MUSISYNC_BEAMED.sixteenthEighth}qn`,
 		);
+	});
+
+	test('rest + eighth + sixteenth beams as undotted [2,1]', () => {
+		const events = measureToNotationEvents(
+			hits(1, 3, 4),
+			undefined,
+			'sixteenths',
+		);
+		expect(
+			eventsToMusiSyncString(events).startsWith(
+				`S${MUSISYNC_BEAMED.eighthSixteenth}`,
+			),
+		).toBe(true);
+	});
+
+	test('eighth rest + two sixteenths beams as [1,1]', () => {
+		const events = measureToNotationEvents(
+			hits(2, 3, 4),
+			undefined,
+			'sixteenths',
+		);
+		expect(
+			eventsToMusiSyncString(events).startsWith(
+				`E${MUSISYNC_BEAMED.twoSixteenths}`,
+			),
+		).toBe(true);
 	});
 
 	test('repeated e+& syncopation beams each [1,2] pair', () => {

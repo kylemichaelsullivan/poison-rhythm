@@ -1,8 +1,6 @@
 import clsx from 'clsx';
-import {
-	type MeasurePlaybackPhase,
-	measureShellClass,
-} from './measure-phase-chrome';
+import { measureShellClass } from './measure-phase-chrome';
+import type { MeasurePlaybackPhase } from './measure-phase-chrome';
 
 type NotationFallbackProps = {
 	hidden?: boolean;

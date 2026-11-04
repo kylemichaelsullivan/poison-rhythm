@@ -1,4 +1,3 @@
-import type { RefObject } from 'react';
 import { useEffect, useRef } from 'react';
 import {
 	useGame,
@@ -13,6 +12,7 @@ import {
 	highwayProgress,
 	highwayTrackTransform,
 } from '@/lib/scroll-animation';
+import type { RefObject } from 'react';
 import type { ScrollDirection } from '@/lib/settings-schema';
 
 type TrackRefs = {

@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+/*
+ * Order is load-bearing — do not shuffle these fences:
+ * 1. @theme — one sRGB value per token (hex / rgba / var). No oklch / color-mix / light-dark.
+ * 2. @utility + @font-face
+ * 3. :root apply — light scheme, then two dark rebinds (media + [data-theme="dark"] cannot share a list)
+ * 4. @property, then @supports oklch, then @supports color-mix (upgrades on :root, including --theme-dark-*)
+ * 5. @layer base — document, text-wrap, range (prefixed track/thumb stay in separate rules)
+ * 6. chrome — buttons, header/footer rings, title lava
+ * 7. features — grid, notation, play-mode, settings scroll (width: lives here)
+ * 8. progress — `.TimedNoticeProgress {` must be the first notice header; tests slice from there to EOF
+ */
+
 @theme {
 	/*
 	 * Brand palette from the Poison favicon (potion bottle):
@@ -36,14 +48,13 @@
 	--color-ink-900: #1a121c;
 	--color-ink-950: #0d090e;
 
-	/* Light semantic colors. Dark counterparts are set on :root below. */
+	/* Light semantic colors. Dark counterparts are `--theme-dark-*` below. */
 	--color-primary: var(--color-brand-purple-deep);
 	--color-on-primary: var(--color-ink-50);
 	/* Deep mint for borders — light mint stays atmosphere-only (gradients). */
 	--color-primary-border: var(--color-brand-mint-deep);
 	--color-secondary: var(--color-brand-mint-deep);
 	--color-on-secondary: var(--color-ink-50);
-	/* Purple complement border for mint fills */
 	--color-secondary-border: var(--color-brand-purple-deep);
 	/* About title hover on chrome bars (Secondary on Dominant / Dominant on Secondary). */
 	--color-title-hover-on-primary: #96af97;
@@ -70,25 +81,35 @@
 	/*
 	 * Side-gutter exterior controls (carousel prev/next, metronome ±, …).
 	 * Lateral: sit `width` outside a `relative` host.
-	 * Collapsed (viewport < 63rem): drop under the host with `collapse-gap`
-	 * between the host bottom and the control, plus `collapse-inset` from
-	 * the host’s bottom/side edges. Reserve padding uses
-	 * gap + control-size + inset — see `sideGutterCollapsedReserveClassName`.
+	 * Collapsed (viewport < `--breakpoint-gutter`): drop under the host with
+	 * `collapse-gap` plus `collapse-inset`. Reserve = gap + size + inset.
 	 */
 	--side-gutter-width: 1rem;
 	--side-gutter-collapse-inset: 0.5rem;
 	--side-gutter-collapse-gap: 0.75rem;
 	--side-gutter-control-size: 2.75rem; /* size-11 */
+	--range-track-height: 0.5rem;
 	--range-thumb-size: 1rem;
+
+	--breakpoint-gutter: 63rem;
+	--breakpoint-phone: 360px;
+	--breakpoint-tray: 380px;
+	--spacing-gutter: var(--side-gutter-width);
+	--spacing-gutter-inset: var(--side-gutter-collapse-inset);
+
+	--text-2xs: 0.625rem;
+	--text-3xs: 0.5rem;
+	--text-micro: 0.65rem;
+	--radius-cell: 3px;
+	--outline-width-3: 3px;
 
 	/*
 	 * Elevation: short, low-opacity, slightly purple-tinted — not stacked black.
 	 * Shadow colors are rgba so they paint without color-mix(). Dark mode uses
-	 * a white lift (see theme blocks) so hover/focus shadows stay visible.
+	 * a white lift (`--theme-dark-shadow-color`) so hover/focus stay visible.
 	 */
 	--shadow-color: rgba(13, 9, 14, 0.09);
 	--shadow-accent-color: rgba(145, 72, 147, 0.12);
-
 	--shadow-soft:
 		0 1px 2px var(--shadow-color), 0 1px 3px var(--shadow-accent-color);
 	--shadow-raised:
@@ -96,10 +117,72 @@
 	--shadow-overlay:
 		0 10px 28px var(--shadow-color), 0 4px 14px var(--shadow-accent-color);
 	--shadow-control: 0 1px 2px var(--shadow-color);
-
 	--shadow-secondary-glow: 0 0 0.5rem var(--color-secondary);
 	--shadow-primary-glow:
 		0 1px 2px var(--shadow-color), 0 0 0.65rem rgba(145, 72, 147, 0.42);
+
+	/*
+	 * Dark counterparts and theme-varying paints. Light values above are
+	 * the defaults. The apply blocks on :root only rebind names — do not
+	 * repeat hex / rgba in prefers-color-scheme or [data-theme] rules.
+	 */
+	--theme-dark-primary: var(--color-brand-purple-bright);
+	--theme-dark-on-primary: var(--color-ink-950);
+	--theme-dark-primary-border: var(--color-brand-mint-bright);
+	--theme-dark-secondary: var(--color-brand-mint-bright);
+	--theme-dark-on-secondary: var(--color-ink-950);
+	--theme-dark-secondary-border: var(--color-brand-purple-bright);
+	--theme-dark-title-hover-on-primary: #4a5b4b;
+	--theme-dark-title-hover-on-secondary: #413341;
+	--theme-dark-light: var(--color-ink-800);
+	--theme-dark-mid: #69536c;
+	--theme-dark-dark: var(--color-ink-200);
+	--theme-dark-surface: var(--color-ink-900);
+	--theme-dark-surface-muted: #472a49;
+	--theme-dark-chrome: #2f1c31;
+	--theme-dark-chrome-hover: #4b3b4e;
+	--theme-dark-white: var(--color-ink-950);
+	--theme-dark-black: var(--color-ink-50);
+	--theme-dark-accent: var(--color-brand-mint-bright);
+	--theme-dark-muted: var(--color-ink-300);
+	--theme-dark-shadow-color: rgba(255, 255, 255, 0.22);
+	--theme-dark-shadow-accent-color: rgba(195, 154, 196, 0.18);
+
+	--interactive-inset-shadow: var(--shadow-raised);
+	--theme-dark-interactive-inset-shadow:
+		0 2px 4px rgba(255, 255, 255, 0.4), 0 6px 18px rgba(255, 255, 255, 0.28);
+
+	--play-mode-icon-idle-bg: rgba(250, 249, 252, 0.7);
+	--theme-dark-play-mode-icon-idle-bg: rgba(13, 9, 14, 0.7);
+	--play-mode-icon-bucket-selected-bg: #e4d9e7;
+	--theme-dark-play-mode-icon-bucket-selected-bg: #2b1a2d;
+	--play-mode-icon-poison-selected-bg: #dae7db;
+	--theme-dark-play-mode-icon-poison-selected-bg: #293029;
+	--play-mode-icon-bucket-selected-ring: rgba(145, 72, 147, 0.28);
+	--play-mode-icon-poison-selected-ring: rgba(110, 186, 102, 0.3);
+
+	--range-thumb-ring: 0 0 0 1px rgba(159, 157, 165, 0.4);
+	--settings-scrollbar-thumb: rgba(159, 157, 165, 0.7);
+	--settings-scrollbar-thumb-hover: rgba(67, 65, 73, 0.55);
+	--app-title-brand-glow: drop-shadow(0 0 0.45rem rgba(145, 72, 147, 0.35));
+	--play-mode-bucket-path-glow: drop-shadow(0 1px 1px rgba(145, 72, 147, 0.45));
+}
+
+/* Calc-based gutter placement — not expressible as a single spacing token. */
+@utility right-gutter-outside {
+	right: calc(100% + var(--side-gutter-width));
+}
+
+@utility left-gutter-outside {
+	left: calc(100% + var(--side-gutter-width));
+}
+
+@utility pb-gutter-reserve {
+	padding-bottom: calc(
+		var(--side-gutter-collapse-gap) +
+		var(--side-gutter-control-size) +
+		var(--side-gutter-collapse-inset)
+	);
 }
 
 @font-face {
@@ -109,7 +192,7 @@
 		url("/fonts/MusiSync.ttf") format("truetype");
 	font-weight: normal;
 	font-style: normal;
-	font-display: swap;
+	font-display: block;
 }
 
 :root {
@@ -117,88 +200,84 @@
 }
 
 /*
- * Dark palette as plain colors. prefers-color-scheme works on iOS 13+.
+ * Apply dark tokens. prefers-color-scheme works on iOS 13+.
  * data-theme forces a side without light-dark() (iOS 17.5+ only).
- * Pre-mixed dark stops are sRGB mixes of the brand hex values.
+ * Values live in @theme (`--theme-dark-*`); these two blocks only rebind
+ * and must stay in sync — a media query cannot share a selector list with
+ * [data-theme="dark"].
  */
 @media (prefers-color-scheme: dark) {
 	:root:not([data-theme="light"]) {
 		color-scheme: dark;
-		--color-primary: var(--color-brand-purple-bright);
-		--color-on-primary: var(--color-ink-950);
-		--color-primary-border: var(--color-brand-mint-bright);
-		--color-secondary: var(--color-brand-mint-bright);
-		--color-on-secondary: var(--color-ink-950);
-		--color-secondary-border: var(--color-brand-purple-bright);
-		--color-title-hover-on-primary: #4a5b4b;
-		--color-title-hover-on-secondary: #413341;
-		--color-light: var(--color-ink-800);
-		--color-mid: #69536c;
-		--color-dark: var(--color-ink-200);
-		--color-surface: var(--color-ink-900);
-		--color-surface-muted: #472a49;
-		--color-chrome: #2f1c31;
-		--color-chrome-hover: #4b3b4e;
-		--color-white: var(--color-ink-950);
-		--color-black: var(--color-ink-50);
-		--color-accent: var(--color-brand-mint-bright);
-		--color-muted: var(--color-ink-300);
-		/* Light lift so elevation utilities read on dark surfaces. */
-		--shadow-color: rgba(255, 255, 255, 0.22);
-		--shadow-accent-color: rgba(195, 154, 196, 0.18);
+		--color-primary: var(--theme-dark-primary);
+		--color-on-primary: var(--theme-dark-on-primary);
+		--color-primary-border: var(--theme-dark-primary-border);
+		--color-secondary: var(--theme-dark-secondary);
+		--color-on-secondary: var(--theme-dark-on-secondary);
+		--color-secondary-border: var(--theme-dark-secondary-border);
+		--color-title-hover-on-primary: var(--theme-dark-title-hover-on-primary);
+		--color-title-hover-on-secondary: var(
+			--theme-dark-title-hover-on-secondary
+		);
+		--color-light: var(--theme-dark-light);
+		--color-mid: var(--theme-dark-mid);
+		--color-dark: var(--theme-dark-dark);
+		--color-surface: var(--theme-dark-surface);
+		--color-surface-muted: var(--theme-dark-surface-muted);
+		--color-chrome: var(--theme-dark-chrome);
+		--color-chrome-hover: var(--theme-dark-chrome-hover);
+		--color-white: var(--theme-dark-white);
+		--color-black: var(--theme-dark-black);
+		--color-accent: var(--theme-dark-accent);
+		--color-muted: var(--theme-dark-muted);
+		--shadow-color: var(--theme-dark-shadow-color);
+		--shadow-accent-color: var(--theme-dark-shadow-accent-color);
+		--interactive-inset-shadow: var(--theme-dark-interactive-inset-shadow);
+		--play-mode-icon-idle-bg: var(--theme-dark-play-mode-icon-idle-bg);
+		--play-mode-icon-bucket-selected-bg: var(
+			--theme-dark-play-mode-icon-bucket-selected-bg
+		);
+		--play-mode-icon-poison-selected-bg: var(
+			--theme-dark-play-mode-icon-poison-selected-bg
+		);
 	}
 }
 
 :root[data-theme="dark"] {
 	color-scheme: dark;
-	--color-primary: var(--color-brand-purple-bright);
-	--color-on-primary: var(--color-ink-950);
-	--color-primary-border: var(--color-brand-mint-bright);
-	--color-secondary: var(--color-brand-mint-bright);
-	--color-on-secondary: var(--color-ink-950);
-	--color-secondary-border: var(--color-brand-purple-bright);
-	--color-title-hover-on-primary: #4a5b4b;
-	--color-title-hover-on-secondary: #413341;
-	--color-light: var(--color-ink-800);
-	--color-mid: #69536c;
-	--color-dark: var(--color-ink-200);
-	--color-surface: var(--color-ink-900);
-	--color-surface-muted: #472a49;
-	--color-chrome: #2f1c31;
-	--color-chrome-hover: #4b3b4e;
-	--color-white: var(--color-ink-950);
-	--color-black: var(--color-ink-50);
-	--color-accent: var(--color-brand-mint-bright);
-	--color-muted: var(--color-ink-300);
-	/* Light lift so elevation utilities read on dark surfaces. */
-	--shadow-color: rgba(255, 255, 255, 0.22);
-	--shadow-accent-color: rgba(195, 154, 196, 0.18);
+	--color-primary: var(--theme-dark-primary);
+	--color-on-primary: var(--theme-dark-on-primary);
+	--color-primary-border: var(--theme-dark-primary-border);
+	--color-secondary: var(--theme-dark-secondary);
+	--color-on-secondary: var(--theme-dark-on-secondary);
+	--color-secondary-border: var(--theme-dark-secondary-border);
+	--color-title-hover-on-primary: var(--theme-dark-title-hover-on-primary);
+	--color-title-hover-on-secondary: var(--theme-dark-title-hover-on-secondary);
+	--color-light: var(--theme-dark-light);
+	--color-mid: var(--theme-dark-mid);
+	--color-dark: var(--theme-dark-dark);
+	--color-surface: var(--theme-dark-surface);
+	--color-surface-muted: var(--theme-dark-surface-muted);
+	--color-chrome: var(--theme-dark-chrome);
+	--color-chrome-hover: var(--theme-dark-chrome-hover);
+	--color-white: var(--theme-dark-white);
+	--color-black: var(--theme-dark-black);
+	--color-accent: var(--theme-dark-accent);
+	--color-muted: var(--theme-dark-muted);
+	--shadow-color: var(--theme-dark-shadow-color);
+	--shadow-accent-color: var(--theme-dark-shadow-accent-color);
+	--interactive-inset-shadow: var(--theme-dark-interactive-inset-shadow);
+	--play-mode-icon-idle-bg: var(--theme-dark-play-mode-icon-idle-bg);
+	--play-mode-icon-bucket-selected-bg: var(
+		--theme-dark-play-mode-icon-bucket-selected-bg
+	);
+	--play-mode-icon-poison-selected-bg: var(
+		--theme-dark-play-mode-icon-poison-selected-bg
+	);
 }
 
 :root[data-theme="light"] {
 	color-scheme: light;
-}
-
-/*
- * Score stacks list Light, then Dark in the DOM. Dark mode pulls the Dark
- * row above Light with flex order (flexbox, iOS 7+). light-dark() is iOS 17.5+
- * and is not used here. A forced light theme wins over the system scheme.
- */
-.ThemeScoreStack {
-	display: flex;
-	flex-direction: column;
-}
-
-@media (prefers-color-scheme: dark) {
-	:root:not([data-theme="light"])
-		.ThemeScoreStack
-		> [data-contrast-mode="dark"] {
-		order: -1;
-	}
-}
-
-:root[data-theme="dark"] .ThemeScoreStack > [data-contrast-mode="dark"] {
-	order: -1;
 }
 
 /*
@@ -330,76 +409,120 @@
 		--shadow-primary-glow:
 			0 1px 2px var(--shadow-color),
 			0 0 0.65rem color-mix(in srgb, var(--color-primary) 42%, transparent);
-	}
-
-	@media (prefers-color-scheme: dark) {
-		:root:not([data-theme="light"]) {
-			--color-mid: color-mix(
-				in srgb,
-				var(--color-brand-purple-bright) 45%,
-				var(--color-ink-800)
-			);
-			--color-surface: color-mix(
-				in srgb,
-				var(--color-brand-purple) 26%,
-				var(--color-ink-900)
-			);
-			--color-surface-muted: color-mix(
-				in srgb,
-				var(--color-brand-purple) 34%,
-				var(--color-ink-800)
-			);
-			--color-chrome: color-mix(
-				in srgb,
-				var(--color-brand-mint) 22%,
-				var(--color-ink-900)
-			);
-			--color-chrome-hover: color-mix(
-				in srgb,
-				var(--color-brand-mint-bright) 30%,
-				var(--color-ink-800)
-			);
-			--shadow-color: color-mix(in srgb, white 22%, transparent);
-			--shadow-accent-color: color-mix(
-				in srgb,
-				var(--color-brand-purple-bright) 18%,
-				transparent
-			);
-		}
-	}
-
-	:root[data-theme="dark"] {
-		--color-mid: color-mix(
+		--color-surface: color-mix(
+			in srgb,
+			var(--color-brand-purple) 8%,
+			var(--color-ink-100)
+		);
+		--color-surface-muted: color-mix(
+			in srgb,
+			var(--color-brand-purple) 12%,
+			var(--color-ink-200)
+		);
+		--color-chrome: color-mix(
+			in srgb,
+			var(--color-brand-mint) 8%,
+			var(--color-ink-100)
+		);
+		--color-chrome-hover: color-mix(
+			in srgb,
+			var(--color-brand-mint) 14%,
+			var(--color-ink-200)
+		);
+		--shadow-accent-color: color-mix(
+			in srgb,
+			var(--color-brand-purple) 24%,
+			transparent
+		);
+		--theme-dark-mid: color-mix(
 			in srgb,
 			var(--color-brand-purple-bright) 45%,
 			var(--color-ink-800)
 		);
-		--color-surface: color-mix(
+		--theme-dark-surface: color-mix(
 			in srgb,
 			var(--color-brand-purple) 26%,
 			var(--color-ink-900)
 		);
-		--color-surface-muted: color-mix(
+		--theme-dark-surface-muted: color-mix(
 			in srgb,
 			var(--color-brand-purple) 34%,
 			var(--color-ink-800)
 		);
-		--color-chrome: color-mix(
+		--theme-dark-chrome: color-mix(
 			in srgb,
 			var(--color-brand-mint) 22%,
 			var(--color-ink-900)
 		);
-		--color-chrome-hover: color-mix(
+		--theme-dark-chrome-hover: color-mix(
 			in srgb,
 			var(--color-brand-mint-bright) 30%,
 			var(--color-ink-800)
 		);
-		--shadow-color: color-mix(in srgb, white 22%, transparent);
-		--shadow-accent-color: color-mix(
+		--theme-dark-shadow-color: color-mix(in srgb, white 22%, transparent);
+		--theme-dark-shadow-accent-color: color-mix(
 			in srgb,
 			var(--color-brand-purple-bright) 18%,
 			transparent
 		);
+		--play-mode-icon-idle-bg: color-mix(
+			in srgb,
+			var(--color-white) 70%,
+			transparent
+		);
+		--play-mode-icon-bucket-selected-bg: color-mix(
+			in srgb,
+			var(--color-brand-gradient-a) 14%,
+			var(--color-surface)
+		);
+		--play-mode-icon-poison-selected-bg: color-mix(
+			in srgb,
+			var(--color-brand-gradient-b) 18%,
+			var(--color-surface)
+		);
+		--play-mode-icon-bucket-selected-ring: color-mix(
+			in srgb,
+			var(--color-brand-gradient-a) 28%,
+			transparent
+		);
+		--play-mode-icon-poison-selected-ring: color-mix(
+			in srgb,
+			var(--color-brand-gradient-b) 30%,
+			transparent
+		);
+		--range-thumb-ring: 0 0 0 1px
+			color-mix(in srgb, var(--color-mid) 40%, transparent);
+		--settings-scrollbar-thumb: color-mix(
+			in srgb,
+			var(--color-mid) 70%,
+			transparent
+		);
+		--settings-scrollbar-thumb-hover: color-mix(
+			in srgb,
+			var(--color-dark) 55%,
+			transparent
+		);
+		--app-title-brand-glow: drop-shadow(
+			0 0 0.45rem color-mix(in srgb, var(--color-primary) 35%, transparent)
+		);
+		--play-mode-bucket-path-glow: drop-shadow(
+			0 1px 1px
+				color-mix(in srgb, var(--color-brand-gradient-a) 45%, transparent)
+		);
+	}
+
+	html {
+		background-image:
+			radial-gradient(
+				110% 75% at 100% 0%,
+				var(--page-wash-dominant),
+				transparent 52%
+			),
+			radial-gradient(
+				90% 60% at 0% 100%,
+				var(--page-wash-secondary),
+				transparent 48%
+			);
 	}
 }
 
@@ -473,6 +596,10 @@
 		cursor: pointer;
 	}
 
+	*:disabled {
+		cursor: not-allowed;
+	}
+
 	/*
 	 * Page images and icons are chrome, not files to drag out.
 	 * -webkit-user-drag covers Chromium and Safari. Firefox still starts a
@@ -490,7 +617,7 @@
 	/*
 	 * Text entry can be selected so a value can be replaced. -webkit-user-drag
 	 * blocks dragging that selection out in Chromium and Safari. Firefox still
-	 * fires dragstart (see main.tsx). Range, check, and radio stay off this
+	 * fires dragstart (see main.tsx). Range, check and radio stay off this
 	 * rule so a thumb drag is not treated as a value drag.
 	 */
 	input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):not(
@@ -502,22 +629,30 @@
 		-webkit-user-drag: none;
 	}
 
-	*:disabled {
-		cursor: not-allowed;
-	}
-
+	/*
+	 * Rail paint lives on ::-webkit-slider-runnable-track / ::-moz-range-track.
+	 * Filling the input as well stacks a second rail in Chromium. Do not merge
+	 * prefixed and unprefixed track/thumb selectors — WebKit drops the rule.
+	 */
 	input[type="range"] {
 		appearance: none;
 		width: 100%;
-		height: 0.5rem;
+		height: var(--range-track-height);
 		border-radius: 9999px;
-		background: var(--color-surface-muted);
-		border: 1px solid var(--color-mid);
+		background: transparent;
+		border: none;
 		accent-color: var(--color-primary);
 	}
 
 	input[type="range"]::-webkit-slider-runnable-track {
-		height: 0.5rem;
+		height: var(--range-track-height);
+		border-radius: 9999px;
+		background: var(--color-surface-muted);
+		border: 1px solid var(--color-mid);
+	}
+
+	input[type="range"]::-moz-range-track {
+		height: var(--range-track-height);
 		border-radius: 9999px;
 		background: var(--color-surface-muted);
 		border: 1px solid var(--color-mid);
@@ -527,18 +662,15 @@
 		appearance: none;
 		width: var(--range-thumb-size);
 		height: var(--range-thumb-size);
-		margin-top: calc((0.5rem - var(--range-thumb-size)) / 2 - 1px);
+		margin-top: calc(
+			(var(--range-track-height) - var(--range-thumb-size)) /
+			2 -
+			1px
+		);
 		border-radius: 9999px;
 		border: 2px solid var(--color-primary);
 		background: var(--color-white);
-		box-shadow: 0 0 0 1px rgba(159, 157, 165, 0.4);
-	}
-
-	input[type="range"]::-moz-range-track {
-		height: 0.5rem;
-		border-radius: 9999px;
-		background: var(--color-surface-muted);
-		border: 1px solid var(--color-mid);
+		box-shadow: var(--range-thumb-ring);
 	}
 
 	input[type="range"]::-moz-range-thumb {
@@ -547,96 +679,37 @@
 		border-radius: 9999px;
 		border: 2px solid var(--color-primary);
 		background: var(--color-white);
-		box-shadow: 0 0 0 1px rgba(159, 157, 165, 0.4);
+		box-shadow: var(--range-thumb-ring);
 	}
 }
 
 /*
- * Brand title (About modal): slow lava clipped to glyphs. Dominant-anchored
- * so a dark Secondary (e.g. Black) cannot paint most of the word black.
- * Solid primary first — Safari / old browsers without background-clip:text.
+ * Global button hover / focus (and `.InteractiveInsetChrome` for non-button
+ * chips). Inset ring + lift only — do not change fill or ink. Shapes stay on
+ * the control. Native :hover / :focus so tablets match mouse.
  *
- * Header / footer About triggers: solid complement on hover/focus — Secondary
- * on the Dominant bar, Dominant on the Secondary bar. No lava / stroke stacks.
+ * Exceptions: `.ModalScrim` (full-bleed dismiss) and `.IntroTutorialDot`
+ * (quiet marker hover on the inner span).
  */
-.AppTitleBrand {
-	color: var(--color-primary);
-	filter: drop-shadow(0 0 0.45rem rgba(145, 72, 147, 0.35));
-}
-
-.Header .AppTitleBrandTrigger:hover,
-.Header .AppTitleBrandTrigger:focus-visible {
-	color: var(--color-title-hover-on-primary);
-}
-
-.Footer .AppTitleBrandTrigger:hover,
-.Footer .AppTitleBrandTrigger:focus-visible {
-	color: var(--color-title-hover-on-secondary);
-}
-
-/* Focus ring: primary ring on a primary bar is invisible — use the complement. */
-.Header .AppTitleBrandTrigger:focus-visible {
-	--tw-ring-color: var(--color-secondary);
-	--tw-ring-offset-color: var(--color-primary);
-}
-
-.Footer .AppTitleBrandTrigger:focus-visible {
-	--tw-ring-color: var(--color-primary);
-	--tw-ring-offset-color: var(--color-secondary);
-}
-
-/*
- * Corner chrome on the bars: default hover uses Dominant. On the Dominant
- * header that is a no-op against the bar — prefer Secondary (matches the
- * header edge). Footer already wants Dominant (matches the footer edge).
- */
-.Header .AppChromeControl:hover,
-.Header .AppChromeControl:focus-visible {
-	border-color: var(--color-secondary);
-}
-
-.Footer .AppChromeControl:hover,
-.Footer .AppChromeControl:focus-visible {
-	border-color: var(--color-primary);
-}
-
-/*
- * Settings / segment interactive chrome. Pure CSS :hover / :focus-visible so
- * the lift still paints when JS is busy. Tokens override per surface without
- * restacking Tailwind ring + shadow utilities (those fight over box-shadow).
- * Resting state stays flat — elevation only while hovered or focus-visible.
- *
- * Light mode: dark drop + purple accent (via --shadow-*). Dark mode overrides
- * --interactive-inset-shadow to a white lift so active (bright primary) chips
- * and checkboxes still read elevation against dark panels.
- */
-.InteractiveInsetChrome {
+:is(button, .InteractiveInsetChrome) {
 	--interactive-inset-ring-color: var(--color-primary);
 	--interactive-inset-ring-width: 2px;
-	--interactive-inset-shadow:
-		0 2px 4px var(--shadow-color), 0 6px 16px var(--shadow-accent-color);
 	transition: box-shadow 200ms ease-out;
 }
 
 /* Active fill is primary — ring matching fill vanishes; keep the complement edge. */
-.InteractiveInsetChrome[data-chrome-active="true"] {
+:is(button, .InteractiveInsetChrome)[data-chrome-active="true"] {
 	--interactive-inset-ring-color: var(--color-primary-border);
 }
 
-@media (prefers-color-scheme: dark) {
-	:root:not([data-theme="light"]) .InteractiveInsetChrome {
-		--interactive-inset-shadow:
-			0 2px 4px rgba(255, 255, 255, 0.4), 0 6px 18px rgba(255, 255, 255, 0.28);
-	}
-}
-
-:root[data-theme="dark"] .InteractiveInsetChrome {
-	--interactive-inset-shadow:
-		0 2px 4px rgba(255, 255, 255, 0.4), 0 6px 18px rgba(255, 255, 255, 0.28);
-}
-
-.InteractiveInsetChrome:hover,
-.InteractiveInsetChrome:focus-visible {
+:is(button, .InteractiveInsetChrome):is(
+		:hover,
+		:focus,
+		:focus-visible,
+		[aria-expanded="true"]
+	):not(:disabled):not([aria-disabled="true"]):not(.ModalScrim):not(
+		.IntroTutorialDot
+	) {
 	outline: none;
 	box-shadow:
 		inset 0 0 0 var(--interactive-inset-ring-width)
@@ -644,71 +717,40 @@
 		var(--interactive-inset-shadow);
 }
 
-.InteractiveInsetChrome:disabled:hover,
-.InteractiveInsetChrome:disabled:focus-visible,
-.InteractiveInsetChrome[aria-disabled="true"]:hover,
-.InteractiveInsetChrome[aria-disabled="true"]:focus-visible {
-	box-shadow: none;
+/*
+ * Header is Dominant — hover ring Secondary. Footer is Secondary — hover
+ * ring Dominant. Title triggers use the same complement on hover/focus.
+ */
+.Header .AppTitleBrandTrigger,
+.Header .AppChromeControl {
+	--interactive-inset-ring-color: var(--color-secondary);
 }
 
-@supports (color: color-mix(in srgb, red, blue)) {
-	:root {
-		--color-surface: color-mix(
-			in srgb,
-			var(--color-brand-purple) 8%,
-			var(--color-ink-100)
-		);
-		--color-surface-muted: color-mix(
-			in srgb,
-			var(--color-brand-purple) 12%,
-			var(--color-ink-200)
-		);
-		--color-chrome: color-mix(
-			in srgb,
-			var(--color-brand-mint) 8%,
-			var(--color-ink-100)
-		);
-		--color-chrome-hover: color-mix(
-			in srgb,
-			var(--color-brand-mint) 14%,
-			var(--color-ink-200)
-		);
-		--shadow-accent-color: color-mix(
-			in srgb,
-			var(--color-brand-purple) 24%,
-			transparent
-		);
-	}
+.Footer .AppTitleBrandTrigger,
+.Footer .AppChromeControl {
+	--interactive-inset-ring-color: var(--color-primary);
+}
 
-	html {
-		background-image:
-			radial-gradient(
-				110% 75% at 100% 0%,
-				var(--page-wash-dominant),
-				transparent 52%
-			),
-			radial-gradient(
-				90% 60% at 0% 100%,
-				var(--page-wash-secondary),
-				transparent 48%
-			);
-	}
+.Header .AppTitleBrandTrigger:is(:hover, :focus-visible) {
+	color: var(--color-title-hover-on-primary);
+}
 
-	input[type="range"]::-webkit-slider-thumb,
-	input[type="range"]::-moz-range-thumb {
-		box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-mid) 40%, transparent);
-	}
+.Footer .AppTitleBrandTrigger:is(:hover, :focus-visible) {
+	color: var(--color-title-hover-on-secondary);
+}
 
-	.AppTitleBrand {
-		filter: drop-shadow(
-			0 0 0.45rem color-mix(in srgb, var(--color-primary) 35%, transparent)
-		);
-	}
+/*
+ * Brand title (About modal): slow lava clipped to glyphs. Dominant-anchored
+ * so a dark Secondary (e.g. Black) cannot paint most of the word black.
+ * Solid primary first — Safari / old browsers without background-clip:text.
+ */
+.AppTitleBrand {
+	color: var(--color-primary);
+	filter: var(--app-title-brand-glow);
 }
 
 @supports ((-webkit-background-clip: text) or (background-clip: text)) {
 	.AppTitleBrand {
-		/* Fallback stops without color-mix: Dominant only (readable on white). */
 		background-image: linear-gradient(
 			125deg,
 			var(--color-primary) 0%,
@@ -755,20 +797,7 @@
 	}
 }
 
-@media (prefers-reduced-motion: reduce) {
-	.AppTitleBrand {
-		animation: none;
-		background-position: 40% 50%;
-	}
-
-	.InteractiveInsetChrome {
-		transition: none;
-	}
-}
-
 /* Beat groups hold 4 sixteenth-cells; subdivision modes hide/span within each group */
-
-/* Quarters only: show 1st cell in each beat group; span full beat */
 .grid-quarters .MeasureCell:not(:nth-child(4n + 1)) {
 	display: none;
 }
@@ -777,7 +806,6 @@
 	grid-column: span 4;
 }
 
-/* Eighths: show odd cells in each beat group; each spans half a beat */
 .grid-eighths .MeasureCell:nth-child(even) {
 	display: none;
 }
@@ -786,14 +814,18 @@
 	grid-column: span 2;
 }
 
-/* MusiSync notation — static files in public/fonts; preload in index.html */
+/* MusiSync notation — static files in public/fonts; preload + FontFace in index.html */
 .MusiSync {
 	font-family: "MusiSync", ui-monospace, monospace;
 }
 
+.MeasureNotation,
 .MeasureNotationLine {
 	--notation-font-size: clamp(2.5rem, 1.5rem + 5vw, 5.5rem);
 	--notation-line-height: 1.35;
+}
+
+.MeasureNotationLine {
 	font-size: var(--notation-font-size);
 	line-height: var(--notation-line-height);
 	min-height: calc(var(--notation-font-size) * var(--notation-line-height));
@@ -820,8 +852,6 @@
 }
 
 .MeasureNotation {
-	--notation-font-size: clamp(2.5rem, 1.5rem + 5vw, 5.5rem);
-	--notation-line-height: 1.35;
 	min-height: calc(
 		2rem +
 		var(--notation-font-size) *
@@ -834,10 +864,6 @@
 
 .MeasureNotation .MeasureNotationLine {
 	width: 100%;
-}
-
-.NotationPlaybackCursor {
-	z-index: 1;
 }
 
 .RhythmStickingOverlay {
@@ -877,91 +903,28 @@
 }
 
 .PlayModeIcon:not(.PlayModeIcon--selected) {
-	background-color: rgba(250, 249, 252, 0.7);
-}
-
-@media (prefers-color-scheme: dark) {
-	:root:not([data-theme="light"]) .PlayModeIcon:not(.PlayModeIcon--selected) {
-		background-color: rgba(13, 9, 14, 0.7);
-	}
-}
-
-:root[data-theme="dark"] .PlayModeIcon:not(.PlayModeIcon--selected) {
-	background-color: rgba(13, 9, 14, 0.7);
+	background-color: var(--play-mode-icon-idle-bg);
 }
 
 .PlayModeIcon--bucket.PlayModeIcon--selected {
-	background-color: #e4d9e7;
-	box-shadow: 0 0 0 1px rgba(145, 72, 147, 0.28);
+	background-color: var(--play-mode-icon-bucket-selected-bg);
+	box-shadow: 0 0 0 1px var(--play-mode-icon-bucket-selected-ring);
 }
 
 .PlayModeIcon--poison.PlayModeIcon--selected {
-	background-color: #dae7db;
-	box-shadow: 0 0 0 1px rgba(110, 186, 102, 0.3);
-}
-
-@media (prefers-color-scheme: dark) {
-	:root:not([data-theme="light"]) .PlayModeIcon--bucket.PlayModeIcon--selected {
-		background-color: #2b1a2d;
-	}
-
-	:root:not([data-theme="light"]) .PlayModeIcon--poison.PlayModeIcon--selected {
-		background-color: #293029;
-	}
-}
-
-:root[data-theme="dark"] .PlayModeIcon--bucket.PlayModeIcon--selected {
-	background-color: #2b1a2d;
-}
-
-:root[data-theme="dark"] .PlayModeIcon--poison.PlayModeIcon--selected {
-	background-color: #293029;
-}
-
-@supports (color: color-mix(in srgb, red, blue)) {
-	:root .PlayModeIcon:not(.PlayModeIcon--selected) {
-		background-color: color-mix(in srgb, var(--color-white) 70%, transparent);
-	}
-
-	:root .PlayModeIcon--bucket.PlayModeIcon--selected {
-		background-color: color-mix(
-			in srgb,
-			var(--color-brand-gradient-a) 14%,
-			var(--color-surface)
-		);
-		box-shadow: 0 0 0 1px
-			color-mix(in srgb, var(--color-brand-gradient-a) 28%, transparent);
-	}
-
-	:root .PlayModeIcon--poison.PlayModeIcon--selected {
-		background-color: color-mix(
-			in srgb,
-			var(--color-brand-gradient-b) 18%,
-			var(--color-surface)
-		);
-		box-shadow: 0 0 0 1px
-			color-mix(in srgb, var(--color-brand-gradient-b) 30%, transparent);
-	}
+	background-color: var(--play-mode-icon-poison-selected-bg);
+	box-shadow: 0 0 0 1px var(--play-mode-icon-poison-selected-ring);
 }
 
 .PlayModeBucketIcon__path--active {
-	filter: drop-shadow(0 1px 1px rgba(145, 72, 147, 0.45));
-}
-
-@supports (color: color-mix(in srgb, red, blue)) {
-	.PlayModeBucketIcon__path--active {
-		filter: drop-shadow(
-			0 1px 1px
-				color-mix(in srgb, var(--color-brand-gradient-a) 45%, transparent)
-		);
-	}
+	filter: var(--play-mode-bucket-path-glow);
 }
 
 /* Settings scroll panel: reserve gutter so the bar never sits on checkboxes. */
 .SettingsTabPanel {
 	scrollbar-gutter: stable;
 	scrollbar-width: thin;
-	scrollbar-color: rgba(159, 157, 165, 0.7) transparent;
+	scrollbar-color: var(--settings-scrollbar-thumb) transparent;
 }
 
 .SettingsTabPanel::-webkit-scrollbar {
@@ -972,42 +935,120 @@
 	background: transparent;
 }
 
-.SettingsTabPanel::-webkit-scrollbar-thumb {
-	background: rgba(159, 157, 165, 0.7);
+.SettingsTabPanel::-webkit-scrollbar-thumb,
+.SettingsTabPanel::-webkit-scrollbar-thumb:hover {
 	border-radius: 9999px;
 	border: 2px solid transparent;
 	background-clip: padding-box;
 	-webkit-background-clip: padding-box;
 }
 
-.SettingsTabPanel::-webkit-scrollbar-thumb:hover {
-	background: rgba(67, 65, 73, 0.55);
-	background-clip: padding-box;
-	-webkit-background-clip: padding-box;
-	border: 2px solid transparent;
+.SettingsTabPanel::-webkit-scrollbar-thumb {
+	background: var(--settings-scrollbar-thumb);
 }
 
-@supports (color: color-mix(in srgb, red, blue)) {
-	.SettingsTabPanel {
-		scrollbar-color: color-mix(in srgb, var(--color-mid) 70%, transparent)
-			transparent;
-	}
+.SettingsTabPanel::-webkit-scrollbar-thumb:hover {
+	background: var(--settings-scrollbar-thumb-hover);
+}
 
-	.SettingsTabPanel::-webkit-scrollbar-thumb {
-		background: color-mix(in srgb, var(--color-mid) 70%, transparent);
-	}
+.IntroTutorialDot {
+	outline: none;
+}
 
-	.SettingsTabPanel::-webkit-scrollbar-thumb:hover {
-		background: color-mix(in srgb, var(--color-dark) 55%, transparent);
+.IntroTutorialDot:hover span,
+.IntroTutorialDot:focus span {
+	box-shadow: var(--shadow-control);
+}
+
+.IntroTutorialDot:focus-visible span {
+	box-shadow:
+		0 0 0 1px var(--color-white),
+		0 0 0 2px var(--color-primary);
+}
+
+/*
+ * First-measure Play stays an empty box at rest. The glyph is in the tree
+ * so hover / focus / arm can reveal it without a layout jump.
+ */
+.CarouselStartPlayButton .Icon {
+	transition: opacity 200ms ease-out;
+}
+
+.CarouselStartPlayButton:not([data-armed="true"]) .Icon {
+	opacity: 0;
+}
+
+.CarouselStartPlayButton:not([data-armed="true"]):not(:disabled):is(
+		:hover,
+		:focus,
+		:focus-visible
+	)
+	.Icon {
+	opacity: 1;
+}
+
+/* Welcome fail line: underline “lose” left → right (scaleX, not width). */
+.IntroLoseUnderline {
+	position: relative;
+}
+
+.IntroLoseUnderline::after {
+	content: "";
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	height: 0.125rem;
+	transform-origin: left center;
+	transform: scaleX(0);
+	background-color: currentColor;
+	animation-name: intro-lose-underline;
+	/* INTRO_LOSE_UNDERLINE_MS */
+	animation-duration: 0.6s;
+	animation-timing-function: ease-out;
+	animation-fill-mode: forwards;
+}
+
+@keyframes intro-lose-underline {
+	from {
+		transform: scaleX(0);
+	}
+	to {
+		transform: scaleX(1);
+	}
+}
+
+/* Welcome Let’s Play: soft Secondary halo after fail copy lands. */
+.IntroPlayHalo {
+	display: inline-flex;
+	border-radius: 0.25rem;
+	animation-name: intro-play-halo;
+	animation-duration: 1.8s;
+	animation-timing-function: ease-in-out;
+	animation-iteration-count: infinite;
+}
+
+@keyframes intro-play-halo {
+	0%,
+	100% {
+		box-shadow:
+			0 0 0 1px var(--color-secondary),
+			0 0 4px transparent;
+	}
+	50% {
+		box-shadow:
+			0 0 0 3px var(--color-secondary),
+			0 0 10px var(--color-secondary);
 	}
 }
 
 /*
- * Timed notice fill. Height, solid color, and both gradient syntaxes are
+ * Timed notice fill. Height, solid color and both gradient syntaxes are
  * asserted in src/lib/__tests__/timed-notice.test.ts.
  * Stops are theme variables (hex in @theme; hex again when crayon prefs apply).
  * No color-mix() or oklch() here — see documentation/IOS.md.
  * scaleX avoids animating width (layout) on WebKit.
+ * Carousel delay uses the same fill language at a shorter height.
  */
 .TimedNoticeProgress {
 	height: 0.5rem;
@@ -1020,7 +1061,19 @@
 	animation-fill-mode: forwards;
 }
 
-.TimedNoticeProgress {
+.CarouselPlayDelayProgress {
+	height: 0.25rem;
+	transform-origin: left center;
+	transform: scaleX(0);
+	background-color: var(--color-primary);
+	animation-name: timed-notice-fill;
+	animation-duration: var(--carousel-play-delay, 1.5s);
+	animation-timing-function: linear;
+	animation-fill-mode: forwards;
+}
+
+.TimedNoticeProgress,
+.CarouselPlayDelayProgress {
 	background-image: -webkit-linear-gradient(
 		left,
 		var(--color-primary),
@@ -1028,7 +1081,8 @@
 	);
 }
 
-.TimedNoticeProgress {
+.TimedNoticeProgress,
+.CarouselPlayDelayProgress {
 	background-image: linear-gradient(
 		to right,
 		var(--color-primary),
@@ -1050,8 +1104,30 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.TimedNoticeProgress {
+	.AppTitleBrand {
+		animation: none;
+		background-position: 40% 50%;
+	}
+
+	:is(button, .InteractiveInsetChrome) {
+		transition: none;
+	}
+
+	.TimedNoticeProgress,
+	.CarouselPlayDelayProgress {
 		animation: none;
 		transform: scaleX(1);
+	}
+
+	.IntroLoseUnderline::after {
+		animation: none;
+		transform: scaleX(1);
+	}
+
+	.IntroPlayHalo {
+		animation: none;
+		box-shadow:
+			0 0 0 2px var(--color-secondary),
+			0 0 8px var(--color-secondary);
 	}
 }

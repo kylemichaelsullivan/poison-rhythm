@@ -1,5 +1,5 @@
-import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
 import { CurrentMeasureDisplay } from './CurrentMeasureDisplay';
+import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
 import type { MeasureDisplayOptions } from './measure-display-options';
 
 type NextMeasurePreviewProps = {

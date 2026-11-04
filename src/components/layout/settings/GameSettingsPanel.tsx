@@ -1,5 +1,8 @@
+import EarIcon from '@/assets/svg/ear.svg?react';
+import EyeIcon from '@/assets/svg/eye.svg?react';
 import { DisplayModeControls } from './DisplayModeControls';
 import { GameBooleanSetting } from './GameBooleanSetting';
+import { IntroTutorialSetting } from './IntroTutorialSetting';
 import { SettingRow } from './SettingRow';
 import { SettingsGroup } from './SettingsGroup';
 
@@ -15,14 +18,12 @@ export function GameSettingsPanel() {
 				<GameBooleanSetting
 					setting='showNextMeasure'
 					label='Show Next Measure'
+					icon={EyeIcon}
 				/>
 				<GameBooleanSetting
 					setting='demoBeforePlay'
-					label='Preview Before Play'
-				/>
-				<GameBooleanSetting
-					setting='muteOnStudentPass'
-					label='Mute on Playing Pass'
+					label='Listen Before You Play'
+					icon={EarIcon}
 				/>
 			</SettingsGroup>
 
@@ -33,6 +34,10 @@ export function GameSettingsPanel() {
 				<SettingRow label='Sticking'>
 					<span className='text-sm italic text-muted'>Coming Soon</span>
 				</SettingRow>
+			</SettingsGroup>
+
+			<SettingsGroup title='Help'>
+				<IntroTutorialSetting />
 			</SettingsGroup>
 		</>
 	);

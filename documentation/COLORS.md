@@ -1,6 +1,6 @@
 # Color Preferences — Poison Rhythm
 
-Classroom-facing notes on **Settings → Colors**: dominant/secondary from a Crayola 64 tray, letter-grade contrast, and why Brand stays the default.
+Classroom-facing notes on **Settings → Colors**: dominant/secondary from a Crayola 64 tray, letter-grade contrast and why Brand stays the default.
 
 For full accessibility policy (grades, border hierarchy, keyboard), see [`A11Y.md`](A11Y.md). Theme (light/dark/system) lives on the Colors contrast meter; display mode is under **Settings → Mode**. For agents and schema wiring, see [`AGENTS.md`](../AGENTS.md).
 
@@ -17,7 +17,7 @@ Unset preferences keep the shipped **Poison Rhythm** purple + mint tokens from t
 
 - **Recognition** — the potion purple / deep mint look is the product signal on projected screens and shared devices.
 - **Classroom consistency** — one default pair means every station looks familiar when students rotate.
-- **Product pair** — Favicon purple (`#914893`) is the light-mode primary, with deep mint (`#246028`) as the green complement. That mint clears grade **A** on light and dark surfaces; the purple clears **B** in Light Mode and **A** in Dark Mode. Suggested Pairings are grade **A** (7:1 between the two colors) across yellow, green, blue, orange, pink, cyan, violet, and earth.
+- **Product pair** — Favicon purple (`#914893`) is the light-mode primary, with deep mint (`#246028`) as the green complement. That mint clears grade **A** on light and dark surfaces; the purple clears **B** in Light Mode and **A** in Dark Mode. Suggested Pairings are grade **A** (7:1 between the two colors) across yellow, green, blue, orange, pink, cyan, violet and earth.
 
 The Colors tab marks **Poison Rhythm** as Recommended in Suggested Pairings.
 
@@ -36,7 +36,7 @@ Avoid near-identical crayons for both roles — borders disappear and badges los
 
 ## Contrast grades
 
-The meter and each swatch stack two grades: Light Mode, then Dark Mode, with the current mode on top. Swatches show the letter. The meter shows grade + ratio in the same stack shape. Choosing Dominant scores the new color against the current Secondary. Choosing Secondary scores the new color against the current Dominant. See [`CONTRAST.md`](CONTRAST.md) and [`A11Y.md`](A11Y.md).
+The meter and each swatch stack two grades: Light Mode, then Dark Mode. Light stays on top in every theme. Swatches show the letter. The meter shows grade + ratio in the same stack shape. Choosing Dominant scores the new color against the current Secondary. Choosing Secondary scores the new color against the current Dominant. See [`CONTRAST.md`](CONTRAST.md) and [`A11Y.md`](A11Y.md).
 
 **Strongly discourage, do not block:** `ColorAccentSettings` owns prefs (+ role selection) and prop-drives the tray and pairings. The meter (`ContrastScoreMeter`) owns theme so locking Light/Dark does not rescore all 64 crayons. Per-swatch grade badges (`ContrastGradeBadge`) update live when the partner color changes. Role tiles live in `ColorRoleTile`; the swap control (`SwapColorRolesButton`) exchanges Dominant and Secondary; the decorative preview is `ColorPairPlayPreview` (mini measure grid). **A/B** get solid hierarchy borders; **F** is dashed and dimmed. In the tray, the active role’s crayon uses strongest border/shadow; the other role’s crayon stays visible at lighter emphasis (switches when you change Dominant vs Secondary). Suggested Pairings remain the easy recovery.
 
@@ -50,6 +50,6 @@ Color preferences are stored on **student-scoped** preference keys (`poison-rhyt
 - [`A11Y.md`](A11Y.md) — contrast grades, border hierarchy, keyboard
 - [`TEACHERS.md`](TEACHERS.md) — classroom arcs and accessibility tips
 - [`ARCHITECTURE.md`](ARCHITECTURE.md) — providers and settings layers
-- [`src/index.css`](../src/index.css) — brand and semantic color tokens
+- [`src/index.css`](../src/index.css) — brand and semantic color tokens (`--theme-dark-*` counterparts; apply blocks rebind names)
 - [`IOS.md`](IOS.md) — WebKit color fallbacks (hex defaults, crayon hex overrides)
 - [`src/lib/hierarchy-border.ts`](../src/lib/hierarchy-border.ts) — shared border ranks

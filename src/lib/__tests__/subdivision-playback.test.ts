@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import {
+	cellsPerSubdivisionPulse,
 	cellToSubdivisionStep,
 	isQuarterDownbeat,
 	smoothSubdivisionPositionPercent,
@@ -9,6 +10,7 @@ import {
 	subdivisionPulseMs,
 	subdivisionPulseSec,
 	subdivisionStepCount,
+	subdivisionStepToCell,
 } from '../subdivision-playback';
 
 describe('subdivision-playback', () => {
@@ -25,6 +27,26 @@ describe('subdivision-playback', () => {
 		expect(cellToSubdivisionStep('eighths', 6)).toBe(3);
 		expect(isQuarterDownbeat('sixteenths', 8)).toBe(true);
 		expect(isQuarterDownbeat('eighths', 1)).toBe(false);
+	});
+
+	test('maps fractional subdivision steps to cells for duration highlight', () => {
+		expect(cellsPerSubdivisionPulse('quarters')).toBe(4);
+		expect(cellsPerSubdivisionPulse('eighths')).toBe(2);
+		expect(cellsPerSubdivisionPulse('sixteenths')).toBe(1);
+
+		expect(subdivisionStepToCell('sixteenths', 0)).toBe(0);
+		expect(subdivisionStepToCell('sixteenths', 5.9)).toBe(5);
+
+		// Dotted quarter (1.5 beats) at quarters: active through cell 5.
+		expect(subdivisionStepToCell('quarters', 0)).toBe(0);
+		expect(subdivisionStepToCell('quarters', 0.99)).toBe(3);
+		expect(subdivisionStepToCell('quarters', 1)).toBe(4);
+		expect(subdivisionStepToCell('quarters', 1.49)).toBe(5);
+		expect(subdivisionStepToCell('quarters', 1.5)).toBe(6);
+
+		expect(subdivisionStepToCell('eighths', 2.5)).toBe(5);
+		expect(subdivisionStepToCell('quarters', -1)).toBe(0);
+		expect(subdivisionStepToCell('quarters', 99)).toBe(15);
 	});
 
 	test('computes pulse duration and smooth playhead positions', () => {

@@ -11,7 +11,7 @@ export function ActionButton() {
 			dismissAfterMs={TIMED_NOTICE_DURATION_MS}
 		>
 			<p className='text-center text-sm text-dark'>
-				Accounts aren’t available yet. Your theme, subdivision, and sound
+				Accounts aren’t available yet. Your theme, subdivision and sound
 				preferences are saved on this device.
 			</p>
 		</CornerModal>

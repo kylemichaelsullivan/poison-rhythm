@@ -1,10 +1,10 @@
 import clsx from 'clsx';
-import type { ColorPairing } from '@/lib/colors';
 import {
 	interactiveInsetChromeClassName,
 	selectionOutlineActiveClassName,
 } from '@/lib/control-classes';
 import { SelectionCheckMark } from './SelectionCheckMark';
+import type { ColorPairing } from '@/lib/colors';
 
 type SuggestedPairingRowProps = {
 	pairing: ColorPairing;

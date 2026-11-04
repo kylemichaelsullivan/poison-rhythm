@@ -17,11 +17,18 @@ test.describe('mobile layout', () => {
 		const play = page.getByTestId('play-controls').getByRole('button').first();
 		await expect(play).toBeVisible();
 
-		const next = page.locator('.CarouselNavButton[aria-label="Next"]');
-		const prev = page.locator('.CarouselNavButton[aria-label="Previous"]');
+		const next = page.getByRole('button', {
+			name: 'Next Measure',
+			exact: true,
+		});
+		const startPlay = page.getByTestId('carousel-start-play');
+		const endMenu = page.getByTestId('carousel-end-menu');
 
-		// Default rounds have multiple measures; Next is enabled on the first slide.
+		// First slide: delayed Play on the left; Next is enabled.
+		await expect(startPlay).toBeVisible();
+		await expect(startPlay).toBeEnabled();
 		await expect(next).toBeVisible();
+		await expect(next).toBeEnabled();
 		const playBox = await play.boundingBox();
 		const navBox = await next.boundingBox();
 		expect(playBox).not.toBeNull();
@@ -36,13 +43,18 @@ test.describe('mobile layout', () => {
 			expect(navBox.y + navBox.height).toBeLessThanOrEqual(playBox.y + 1);
 		}
 
-		// Prev may be invisible when disabled; assert it does not steal Play space if shown.
-		if (await prev.isVisible()) {
-			const prevBox = await prev.boundingBox();
-			if (playBox && prevBox) {
-				expect(prevBox.y + prevBox.height).toBeLessThanOrEqual(playBox.y + 1);
-			}
+		const startBox = await startPlay.boundingBox();
+		if (playBox && startBox) {
+			expect(startBox.y + startBox.height).toBeLessThanOrEqual(playBox.y + 1);
 		}
+
+		for (let step = 0; step < 20 && (await next.isVisible()); step += 1) {
+			await next.click();
+		}
+		await expect(endMenu).toBeVisible();
+		await expect(
+			page.getByRole('button', { name: 'Previous Measure', exact: true }),
+		).toBeEnabled();
 
 		const measureGrid = page.locator('.MeasureCellGrid').first();
 		if (await measureGrid.isVisible()) {

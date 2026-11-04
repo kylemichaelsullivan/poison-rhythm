@@ -1,6 +1,7 @@
 import { afterEach, beforeAll, describe, expect, test } from 'bun:test';
 import { BPM_DEFAULT } from '../metronome-defaults';
 import {
+	coerceRhythmMutes,
 	parseCountInEnabledStored,
 	parseDifficulty,
 	parseExplicitTrue,
@@ -9,12 +10,15 @@ import {
 	parseThemeSetting,
 	readCountInEnabled,
 	readDifficulty,
+	readIntroSeen,
 	readMuteMetronome,
 	readStoredTempo,
 	resetPreferenceBootstrapForTests,
 	resolveInitialTempo,
+	resolveRhythmMutes,
 	writeCountInEnabled,
 	writeDifficulty,
+	writeIntroSeen,
 	writeMuteMetronome,
 	writeStoredTempo,
 	writeThemeSetting,
@@ -93,6 +97,73 @@ describe('explicit-true mute preferences', () => {
 	});
 });
 
+describe('rhythm mute coupling and migration', () => {
+	afterEach(() => {
+		memoryStore.clear();
+		resetPreferenceBootstrapForTests();
+	});
+
+	test('coerceRhythmMutes keeps Preview mute when Playback is on', () => {
+		expect(coerceRhythmMutes(false, true)).toEqual({
+			mutePlayback: false,
+			mutePreview: true,
+		});
+		expect(coerceRhythmMutes(true, true)).toEqual({
+			mutePlayback: true,
+			mutePreview: true,
+		});
+	});
+
+	test('migrates legacy rhythm mute to both channels', () => {
+		localStorage.setItem(LEGACY_STORAGE_KEYS.muteRhythm, 'true');
+		expect(resolveRhythmMutes()).toEqual({
+			mutePlayback: true,
+			mutePreview: true,
+		});
+		expect(localStorage.getItem(STORAGE_KEYS.mutePlayback)).toBe('true');
+		expect(localStorage.getItem(STORAGE_KEYS.mutePreview)).toBe('true');
+		expect(localStorage.getItem(LEGACY_STORAGE_KEYS.muteRhythm)).toBeNull();
+	});
+
+	test('migrates muteOnStudentPass to Playback only', () => {
+		localStorage.setItem(
+			STORAGE_KEYS.gameSettings,
+			JSON.stringify({ demoBeforePlay: true, muteOnStudentPass: true }),
+		);
+		expect(resolveRhythmMutes()).toEqual({
+			mutePlayback: true,
+			mutePreview: false,
+		});
+		expect(localStorage.getItem(STORAGE_KEYS.mutePlayback)).toBe('true');
+		expect(localStorage.getItem(STORAGE_KEYS.mutePreview)).toBeNull();
+		const stored = JSON.parse(
+			localStorage.getItem(STORAGE_KEYS.gameSettings) ?? '{}',
+		);
+		expect('muteOnStudentPass' in stored).toBe(false);
+	});
+
+	test('legacy rhythm mute wins over muteOnStudentPass', () => {
+		localStorage.setItem(LEGACY_STORAGE_KEYS.muteRhythm, 'true');
+		localStorage.setItem(
+			STORAGE_KEYS.gameSettings,
+			JSON.stringify({ muteOnStudentPass: true }),
+		);
+		expect(resolveRhythmMutes()).toEqual({
+			mutePlayback: true,
+			mutePreview: true,
+		});
+	});
+
+	test('preserves stored Preview mute when Playback is unmuted', () => {
+		localStorage.setItem(STORAGE_KEYS.mutePreview, 'true');
+		expect(resolveRhythmMutes()).toEqual({
+			mutePlayback: false,
+			mutePreview: true,
+		});
+		expect(localStorage.getItem(STORAGE_KEYS.mutePreview)).toBe('true');
+	});
+});
+
 describe('count-in preference', () => {
 	afterEach(() => {
 		memoryStore.clear();
@@ -120,6 +191,26 @@ describe('count-in preference', () => {
 		writeCountInEnabled(true);
 		expect(localStorage.getItem(LEGACY_STORAGE_KEYS.muteCountIn)).toBeNull();
 		expect(readCountInEnabled()).toBe(true);
+	});
+});
+
+describe('intro-seen preference', () => {
+	afterEach(() => {
+		memoryStore.clear();
+	});
+
+	test('treats a missing key as not yet seen', () => {
+		expect(readIntroSeen()).toBe(false);
+	});
+
+	test('persists seen as true and clears when unseen', () => {
+		writeIntroSeen(true);
+		expect(localStorage.getItem(STORAGE_KEYS.introSeen)).toBe('true');
+		expect(readIntroSeen()).toBe(true);
+
+		writeIntroSeen(false);
+		expect(localStorage.getItem(STORAGE_KEYS.introSeen)).toBeNull();
+		expect(readIntroSeen()).toBe(false);
 	});
 });
 

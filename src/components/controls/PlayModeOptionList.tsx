@@ -1,10 +1,10 @@
 import { useId } from 'react';
 import { GAME_MODE_OPTIONS } from '@/components/layout/settings/settings-options';
 import { useSetting } from '@/components/layout/settings/useSetting';
-import type { GameMode } from '@/lib/settings-schema';
 import { PlayModeEndlessOption } from './PlayModeEndlessOption';
 import { PlayModeIcon } from './PlayModeIcon';
 import { PlayModeOptionCard } from './PlayModeOptionCard';
+import type { GameMode } from '@/lib/settings-schema';
 
 /** Classic / Bucket + Endless — one settings subscription for the list. */
 export function PlayModeOptionList() {

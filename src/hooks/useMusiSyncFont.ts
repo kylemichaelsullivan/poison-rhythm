@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useLayoutEffect, useState } from 'react';
 import {
 	isMusiSyncFontReady,
 	loadMusiSyncFont,
+	prefetchMusiSyncFont,
 } from '@/lib/notation/load-musisync-font';
 
 type MusiSyncFontState = {
@@ -10,6 +11,10 @@ type MusiSyncFontState = {
 	/** Retry / finish loading (e.g. on ShowNotes hover). */
 	ensureLoaded: () => void;
 };
+
+// Module load is still after `main`, but a second import path (lazy notation)
+// should kick the same singleton prefetch immediately.
+prefetchMusiSyncFont();
 
 /**
  * Tracks MusiSync readiness. Never reports ready on load failure, so UI can
@@ -23,12 +28,13 @@ export function useMusiSyncFont(): MusiSyncFontState {
 			setReady(true);
 			return;
 		}
+		setReady(false);
 		void loadMusiSyncFont().then((ok) => {
 			setReady(ok || isMusiSyncFontReady());
 		});
 	}, []);
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		ensureLoaded();
 
 		if (typeof document === 'undefined') return;

@@ -1,5 +1,5 @@
+import EarIcon from '@/assets/svg/ear.svg?react';
 import EyeIcon from '@/assets/svg/eye.svg?react';
-import HeadphoneIcon from '@/assets/svg/headphone.svg?react';
 import {
 	feedbackModeFromToggles,
 	feedbackTogglesFromMode,
@@ -16,7 +16,11 @@ export function FeedbackToggles() {
 		<div className='FeedbackToggles flex w-full flex-wrap items-center gap-2'>
 			<IconToggle
 				label='Visual Feedback'
-				title={visual ? 'Disable Visual Feedback' : 'Enable Visual Feedback'}
+				title={
+					visual
+						? 'Click to Disable Visual Feedback'
+						: 'Click to Enable Visual Feedback'
+				}
 				pressed={visual}
 				pressedIcon={EyeIcon}
 				unpressedIcon={EyeIcon}
@@ -27,10 +31,14 @@ export function FeedbackToggles() {
 			/>
 			<IconToggle
 				label='Audio Feedback'
-				title={audio ? 'Disable Audio Feedback' : 'Enable Audio Feedback'}
+				title={
+					audio
+						? 'Click to Disable Audio Feedback'
+						: 'Click to Enable Audio Feedback'
+				}
 				pressed={audio}
-				pressedIcon={HeadphoneIcon}
-				unpressedIcon={HeadphoneIcon}
+				pressedIcon={EarIcon}
+				unpressedIcon={EarIcon}
 				grow='auto'
 				onPressedChange={(next) =>
 					set('feedbackMode', feedbackModeFromToggles(visual, next))

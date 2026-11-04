@@ -1,5 +1,5 @@
-import type { SubdivisionLevel } from '@/lib/preference-schemas';
 import { MEASURE_LENGTH } from '@/types';
+import type { SubdivisionLevel } from '@/lib/preference-schemas';
 
 export const DOWN_BEATS = [0, 4, 8, 12];
 export const UP_BEATS = [2, 6, 10, 14];

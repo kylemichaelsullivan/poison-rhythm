@@ -1,6 +1,6 @@
 import clsx from 'clsx';
-import type { ReactNode } from 'react';
 import { scrollAnimationClass } from '@/lib/scroll-animation';
+import type { ReactNode } from 'react';
 import type { ScrollDirection } from '@/lib/settings-schema';
 
 type MeasureCarouselChromeProps = {

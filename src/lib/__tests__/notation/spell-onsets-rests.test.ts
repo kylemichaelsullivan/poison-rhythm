@@ -60,6 +60,19 @@ describe('spell-onsets', () => {
 		]);
 	});
 
+	test('half note on beat 2 covers beats 2–3', () => {
+		const segments = splitSpanAtBeats(4, 8, 4);
+		expect(segments).toEqual([
+			{
+				startCell: 4,
+				durationCells: 8,
+				duration: 'half',
+				tieContinuation: false,
+				onsetCell: 4,
+			},
+		]);
+	});
+
 	test('adjacent sixteenth hits stay separate onsets without ties', () => {
 		const segments = spellOnsetSegments(hits(0, 1), 'sixteenths');
 		expect(segments).toHaveLength(2);
@@ -72,6 +85,43 @@ describe('spell-onsets', () => {
 		expect(segments[1]).toMatchObject({
 			startCell: 1,
 			tieContinuation: false,
+		});
+	});
+
+	test('eighth–quarter–eighth syncopation uses a quarter on the &', () => {
+		const segments = spellOnsetSegments(hits(0, 2, 6), 'eighths');
+		expect(segments.map((s) => s.duration)).toEqual([
+			'eighth',
+			'quarter',
+			'eighth',
+		]);
+		expect(segments[1]).toMatchObject({
+			startCell: 2,
+			durationCells: 4,
+			duration: 'quarter',
+		});
+	});
+
+	test('eighth + dotted quarter fills a half-bar from the &', () => {
+		const segments = spellOnsetSegments(hits(0, 2, 8), 'eighths');
+		expect(segments.map((s) => s.duration)).toEqual([
+			'eighth',
+			'dottedQuarter',
+			'half',
+		]);
+		expect(segments[1]).toMatchObject({
+			startCell: 2,
+			durationCells: 6,
+			duration: 'dottedQuarter',
+		});
+	});
+
+	test('does not write a quarter across the mid-bar from the & of 2', () => {
+		const segments = spellOnsetSegments(hits(6, 10), 'eighths');
+		expect(segments[0]).toMatchObject({
+			startCell: 6,
+			durationCells: 2,
+			duration: 'eighth',
 		});
 	});
 });
@@ -104,9 +154,26 @@ describe('spell-rests', () => {
 		).toBe(false);
 	});
 
-	test('eighth rest within a beat', () => {
-		expect(spellGap(0, 2)).toEqual([
-			{ startCell: 0, durationCells: 2, duration: 'eighth' },
+	test('dotted quarter rest at the start of a half-bar', () => {
+		expect(spellGap(0, 6)).toEqual([
+			{ startCell: 0, durationCells: 6, duration: 'dottedQuarter' },
+		]);
+		expect(spellGap(8, 6)).toEqual([
+			{ startCell: 8, durationCells: 6, duration: 'dottedQuarter' },
+		]);
+	});
+
+	test('does not use a dotted quarter rest across the mid-bar', () => {
+		expect(spellGap(4, 6)).toEqual([
+			{ startCell: 4, durationCells: 4, duration: 'quarter' },
+			{ startCell: 8, durationCells: 2, duration: 'eighth' },
+		]);
+	});
+
+	test('does not use a dotted half rest in 4/4', () => {
+		expect(spellGap(0, 12)).toEqual([
+			{ startCell: 0, durationCells: 8, duration: 'half' },
+			{ startCell: 8, durationCells: 4, duration: 'quarter' },
 		]);
 	});
 
@@ -135,5 +202,38 @@ describe('spell-rests', () => {
 			durationCells: 2,
 			duration: 'eighth',
 		});
+	});
+
+	test('rest before the & of 2 is a dotted quarter', () => {
+		const notes = spellOnsetSegments(hits(6, 12), 'eighths');
+		const rests = spellRests(notes);
+		expect(rests[0]).toEqual({
+			startCell: 0,
+			durationCells: 6,
+			duration: 'dottedQuarter',
+		});
+	});
+
+	test('dotted eighth rest on a beat, not on e', () => {
+		expect(spellGap(0, 3)).toEqual([
+			{ startCell: 0, durationCells: 3, duration: 'dottedEighth' },
+		]);
+		expect(spellGap(1, 3)).toEqual([
+			{ startCell: 1, durationCells: 1, duration: 'sixteenth' },
+			{ startCell: 2, durationCells: 2, duration: 'eighth' },
+		]);
+	});
+
+	test('eighth rest on a beat or &, not on e', () => {
+		expect(spellGap(0, 2)).toEqual([
+			{ startCell: 0, durationCells: 2, duration: 'eighth' },
+		]);
+		expect(spellGap(2, 2)).toEqual([
+			{ startCell: 2, durationCells: 2, duration: 'eighth' },
+		]);
+		expect(spellGap(1, 2)).toEqual([
+			{ startCell: 1, durationCells: 1, duration: 'sixteenth' },
+			{ startCell: 2, durationCells: 1, duration: 'sixteenth' },
+		]);
 	});
 });

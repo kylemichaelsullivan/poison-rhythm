@@ -1,6 +1,6 @@
-import type { RefObject } from 'react';
 import { useCallback, useRef } from 'react';
 import { focusWithForcedRing } from '@/lib/control-classes';
+import type { RefObject } from 'react';
 
 type UseSoftDisableFocusResult = {
 	playButtonRef: RefObject<HTMLButtonElement | null>;

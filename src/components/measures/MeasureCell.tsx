@@ -1,14 +1,14 @@
 import clsx from 'clsx';
 import { cellToSubdivisionStep } from '@/lib';
 import { shouldHighlightPlaybackStep } from '@/lib/playback-state';
-import type { SubdivisionLevel } from '@/lib/preference-schemas';
 import {
-	type MeasurePlaybackPhase,
 	measureHitClass,
 	measureHitHighlightClass,
 } from './measure-phase-chrome';
 import { RhythmAccentMark } from './RhythmAccentMark';
 import { RhythmStickingLabel } from './RhythmStickingLabel';
+import type { SubdivisionLevel } from '@/lib/preference-schemas';
+import type { MeasurePlaybackPhase } from './measure-phase-chrome';
 
 type MeasureCellProps = {
 	value: boolean;
@@ -52,16 +52,17 @@ export function MeasureCell({
 	const showStepHighlight = isCurrentStep && showVisual;
 	const showAccentMark = showAccents && accent && value;
 	const showStickingLabel = showSticking && sticking && value;
+	const cellTitle = value ? (accent ? 'Accent Hit' : 'Hit') : 'Rest';
 
 	return (
 		<div
 			className={clsx(
-				'MeasureCell relative aspect-square rounded-[3px]',
+				'MeasureCell relative aspect-square rounded-cell',
 				value ? measureHitClass(phase) : 'bg-surface-muted',
 				showStepHighlight && measureHitHighlightClass(phase),
 				hidden && value && 'opacity-0',
 			)}
-			title={value ? (accent ? 'Accent Hit' : 'Hit') : 'Rest'}
+			title={showStepHighlight ? `${cellTitle} (current)` : cellTitle}
 			data-cell-index={index}
 			data-highlighted={showStepHighlight ? 'true' : undefined}
 		>

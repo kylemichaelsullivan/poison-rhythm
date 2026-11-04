@@ -1,11 +1,4 @@
-import type { ReactNode } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type {
-	MetronomeContextValue,
-	MetronomeTempoContextValue,
-	PlaybackPass,
-	PlaybackSource,
-} from '@/contexts/MetronomeContext';
 import {
 	MetronomeContext,
 	MetronomeTempoContext,
@@ -17,11 +10,9 @@ import {
 } from '@/contexts/PreferencesContext';
 import { useSettings } from '@/contexts/SettingsContext';
 import { createAudioEngine, shouldPlayRhythmAudio } from '@/lib/audio';
-import type { LookaheadScheduler } from '@/lib/lookahead-scheduler';
 import { createLookaheadScheduler } from '@/lib/lookahead-scheduler';
 import { BEAT_FLASH_MS, BPM_MAX, BPM_MIN } from '@/lib/metronome-defaults';
 import { clampTempo } from '@/lib/metronome-tempo';
-import type { PlaybackClockEvent } from '@/lib/playback-clock';
 import {
 	createPlaybackClock,
 	shouldHoldLookaheadAfterEvent,
@@ -34,6 +25,15 @@ import {
 	shouldRunCountIn,
 } from '@/lib/playback-state';
 import { stepHasHit } from '@/lib/subdivision-playback';
+import type { ReactNode } from 'react';
+import type {
+	MetronomeContextValue,
+	MetronomeTempoContextValue,
+	PlaybackPass,
+	PlaybackSource,
+} from '@/contexts/MetronomeContext';
+import type { LookaheadScheduler } from '@/lib/lookahead-scheduler';
+import type { PlaybackClockEvent } from '@/lib/playback-clock';
 import type { RhythmMeasure } from '@/types';
 
 type MetronomeProviderProps = {
@@ -50,10 +50,16 @@ function isTextInputTarget(target: EventTarget | null) {
 	);
 }
 
+/** True while a portaled `.Modal` overlay is mounted (focus may sit on `body`). */
+function isAppModalOpen() {
+	return document.querySelector('.Modal') !== null;
+}
+
 /** Space/Enter/arrows should not fire while focus is on controls or dialogs. */
 function isEditableTarget(target: EventTarget | null) {
 	return (
 		isTextInputTarget(target) ||
+		isAppModalOpen() ||
 		(target instanceof HTMLElement &&
 			target.closest('button, a[href], [role="button"], [role="dialog"]') !==
 				null)
@@ -71,7 +77,7 @@ function shouldIgnoreEscapeStop(target: EventTarget | null) {
 export function MetronomeProvider({ children }: MetronomeProviderProps) {
 	const { subdivisionLevel } = useSubdivision();
 	const { tempo, setTempo } = useTempoPreference();
-	const { muteMetronome, countInEnabled, muteRhythmSounds } =
+	const { muteMetronome, countInEnabled, mutePlayback, mutePreview } =
 		useSoundPreferences();
 	const { settings } = useSettings();
 	const [activeSource, setActiveSource] = useState<PlaybackSource | null>(null);
@@ -86,12 +92,14 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 	const previewMeasureRef = useRef<RhythmMeasure | null>(null);
 	const muteMetronomeRef = useRef(muteMetronome);
 	const countInEnabledRef = useRef(countInEnabled);
-	const muteRhythmSoundsRef = useRef(muteRhythmSounds);
+	const mutePlaybackRef = useRef(mutePlayback);
+	const mutePreviewRef = useRef(mutePreview);
 	const settingsRef = useRef(settings);
 	const activeSourceRef = useRef(activeSource);
 	muteMetronomeRef.current = muteMetronome;
 	countInEnabledRef.current = countInEnabled;
-	muteRhythmSoundsRef.current = muteRhythmSounds;
+	mutePlaybackRef.current = mutePlayback;
+	mutePreviewRef.current = mutePreview;
 	settingsRef.current = settings;
 	activeSourceRef.current = activeSource;
 
@@ -241,12 +249,11 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 					playbackMeasureRef.current,
 				);
 				if (measure && stepHasHit(measure, subdivisionLevel, step)) {
-					const s = settingsRef.current;
 					if (
 						shouldPlayRhythmAudio(
 							passForEvent,
-							s.muteOnStudentPass,
-							muteRhythmSoundsRef.current,
+							mutePreviewRef.current,
+							mutePlaybackRef.current,
 						)
 					) {
 						engine.scheduleHit(event.audioTime);

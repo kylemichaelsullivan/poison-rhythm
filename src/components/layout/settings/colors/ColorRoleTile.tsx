@@ -36,7 +36,7 @@ export function ColorRoleTile({
 			style={{ backgroundColor: hex, color: onColor }}
 			aria-pressed={selected}
 			aria-label={`${label}: ${name}`}
-			title={`${label}: ${name}`}
+			title={`Choose ${label} Color: ${name}`}
 			data-chrome-active={selected || undefined}
 			onClick={onSelect}
 		>

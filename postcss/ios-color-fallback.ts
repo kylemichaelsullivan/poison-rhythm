@@ -1,8 +1,8 @@
-import type { Declaration, Plugin } from 'postcss';
 import {
 	colorMixFallbackValue,
 	webkitGradientValue,
 } from '../src/lib/css/color-mix-fallback';
+import type { Declaration, Plugin } from 'postcss';
 
 function alreadyHas(decl: Declaration, value: string): boolean {
 	const prev = decl.prev();

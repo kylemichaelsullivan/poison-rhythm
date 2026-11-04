@@ -1,4 +1,5 @@
-import { type RefObject, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
+import type { RefObject } from 'react';
 
 const FOCUSABLE_SELECTOR = [
 	'a[href]',
@@ -10,7 +11,7 @@ const FOCUSABLE_SELECTOR = [
 ].join(', ');
 
 /**
- * When `open`, moves focus into the dialog, traps Tab, closes on Escape, and
+ * When `open`, moves focus into the dialog, traps Tab, closes on Escape and
  * restores focus to the previously focused element on cleanup.
  */
 export function useModalFocusTrap(
@@ -43,6 +44,17 @@ export function useModalFocusTrap(
 		initialFocus?.focus();
 
 		function handleKeyDown(e: KeyboardEvent) {
+			// Nested portaled modals each register a listener; only the topmost acts.
+			const overlay = dialog?.closest('.Modal');
+			const stack = document.querySelectorAll('.Modal');
+			if (
+				overlay != null &&
+				stack.length > 0 &&
+				overlay !== stack[stack.length - 1]
+			) {
+				return;
+			}
+
 			if (e.key === 'Escape') {
 				e.preventDefault();
 				onClose();

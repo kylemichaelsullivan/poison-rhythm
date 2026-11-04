@@ -7,7 +7,8 @@ import {
 	WCAG_AA_TEXT,
 	WCAG_AA_UI,
 } from './contrast';
-import { type CrayonId, crayonByIdOrNull } from './crayola-64';
+import { crayonByIdOrNull } from './crayola-64';
+import type { CrayonId } from './crayola-64';
 
 /**
  * Brand defaults when prefs are unset.
@@ -27,7 +28,7 @@ const BRAND_ACCENTS: Record<BrandAccentId, { hex: string; name: string }> = {
 	'poison-mint': { hex: BRAND_SECONDARY_HEX, name: 'Poison Mint' },
 };
 
-/** Stored accent: crayon, explicit brand token, or null (role’s brand default). */
+/** Stored accent: crayon, explicit brand token or null (role’s brand default). */
 export type AccentColorId = CrayonId | BrandAccentId | null;
 
 export function isBrandAccentId(

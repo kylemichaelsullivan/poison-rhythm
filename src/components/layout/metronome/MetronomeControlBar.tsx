@@ -1,8 +1,5 @@
 import clsx from 'clsx';
-import {
-	controlSurfaceBaseClassName,
-	sideGutterCollapsedReserveClassName,
-} from '@/lib/control-classes';
+import { controlSurfaceBaseClassName } from '@/lib/control-classes';
 import { MetronomeModifyTempoButton } from './MetronomeModifyTempoButton';
 import { MetronomePlayButton } from './MetronomePlayButton';
 import { MetronomeTempoSlider } from './MetronomeTempoSlider';
@@ -12,9 +9,8 @@ type MetronomeControlBarProps = {
 };
 
 /**
- * Tempo ± sit in-flow beside the control surface (inside the modal) when
- * there is room. Below ~63rem they drop under the surface; pair with
- * `sideGutterCollapsedReserveClassName` so they clear the bar and Tap.
+ * Tempo ± stay in-flow beside Play + slider so the first open reads as one
+ * control (the modal never reaches the page gutter breakpoint).
  * Play / tempo bind globally inside child composers.
  */
 export function MetronomeControlBar({
@@ -24,15 +20,12 @@ export function MetronomeControlBar({
 		<div
 			id='beat-selector'
 			tabIndex={-1}
-			className={clsx(
-				'MetronomeContent relative flex w-full items-center gap-[var(--side-gutter-width)]',
-				sideGutterCollapsedReserveClassName,
-			)}
+			className='MetronomeContent relative flex w-full items-center gap-2'
 		>
 			<MetronomeModifyTempoButton direction='decrease' />
 			<div
 				className={clsx(
-					'MetronomeControlSurface flex min-w-0 flex-1 flex-col justify-center gap-4 items-center px-3 py-4 sm:flex-row sm:px-6',
+					'MetronomeControlSurface flex min-w-0 flex-1 flex-row items-center justify-center gap-2 px-2 py-3 sm:gap-4 sm:px-6',
 					controlSurfaceBaseClassName,
 				)}
 			>

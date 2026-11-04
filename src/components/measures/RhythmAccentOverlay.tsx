@@ -1,5 +1,5 @@
-import type { NotationStep } from '@/lib/notation';
 import { RhythmAccentMark } from './RhythmAccentMark';
+import type { NotationStep } from '@/lib/notation';
 
 type RhythmAccentOverlayProps = {
 	steps: NotationStep[];

@@ -1,3 +1,4 @@
+export { useActiveNotationStepIndex } from './useActiveNotationStepIndex';
 export { useColorRoleSelection } from './useColorRoleSelection';
 export { useDelayedClick } from './useDelayedClick';
 export { useDisclosure } from './useDisclosure';
@@ -12,7 +13,7 @@ export { useMusiSyncFont } from './useMusiSyncFont';
 export { useNotationPrefetch } from './useNotationPrefetch';
 export { usePaletteContrast } from './usePaletteContrast';
 export { useScrollHighwayTrack } from './useScrollHighwayTrack';
-export { useSmoothNotationCursor } from './useSmoothNotationCursor';
 export { useSoftDisableFocus } from './useSoftDisableFocus';
+export { useSubdivisionProgress } from './useSubdivisionProgress';
 export { useTapTempo } from './useTapTempo';
 export { useTimedDismiss } from './useTimedDismiss';

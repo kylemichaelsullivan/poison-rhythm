@@ -1,12 +1,16 @@
 import clsx from 'clsx';
-import { type ReactNode, useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useModalFocusTrap } from '@/hooks/useModalFocusTrap';
 import { useTimedDismiss } from '@/hooks/useTimedDismiss';
+import { modalCornerControlClassName } from '@/lib/control-classes';
 import { ModalCloseButton } from './ModalCloseButton';
-import { ModalPanel, type ModalSize } from './ModalPanel';
+import { ModalPanel } from './ModalPanel';
 import { ModalScrim } from './ModalScrim';
 import { ModalTitle } from './ModalTitle';
 import { TimedNoticeProgress } from './TimedNoticeProgress';
+import type { ReactNode } from 'react';
+import type { ModalSize } from './ModalPanel';
 
 type ModalProps = {
 	open: boolean;
@@ -21,6 +25,8 @@ type ModalProps = {
 	 * shows a progress bar along the top edge. Omit for a manual dismiss only.
 	 */
 	dismissAfterMs?: number;
+	/** Optional control in the upper-left corner (pairs with the close button). */
+	headerLeading?: ReactNode;
 	children?: ReactNode;
 };
 
@@ -32,6 +38,7 @@ export function Modal({
 	ariaLabel,
 	onClose,
 	dismissAfterMs,
+	headerLeading,
 	children,
 }: ModalProps) {
 	const dialogRef = useRef<HTMLDivElement>(null);
@@ -52,7 +59,9 @@ export function Modal({
 
 	const sheet = size === 'xl';
 
-	return (
+	// Portal to body so nested dialogs (e.g. Difficulty Help inside About) are not
+	// clipped by a parent ModalPanel’s overflow / backdrop-filter containing block.
+	return createPortal(
 		<div
 			className={clsx(
 				'Modal fixed inset-0 z-50 flex items-center justify-center',
@@ -79,6 +88,16 @@ export function Modal({
 						paused={noticePaused}
 					/>
 				) : null}
+				{headerLeading ? (
+					<div
+						className={clsx(
+							'ModalHeaderLeading',
+							modalCornerControlClassName('start'),
+						)}
+					>
+						{headerLeading}
+					</div>
+				) : null}
 				<ModalCloseButton onClose={onClose} />
 				{title ? (
 					<ModalTitle id={titleId} sheet={sheet}>
@@ -88,12 +107,13 @@ export function Modal({
 				<div
 					className={clsx(
 						'flex min-h-0 flex-col',
-						sheet ? 'flex-1' : 'shrink-0',
+						sheet ? 'flex-1' : 'overflow-y-auto overscroll-contain',
 					)}
 				>
 					{children}
 				</div>
 			</ModalPanel>
-		</div>
+		</div>,
+		document.body,
 	);
 }

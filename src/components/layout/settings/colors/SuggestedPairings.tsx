@@ -1,11 +1,11 @@
 import {
-	type ColorPairing,
 	pairingMatchesSelection,
 	resolveAccentDisplay,
 	SUGGESTED_PAIRINGS,
 } from '@/lib/colors';
-import type { ColorPreference } from '@/lib/preference-schemas';
 import { SuggestedPairingRow } from './SuggestedPairingRow';
+import type { ColorPairing } from '@/lib/colors';
+import type { ColorPreference } from '@/lib/preference-schemas';
 
 type SuggestedPairingsProps = {
 	dominantColor: ColorPreference;

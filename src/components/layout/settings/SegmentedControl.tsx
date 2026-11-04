@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { Fieldset } from './Fieldset';
-import type { SegmentOption } from './SegmentButton';
 import { SegmentButton } from './SegmentButton';
+import type { SegmentOption } from './SegmentButton';
 
 export type { SegmentOption };
 

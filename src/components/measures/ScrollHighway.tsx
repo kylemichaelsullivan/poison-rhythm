@@ -8,13 +8,13 @@ import {
 	highwayNoteTrackInset,
 	padMeasuresForHighwayLookahead,
 } from '@/lib/scroll-animation';
-import type { ScrollDirection } from '@/lib/settings-schema';
-import type { RhythmMeasure } from '@/types';
 import {
 	SCROLL_HIGHWAY_GEM_ALONG_PX,
 	SCROLL_HIGHWAY_GEM_CROSS_PX,
 	ScrollHighwayNote,
 } from './ScrollHighwayNote';
+import type { ScrollDirection } from '@/lib/settings-schema';
+import type { RhythmMeasure } from '@/types';
 
 type ScrollHighwayProps = {
 	measures: RhythmMeasure[];
