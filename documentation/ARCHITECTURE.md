@@ -194,7 +194,7 @@ flowchart LR
 | `notation-events.ts` | Boolean grid → timed note/rest events |
 | `spell-onsets.ts` / `spell-rests.ts` | Conventional 4/4 duration spelling per subdivision level |
 | `duration-units.ts` | Cell ↔ duration mapping |
-| `beam-groups.ts` / `beam-notes.ts` / `beam-glyphs.ts` | Beamed eighth/sixteenth groups (exact patterns; `[1,2]` → derived U+E001, not stock `O`) |
+| `beam-groups.ts` / `beam-notes.ts` / `beam-glyphs.ts` | Beamed eighth/sixteenth groups (exact patterns; `[1,2]`/`[2,1]`/`[1,1]` → derived U+E001–E003, not stock dotted `O`/`o`) |
 | `musisync-glyphs.ts` | Duration keys; dotted notes `i`/`j`/`d`; dotted rests = rest + `.` |
 | `events-to-musisync.ts` | Events → MusiSync glyph string |
 | `measure-to-notation.ts` | Flat `NotationStep[]` with `startCell` / `durationCells` for overlays and playback |
@@ -205,7 +205,7 @@ Font assets: canonical copies in `src/assets/fonts/`; served from `public/fonts/
 
 `MeasureGrid` lazy-loads `MeasureNotation` and prefetches the chunk + MusiSync font via `useNotationPrefetch` when `rhythmRenderMode === 'notation'` (`NotationFallback` shell instead of flashing the cell grid). Grid layout lives in `MeasureCellGrid` (takes `showSticking` as a prop).
 
-Playback follow: `useSubdivisionProgress` + `subdivisionStepToCell` + `buildNotationCellStepMap` keep the active `MeasureNotationGlyph` (`data-active`) colored for its full spelled duration (Secondary on listening, Dominant on playing; inactive tokens mute to `text-mid`).
+Playback follow: `useSubdivisionProgress` + `subdivisionStepToCell` + `buildNotationCellStepMap` keep the active `MeasureNotationGlyph` (`data-active`) colored for its full spelled duration (Secondary on listening, Dominant on playing; inactive tokens stay full ink).
 
 ## Audio engine
 

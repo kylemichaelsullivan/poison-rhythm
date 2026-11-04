@@ -91,6 +91,8 @@ The a11y “start screen” test expects a **seeded** round (`measure-slider`), 
 
 - Dotted note glyphs: `i` / `j` / `d` — see [`src/assets/fonts/README.md`](../src/assets/fonts/README.md)
 - `[1,2]` (sixteenth + eighth) beams to derived U+E001 (undotted `O`); never alias to stock `O` (`[1,3]`)
+- `[2,1]` (eighth + sixteenth) beams to derived U+E002 (undotted `o`); never alias to stock `o` (`[3,1]`)
+- `[1,1]` (two sixteenths) beams to derived U+E003 (left half of `y`)
 - Lazy `MeasureNotation` + `loadMusiSyncFont` prefetch when display mode is notation (`MeasureGrid` → `useNotationPrefetch`; loading shell is `NotationFallback`)
 - Header ShowNotes trigger: `e2e/shownotes-glyph.spec.ts` asserts the canvas paints a MusiSync note (not a fallback letter) in Light, Dark and System
 - `MUSISYNC_ALL_GLYPHS` unit test: every duration + beamed key is in the early-load string

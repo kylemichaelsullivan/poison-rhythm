@@ -76,6 +76,32 @@ describe('dotted notes', () => {
 		);
 	});
 
+	test('rest + eighth + sixteenth beams as undotted [2,1]', () => {
+		const events = measureToNotationEvents(
+			hits(1, 3, 4),
+			undefined,
+			'sixteenths',
+		);
+		expect(
+			eventsToMusiSyncString(events).startsWith(
+				`S${MUSISYNC_BEAMED.eighthSixteenth}`,
+			),
+		).toBe(true);
+	});
+
+	test('eighth rest + two sixteenths beams as [1,1]', () => {
+		const events = measureToNotationEvents(
+			hits(2, 3, 4),
+			undefined,
+			'sixteenths',
+		);
+		expect(
+			eventsToMusiSyncString(events).startsWith(
+				`E${MUSISYNC_BEAMED.twoSixteenths}`,
+			),
+		).toBe(true);
+	});
+
 	test('repeated e+& syncopation beams each [1,2] pair', () => {
 		const events = measureToNotationEvents(
 			hits(1, 2, 5, 6, 9, 10, 12, 13, 14, 15),

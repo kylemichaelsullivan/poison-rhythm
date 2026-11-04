@@ -71,8 +71,21 @@ describe('tryBeamNotes', () => {
 		expect(attempt.ok).toBe(false);
 	});
 
-	test('rejects unmatched patterns', () => {
-		expect(tryBeamNotes([note(0, 1), note(1, 1)]).ok).toBe(false);
+	test('beams two sixteenths in one beat', () => {
+		const attempt = tryBeamNotes([note(2, 1), note(3, 1)]);
+		expect(attempt.ok).toBe(true);
+		if (attempt.ok) {
+			expect(attempt.glyph).toBe(MUSISYNC_BEAMED.twoSixteenths);
+		}
+	});
+
+	test('beams eighth + sixteenth [2,1] without aliasing to dotted o', () => {
+		const attempt = tryBeamNotes([note(1, 2), note(3, 1)]);
+		expect(attempt.ok).toBe(true);
+		if (attempt.ok) {
+			expect(attempt.glyph).toBe(MUSISYNC_BEAMED.eighthSixteenth);
+			expect(attempt.glyph).not.toBe(MUSISYNC_BEAMED.dottedEighthSixteenth);
+		}
 	});
 
 	test('beams three sixteenths in one beat', () => {
@@ -144,6 +157,22 @@ describe('beamNotesForDisplay', () => {
 		const tokens = beamNotesForDisplay([rest(0, 1), note(1, 1), note(2, 2)]);
 		expect(tokens.map((t) => t.glyph).join('')).toBe(
 			`S${MUSISYNC_BEAMED.sixteenthEighth}`,
+		);
+		expect(tokens[1]?.events).toHaveLength(2);
+	});
+
+	test('beams eighth + sixteenth after a sixteenth rest in the beat', () => {
+		const tokens = beamNotesForDisplay([rest(0, 1), note(1, 2), note(3, 1)]);
+		expect(tokens.map((t) => t.glyph).join('')).toBe(
+			`S${MUSISYNC_BEAMED.eighthSixteenth}`,
+		);
+		expect(tokens[1]?.events).toHaveLength(2);
+	});
+
+	test('beams two sixteenths after an eighth rest in the beat', () => {
+		const tokens = beamNotesForDisplay([rest(0, 2), note(2, 1), note(3, 1)]);
+		expect(tokens.map((t) => t.glyph).join('')).toBe(
+			`E${MUSISYNC_BEAMED.twoSixteenths}`,
 		);
 		expect(tokens[1]?.events).toHaveLength(2);
 	});

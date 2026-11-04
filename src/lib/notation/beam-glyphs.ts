@@ -26,6 +26,19 @@ export const MUSISYNC_BEAMED = {
 	 * augmentation-dot contour so beat spacing matches rest + [1,2].
 	 */
 	sixteenthEighth: '\uE001',
+	/**
+	 * Eighth + sixteenth (derived MusiSync PUA: undotted `o`).
+	 * Stock MusiSync has no precomposed [2,1]; U+E002 is `o` without the
+	 * augmentation-dot contour so beat spacing matches rest + [2,1].
+	 */
+	eighthSixteenth: '\uE002',
+	/**
+	 * Two beamed sixteenths (derived MusiSync PUA: `n` extend + `y` gap punch).
+	 * Stock MusiSync has no precomposed [1,1]; built from two beamed eighths
+	 * with the same inter-beam hole band as `y` so spacing matches other
+	 * double beams (adv 1536 with a leading rest fills a beat).
+	 */
+	twoSixteenths: '\uE003',
 	/** Three beamed eighths */
 	threeEighths: '§',
 	/** Four beamed eighths */
@@ -36,12 +49,14 @@ const PATTERN_TO_GLYPH: Record<string, string> = {
 	'2,2': MUSISYNC_BEAMED.twoEighths,
 	'1,1,1,1': MUSISYNC_BEAMED.fourSixteenths,
 	'1,1,1': MUSISYNC_BEAMED.threeSixteenths,
+	'1,1': MUSISYNC_BEAMED.twoSixteenths,
 	'2,1,1': MUSISYNC_BEAMED.eighthTwoSixteenths,
 	'1,1,2': MUSISYNC_BEAMED.twoSixteenthsEighth,
 	'1,2,1': MUSISYNC_BEAMED.sixteenthEighthSixteenth,
 	'3,1': MUSISYNC_BEAMED.dottedEighthSixteenth,
 	'1,3': MUSISYNC_BEAMED.sixteenthDottedEighth,
 	'1,2': MUSISYNC_BEAMED.sixteenthEighth,
+	'2,1': MUSISYNC_BEAMED.eighthSixteenth,
 	'2,2,2': MUSISYNC_BEAMED.threeEighths,
 	'2,2,2,2': MUSISYNC_BEAMED.fourEighths,
 };
@@ -62,8 +77,8 @@ export function beamedGlyphForDurations(
 
 /**
  * Map a contiguous beam run to a MusiSync beamed glyph.
- * Exact duration patterns only — `[1, 2]` uses the derived undotted-`O`
- * glyph (`sixteenthEighth`), never stock `O` (`[1, 3]`).
+ * Exact duration patterns only — `[1, 2]` / `[2, 1]` use derived undotted
+ * `O` / `o` (never stock dotted `[1, 3]` / `[3, 1]`); `[1, 1]` uses `n`+beam.
  */
 export function resolveBeamedGlyph(
 	notes: readonly BeamedNoteSlice[],

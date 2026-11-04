@@ -52,6 +52,15 @@ describe('conventional ABC / beaming figures', () => {
 		);
 	});
 
+	test('rest-led [2,1] and [1,1] beam instead of flagged pairs', () => {
+		// Beats: rest16-8-16 | rest8-16-16 | 16×4 | 8-16-16
+		const measure = hits(1, 3, 6, 7, 8, 9, 10, 11, 12, 14, 15);
+		const events = measureToNotationEvents(measure, undefined, 'sixteenths');
+		expect(eventsToMusiSyncString(events)).toBe(
+			`S${MUSISYNC_BEAMED.eighthSixteenth}E${MUSISYNC_BEAMED.twoSixteenths}${MUSISYNC_BEAMED.fourSixteenths}${MUSISYNC_BEAMED.eighthTwoSixteenths}`,
+		);
+	});
+
 	test('measureToAbc emits perc clef header', () => {
 		const abc = measureToAbc(hits(0, 2), undefined, 'eighths', {
 			title: 'Poison Rhythm',

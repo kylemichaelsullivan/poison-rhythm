@@ -83,7 +83,7 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 | `src/lib/notation/` | Events → spelling → beams → MusiSync glyphs |
 | `src/lib/notation/notation-playback.ts` | Length-16 cell→glyph map for duration-accurate active token |
 | `src/lib/notation/musisync-glyphs.ts` | Duration glyph map (`i`/`j`/`d` dotted notes) |
-| `src/lib/notation/beam-glyphs.ts` | Beamed patterns (`³`, `O`, `o`, U+E001 for `[1,2]`, `n`, `y`, …) |
+| `src/lib/notation/beam-glyphs.ts` | Beamed patterns (`³`, `O`, `o`, U+E001–E003 for `[1,2]`/`[2,1]`/`[1,1]`, `n`, `y`, …) |
 | `src/lib/control-classes.ts` | Shared control classes; global button hover tokens / carousel nav / side-gutter helpers; `SegmentControlVariant` includes `'header'` |
 | `src/lib/hierarchy-border.ts` | Shared border ranks (active / emphasis / structure / provisional) for swatches + measures |
 | `src/lib/colors/contrast.ts` | WCAG ratios mapped to US letter grades A/B/C/F for crayon / pair rating |

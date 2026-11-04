@@ -24,7 +24,7 @@ export function MeasureNotationGlyph({
 			className={clsx(
 				'MeasureNotationGlyph inline-block transition-colors duration-150',
 				dotted && 'MeasureNotationGlyph--dotted',
-				highlighting && (active ? activeTone : 'text-mid'),
+				highlighting && (active ? activeTone : 'text-black'),
 			)}
 			data-active={highlighting && active ? 'true' : undefined}
 		>
