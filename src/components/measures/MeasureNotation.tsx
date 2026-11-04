@@ -1,12 +1,15 @@
 import clsx from 'clsx';
+import { useMemo } from 'react';
+import { useActiveNotationStepIndex } from '@/hooks/useActiveNotationStepIndex';
 import { useMusiSyncFont } from '@/hooks/useMusiSyncFont';
+import { useSubdivisionProgress } from '@/hooks/useSubdivisionProgress';
 import {
 	measureToNotationSteps,
 	notationStepsToGlyphString,
 } from '@/lib/notation';
+import { shouldHighlightNotationPlayback } from '@/lib/playback-state';
 import { MeasureNotationGlyph } from './MeasureNotationGlyph';
 import { measureShellClass } from './measure-phase-chrome';
-import { NotationPlaybackCursor } from './NotationPlaybackCursor';
 import { RhythmAccentOverlay } from './RhythmAccentOverlay';
 import { RhythmStickingOverlay } from './RhythmStickingOverlay';
 import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
@@ -31,14 +34,26 @@ export function MeasureNotation({
 	display,
 }: MeasureNotationProps) {
 	const { ready: fontReady } = useMusiSyncFont();
-	const steps = measureToNotationSteps(
-		measure,
-		richMeasure,
-		display.subdivisionLevel,
+	const steps = useMemo(
+		() =>
+			measureToNotationSteps(measure, richMeasure, display.subdivisionLevel),
+		[measure, richMeasure, display.subdivisionLevel],
 	);
 	const glyphString = notationStepsToGlyphString(steps);
 	const stepCount = Math.max(steps.length, 1);
 	const { showAccents, showSticking } = display;
+
+	const highlighting = shouldHighlightNotationPlayback({
+		playbackEnabled: playback,
+		isMeasuresPlaying: display.isMeasuresPlaying,
+		showVisual: display.showVisualFeedback,
+	});
+	const progress = useSubdivisionProgress(highlighting);
+	const activeStepIndex = useActiveNotationStepIndex(
+		steps,
+		highlighting,
+		progress,
+	);
 
 	return (
 		<div
@@ -55,28 +70,26 @@ export function MeasureNotation({
 				stepCount={stepCount}
 				show={showAccents && fontReady}
 			/>
-			<div className='relative w-full'>
-				<NotationPlaybackCursor
-					playback={playback}
-					hidden={hidden || !fontReady}
-					showVisualFeedback={display.showVisualFeedback}
-					isMeasuresPlaying={display.isMeasuresPlaying}
-				/>
-				<section
-					className={clsx(
-						'MeasureNotationLine MusiSync text-current focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface',
-						!fontReady && 'invisible',
-					)}
-					aria-label='Rhythm Notation'
-					data-glyphs={glyphString}
-					// biome-ignore lint/a11y/noNoninteractiveTabindex: keyboard users must focus horizontal overflow
-					tabIndex={0}
-				>
-					{steps.map((step) => (
-						<MeasureNotationGlyph key={step.stepIndex} glyph={step.glyph} />
-					))}
-				</section>
-			</div>
+			<section
+				className={clsx(
+					'MeasureNotationLine MusiSync text-current focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface',
+					!fontReady && 'invisible',
+				)}
+				aria-label='Rhythm Notation'
+				data-glyphs={glyphString}
+				// biome-ignore lint/a11y/noNoninteractiveTabindex: keyboard users must focus horizontal overflow
+				tabIndex={0}
+			>
+				{steps.map((step) => (
+					<MeasureNotationGlyph
+						key={step.stepIndex}
+						glyph={step.glyph}
+						active={step.stepIndex === activeStepIndex}
+						highlighting={highlighting}
+						phase={phase}
+					/>
+				))}
+			</section>
 			<RhythmStickingOverlay steps={steps} show={showSticking && fontReady} />
 		</div>
 	);

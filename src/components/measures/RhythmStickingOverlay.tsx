@@ -22,7 +22,7 @@ export function RhythmStickingOverlay({
 			aria-hidden
 		>
 			{steps.map((step) =>
-				step.hit && step.sticking && step.startCell !== undefined ? (
+				step.hit && step.sticking ? (
 					<span
 						key={step.stepIndex}
 						className='absolute top-0.5'

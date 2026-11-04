@@ -56,14 +56,22 @@ describe('measureToNotationSteps', () => {
 		expect(steps.length).toBeGreaterThan(0);
 		expect(steps[0]?.hit).toBe(true);
 		expect(steps[0]?.glyph).toBe('q');
+		expect(steps[0]).toMatchObject({ startCell: 0, durationCells: 4 });
 		// Second attack spans three beats → dotted half
 		expect(notationStepsToGlyphString(steps)).toBe('qd');
+		expect(steps[1]).toMatchObject({
+			glyph: 'd',
+			startCell: 4,
+			durationCells: 12,
+		});
 	});
 
 	test('spells eighth-level hits with conventional glyphs', () => {
 		const steps = measureToNotationSteps(hits(0, 8), undefined, 'eighths');
 		expect(steps[0]?.glyph).toBe('h');
 		expect(notationStepsToGlyphString(steps)).toBe('hh');
+		expect(steps[0]).toMatchObject({ startCell: 0, durationCells: 8 });
+		expect(steps[1]).toMatchObject({ startCell: 8, durationCells: 8 });
 	});
 
 	test('respects accent and sticking on rich measure', () => {
@@ -85,11 +93,40 @@ describe('measureToNotationSteps', () => {
 		expect(steps).toHaveLength(1);
 		expect(steps[0]?.hit).toBe(false);
 		expect(steps[0]?.glyph).toBe('W');
+		expect(steps[0]).toMatchObject({ startCell: 0, durationCells: 16 });
 	});
 
 	test('empty first half is a half rest, not a whole rest', () => {
 		const steps = measureToNotationSteps(hits(8), undefined, 'sixteenths');
 		expect(notationStepsToGlyphString(steps)).toBe('Hh');
-		expect(steps[0]).toMatchObject({ hit: false, glyph: 'H' });
+		expect(steps[0]).toMatchObject({
+			hit: false,
+			glyph: 'H',
+			startCell: 0,
+			durationCells: 8,
+		});
+	});
+
+	test('dotted quarter carries 6 cells (1.50 beats)', () => {
+		const steps = measureToNotationSteps(hits(0, 6), undefined, 'sixteenths');
+		expect(steps[0]).toMatchObject({
+			hit: true,
+			startCell: 0,
+			durationCells: 6,
+		});
+	});
+
+	test('beamed eighth pair spans a full beat', () => {
+		const steps = measureToNotationSteps(
+			hits(0, 2, 4),
+			undefined,
+			'sixteenths',
+		);
+		const beamed = steps.find((step) => step.glyph === 'n');
+		expect(beamed).toMatchObject({
+			hit: true,
+			startCell: 0,
+			durationCells: 4,
+		});
 	});
 });

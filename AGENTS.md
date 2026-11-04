@@ -77,8 +77,11 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 | `src/components/measures/MeasureCarouselChrome.tsx` | Carousel chrome; `live` sets `data-testid="measure-slider"` |
 | `src/hooks/useDisclosure.ts` | Shared open/close state for modals |
 | `src/hooks/useNotationPrefetch.ts` | Prefetch notation chunk + MusiSync when mode is notation |
+| `src/hooks/useSubdivisionProgress.ts` | Fractional subdivision step (RAF) for notation playhead consumers |
+| `src/hooks/useActiveNotationStepIndex.ts` | Cell-map lookup → active MusiSync glyph during playback |
 | `src/lib/rhythm/` | Measure/round generation |
 | `src/lib/notation/` | Events → spelling → beams → MusiSync glyphs |
+| `src/lib/notation/notation-playback.ts` | Length-16 cell→glyph map for duration-accurate active token |
 | `src/lib/notation/musisync-glyphs.ts` | Duration glyph map (`i`/`j`/`d` dotted notes) |
 | `src/lib/notation/beam-glyphs.ts` | Beamed patterns (`³`, `O`, `o`, U+E001 for `[1,2]`, `n`, `y`, …) |
 | `src/lib/control-classes.ts` | Shared control classes; global button hover tokens / carousel nav / side-gutter helpers; `SegmentControlVariant` includes `'header'` |

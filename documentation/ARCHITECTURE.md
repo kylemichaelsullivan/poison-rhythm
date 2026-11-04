@@ -185,7 +185,7 @@ flowchart LR
   beam[beam-groups / beam-glyphs]
   tokens[eventsToGlyphTokens]
   steps[measureToNotationSteps]
-  ui[MeasureNotation + NotationPlaybackCursor]
+  ui[MeasureNotation]
   measure --> events --> spell --> beam --> tokens --> steps --> ui
 ```
 
@@ -197,14 +197,15 @@ flowchart LR
 | `beam-groups.ts` / `beam-notes.ts` / `beam-glyphs.ts` | Beamed eighth/sixteenth groups (exact patterns; `[1,2]` → derived U+E001, not stock `O`) |
 | `musisync-glyphs.ts` | Duration keys; dotted notes `i`/`j`/`d`; dotted rests = rest + `.` |
 | `events-to-musisync.ts` | Events → MusiSync glyph string |
-| `measure-to-notation.ts` | Flat `NotationStep[]` for overlays and playback cursor |
+| `measure-to-notation.ts` | Flat `NotationStep[]` with `startCell` / `durationCells` for overlays and playback |
+| `notation-playback.ts` | Length-16 cell→glyph `stepIndex` map for active-token highlight |
 | `load-musisync-font.ts` | `@font-face` (`font-display: block`) + `index.html` preload + inline FontFace; `prefetchMusiSyncFont` in `main` loads **all** duration/beam glyphs; ready = canvas vs matching fallback (never `fonts.check()` on Latin keys); `useMusiSyncFont` in UI |
 
 Font assets: canonical copies in `src/assets/fonts/`; served from `public/fonts/` as static `/fonts/MusiSync.*` URLs. See [`src/assets/fonts/README.md`](../src/assets/fonts/README.md) for glyph keys and refresh steps.
 
 `MeasureGrid` lazy-loads `MeasureNotation` and prefetches the chunk + MusiSync font via `useNotationPrefetch` when `rhythmRenderMode === 'notation'` (`NotationFallback` shell instead of flashing the cell grid). Grid layout lives in `MeasureCellGrid` (takes `showSticking` as a prop).
 
-Playback cursor: `useSmoothNotationCursor` interpolates position across `NotationStep` indices; `NotationPlaybackCursor` highlights the active glyph during demo/student passes.
+Playback follow: `useSubdivisionProgress` + `subdivisionStepToCell` + `buildNotationCellStepMap` keep the active `MeasureNotationGlyph` (`data-active`) colored for its full spelled duration (Secondary on listening, Dominant on playing; inactive tokens mute to `text-mid`).
 
 ## Audio engine
 

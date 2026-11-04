@@ -233,7 +233,7 @@ Coverage includes:
 - Playback clock / look-ahead (count-in → playback join with no timer gap)
 - Difficulty levels, subdivision playback, metronome tempo/tap
 - Theme options and preference storage
-- Playwright: seeded round ready, count-in highlight gating, count-in beats on Play, Escape-to-stop, demo pass, notation overflow, mobile layout smoke (360×800)
+- Playwright: seeded round ready, count-in highlight gating, count-in beats on Play, Escape-to-stop, demo pass, notation active-glyph color, notation overflow, mobile layout smoke (360×800)
 - Axe: start screen (seeded round), generated round, settings (incl. Sound), metronome, modals, count-in on **desktop and mobile** (WCAG 2.2 A/AA + best-practice)
 
 Details: [`documentation/TESTING.md`](documentation/TESTING.md).
