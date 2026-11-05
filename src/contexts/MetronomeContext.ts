@@ -12,6 +12,20 @@ export type MetronomeTempoContextValue = {
 	setTempo: Dispatch<SetStateAction<number>>;
 };
 
+/**
+ * Audio-clock epoch for Scroll highway progress (same timeline as scheduleHit).
+ * Stable getters read refs so rAF can sample without React state each frame.
+ */
+export type HighwayClock = {
+	getAudioNow: () => number;
+	/** `firstPlaybackAt` (or demo→student restart); null when idle. */
+	getOriginAt: () => number | null;
+	/** Accumulated audio seconds spent in bar lookahead holds. */
+	getHeldSec: () => number;
+	/** Last-step audio time to freeze at while lookahead is held; null when not held. */
+	getHoldStartedAt: () => number | null;
+};
+
 /** Playback clock / transport — does not include tempo. */
 export type MetronomeContextValue = {
 	activeSource: PlaybackSource | null;
@@ -28,6 +42,8 @@ export type MetronomeContextValue = {
 	isLit: boolean;
 	subdivisionIndex: number;
 	measureCycle: number;
+	/** Scroll highway samples this for judgment-line progress. */
+	highwayClock: HighwayClock;
 	setPlaybackMeasure: (measure: RhythmMeasure | null) => void;
 	/** @deprecated Preview measure is no longer used; listen pass uses the carousel measure. */
 	setPreviewMeasure: (measure: RhythmMeasure | null) => void;

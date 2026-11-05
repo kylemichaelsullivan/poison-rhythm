@@ -137,7 +137,10 @@ test.describe('accessibility', () => {
 		await generateRound(page);
 
 		await clickPlay(page);
-		await expect(page.getByRole('status')).toHaveText('Counting In');
+		await expect(page.getByTestId('play-controls')).toHaveAttribute(
+			'data-counting-in',
+			'true',
+		);
 		await expect(
 			page
 				.getByTestId('measure-slider')

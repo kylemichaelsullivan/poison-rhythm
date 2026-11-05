@@ -24,9 +24,14 @@ import {
 	nextPassAfterBar,
 	shouldRunCountIn,
 } from '@/lib/playback-state';
+import {
+	accumulateHighwayHold,
+	nextHighwayOriginAfterPassRestart,
+} from '@/lib/scroll-animation';
 import { stepHasHit } from '@/lib/subdivision-playback';
 import type { ReactNode } from 'react';
 import type {
+	HighwayClock,
 	MetronomeContextValue,
 	MetronomeTempoContextValue,
 	PlaybackPass,
@@ -96,12 +101,21 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 	const mutePreviewRef = useRef(mutePreview);
 	const settingsRef = useRef(settings);
 	const activeSourceRef = useRef(activeSource);
+	const highwayOriginAtRef = useRef<number | null>(null);
+	const highwayHeldSecRef = useRef(0);
+	const highwayHoldStartedAtRef = useRef<number | null>(null);
 	muteMetronomeRef.current = muteMetronome;
 	countInEnabledRef.current = countInEnabled;
 	mutePlaybackRef.current = mutePlayback;
 	mutePreviewRef.current = mutePreview;
 	settingsRef.current = settings;
 	activeSourceRef.current = activeSource;
+
+	const resetHighwayClock = useCallback(() => {
+		highwayOriginAtRef.current = null;
+		highwayHeldSecRef.current = 0;
+		highwayHoldStartedAtRef.current = null;
+	}, []);
 
 	const setPlaybackMeasure = useCallback((measure: RhythmMeasure | null) => {
 		playbackMeasureRef.current = measure;
@@ -110,6 +124,17 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 	const setPreviewMeasure = useCallback((measure: RhythmMeasure | null) => {
 		previewMeasureRef.current = measure;
 	}, []);
+
+	const highwayClock = useMemo(
+		() =>
+			({
+				getAudioNow: () => audioEngineRef.current.getContext().currentTime,
+				getOriginAt: () => highwayOriginAtRef.current,
+				getHeldSec: () => highwayHeldSecRef.current,
+				getHoldStartedAt: () => highwayHoldStartedAtRef.current,
+			}) satisfies HighwayClock,
+		[],
+	);
 
 	const isRunning = activeSource !== null;
 	const isMetronomeRunning = activeSource === 'metronome';
@@ -172,6 +197,7 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 			setPlaybackPass(null);
 			setSubdivisionIndex(0);
 			setMeasureCycle(0);
+			resetHighwayClock();
 			return;
 		}
 
@@ -217,6 +243,15 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 			requestAnimationFrame(() => {
 				requestAnimationFrame(() => {
 					if (cancelled) return;
+					const holdStartedAt = highwayHoldStartedAtRef.current;
+					if (holdStartedAt !== null) {
+						highwayHeldSecRef.current = accumulateHighwayHold(
+							highwayHeldSecRef.current,
+							holdStartedAt,
+							engine.getContext().currentTime,
+						);
+						highwayHoldStartedAtRef.current = null;
+					}
 					held = false;
 					sessionScheduler?.nudge();
 				});
@@ -227,6 +262,7 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 			event: PlaybackClockEvent,
 			currentPass: { value: PlaybackPass },
 			playbackUi: { started: boolean },
+			stepSec: number,
 		): boolean => {
 			if (event.phase === 'count-in') {
 				if (!muteMetronomeRef.current) {
@@ -275,6 +311,15 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 				passAfterBar = next.pass;
 				bumpCycle = next.bumpCycle;
 				currentPass.value = next.pass;
+				if (!bumpCycle) {
+					// Demo → student replays the same gems; restart the highway epoch.
+					highwayOriginAtRef.current = nextHighwayOriginAfterPassRestart(
+						event.audioTime,
+						stepSec,
+					);
+					highwayHeldSecRef.current = 0;
+					highwayHoldStartedAtRef.current = null;
+				}
 			}
 
 			scheduleUi(event.audioTime, () => {
@@ -325,6 +370,11 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 				countInEnabled: withCountIn,
 				audioNow: context.currentTime,
 			});
+			highwayOriginAtRef.current =
+				activeSource === 'measures' ? clock.firstPlaybackAt : null;
+			highwayHeldSecRef.current = 0;
+			highwayHoldStartedAtRef.current = null;
+
 			const currentPass = {
 				value:
 					activeSource === 'measures'
@@ -339,8 +389,9 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 					held ? Number.POSITIVE_INFINITY : clock.peek().audioTime,
 				onDue: () => {
 					const event = clock.advance();
-					if (dispatch(event, currentPass, playbackUi)) {
+					if (dispatch(event, currentPass, playbackUi, clock.stepSec)) {
 						held = true;
+						highwayHoldStartedAtRef.current = event.audioTime;
 						return 'pause';
 					}
 					return undefined;
@@ -359,8 +410,9 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 		return () => {
 			cancelled = true;
 			clearTimers();
+			resetHighwayClock();
 		};
-	}, [isRunning, activeSource, tempo, subdivisionLevel]);
+	}, [isRunning, activeSource, tempo, subdivisionLevel, resetHighwayClock]);
 
 	useEffect(() => {
 		function handleKeyDown(e: KeyboardEvent) {
@@ -445,6 +497,7 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 				isLit,
 				subdivisionIndex,
 				measureCycle,
+				highwayClock,
 				setPlaybackMeasure,
 				setPreviewMeasure,
 				toggleMetronome,
@@ -466,6 +519,7 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 			isLit,
 			subdivisionIndex,
 			measureCycle,
+			highwayClock,
 			setPlaybackMeasure,
 			setPreviewMeasure,
 			toggleMetronome,

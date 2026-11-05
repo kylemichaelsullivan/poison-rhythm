@@ -2,6 +2,7 @@ import { describe, expect, test } from 'bun:test';
 import {
 	generateAppendBatch,
 	generateRound,
+	TRAILING_DECOYS_AFTER_POISON,
 } from '@/lib/rhythm/generate-round';
 import { DEFAULT_SETTINGS, sanitizeGameSettings } from '@/lib/settings-schema';
 import { richMeasuresEqual } from '@/types';
@@ -71,6 +72,25 @@ describe('endless stream', () => {
 					round.poisonMeasure,
 				),
 			).toBe(false);
+		}
+	});
+
+	test('leaves a full Scroll lookahead of decoys after poison', () => {
+		const settings = sanitizeGameSettings({
+			...DEFAULT_SETTINGS,
+			endless: false,
+			poisonMode: 'visible',
+		});
+		for (let seed = 0; seed < 30; seed += 1) {
+			const round = generateRound({
+				difficulty: 3,
+				subdivisionLevel: 'eighths',
+				settings,
+				seed,
+			});
+			if (round.poisonIndex < 0) continue;
+			const after = round.measures.length - round.poisonIndex - 1;
+			expect(after).toBeGreaterThanOrEqual(TRAILING_DECOYS_AFTER_POISON);
 		}
 	});
 

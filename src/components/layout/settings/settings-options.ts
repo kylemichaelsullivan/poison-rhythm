@@ -8,6 +8,7 @@ import type { SegmentOption } from './SegmentButton';
 export const RENDER_MODE_OPTIONS: SegmentOption<RhythmRenderMode>[] = [
 	{ label: 'Grid', value: 'grid' },
 	{ label: 'Notation', value: 'notation' },
+	{ label: 'Scroll', value: 'scroll' },
 ];
 
 export const STICKING_OPTIONS: SegmentOption<StickingMode>[] = [

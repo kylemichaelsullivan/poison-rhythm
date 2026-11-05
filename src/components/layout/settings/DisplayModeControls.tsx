@@ -1,22 +1,41 @@
 import { Stack } from '@/components/ui';
+import { isScrollDisplayMode } from '@/lib/settings-schema';
+import { ScrollDirectionPad } from './ScrollDirectionPad';
 import { SegmentedControl } from './SegmentedControl';
-import { SettingRow } from './SettingRow';
 import { RENDER_MODE_OPTIONS } from './settings-options';
 import { useUpdateSetting } from './useUpdateSetting';
+import { When } from './When';
+import type { ScrollDirection } from '@/lib/settings-schema';
 
-/** Grid / notation; scroll highway is Coming Soon. */
+/** Exclusive display mode: Grid, Notation, or Scroll (Guitar Hero–style highway). */
 export function DisplayModeControls() {
-	const { settings, set } = useUpdateSetting();
+	const { settings, set, updateSettings } = useUpdateSetting();
+	const scrollMode = isScrollDisplayMode(settings.rhythmRenderMode);
+	const direction: Exclude<ScrollDirection, 'none'> =
+		settings.scrollDirection === 'none' ? 'down' : settings.scrollDirection;
 
 	return (
 		<Stack gap='4'>
 			<SegmentedControl
-				ariaLabel='Rhythm Render Mode'
+				ariaLabel='Display Mode'
 				options={RENDER_MODE_OPTIONS}
 				value={settings.rhythmRenderMode}
 				stackBelowSm
 				onChange={(value) => {
-					set('rhythmRenderMode', value);
+					if (value === 'scroll') {
+						updateSettings({
+							rhythmRenderMode: 'scroll',
+							scrollDirection:
+								settings.scrollDirection === 'none'
+									? 'down'
+									: settings.scrollDirection,
+						});
+						return;
+					}
+					updateSettings({
+						rhythmRenderMode: value,
+						scrollDirection: 'none',
+					});
 					if (value === 'notation') {
 						void import('@/lib/notation').then((module) =>
 							module.loadMusiSyncFont(),
@@ -24,9 +43,12 @@ export function DisplayModeControls() {
 					}
 				}}
 			/>
-			<SettingRow label='Scroll'>
-				<span className='text-sm italic text-muted'>Coming Soon</span>
-			</SettingRow>
+			<When condition={scrollMode}>
+				<ScrollDirectionPad
+					value={direction}
+					onChange={(next) => set('scrollDirection', next)}
+				/>
+			</When>
 		</Stack>
 	);
 }

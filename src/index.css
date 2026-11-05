@@ -870,11 +870,21 @@
 	padding-inline: 0.75rem;
 }
 
-.scroll-left,
-.scroll-right,
-.scroll-up,
-.scroll-down {
-	transition: transform 0.5s ease;
+.ScrollHighwayViewport {
+	isolation: isolate;
+}
+
+.ScrollHighwayJudgment {
+	box-shadow: 0 0 0 1px
+		color-mix(in oklab, var(--color-secondary) 35%, transparent);
+}
+
+.ScrollHighwayNoteSlot {
+	transition: none;
+}
+
+.ScrollHighwayTrack {
+	transition: none;
 }
 
 .PlayModeIcon__glyph {

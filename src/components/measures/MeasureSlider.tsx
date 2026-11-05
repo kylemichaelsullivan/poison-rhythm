@@ -2,11 +2,16 @@ import { REST_MEASURE } from '@/types';
 import { CurrentMeasureDisplay } from './CurrentMeasureDisplay';
 import { MeasureCarouselChrome } from './MeasureCarouselChrome';
 import { NextMeasurePreview } from './NextMeasurePreview';
+import { ScrollHighway } from './ScrollHighway';
+import type { ScrollDirection } from '@/lib/settings-schema';
 import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
 import type { MeasurePlaybackPhase } from './CurrentMeasureDisplay';
 import type { MeasureDisplayOptions } from './measure-display-options';
 
 type MeasureSliderProps = {
+	measures: RhythmMeasure[];
+	/** Poison index for Scroll highway lookahead padding. */
+	poisonIndex?: number;
 	displayMeasure: RhythmMeasure;
 	displayRich?: RichRhythmMeasure;
 	nextDisplayMeasure: RhythmMeasure | null;
@@ -17,6 +22,8 @@ type MeasureSliderProps = {
 	isCountingIn: boolean;
 	isMeasuresRunning: boolean;
 	display: MeasureDisplayOptions;
+	scrollMode: boolean;
+	scrollDirection: Exclude<ScrollDirection, 'none'>;
 };
 
 function resolvePlaybackPhase({
@@ -45,12 +52,17 @@ function resolvePlaybackLabel({
 	demoBeforePlay: boolean;
 	isDemoPass: boolean;
 }): string {
-	if (isCountingIn) return 'Counting In';
-	if (demoBeforePlay) return isDemoPass ? 'Listening' : 'Playing';
+	if (demoBeforePlay) {
+		// Count-in leads into the demo pass; keep Listening until the student pass.
+		if (isCountingIn || isDemoPass) return 'Listening';
+		return 'Playing';
+	}
 	return 'Current Measure';
 }
 
 export function MeasureSlider({
+	measures,
+	poisonIndex = -1,
 	displayMeasure,
 	displayRich,
 	nextDisplayMeasure,
@@ -61,6 +73,8 @@ export function MeasureSlider({
 	isCountingIn,
 	isMeasuresRunning,
 	display,
+	scrollMode,
+	scrollDirection,
 }: MeasureSliderProps) {
 	const phase = resolvePlaybackPhase({
 		isCountingIn,
@@ -68,6 +82,27 @@ export function MeasureSlider({
 		demoBeforePlay,
 		isDemoPass,
 	});
+	const label = resolvePlaybackLabel({
+		isCountingIn,
+		demoBeforePlay,
+		isDemoPass,
+	});
+
+	if (scrollMode) {
+		return (
+			<MeasureCarouselChrome live scroll={{ direction: scrollDirection }}>
+				<ScrollHighway
+					measures={measures}
+					poisonIndex={poisonIndex}
+					direction={scrollDirection}
+					playbackActive={isMeasuresRunning}
+					countingIn={isCountingIn}
+					label={label}
+					labelVisible={demoBeforePlay}
+				/>
+			</MeasureCarouselChrome>
+		);
+	}
 
 	return (
 		<MeasureCarouselChrome
@@ -87,11 +122,7 @@ export function MeasureSlider({
 				richMeasure={displayRich}
 				playback
 				phase={phase}
-				label={resolvePlaybackLabel({
-					isCountingIn,
-					demoBeforePlay,
-					isDemoPass,
-				})}
+				label={label}
 				display={display}
 			/>
 		</MeasureCarouselChrome>

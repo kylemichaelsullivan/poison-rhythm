@@ -21,6 +21,11 @@ type CarouselNavButtonsProps = {
 	onReuse?: () => void;
 	/** Last-measure New (same as the + control). */
 	onNew?: () => void;
+	/**
+	 * Side gutters (prev/next, first-measure Play, last-measure menu).
+	 * Off in Scroll — the highway shows the whole round.
+	 */
+	showSideNav?: boolean;
 };
 
 /**
@@ -30,7 +35,7 @@ type CarouselNavButtonsProps = {
  * is unchanged. Below `--breakpoint-gutter` (no lateral gutter), they
  * drop under the section with `sideGutterCollapsedReserveClassName` so
  * they clear PlayControls. First measure: delayed Play. Last measure:
- * New / Reuse / Play.
+ * New / Reuse / Play. Scroll mode omits the gutters.
  */
 export function CarouselNavButtons({
 	children,
@@ -42,6 +47,7 @@ export function CarouselNavButtons({
 	isPlaying = false,
 	onReuse,
 	onNew,
+	showSideNav = true,
 }: CarouselNavButtonsProps) {
 	const showStartPlay = !canGoPrev && onStartPlay != null;
 	const showEndMenu = !canGoNext && onReuse != null && onNew != null;
@@ -50,43 +56,47 @@ export function CarouselNavButtons({
 		<div
 			className={clsx(
 				'CarouselNavButtons relative w-full',
-				sideGutterCollapsedReserveClassName,
+				showSideNav && sideGutterCollapsedReserveClassName,
 			)}
 		>
 			{children}
-			<div
-				className={sideGutterControlClassName('start', {
-					collapseBelowGutter: true,
-				})}
-			>
-				{showStartPlay ? (
-					<CarouselStartPlayButton
-						onStart={onStartPlay}
-						isPlaying={isPlaying}
-					/>
-				) : (
-					<CarouselNavButton
-						direction='prev'
-						onClick={onPrev}
-						disabled={!canGoPrev}
-					/>
-				)}
-			</div>
-			<div
-				className={sideGutterControlClassName('end', {
-					collapseBelowGutter: true,
-				})}
-			>
-				{showEndMenu ? (
-					<CarouselEndMenu onReuse={onReuse} onNew={onNew} />
-				) : (
-					<CarouselNavButton
-						direction='next'
-						onClick={onNext}
-						disabled={!canGoNext}
-					/>
-				)}
-			</div>
+			{showSideNav ? (
+				<>
+					<div
+						className={sideGutterControlClassName('start', {
+							collapseBelowGutter: true,
+						})}
+					>
+						{showStartPlay ? (
+							<CarouselStartPlayButton
+								onStart={onStartPlay}
+								isPlaying={isPlaying}
+							/>
+						) : (
+							<CarouselNavButton
+								direction='prev'
+								onClick={onPrev}
+								disabled={!canGoPrev}
+							/>
+						)}
+					</div>
+					<div
+						className={sideGutterControlClassName('end', {
+							collapseBelowGutter: true,
+						})}
+					>
+						{showEndMenu ? (
+							<CarouselEndMenu onReuse={onReuse} onNew={onNew} />
+						) : (
+							<CarouselNavButton
+								direction='next'
+								onClick={onNext}
+								disabled={!canGoNext}
+							/>
+						)}
+					</div>
+				</>
+			) : null}
 		</div>
 	);
 }

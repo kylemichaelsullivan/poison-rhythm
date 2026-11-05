@@ -55,7 +55,7 @@ Phone-up layout (≈360px primary; 320px must not overflow horizontally): safe-a
 |-----------------|------------------------|
 | `IntroModalHost` | `IntroTutorialProvider` + `IntroModal` / `IntroTutorialStep` (quarters `MeasureGrid`) / `IntroSkipToggle` (checked by default); writes `poison-rhythm-intro-seen` when skip is checked on dismiss |
 | `DifficultyControls` | `DifficultyFramedBlock` / `DifficultySettingsBlock`, help + play-mode modals; regen ack via `DifficultyRegenAckHost` |
-| `MeasureSlider` | `MeasureCarouselChrome` (`live` sets `data-testid="measure-slider"`), `NextMeasurePreview`, `useMeasurePlaybackSync` |
+| `MeasureSlider` | `MeasureCarouselChrome` (`live` sets `data-testid="measure-slider"`), `NextMeasurePreview` / `ScrollHighway`, `useMeasurePlaybackSync` |
 | `ShowNotes` | `ShowNotesTrigger`, `ShowNotesSlider`, `useHoverPinPopover` |
 | `VolumeMenu` | `VolumeMenuTrigger`, `VolumeMenuPanel`, `useHoverPinPopover`; Metronome / Playback / Preview mutes; click speaker while open mutes all, click again restores the last mix or unmutes all |
 | `PoisonSection` | `PoisonSectionHeader`, `PoisonMeasureContent`, `PoisonMeasureFrame` / `HiddenPoisonOverlay` (badge opens Body-owned `DisplayModeModal`) |
@@ -125,7 +125,7 @@ Defined in `src/lib/settings-schema.ts`, persisted as `poison-rhythm-settings-v1
 
 | Category | Fields |
 |----------|--------|
-| General | `players`, `feedbackMode`; `scrollDirection` / `scrollSpeed` (schema + helpers retained; **not wired** in UI — Display Mode shows Coming Soon) |
+| General | `players`, `feedbackMode`; `rhythmRenderMode` (`grid` \| `notation` \| `scroll`); `scrollDirection` when mode is Scroll; `scrollSpeed` (schema retained) |
 | Practice | `showNextMeasure`, `demoBeforePlay` |
 | Rhythm | `accents`, `sticking`, `phraseLength` (Coming Soon in Settings); `rests` (unused; always off) |
 | Poison | `poisonMode` (Eye toggle on Poison section + Settings → Mode → Practice) |
@@ -217,8 +217,8 @@ Playback follow: `useSubdivisionProgress` + `subdivisionStepToCell` + `buildNota
 | `count-in-schedule.ts` | `planCountIn` helper over the playback clock |
 | `measure-playback.ts` | Measure-level step indexing for carousel sync |
 | `playback-state.ts` | Count-in / demo / student pass gating for cell highlight |
-| `scroll-animation.ts` | Scroll-mode animation helpers (dormant; Coming Soon in Display Mode — keep for eventual highway mode) |
-| `MetronomeProvider` | Schedules clicks/hits on the audio clock; UI updates via delayed timeouts; **Escape** stops playback (keydown; ignored in inputs/dialogs) |
+| `scroll-animation.ts` | Scroll highway math (`highwayAudioProgress`, lane insets, `padMeasuresForHighwayLookahead`); judgment line is AudioContext-locked |
+| `MetronomeProvider` | Schedules clicks/hits on the audio clock; exposes `highwayClock` for Scroll; UI updates via delayed timeouts; **Escape** stops playback (keydown; ignored in inputs/dialogs) |
 
 ## TypeScript imports
 

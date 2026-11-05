@@ -17,12 +17,15 @@ export function MeasureHeightReserve({
 	richMeasure,
 	display,
 }: MeasureHeightReserveProps) {
+	const renderMode =
+		display.renderMode === 'scroll' ? 'grid' : display.renderMode;
+
 	return (
 		<div className='MeasureHeightReserve w-full'>
 			<MeasureGrid
 				measure={measure}
 				richMeasure={richMeasure}
-				renderMode={display.renderMode}
+				renderMode={renderMode}
 				display={display}
 			/>
 		</div>

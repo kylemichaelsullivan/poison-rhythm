@@ -162,7 +162,7 @@ The rhythm engine (`src/lib/rhythm/`) accepts both `difficulty` and `subdivision
 
 | Area | Controls |
 |------|----------|
-| Mode | Display (grid / notation; Scroll Coming Soon), play mode + Endless, complexity (difficulty, subdivision), practice (Show Poison?, show next, preview pass) |
+| Mode | Display (grid / notation / scroll highway), play mode + Endless, complexity (difficulty, subdivision), practice (Show Poison?, show next, preview pass) |
 | Sound | Visual/audio feedback, Metronome / Playback / Preview mute, count-in, tempo |
 | Colors | Dominant / secondary Crayola accents + Light/Dark theme toggles on the contrast meter; see [`documentation/COLORS.md`](documentation/COLORS.md) and [`documentation/A11Y.md`](documentation/A11Y.md) |
 | Main-page shortcuts | Poison Display Mode badge, header ShowNotes, Measures Volume menu, footer metronome |

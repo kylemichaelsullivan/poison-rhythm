@@ -10,7 +10,7 @@ import { useMeasureDisplayOptions } from '@/hooks/useMeasureDisplayOptions';
 import { useMeasurePlaybackSync } from '@/hooks/useMeasurePlaybackSync';
 import { isBucketTrainerMode } from '@/lib/settings-schema';
 import { REST_MEASURE } from '@/types';
-import { CurrentMeasureDisplay, MeasureSlider } from '.';
+import { CurrentMeasureDisplay, MeasureSlider, ScrollHighway } from '.';
 import { MeasureCarouselChrome } from './MeasureCarouselChrome';
 import { MeasureHeightReserve } from './MeasureHeightReserve';
 import { MeasuresSectionHeaderActions } from './MeasuresSectionHeaderActions';
@@ -27,7 +27,7 @@ export function MeasuresSection({
 	onReusePoison,
 	onOpenDisplayMode,
 }: MeasuresSectionProps) {
-	const { measures } = useGame();
+	const { measures, poisonIndex } = useGame();
 	const { settings } = useSettings();
 	const display = useMeasureDisplayOptions();
 	const showNext = settings.showNextMeasure;
@@ -44,6 +44,8 @@ export function MeasuresSection({
 		isMeasuresRunning,
 		measuresLength,
 		setCurrentIndex,
+		scrollMode,
+		scrollDirection,
 	} = useMeasurePlaybackSync();
 	const { toggleMeasures } = useMetronome();
 
@@ -53,6 +55,30 @@ export function MeasuresSection({
 	const startPlay = useCallback(() => {
 		toggleMeasures();
 	}, [toggleMeasures]);
+
+	const spacer = scrollMode ? (
+		<MeasureCarouselChrome scroll={{ direction: scrollDirection }}>
+			<ScrollHighway
+				measures={[REST_MEASURE]}
+				direction={scrollDirection}
+				playbackActive={false}
+				label={demoBeforePlay ? 'Playing' : undefined}
+				labelVisible={demoBeforePlay}
+			/>
+		</MeasureCarouselChrome>
+	) : (
+		<MeasureCarouselChrome
+			nextSlot={
+				showNext ? (
+					<div className='NextMeasurePreview w-full opacity-35'>
+						<MeasureHeightReserve measure={REST_MEASURE} display={display} />
+					</div>
+				) : undefined
+			}
+		>
+			<CurrentMeasureDisplay measure={REST_MEASURE} display={display} />
+		</MeasureCarouselChrome>
+	);
 
 	return (
 		<CarouselNavButtons
@@ -66,10 +92,11 @@ export function MeasuresSection({
 			isPlaying={isMeasuresRunning}
 			onReuse={atLast ? onReusePoison : undefined}
 			onNew={atLast ? onNewPoison : undefined}
+			showSideNav={!scrollMode}
 		>
 			<Section
 				title='Measures'
-				headerLeading={<NextMeasureToggle />}
+				headerLeading={scrollMode ? undefined : <NextMeasureToggle />}
 				headerAction={
 					<MeasuresSectionHeaderActions
 						showDisplayModeTrigger={showDisplayModeTrigger}
@@ -78,28 +105,13 @@ export function MeasuresSection({
 					/>
 				}
 			>
-				<StableContentFrame
-					spacer={
-						<MeasureCarouselChrome
-							nextSlot={
-								showNext ? (
-									<div className='NextMeasurePreview w-full opacity-35'>
-										<MeasureHeightReserve
-											measure={REST_MEASURE}
-											display={display}
-										/>
-									</div>
-								) : undefined
-							}
-						>
-							<CurrentMeasureDisplay measure={REST_MEASURE} display={display} />
-						</MeasureCarouselChrome>
-					}
-				>
+				<StableContentFrame spacer={spacer}>
 					{!hasMeasures || !displayMeasure ? (
 						<EmptyStartPrompt onClick={onNewPoison} />
 					) : (
 						<MeasureSlider
+							measures={measures}
+							poisonIndex={poisonIndex}
 							displayMeasure={displayMeasure}
 							displayRich={displayRich}
 							nextDisplayMeasure={nextDisplayMeasure}
@@ -110,6 +122,8 @@ export function MeasuresSection({
 							isCountingIn={isCountingIn}
 							isMeasuresRunning={isMeasuresRunning}
 							display={display}
+							scrollMode={scrollMode}
+							scrollDirection={scrollDirection}
 						/>
 					)}
 				</StableContentFrame>
