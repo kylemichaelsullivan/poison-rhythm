@@ -95,7 +95,7 @@ src/components/
 - **Purpose**: Poison rhythm and New/Reuse controls
 - **Props**: `poisonRhythm`, `onNewPoison`, `onReusePoison`, `onOpenDisplayMode`, optional soft-disable focus helpers
 - **Header**: `PoisonSectionHeader` (`slot: 'leading' | 'action'`) → visibility toggle / display trigger
-- **Display Mode**: Grid / Notation / Scroll on the badge; modal owned by `Body` (not this section). Scroll is Guitar Hero–style highway (`ScrollHighway`); direction in `DisplayModeControls`
+- **Display Mode**: Grid / Notation / Scroll on the badge; modal owned by `Body` (not this section). Scroll is Guitar Hero–style highway (`ScrollHighway`); direction in `DisplayModeControls`; `CarouselNavButtons` uses `showSideNav={false}` in Scroll
 - **Uses**: `PoisonMeasureContent` / `PoisonMeasureFrame` / `HiddenPoisonOverlay`, Section, MeasureGrid, ControlButtons
 
 ### MeasuresSection / MeasureSlider

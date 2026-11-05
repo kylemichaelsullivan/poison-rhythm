@@ -92,6 +92,7 @@ export function MeasuresSection({
 			isPlaying={isMeasuresRunning}
 			onReuse={atLast ? onReusePoison : undefined}
 			onNew={atLast ? onNewPoison : undefined}
+			showSideNav={!scrollMode}
 		>
 			<Section
 				title='Measures'

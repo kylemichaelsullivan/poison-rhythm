@@ -52,8 +52,11 @@ function resolvePlaybackLabel({
 	demoBeforePlay: boolean;
 	isDemoPass: boolean;
 }): string {
-	if (isCountingIn) return 'Counting In';
-	if (demoBeforePlay) return isDemoPass ? 'Listening' : 'Playing';
+	if (demoBeforePlay) {
+		// Count-in leads into the demo pass; keep Listening until the student pass.
+		if (isCountingIn || isDemoPass) return 'Listening';
+		return 'Playing';
+	}
 	return 'Current Measure';
 }
 
@@ -95,7 +98,7 @@ export function MeasureSlider({
 					playbackActive={isMeasuresRunning}
 					countingIn={isCountingIn}
 					label={label}
-					labelVisible={demoBeforePlay || isCountingIn}
+					labelVisible={demoBeforePlay}
 				/>
 			</MeasureCarouselChrome>
 		);
