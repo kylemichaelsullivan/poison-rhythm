@@ -1,4 +1,3 @@
-import { COUNT_IN_BEATS } from '@/lib/metronome-defaults';
 import { subdivisionStepCount } from '@/lib/subdivision-playback';
 import { MEASURE_LENGTH } from '@/types';
 import type { SubdivisionLevel } from '@/lib/preference-schemas';
@@ -89,22 +88,6 @@ export function measureProgressFraction(
 	);
 }
 
-/**
- * Count-in maps one full measure of approach onto the highway:
- * beat 1 @ fraction 0 → −1; end of last beat → 0 (first playback attack).
- */
-export function countInHighwayProgress(
-	countInBeat: number | null,
-	beatFraction = 0,
-	beatCount = COUNT_IN_BEATS,
-): number {
-	if (beatCount <= 0) return 0;
-	const beatIndex = countInBeat === null ? 0 : Math.max(countInBeat - 1, 0);
-	const clampedFraction =
-		countInBeat === null ? 0 : Math.min(Math.max(beatFraction, 0), 1);
-	return -1 + (beatIndex + clampedFraction) / beatCount;
-}
-
 /** Global highway progress in measure units from the start of the round. */
 export function highwayProgress(
 	measureIndex: number,
@@ -116,6 +99,65 @@ export function highwayProgress(
 		Math.max(measureIndex, 0) +
 		measureProgressFraction(subdivisionIndex, level, beatFraction)
 	);
+}
+
+/**
+ * One measure of highway approach before the first playback attack (count-in).
+ * Progress runs ≈ −1 → 0 over the count-in bar, then continues through the round.
+ */
+export const HIGHWAY_COUNT_IN_LEAD_MEASURES = 1;
+
+/** Resting playhead before a session so the lead-in measure is already on screen. */
+export const HIGHWAY_IDLE_PROGRESS = -HIGHWAY_COUNT_IN_LEAD_MEASURES;
+
+/**
+ * Highway progress from the AudioContext timeline used by `scheduleHit`.
+ * `heldSec` is audio time spent paused between bars (lookahead hold).
+ * Before `originAt` (count-in) progress is negative — one measure of approach space.
+ */
+export function highwayAudioProgress(
+	audioNow: number,
+	originAt: number,
+	measureSec: number,
+	heldSec = 0,
+): number {
+	if (measureSec <= 0) return HIGHWAY_IDLE_PROGRESS;
+	return (audioNow - originAt - heldSec) / measureSec;
+}
+
+/** Seconds of musical time for one 4/4 measure at the given tempo. */
+export function highwayMeasureSec(tempo: number): number {
+	return (60 / Math.max(tempo, 1)) * 4;
+}
+
+/**
+ * Effective “now” while the lookahead scheduler is held after a bar.
+ * `holdFreezeAt` is the last-step audio time: keep advancing until then,
+ * then freeze so a look-ahead pause cannot jump the highway past the hit.
+ */
+export function highwayAudioNowWhileHeld(
+	audioNow: number,
+	holdFreezeAt: number | null,
+): number {
+	if (holdFreezeAt === null) return audioNow;
+	return Math.min(audioNow, holdFreezeAt);
+}
+
+/** Audio time of the next bar’s first step after a completed last step. */
+export function nextHighwayOriginAfterPassRestart(
+	lastStepAudioTime: number,
+	stepSec: number,
+): number {
+	return lastStepAudioTime + Math.max(stepSec, 0);
+}
+
+/** Fold a completed lookahead hold into the accumulated held duration. */
+export function accumulateHighwayHold(
+	heldSec: number,
+	holdStartedAt: number,
+	resumeAudioTime: number,
+): number {
+	return heldSec + Math.max(0, resumeAudioTime - holdStartedAt);
 }
 
 /**

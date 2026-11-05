@@ -75,7 +75,7 @@ From the badge on the Poison Rhythm section, or **Settings → Mode → Display*
 |------|----------------|
 | **Grid** | Clearest for counting cells and subdivisions; great for beginners. |
 | **Notation** | MusiSync note/rest glyphs; better once students can map duration shapes. |
-| **Scroll** | Guitar Hero–style highway; rounded hit bars approach a judgment line. Pick travel direction with a single-press D-pad (Up / Down / Left / Right). Extra decoy patterns keep the highway full past the poison so students can’t spot it by empty space; Classic still stops playback on the poison. |
+| **Scroll** | Guitar Hero–style highway; rounded hit bars approach a judgment line and sound when they reach it (locked to the audio clock). Pick travel direction with a single-press D-pad (Up / Down / Left / Right). Count-in scrolls immediately across one lead-in measure so the first hit arrives with the downbeat. Extra decoy patterns keep the highway full past the poison so students can’t spot it by empty space; Classic still stops playback on the poison. |
 
 ## Suggested lesson arcs
 

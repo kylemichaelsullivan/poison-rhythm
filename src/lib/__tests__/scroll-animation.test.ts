@@ -1,12 +1,18 @@
 import { describe, expect, test } from 'bun:test';
 import {
+	accumulateHighwayHold,
 	collectHighwayNotes,
-	countInHighwayProgress,
+	HIGHWAY_COUNT_IN_LEAD_MEASURES,
+	HIGHWAY_IDLE_PROGRESS,
 	HIGHWAY_LOOKAHEAD_MEASURES,
+	highwayAudioNowWhileHeld,
+	highwayAudioProgress,
+	highwayMeasureSec,
 	highwayNoteTrackInset,
 	highwayProgress,
 	highwayTrackTransform,
 	measureProgressFraction,
+	nextHighwayOriginAfterPassRestart,
 	padMeasuresForHighwayLookahead,
 } from '@/lib/scroll-animation';
 import { MEASURE_LENGTH, REST_MEASURE } from '@/types';
@@ -44,22 +50,6 @@ describe('collectHighwayNotes', () => {
 	});
 });
 
-describe('countInHighwayProgress', () => {
-	test('starts one measure before the first attack', () => {
-		expect(countInHighwayProgress(null, 0)).toBe(-1);
-		expect(countInHighwayProgress(1, 0)).toBe(-1);
-	});
-
-	test('reaches 0 at the end of the last count-in beat', () => {
-		expect(countInHighwayProgress(4, 1)).toBe(0);
-	});
-
-	test('glides through the four count-in quarters', () => {
-		expect(countInHighwayProgress(2, 0)).toBe(-0.75);
-		expect(countInHighwayProgress(3, 0.5)).toBe(-0.375);
-	});
-});
-
 describe('measureProgressFraction', () => {
 	test('returns 0 at the first sixteenth', () => {
 		expect(measureProgressFraction(0, 'sixteenths', 0)).toBe(0);
@@ -74,6 +64,68 @@ describe('measureProgressFraction', () => {
 describe('highwayProgress', () => {
 	test('adds measure index to in-bar fraction', () => {
 		expect(highwayProgress(2, 8, 'sixteenths', 0)).toBe(2.5);
+	});
+});
+
+describe('highwayAudioProgress', () => {
+	test('is 0 at the playback origin', () => {
+		expect(highwayAudioProgress(10, 10, 2, 0)).toBe(0);
+	});
+
+	test('advances in measure units from the audio clock', () => {
+		expect(highwayAudioProgress(11, 10, 2, 0)).toBe(0.5);
+		expect(highwayAudioProgress(12, 10, 2, 0)).toBe(1);
+	});
+
+	test('subtracts held audio gaps so bar pauses do not advance the highway', () => {
+		expect(highwayAudioProgress(12.5, 10, 2, 0.5)).toBe(1);
+	});
+
+	test('maps one lead-in measure of count-in before the origin', () => {
+		expect(HIGHWAY_COUNT_IN_LEAD_MEASURES).toBe(1);
+		expect(HIGHWAY_IDLE_PROGRESS).toBe(-1);
+		expect(highwayAudioProgress(8, 10, 2, 0)).toBe(-1);
+		expect(highwayAudioProgress(9, 10, 2, 0)).toBe(-0.5);
+	});
+
+	test('returns idle lead-in when measureSec is invalid', () => {
+		expect(highwayAudioProgress(12, 10, 0, 0)).toBe(HIGHWAY_IDLE_PROGRESS);
+		expect(highwayAudioProgress(12, 10, -1, 0)).toBe(HIGHWAY_IDLE_PROGRESS);
+	});
+});
+
+describe('highwayMeasureSec', () => {
+	test('is four quarter notes at the given tempo', () => {
+		expect(highwayMeasureSec(120)).toBe(2);
+		expect(highwayMeasureSec(60)).toBe(4);
+	});
+});
+
+describe('highwayAudioNowWhileHeld', () => {
+	test('passes through live audio time when not held', () => {
+		expect(highwayAudioNowWhileHeld(5.5, null)).toBe(5.5);
+	});
+
+	test('keeps advancing until the freeze point then clamps', () => {
+		expect(highwayAudioNowWhileHeld(6.0, 6.25)).toBe(6.0);
+		expect(highwayAudioNowWhileHeld(6.25, 6.25)).toBe(6.25);
+		expect(highwayAudioNowWhileHeld(8, 6.25)).toBe(6.25);
+	});
+});
+
+describe('nextHighwayOriginAfterPassRestart', () => {
+	test('maps the student-pass downbeat after a demo last step', () => {
+		expect(nextHighwayOriginAfterPassRestart(4.0, 0.5)).toBe(4.5);
+	});
+});
+
+describe('accumulateHighwayHold', () => {
+	test('adds the held gap so progress stays continuous across a bar pause', () => {
+		expect(accumulateHighwayHold(0.25, 10, 10.4)).toBeCloseTo(0.65);
+	});
+
+	test('ignores inverted resume times', () => {
+		expect(accumulateHighwayHold(1, 10, 9)).toBe(1);
 	});
 });
 

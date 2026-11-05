@@ -1,15 +1,11 @@
 import { useEffect, useRef } from 'react';
+import { useMetronome, useMetronomeTempo } from '@/contexts';
 import {
-	useGame,
-	useMetronome,
-	useMetronomeTempo,
-	useSubdivision,
-} from '@/contexts';
-import { COUNT_IN_BEATS } from '@/lib/metronome-defaults';
-import {
-	countInHighwayProgress,
+	HIGHWAY_IDLE_PROGRESS,
 	HIGHWAY_PX_PER_MEASURE,
-	highwayProgress,
+	highwayAudioNowWhileHeld,
+	highwayAudioProgress,
+	highwayMeasureSec,
 	highwayTrackTransform,
 } from '@/lib/scroll-animation';
 import type { RefObject } from 'react';
@@ -21,110 +17,66 @@ type TrackRefs = {
 };
 
 /**
- * Drives the highway track transform from a continuous tempo clock.
- * Writes to the DOM in rAF (no per-frame React state) so gems do not flash.
- * Resyncs stay monotonic — never jump backward when UI events arrive late.
+ * Drives the highway track transform from the AudioContext timeline used by
+ * scheduleHit, so gems cross the judgment line when hits sound.
+ * Count-in scrolls immediately across one lead-in measure (−1 → 0); idle rests
+ * at −1 so that space is already visible. Writes to the DOM in rAF.
  */
 export function useScrollHighwayTrack(
 	{ trackRef, rootRef }: TrackRefs,
 	active: boolean,
 	direction: Exclude<ScrollDirection, 'none'>,
 ): void {
-	const { currentIndex } = useGame();
-	const {
-		subdivisionIndex,
-		isCountingIn,
-		countInBeat,
-		isMeasuresRunning,
-		measureCycle,
-	} = useMetronome();
+	const { isMeasuresRunning, highwayClock } = useMetronome();
 	const { tempo } = useMetronomeTempo();
-	const { subdivisionLevel } = useSubdivision();
 
-	const animating = active && isMeasuresRunning;
-	const measureMs = (60 / Math.max(tempo, 1)) * 1000 * 4;
+	const scrolling = active && isMeasuresRunning;
+	const measureSec = highwayMeasureSec(tempo);
 
-	const anchorProgressRef = useRef(0);
-	const anchorTimeRef = useRef(performance.now());
-	const measureIndexRef = useRef(currentIndex);
-	const prevSubRef = useRef(subdivisionIndex);
 	const directionRef = useRef(direction);
-	const measureMsRef = useRef(measureMs);
-	const animatingRef = useRef(animating);
+	const measureSecRef = useRef(measureSec);
+	const scrollingRef = useRef(scrolling);
+	const highwayClockRef = useRef(highwayClock);
 
 	directionRef.current = direction;
-	measureMsRef.current = measureMs;
-	animatingRef.current = animating;
+	measureSecRef.current = measureSec;
+	scrollingRef.current = scrolling;
+	highwayClockRef.current = highwayClock;
 
 	useEffect(() => {
-		if (isCountingIn) {
-			measureIndexRef.current = currentIndex;
-			prevSubRef.current = subdivisionIndex;
-			return;
-		}
-		if (subdivisionIndex < prevSubRef.current && currentIndex < measureCycle) {
-			measureIndexRef.current = measureCycle;
-		} else {
-			measureIndexRef.current = currentIndex;
-		}
-		prevSubRef.current = subdivisionIndex;
-	}, [subdivisionIndex, currentIndex, measureCycle, isCountingIn]);
-
-	// Resync to the audible step; keep progress monotonic.
-	// biome-ignore lint/correctness/useExhaustiveDependencies: beat identity is the resync signal
-	useEffect(() => {
-		const target = isCountingIn
-			? countInHighwayProgress(countInBeat, 0, COUNT_IN_BEATS)
-			: highwayProgress(
-					measureIndexRef.current,
-					subdivisionIndex,
-					subdivisionLevel,
-					0,
-				);
-		const now = performance.now();
-		const predicted =
-			anchorProgressRef.current +
-			(now - anchorTimeRef.current) / measureMsRef.current;
-		const next = animating ? Math.max(predicted, target) : target;
-		anchorProgressRef.current = next;
-		anchorTimeRef.current = now;
-		applyFrame(trackRef, rootRef, directionRef.current, next);
-	}, [
-		animating,
-		isCountingIn,
-		countInBeat,
-		subdivisionIndex,
-		currentIndex,
-		measureCycle,
-		subdivisionLevel,
-		trackRef,
-		rootRef,
-	]);
-
-	useEffect(() => {
-		if (!animating) {
-			applyFrame(
-				trackRef,
-				rootRef,
-				directionRef.current,
-				anchorProgressRef.current,
+		const sampleProgress = (): number => {
+			if (!scrollingRef.current) return HIGHWAY_IDLE_PROGRESS;
+			const clock = highwayClockRef.current;
+			const originAt = clock.getOriginAt();
+			if (originAt === null) return HIGHWAY_IDLE_PROGRESS;
+			const audioNow = highwayAudioNowWhileHeld(
+				clock.getAudioNow(),
+				clock.getHoldStartedAt(),
 			);
+			return highwayAudioProgress(
+				audioNow,
+				originAt,
+				measureSecRef.current,
+				clock.getHeldSec(),
+			);
+		};
+
+		applyFrame(trackRef, rootRef, directionRef.current, sampleProgress());
+
+		if (!scrolling) {
 			return;
 		}
 
 		let rafId = 0;
 		const tick = () => {
-			if (!animatingRef.current) return;
-			const elapsed = performance.now() - anchorTimeRef.current;
-			const progress =
-				anchorProgressRef.current + elapsed / measureMsRef.current;
-			applyFrame(trackRef, rootRef, directionRef.current, progress);
+			if (!scrollingRef.current) return;
+			applyFrame(trackRef, rootRef, directionRef.current, sampleProgress());
 			rafId = requestAnimationFrame(tick);
 		};
 
 		rafId = requestAnimationFrame(tick);
 		return () => cancelAnimationFrame(rafId);
-	}, [animating, trackRef, rootRef]);
+	}, [scrolling, trackRef, rootRef]);
 }
 
 function applyFrame(
