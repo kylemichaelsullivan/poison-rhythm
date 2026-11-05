@@ -10,7 +10,7 @@ import {
 } from '@/lib/scroll-animation';
 import {
 	SCROLL_HIGHWAY_GEM_ALONG_PX,
-	SCROLL_HIGHWAY_GEM_CROSS_PX,
+	SCROLL_HIGHWAY_HORIZONTAL_VIEWPORT_PX,
 	ScrollHighwayNote,
 } from './ScrollHighwayNote';
 import type { ScrollDirection } from '@/lib/settings-schema';
@@ -95,8 +95,8 @@ export function ScrollHighway({
 					vertical
 						? { height: `${viewportSpan}px` }
 						: {
-								height: `${SCROLL_HIGHWAY_GEM_CROSS_PX * 3}px`,
-								minHeight: `${SCROLL_HIGHWAY_GEM_CROSS_PX * 3}px`,
+								height: `${SCROLL_HIGHWAY_HORIZONTAL_VIEWPORT_PX}px`,
+								minHeight: `${SCROLL_HIGHWAY_HORIZONTAL_VIEWPORT_PX}px`,
 							}
 				}
 			>
@@ -140,8 +140,9 @@ export function ScrollHighway({
 							<div
 								className={clsx(
 									'ScrollHighwayNoteSlot absolute',
-									vertical && 'left-1/2 -translate-x-1/2',
-									!vertical && 'top-1/2 -translate-y-1/2',
+									// 80% of the viewport cross-track; track is the % containing block.
+									vertical && 'left-[10%] w-[80%]',
+									!vertical && 'top-[10%] h-[80%]',
 								)}
 								style={inset}
 								data-note-id={note.id}

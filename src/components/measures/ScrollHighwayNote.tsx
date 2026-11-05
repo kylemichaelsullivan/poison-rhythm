@@ -7,14 +7,14 @@ type ScrollHighwayNoteProps = {
 
 /**
  * Capsule hit marker on the scroll highway (rounded bar, not a dot).
- * Cross-track long, travel-axis short — like a Guitar Hero gem lane.
+ * Fills the slot cross-track; short along the travel axis.
  */
 export function ScrollHighwayNote({ vertical }: ScrollHighwayNoteProps) {
 	return (
 		<div
 			className={clsx(
 				'ScrollHighwayNote border-2 border-primary bg-primary shadow-soft',
-				vertical ? 'h-3 w-7 rounded-full' : 'h-7 w-3 rounded-full',
+				vertical ? 'h-2 w-full rounded-full' : 'h-full w-2 rounded-full',
 			)}
 			title='Hit'
 			aria-hidden='true'
@@ -22,8 +22,11 @@ export function ScrollHighwayNote({ vertical }: ScrollHighwayNoteProps) {
 	);
 }
 
-/** Size along the travel axis (for centering insets). */
-export const SCROLL_HIGHWAY_GEM_ALONG_PX = 12;
+/** Size along the travel axis (for centering insets); matches `h-2` / `w-2`. */
+export const SCROLL_HIGHWAY_GEM_ALONG_PX = 8;
 
-/** Size across the travel axis (bar length). */
-export const SCROLL_HIGHWAY_GEM_CROSS_PX = 28;
+/** Fraction of the viewport cross-track the gem fills. */
+export const SCROLL_HIGHWAY_GEM_CROSS_FRACTION = 0.8;
+
+/** Fixed height of the horizontal highway viewport (gems use 80% of this). */
+export const SCROLL_HIGHWAY_HORIZONTAL_VIEWPORT_PX = 72;
