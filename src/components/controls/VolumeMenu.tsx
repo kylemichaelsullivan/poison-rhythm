@@ -1,8 +1,9 @@
 import clsx from 'clsx';
 import { useState } from 'react';
 import { ClickOutside } from '@/components/layout/ClickOutside';
-import { useSoundPreferences } from '@/contexts';
+import { useSettings, useSoundPreferences } from '@/contexts';
 import { useHoverPinPopover } from '@/hooks/useHoverPinPopover';
+import { isScrollDisplayMode } from '@/lib/settings-schema';
 import { VolumeMenuPanel } from './VolumeMenuPanel';
 import {
 	nextVolumeUnmute,
@@ -21,6 +22,8 @@ export function VolumeMenu() {
 		mutePreview,
 		setMutePreview,
 	} = useSoundPreferences();
+	const { settings } = useSettings();
+	const includePreview = !isScrollDisplayMode(settings.rhythmRenderMode);
 	const {
 		open,
 		wrapperRef,
@@ -37,12 +40,15 @@ export function VolumeMenu() {
 		muteMetronome,
 		mutePlayback,
 		mutePreview,
+		includePreview,
 	);
 
 	function applyMutes(next: VolumeChannelMutes) {
 		setMuteMetronome(next.muteMetronome);
 		setMutePlayback(next.mutePlayback);
-		setMutePreview(next.mutePreview);
+		if (includePreview) {
+			setMutePreview(next.mutePreview);
+		}
 	}
 
 	function handleTriggerClick() {
@@ -56,7 +62,7 @@ export function VolumeMenu() {
 			return;
 		}
 		if (open && activeCount === 0) {
-			applyMutes(nextVolumeUnmute(undoSnapshot));
+			applyMutes(nextVolumeUnmute(undoSnapshot, includePreview));
 			setUndoSnapshot(null);
 			return;
 		}
@@ -75,6 +81,7 @@ export function VolumeMenu() {
 				mutePlayback={mutePlayback}
 				mutePreview={mutePreview}
 				undoSnapshot={undoSnapshot}
+				includePreview={includePreview}
 				onMouseEnter={handleHoverOpen}
 				onMouseLeave={handleMouseLeave}
 				onBlur={handleBlur}

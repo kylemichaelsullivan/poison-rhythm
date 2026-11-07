@@ -14,6 +14,7 @@ import {
 	measureProgressFraction,
 	nextHighwayOriginAfterPassRestart,
 	padMeasuresForHighwayLookahead,
+	TRAILING_DECOYS_AFTER_POISON,
 } from '@/lib/scroll-animation';
 import { MEASURE_LENGTH, REST_MEASURE } from '@/types';
 import type { RhythmMeasure } from '@/types';
@@ -21,6 +22,13 @@ import type { RhythmMeasure } from '@/types';
 describe('HIGHWAY_LOOKAHEAD_MEASURES', () => {
 	test('is a fixed window (tempo drives scroll rate)', () => {
 		expect(HIGHWAY_LOOKAHEAD_MEASURES).toBe(3);
+	});
+
+	test('trailing decoys more than fill the visible highway', () => {
+		expect(TRAILING_DECOYS_AFTER_POISON).toBeGreaterThan(
+			HIGHWAY_LOOKAHEAD_MEASURES,
+		);
+		expect(TRAILING_DECOYS_AFTER_POISON).toBe(HIGHWAY_LOOKAHEAD_MEASURES + 2);
 	});
 });
 
@@ -158,21 +166,21 @@ describe('padMeasuresForHighwayLookahead', () => {
 		(_, i) => i === 4,
 	);
 
-	test('pads after poison until a full lookahead window', () => {
+	test('pads after poison until trailing decoys more than fill the highway', () => {
 		const measures = [hit, other, hit];
-		const padded = padMeasuresForHighwayLookahead(measures, 1, 3);
-		expect(padded.length).toBe(1 + 1 + 3);
+		const padded = padMeasuresForHighwayLookahead(measures, 1);
+		expect(padded.length).toBe(1 + 1 + TRAILING_DECOYS_AFTER_POISON);
 		expect(padded.slice(0, 3)).toEqual(measures);
 	});
 
 	test('is a no-op when enough measures already follow poison', () => {
-		const measures = [hit, other, hit, other, hit];
-		expect(padMeasuresForHighwayLookahead(measures, 1, 3)).toBe(measures);
+		const measures = [hit, other, hit, other, hit, other, hit];
+		expect(padMeasuresForHighwayLookahead(measures, 1)).toBe(measures);
 	});
 
 	test('pads past the last measure when poison is off', () => {
 		const measures = [hit, other];
-		const padded = padMeasuresForHighwayLookahead(measures, -1, 3);
-		expect(padded.length).toBe(2 + 3);
+		const padded = padMeasuresForHighwayLookahead(measures, -1);
+		expect(padded.length).toBe(2 + TRAILING_DECOYS_AFTER_POISON);
 	});
 });

@@ -34,10 +34,11 @@ export function volumeActiveCount(
 	muteMetronome: boolean,
 	mutePlayback: boolean,
 	mutePreview: boolean,
+	includePreview = true,
 ): VolumeActiveCount {
 	return (Number(!muteMetronome) +
 		Number(!mutePlayback) +
-		Number(!mutePreview)) as VolumeActiveCount;
+		Number(includePreview && !mutePreview)) as VolumeActiveCount;
 }
 
 function joinChannelNames(names: readonly string[]): string {
@@ -55,19 +56,30 @@ function volumeChannelNames(
 	mutePlayback: boolean,
 	mutePreview: boolean,
 	unmuted: boolean,
+	includePreview: boolean,
 ): string[] {
 	const muted = [muteMetronome, mutePlayback, mutePreview];
-	return VOLUME_CHANNELS.filter((_, index) => muted[index] !== unmuted);
+	return VOLUME_CHANNELS.filter((_, index) => {
+		if (!includePreview && VOLUME_CHANNELS[index] === 'Preview') {
+			return false;
+		}
+		return muted[index] !== unmuted;
+	});
 }
 
 /** Restore the last mix, or unmute every channel when there is nothing to undo. */
 export function nextVolumeUnmute(
 	undo: VolumeChannelMutes | null,
+	includePreview = true,
 ): VolumeChannelMutes {
 	if (
 		undo &&
-		volumeActiveCount(undo.muteMetronome, undo.mutePlayback, undo.mutePreview) >
-			0
+		volumeActiveCount(
+			undo.muteMetronome,
+			undo.mutePlayback,
+			undo.mutePreview,
+			includePreview,
+		) > 0
 	) {
 		return undo;
 	}
@@ -80,38 +92,45 @@ export function volumeMenuTriggerTitle({
 	mutePlayback,
 	mutePreview,
 	undoSnapshot = null,
+	includePreview = true,
 }: {
 	open: boolean;
 	muteMetronome: boolean;
 	mutePlayback: boolean;
 	mutePreview: boolean;
 	undoSnapshot?: VolumeChannelMutes | null;
+	includePreview?: boolean;
 }): string {
 	const active = volumeChannelNames(
 		muteMetronome,
 		mutePlayback,
 		mutePreview,
 		true,
+		includePreview,
 	);
+	const channelCount = includePreview ? 3 : 2;
 
 	if (open && active.length > 0) {
 		return `Click to Mute ${joinChannelNames(active)}`;
 	}
 
 	if (open && active.length === 0) {
-		const next = nextVolumeUnmute(undoSnapshot);
+		const next = nextVolumeUnmute(undoSnapshot, includePreview);
 		return `Click to Unmute ${joinChannelNames(
 			volumeChannelNames(
 				next.muteMetronome,
 				next.mutePlayback,
 				next.mutePreview,
 				true,
+				includePreview,
 			),
 		)}`;
 	}
 
-	if (active.length === 3) {
-		return 'Open Volume Menu — Metronome, Playback and Preview';
+	if (active.length === channelCount) {
+		return includePreview
+			? 'Open Volume Menu — Metronome, Playback and Preview'
+			: 'Open Volume Menu — Metronome and Playback';
 	}
 
 	if (active.length === 0) {
@@ -119,7 +138,13 @@ export function volumeMenuTriggerTitle({
 	}
 
 	return `Open Volume Menu — ${joinChannelNames(
-		volumeChannelNames(muteMetronome, mutePlayback, mutePreview, false),
+		volumeChannelNames(
+			muteMetronome,
+			mutePlayback,
+			mutePreview,
+			false,
+			includePreview,
+		),
 	)} Muted`;
 }
 
@@ -130,6 +155,7 @@ type VolumeMenuTriggerProps = {
 	mutePlayback: boolean;
 	mutePreview: boolean;
 	undoSnapshot?: VolumeChannelMutes | null;
+	includePreview?: boolean;
 	onMouseEnter: () => void;
 	onMouseLeave: () => void;
 	onBlur: (relatedTarget: EventTarget | null) => void;
@@ -144,6 +170,7 @@ export function VolumeMenuTrigger({
 	mutePlayback,
 	mutePreview,
 	undoSnapshot = null,
+	includePreview = true,
 	onMouseEnter,
 	onMouseLeave,
 	onBlur,
@@ -155,6 +182,7 @@ export function VolumeMenuTrigger({
 		mutePlayback,
 		mutePreview,
 		undoSnapshot,
+		includePreview,
 	});
 
 	return (

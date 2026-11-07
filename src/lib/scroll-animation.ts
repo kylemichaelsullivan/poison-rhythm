@@ -7,6 +7,12 @@ import type { RhythmMeasure } from '@/types';
 /** How far ahead (in measures) notes remain visible on the highway. */
 export const HIGHWAY_LOOKAHEAD_MEASURES = 3;
 
+/**
+ * Decoys past poison (generation + display pad). Exceeds the visible highway
+ * so the stream does not end at the viewport edge and tip off the poison.
+ */
+export const TRAILING_DECOYS_AFTER_POISON = HIGHWAY_LOOKAHEAD_MEASURES + 2;
+
 /** Pixels of travel per measure; tempo maps this distance to wall-clock time. */
 export const HIGHWAY_PX_PER_MEASURE = 160;
 
@@ -42,14 +48,14 @@ export function collectHighwayNotes(measures: RhythmMeasure[]): HighwayNote[] {
 }
 
 /**
- * Ensures the highway always shows a full viewport of patterns past the poison
- * (or past the last measure), so emptiness cannot tip off the poison location.
+ * Ensures the highway always shows more than a viewport of patterns past the
+ * poison (or past the last measure), so emptiness cannot tip off the poison.
  * Pads by cycling non-poison measures; playback still uses the unpadded round.
  */
 export function padMeasuresForHighwayLookahead(
 	measures: RhythmMeasure[],
 	poisonIndex: number,
-	lookaheadMeasures = HIGHWAY_LOOKAHEAD_MEASURES,
+	lookaheadMeasures = TRAILING_DECOYS_AFTER_POISON,
 ): RhythmMeasure[] {
 	if (measures.length === 0 || lookaheadMeasures <= 0) return measures;
 

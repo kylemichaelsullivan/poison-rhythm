@@ -81,6 +81,30 @@ export function isScrollDisplayMode(mode: RhythmRenderMode): boolean {
 	return mode === 'scroll';
 }
 
+/**
+ * Scroll locks to a single Playing pass — no Listening / demo pass.
+ * Stored `demoBeforePlay` is preserved for Grid / Notation.
+ */
+export function effectiveDemoBeforePlay(settings: {
+	demoBeforePlay: boolean;
+	rhythmRenderMode: RhythmRenderMode;
+}): boolean {
+	return (
+		!isScrollDisplayMode(settings.rhythmRenderMode) && settings.demoBeforePlay
+	);
+}
+
+/**
+ * Scroll always counts in (highway lead-in). Stored Count-In is preserved for
+ * Grid / Notation.
+ */
+export function effectiveCountInEnabled(
+	countInEnabled: boolean,
+	rhythmRenderMode: RhythmRenderMode,
+): boolean {
+	return isScrollDisplayMode(rhythmRenderMode) || countInEnabled;
+}
+
 export const gameSettingsSchema = z.object({
 	players: playersSchema,
 	feedbackMode: feedbackModeSchema,

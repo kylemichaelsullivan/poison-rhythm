@@ -75,7 +75,7 @@ describe('endless stream', () => {
 		}
 	});
 
-	test('leaves a full Scroll lookahead of decoys after poison', () => {
+	test('leaves more than a Scroll highway of decoys after poison', () => {
 		const settings = sanitizeGameSettings({
 			...DEFAULT_SETTINGS,
 			endless: false,

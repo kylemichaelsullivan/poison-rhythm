@@ -1,10 +1,10 @@
-import { MeasureGrid } from '@/components/measures';
 import { useGame, useMetronome, useSettings } from '@/contexts';
 import { useMeasureDisplayOptions } from '@/hooks/useMeasureDisplayOptions';
 import { shouldHidePoisonDuringPlayback } from '@/lib/rhythm/poison';
 import { isPoisonEnabled } from '@/lib/settings-schema';
 import { REST_MEASURE } from '@/types';
 import { PoisonMeasureFrame } from './PoisonMeasureFrame';
+import { PoisonReferenceViews } from './PoisonReferenceViews';
 import type { RhythmMeasure } from '@/types';
 
 type PoisonMeasureContentProps = {
@@ -40,7 +40,7 @@ export function PoisonMeasureContent({
 						: undefined
 				}
 			>
-				<MeasureGrid
+				<PoisonReferenceViews
 					measure={poisonRhythm}
 					richMeasure={poisonMeasure ?? undefined}
 					display={display}
@@ -51,7 +51,7 @@ export function PoisonMeasureContent({
 
 	return (
 		<PoisonMeasureFrame hidden>
-			<MeasureGrid measure={REST_MEASURE} display={display} />
+			<PoisonReferenceViews measure={REST_MEASURE} display={display} />
 		</PoisonMeasureFrame>
 	);
 }

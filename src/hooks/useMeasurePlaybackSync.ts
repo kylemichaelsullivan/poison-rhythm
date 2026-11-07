@@ -5,7 +5,11 @@ import {
 	rhythmsEqual,
 	shouldProcessMeasureCycle,
 } from '@/lib';
-import { isEndlessMode, isScrollDisplayMode } from '@/lib/settings-schema';
+import {
+	effectiveDemoBeforePlay,
+	isEndlessMode,
+	isScrollDisplayMode,
+} from '@/lib/settings-schema';
 import type { ScrollDirection } from '@/lib/settings-schema';
 import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
 
@@ -144,7 +148,7 @@ export function useMeasurePlaybackSync(): UseMeasurePlaybackSyncResult {
 		nextDisplayMeasure,
 		nextDisplayRich,
 		showNextMeasure: settings.showNextMeasure,
-		demoBeforePlay: settings.demoBeforePlay,
+		demoBeforePlay: effectiveDemoBeforePlay(settings),
 		isDemoPass,
 		isCountingIn,
 		isMeasuresRunning,

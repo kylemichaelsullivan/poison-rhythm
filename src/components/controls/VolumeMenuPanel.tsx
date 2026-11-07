@@ -3,9 +3,12 @@ import {
 	MetronomeMuteSetting,
 	PlaybackMuteSetting,
 	PreviewMuteSetting,
+	When,
 } from '@/components/layout/settings';
 import { Stack } from '@/components/ui';
+import { useSettings } from '@/contexts';
 import { controlSurfaceBaseClassName } from '@/lib/control-classes';
+import { isScrollDisplayMode } from '@/lib/settings-schema';
 
 type VolumeMenuPanelProps = {
 	onMouseEnter: () => void;
@@ -17,6 +20,9 @@ export function VolumeMenuPanel({
 	onMouseEnter,
 	onMouseLeave,
 }: VolumeMenuPanelProps) {
+	const { settings } = useSettings();
+	const scrollMode = isScrollDisplayMode(settings.rhythmRenderMode);
+
 	return (
 		<div
 			className={clsx(
@@ -31,7 +37,9 @@ export function VolumeMenuPanel({
 			<Stack gap='3'>
 				<MetronomeMuteSetting />
 				<PlaybackMuteSetting />
-				<PreviewMuteSetting />
+				<When condition={!scrollMode}>
+					<PreviewMuteSetting />
+				</When>
 			</Stack>
 		</div>
 	);

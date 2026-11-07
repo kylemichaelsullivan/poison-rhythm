@@ -28,6 +28,10 @@ import {
 	accumulateHighwayHold,
 	nextHighwayOriginAfterPassRestart,
 } from '@/lib/scroll-animation';
+import {
+	effectiveCountInEnabled,
+	effectiveDemoBeforePlay,
+} from '@/lib/settings-schema';
 import { stepHasHit } from '@/lib/subdivision-playback';
 import type { ReactNode } from 'react';
 import type {
@@ -105,7 +109,10 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 	const highwayHeldSecRef = useRef(0);
 	const highwayHoldStartedAtRef = useRef<number | null>(null);
 	muteMetronomeRef.current = muteMetronome;
-	countInEnabledRef.current = countInEnabled;
+	countInEnabledRef.current = effectiveCountInEnabled(
+		countInEnabled,
+		settings.rhythmRenderMode,
+	);
 	mutePlaybackRef.current = mutePlayback;
 	mutePreviewRef.current = mutePreview;
 	settingsRef.current = settings;
@@ -306,7 +313,7 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 			if (event.isLastStepInBar) {
 				const next = nextPassAfterBar(
 					currentPass.value,
-					settingsRef.current.demoBeforePlay,
+					effectiveDemoBeforePlay(settingsRef.current),
 				);
 				passAfterBar = next.pass;
 				bumpCycle = next.bumpCycle;
@@ -378,7 +385,7 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 			const currentPass = {
 				value:
 					activeSource === 'measures'
-						? initialPlaybackPass(settingsRef.current.demoBeforePlay)
+						? initialPlaybackPass(effectiveDemoBeforePlay(settingsRef.current))
 						: ('student' satisfies PlaybackPass),
 			};
 			const playbackUi = { started: false };

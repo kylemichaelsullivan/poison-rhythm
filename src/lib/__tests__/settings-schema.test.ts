@@ -1,6 +1,8 @@
 import { describe, expect, test } from 'bun:test';
 import {
 	DEFAULT_SETTINGS,
+	effectiveCountInEnabled,
+	effectiveDemoBeforePlay,
 	feedbackModeFromToggles,
 	feedbackTogglesFromMode,
 	parseGameSettings,
@@ -134,6 +136,28 @@ describe('settings-schema', () => {
 		expect(parsed.rhythmRenderMode).toBe('scroll');
 		expect(parsed.scrollDirection).toBe('down');
 		expect(parsed.demoBeforePlay).toBe(true);
+		expect(effectiveDemoBeforePlay(parsed)).toBe(false);
+		expect(effectiveCountInEnabled(false, parsed.rhythmRenderMode)).toBe(true);
+	});
+
+	test('effectiveDemoBeforePlay follows stored flag outside scroll', () => {
+		expect(
+			effectiveDemoBeforePlay({
+				demoBeforePlay: true,
+				rhythmRenderMode: 'grid',
+			}),
+		).toBe(true);
+		expect(
+			effectiveDemoBeforePlay({
+				demoBeforePlay: false,
+				rhythmRenderMode: 'notation',
+			}),
+		).toBe(false);
+	});
+
+	test('effectiveCountInEnabled follows stored flag outside scroll', () => {
+		expect(effectiveCountInEnabled(true, 'grid')).toBe(true);
+		expect(effectiveCountInEnabled(false, 'notation')).toBe(false);
 	});
 
 	test('migrates orthogonal scrollDirection overlay into scroll mode', () => {

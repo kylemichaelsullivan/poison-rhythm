@@ -86,4 +86,77 @@ test.describe('scroll highway', () => {
 
 		await clickPause(page);
 	});
+
+	test('always counts in even when Count-In preference is off', async ({
+		page,
+	}) => {
+		await seedPlaybackPrefs(page, {
+			countIn: false,
+			demoBeforePlay: true,
+			tempo: 180,
+			subdivision: 'quarters',
+			rhythmRenderMode: 'scroll',
+			scrollDirection: 'down',
+		});
+		await page.goto('/');
+		await generateRound(page);
+
+		const playControls = page.getByTestId('play-controls');
+		await clickPlay(page);
+		await expect(playControls).toHaveAttribute('data-counting-in', 'true');
+		await clickPause(page);
+	});
+
+	test('hides Practice Preview and Count-In controls', async ({ page }) => {
+		await seedPlaybackPrefs(page, {
+			countIn: false,
+			demoBeforePlay: true,
+			rhythmRenderMode: 'scroll',
+			scrollDirection: 'down',
+		});
+		await page.goto('/');
+		await generateRound(page);
+
+		await page.getByRole('button', { name: 'Settings' }).click();
+		const settings = page.getByRole('dialog', { name: 'Settings' });
+		await expect(settings).toBeVisible();
+		await expect(settings.getByText('Practice')).toHaveCount(0);
+		await expect(
+			settings.getByRole('button', { name: /Show Next Measure/ }),
+		).toHaveCount(0);
+		await expect(
+			settings.getByRole('button', { name: /Listen Before You Play/ }),
+		).toHaveCount(0);
+
+		await settings.getByRole('tab', { name: 'Sound' }).click();
+		await expect(settings.getByRole('button', { name: /Preview/ })).toHaveCount(
+			0,
+		);
+		await expect(
+			settings.getByRole('button', { name: /Count-In/ }),
+		).toHaveCount(0);
+		await settings.getByRole('button', { name: 'Close Modal' }).click();
+
+		await page.getByRole('button', { name: 'Volume' }).click();
+		const volume = page.getByRole('dialog', { name: 'Volume', exact: true });
+		await expect(volume).toBeVisible();
+		await expect(volume.getByRole('button', { name: /Preview/ })).toHaveCount(
+			0,
+		);
+	});
+
+	test('shows poison as notation and grid', async ({ page }) => {
+		await seedPlaybackPrefs(page, {
+			countIn: true,
+			demoBeforePlay: false,
+			rhythmRenderMode: 'scroll',
+			scrollDirection: 'down',
+		});
+		await page.goto('/');
+		await generateRound(page);
+
+		const poison = page.locator('.PoisonMeasureFrame .PoisonReferenceViews');
+		await expect(poison.locator('.MeasureNotationGlyph').first()).toBeVisible();
+		await expect(poison.locator('.MeasureCellGrid')).toBeVisible();
+	});
 });

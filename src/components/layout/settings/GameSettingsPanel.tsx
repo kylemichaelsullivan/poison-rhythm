@@ -1,5 +1,8 @@
 import EarIcon from '@/assets/svg/ear.svg?react';
 import EyeIcon from '@/assets/svg/eye.svg?react';
+import { useSettings } from '@/contexts';
+import { isScrollDisplayMode } from '@/lib/settings-schema';
+import { ConditionalSettingsGroup } from './ConditionalSettingsGroup';
 import { DisplayModeControls } from './DisplayModeControls';
 import { GameBooleanSetting } from './GameBooleanSetting';
 import { IntroTutorialSetting } from './IntroTutorialSetting';
@@ -8,13 +11,16 @@ import { SettingsGroup } from './SettingsGroup';
 
 /** Settings → Mode. Display + practice bind globally inside their composers. */
 export function GameSettingsPanel() {
+	const { settings } = useSettings();
+	const scrollMode = isScrollDisplayMode(settings.rhythmRenderMode);
+
 	return (
 		<>
 			<SettingsGroup title='Display'>
 				<DisplayModeControls />
 			</SettingsGroup>
 
-			<SettingsGroup title='Practice'>
+			<ConditionalSettingsGroup when={!scrollMode} title='Practice'>
 				<GameBooleanSetting
 					setting='showNextMeasure'
 					label='Show Next Measure'
@@ -25,7 +31,7 @@ export function GameSettingsPanel() {
 					label='Listen Before You Play'
 					icon={EarIcon}
 				/>
-			</SettingsGroup>
+			</ConditionalSettingsGroup>
 
 			<SettingsGroup title='Rhythm'>
 				<SettingRow label='Accents'>

@@ -4,10 +4,10 @@ import {
 	Section,
 	StableContentFrame,
 } from '@/components/layout';
-import { MeasureHeightReserve } from '@/components/measures';
 import { useMeasureDisplayOptions } from '@/hooks/useMeasureDisplayOptions';
 import { REST_MEASURE } from '@/types';
 import { PoisonMeasureContent } from './PoisonMeasureContent';
+import { PoisonReferenceViews } from './PoisonReferenceViews';
 import { PoisonSectionHeader } from './PoisonSectionHeader';
 import type { RhythmMeasure } from '@/types';
 
@@ -44,7 +44,7 @@ export function PoisonSection({
 		>
 			<StableContentFrame
 				spacer={
-					<MeasureHeightReserve measure={REST_MEASURE} display={display} />
+					<PoisonReferenceViews measure={REST_MEASURE} display={display} />
 				}
 			>
 				{!hasRound ? (

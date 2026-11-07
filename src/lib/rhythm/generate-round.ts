@@ -1,4 +1,4 @@
-import { HIGHWAY_LOOKAHEAD_MEASURES } from '@/lib/scroll-animation';
+import { TRAILING_DECOYS_AFTER_POISON } from '@/lib/scroll-animation';
 import { isEndlessMode } from '@/lib/settings-schema';
 import { richMeasuresEqual } from '@/types';
 import { generateMeasure } from './generate-measure';
@@ -8,8 +8,7 @@ import type { SubdivisionLevel } from '@/lib/preference-schemas';
 import type { GameSettings } from '@/lib/settings-schema';
 import type { RichRhythmMeasure, Round } from '@/types';
 
-/** Trailing decoys after poison so Scroll cannot tip off by an empty highway. */
-export const TRAILING_DECOYS_AFTER_POISON = HIGHWAY_LOOKAHEAD_MEASURES;
+export { TRAILING_DECOYS_AFTER_POISON };
 
 export type GenerateRoundOptions = {
 	difficulty: number;
@@ -58,7 +57,7 @@ function generateDecoy(
 	return measure;
 }
 
-/** Append decoys after poison so a full Scroll viewport stays populated. */
+/** Append decoys after poison so Scroll stays more than one viewport full. */
 function appendTrailingDecoys(
 	options: GenerateRoundOptions,
 	seed: number,
@@ -146,7 +145,7 @@ function computeEndlessBatch(
 		if (inject) {
 			measures.push(cloneMeasure(poisonMeasure));
 			if (poisonIndex < 0) poisonIndex = measures.length - 1;
-			// Full Scroll viewport of decoys so emptiness cannot tip off poison.
+			// More than a Scroll viewport so emptiness cannot tip off poison.
 			appendTrailingDecoys(options, seed + i + 1000, poisonMeasure, measures);
 			previousWasPoison = false;
 		} else {
