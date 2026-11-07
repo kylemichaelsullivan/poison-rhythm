@@ -52,6 +52,13 @@ export {
 	shouldRunCountIn,
 } from './playback-state';
 export {
+	POISON_HIT_BOTTLE_HOLD_MS,
+	POISON_HIT_DURATION_MS,
+	POISON_HIT_FADE_OUT_MS,
+	POISON_HIT_SPLAT_MS,
+	POISON_HIT_TITLE,
+} from './poison-hit';
+export {
 	DEFAULT_DIFFICULTY,
 	DEFAULT_SUBDIVISION_LEVEL,
 	serializeColorPreference,
@@ -118,10 +125,14 @@ export {
 	nextHighwayOriginAfterPassRestart,
 	padMeasuresForHighwayLookahead,
 	scrollAnimationClass,
+	TRAILING_DECOYS_AFTER_POISON,
 } from './scroll-animation';
 export {
 	DEFAULT_SETTINGS,
+	effectiveCountInEnabled,
+	effectiveDemoBeforePlay,
 	type GameSettings,
+	isScrollDisplayMode,
 	parseGameSettings,
 	sanitizeGameSettings,
 	serializeGameSettings,

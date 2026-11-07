@@ -10,6 +10,7 @@ import {
 	IntroModalHost,
 	IntroTutorialProvider,
 } from '@/components/layout';
+import { PoisonHitOverlayHost } from '@/components/poison';
 import { GameProvider, PendingDifficultyProvider } from '@/contexts';
 import { pageSurfaceClassName } from '@/lib/control-classes';
 
@@ -38,6 +39,7 @@ function App() {
 						<IntroModalHost />
 						<AboutPoisonRhythmModal />
 						<DifficultyRegenAckHost />
+						<PoisonHitOverlayHost />
 					</IntroTutorialProvider>
 				</AboutPoisonRhythmProvider>
 			</PendingDifficultyProvider>

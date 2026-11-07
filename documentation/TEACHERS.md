@@ -44,7 +44,7 @@ Change mode from the **Difficulty** section badge in the title About modal (clic
 
 | Mode | Use when… |
 |------|-----------|
-| **Poison Rhythm** (default) | You want a poison target among decoys; playback can stop when the poison measure is reached (unless Endless is on). |
+| **Poison Rhythm** (default) | You want a poison target among decoys; playback stops when the poison measure is reached and “That’s the Poison!” appears over a poison bottle that explodes into a Dominant splat, then clears (~1.8s). Endless / continuous skips it. System reduced-motion shows the bottle without the burst. |
 | **Bucket Drumming** | You want endless practice without a poison target (good for groove / sticking-focused work). Endless is forced on. |
 | **Endless** (checkbox under Poison Rhythm mode) | Keep streaming measures without ending the set when poison appears — useful for longer warm-ups. |
 
@@ -65,7 +65,7 @@ In **Settings → Mode**:
 - **Listen Before You Play** — for each measure: a **Listening** (demo) pass, then a **Playing** (student) pass.
 - **Volume** (Measures speaker, also Settings → Sound) — mute **Metronome**, **Playback** (the student pass) or **Preview** (the Listening pass). Click the speaker while the menu is open to mute all three; click again to restore the previous mix, or unmute all if there is nothing to restore. Mute Playback and leave Preview on for call-and-response. Muting Preview while Playback stays on asks for confirmation: Mute Preview, Mute Both or Cancel. If Playback and Preview are both muted, turning Playback on restores Preview too.
 
-Optional **Count-In** is under **Settings → Sound**. During count-in, beat numbers show on the Play button.
+Optional **Count-In** is under **Settings → Sound** (Grid / Notation). During count-in, beat numbers show on the Play button. **Scroll** always counts in and hides the Mode **Practice** group, Preview and the Count-In toggle.
 
 ## Display mode
 
@@ -75,7 +75,7 @@ From the badge on the Poison Rhythm section, or **Settings → Mode → Display*
 |------|----------------|
 | **Grid** | Clearest for counting cells and subdivisions; great for beginners. |
 | **Notation** | MusiSync note/rest glyphs; better once students can map duration shapes. |
-| **Scroll** | Guitar Hero–style highway; rounded hit bars approach a judgment line and sound when they reach it (locked to the audio clock). Pick travel direction with a single-press D-pad (Up / Down / Left / Right). Count-in scrolls immediately across one lead-in measure so the first hit arrives with the downbeat. Extra decoy patterns keep the highway full past the poison so students can’t spot it by empty space; Classic still stops playback on the poison. |
+| **Scroll** | Guitar Hero–style highway; rounded hit bars approach a judgment line and sound when they reach it (locked to the audio clock). Pick travel direction with a single-press D-pad (Up / Down / Left / Right). Always counts in (one lead-in measure so the first hit arrives with the downbeat); no Practice toggles or Preview mute. The Poison Rhythm box shows sheet music and the grid stacked; Measures is the highway. Extra decoy patterns more than fill the highway past the poison so students can’t spot it by empty space; Classic still stops playback on the poison. |
 
 ## Suggested lesson arcs
 

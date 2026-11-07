@@ -1,6 +1,11 @@
 export { DisplayModeBadge } from './DisplayModeBadge';
 export { DisplayModeModal } from './DisplayModeModal';
 export { DisplayModeTrigger } from './DisplayModeTrigger';
+export { PoisonHitBottle } from './PoisonHitBottle';
+export { PoisonHitOverlay } from './PoisonHitOverlay';
+export { PoisonHitOverlayHost } from './PoisonHitOverlayHost';
+export { PoisonHitSplat } from './PoisonHitSplat';
 export { PoisonMeasureContent } from './PoisonMeasureContent';
 export { PoisonMeasureFrame } from './PoisonMeasureFrame';
+export { PoisonReferenceViews } from './PoisonReferenceViews';
 export { PoisonSection } from './PoisonSection';

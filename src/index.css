@@ -987,6 +987,173 @@
 	opacity: 1;
 }
 
+/*
+ * Classic poison-hit: title → bottle hold → explode → clear.
+ * Timings from poison-hit.ts:
+ *   POISON_HIT_BOTTLE_HOLD_MS 650ms
+ *   POISON_HIT_SPLAT_MS 750ms
+ *   POISON_HIT_FADE_OUT_MS 400ms
+ *   POISON_HIT_DURATION_MS 1800ms
+ * Reduced motion: system prefers-reduced-motion → static bottle, no burst.
+ */
+.PoisonHitOverlay {
+	animation-name: poison-hit-overlay-clear;
+	animation-duration: 1.8s;
+	animation-timing-function: linear;
+	animation-fill-mode: forwards;
+}
+
+.PoisonHitOverlayTitle {
+	text-shadow:
+		0 1px 0 rgb(255 255 255 / 0.55),
+		0 2px 10px rgb(0 0 0 / 0.2);
+	animation-name: poison-hit-title;
+	animation-duration: 0.35s;
+	animation-timing-function: cubic-bezier(0.2, 0.9, 0.2, 1.12);
+	animation-fill-mode: both;
+}
+
+.PoisonHitBottle {
+	transform-origin: center bottom;
+	animation-name: poison-hit-bottle;
+	/* hold 0.65s + explode 0.35s of the splat window */
+	animation-duration: 1s;
+	animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+	animation-fill-mode: forwards;
+}
+
+.PoisonHitSplat {
+	z-index: 1;
+}
+
+.PoisonHitSplatBlob {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	/* Oversized so the burst fills and spills past the viewport. */
+	width: 140vmax;
+	height: 140vmax;
+	margin: 0;
+	border-radius: 42% 58% 55% 45% / 48% 42% 58% 52%;
+	background-color: var(--color-primary);
+	opacity: 0;
+	transform: translate(-50%, -50%) scale(0.02);
+	animation-name: poison-hit-splat-blob;
+	animation-duration: 0.75s;
+	/* POISON_HIT_BOTTLE_HOLD_MS */
+	animation-delay: 0.65s;
+	animation-timing-function: cubic-bezier(0.15, 0.85, 0.25, 1.05);
+	animation-fill-mode: forwards;
+}
+
+.PoisonHitSplatDrop {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: clamp(1rem, 4.5vw, 2.75rem);
+	height: clamp(1rem, 4.5vw, 2.75rem);
+	border-radius: 62% 38% 55% 45% / 48% 55% 45% 52%;
+	background-color: var(--color-primary);
+	opacity: 0;
+	/* Fan droplets across the viewport; --splat-i is 0…23. */
+	--splat-angle: calc(var(--splat-i) * 15deg + 6deg);
+	--splat-distance: clamp(28vmin, 48vmax, 72vmax);
+	transform: translate(-50%, -50%) rotate(var(--splat-angle)) translateY(0)
+		scale(0.35);
+	animation-name: poison-hit-splat-drop;
+	animation-duration: 0.75s;
+	animation-delay: calc(0.65s + var(--splat-i) * 12ms);
+	animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+	animation-fill-mode: forwards;
+}
+
+@keyframes poison-hit-overlay-clear {
+	0%,
+	78% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+
+@keyframes poison-hit-title {
+	from {
+		opacity: 0;
+		transform: translateY(-0.5rem) scale(0.92);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+}
+
+@keyframes poison-hit-bottle {
+	0% {
+		opacity: 0;
+		transform: scale(0.7) translateY(0.75rem);
+	}
+	18% {
+		opacity: 1;
+		transform: scale(1) translateY(0);
+	}
+	64% {
+		opacity: 1;
+		transform: scale(1) translateY(0) rotate(0deg);
+	}
+	72% {
+		opacity: 1;
+		transform: scale(1.18) translateY(-0.15rem) rotate(-6deg);
+	}
+	100% {
+		opacity: 0;
+		transform: scale(1.55) translateY(-0.35rem) rotate(12deg);
+	}
+}
+
+@keyframes poison-hit-splat-blob {
+	0% {
+		opacity: 0;
+		transform: translate(-50%, -50%) scale(0.02) rotate(-8deg);
+		border-radius: 50%;
+	}
+	35% {
+		opacity: 1;
+		transform: translate(-50%, -50%) scale(0.55) rotate(4deg);
+		border-radius: 58% 42% 62% 38% / 42% 58% 42% 58%;
+	}
+	70% {
+		opacity: 1;
+		transform: translate(-50%, -50%) scale(1) rotate(0deg);
+		border-radius: 42% 58% 55% 45% / 48% 42% 58% 52%;
+	}
+	100% {
+		opacity: 0;
+		transform: translate(-50%, -50%) scale(1.08) rotate(0deg);
+	}
+}
+
+@keyframes poison-hit-splat-drop {
+	0% {
+		opacity: 0;
+		transform: translate(-50%, -50%) rotate(var(--splat-angle)) translateY(0)
+			scale(0.3);
+	}
+	20% {
+		opacity: 1;
+	}
+	65% {
+		opacity: 0.95;
+		transform: translate(-50%, -50%) rotate(var(--splat-angle))
+			translateY(calc(var(--splat-distance) * -1)) scale(1.15);
+	}
+	100% {
+		opacity: 0;
+		transform: translate(-50%, -50%) rotate(var(--splat-angle))
+			translateY(calc(var(--splat-distance) * -1.2)) scale(0.8);
+	}
+}
+
 /* Welcome fail line: underline “lose” left → right (scaleX, not width). */
 .IntroLoseUnderline {
 	position: relative;
@@ -1129,5 +1296,32 @@
 		box-shadow:
 			0 0 0 2px var(--color-secondary),
 			0 0 8px var(--color-secondary);
+	}
+
+	.PoisonHitOverlay,
+	.PoisonHitBottle,
+	.PoisonHitSplatBlob,
+	.PoisonHitSplatDrop,
+	.PoisonHitOverlayTitle {
+		animation: none;
+	}
+
+	.PoisonHitOverlay {
+		opacity: 1;
+	}
+
+	.PoisonHitBottle {
+		opacity: 1;
+		transform: none;
+	}
+
+	.PoisonHitSplatBlob,
+	.PoisonHitSplatDrop {
+		opacity: 0;
+	}
+
+	.PoisonHitOverlayTitle {
+		opacity: 1;
+		transform: none;
 	}
 }

@@ -36,7 +36,7 @@ flowchart TB
 | Atoms | `src/components/ui/` | `Button`, `IconButton`, `Caption`, `Stack`, `Row` |
 | Molecules | domain folders | `PlayModeOptionCard`, `ModalActions`, `ModalPanel`, `MeasureCarouselChrome`, `ContrastGradeBadge`, settings `EnableToggle` |
 | Composers | domain folders | `DifficultyControls`, `MeasureSlider`, `ShowNotes`, `PoisonSection`, `Body` |
-| Hosts | `App` / `Body` | `IntroModalHost`, `AboutPoisonRhythmModal`, `DifficultyRegenAckHost`, `DisplayModeModal` |
+| Hosts | `App` / `Body` | `IntroModalHost`, `AboutPoisonRhythmModal`, `DifficultyRegenAckHost`, `PoisonHitOverlayHost`, `DisplayModeModal` |
 | Hooks | `src/hooks/` | `useDisclosure`, `useModalFocusTrap`, `useTimedDismiss`, `useNotationPrefetch`, `useMeasureDisplayOptions`, `useMeasurePlaybackSync`, `useHoverPinPopover`, `useSoftDisableFocus` |
 
 Rules of thumb:
@@ -57,8 +57,8 @@ Phone-up layout (≈360px primary; 320px must not overflow horizontally): safe-a
 | `DifficultyControls` | `DifficultyFramedBlock` / `DifficultySettingsBlock`, help + play-mode modals; regen ack via `DifficultyRegenAckHost` |
 | `MeasureSlider` | `MeasureCarouselChrome` (`live` sets `data-testid="measure-slider"`), `NextMeasurePreview` / `ScrollHighway`, `useMeasurePlaybackSync` |
 | `ShowNotes` | `ShowNotesTrigger`, `ShowNotesSlider`, `useHoverPinPopover` |
-| `VolumeMenu` | `VolumeMenuTrigger`, `VolumeMenuPanel`, `useHoverPinPopover`; Metronome / Playback / Preview mutes; click speaker while open mutes all, click again restores the last mix or unmutes all |
-| `PoisonSection` | `PoisonSectionHeader`, `PoisonMeasureContent`, `PoisonMeasureFrame` / `HiddenPoisonOverlay` (badge opens Body-owned `DisplayModeModal`) |
+| `VolumeMenu` | `VolumeMenuTrigger`, `VolumeMenuPanel`, `useHoverPinPopover`; Metronome / Playback / Preview mutes (Preview omitted in Scroll); click speaker while open mutes all, click again restores the last mix or unmutes all |
+| `PoisonSection` | `PoisonSectionHeader`, `PoisonMeasureContent`, `PoisonReferenceViews` (Scroll stacks notation + grid), `PoisonMeasureFrame` / `HiddenPoisonOverlay` (badge opens Body-owned `DisplayModeModal`) |
 | `Body` | `useSoftDisableFocus`, `useDisclosure` → single `DisplayModeModal` |
 | `Modal` | Portals to `document.body`; `ModalScrim`, `ModalPanel`, `ModalCloseButton`, `ModalTitle`, `TimedNoticeProgress` when `dismissAfterMs` is set, `useModalFocusTrap` (topmost `.Modal` only), `useTimedDismiss` |
 | `MeasureGrid` | Prop-driven `display` → `MeasureCellGrid` / lazy `MeasureNotation`, `NotationFallback`, `useNotationPrefetch` |
@@ -126,7 +126,7 @@ Defined in `src/lib/settings-schema.ts`, persisted as `poison-rhythm-settings-v1
 | Category | Fields |
 |----------|--------|
 | General | `players`, `feedbackMode`; `rhythmRenderMode` (`grid` \| `notation` \| `scroll`); `scrollDirection` when mode is Scroll; `scrollSpeed` (schema retained) |
-| Practice | `showNextMeasure`, `demoBeforePlay` |
+| Practice | `showNextMeasure`, `demoBeforePlay` (Scroll forces demo off via `effectiveDemoBeforePlay`) |
 | Rhythm | `accents`, `sticking`, `phraseLength` (Coming Soon in Settings); `rests` (unused; always off) |
 | Poison | `poisonMode` (Eye toggle on Poison section + Settings → Mode → Practice) |
 | Game mode | `gameMode` |
@@ -134,12 +134,14 @@ Defined in `src/lib/settings-schema.ts`, persisted as `poison-rhythm-settings-v1
 
 ## Playback passes
 
-When `demoBeforePlay` is enabled:
+When `effectiveDemoBeforePlay` is enabled (stored `demoBeforePlay` on Grid / Notation only; Scroll always false):
 
-1. Count-in (optional; Sound → Count-In)
+1. Count-in (optional on Grid / Notation via Sound → Count-In; Scroll always on via `effectiveCountInEnabled`)
 2. For **each** carousel measure: **Listening (demo) pass** — plays the current measure so students can hear it; cells highlighted; dashed primary shell + Secondary notes (`data-playback-phase="listening"`)
 3. **Playing (student) pass** — same measure again with solid secondary glow shell + Dominant notes (`data-playback-phase="playing"`); if Playback is muted, rhythm hits are suppressed; metronome continues unless it is muted too
 4. Advance to the next measure and repeat from step 2
+
+Scroll has no Listening pass and no Preview mute channel; Volume / Sound show Metronome and Playback only.
 
 Count-in, Listening and Playing share a fixed-width shell from `hierarchyBorderClass` (`src/lib/hierarchy-border.ts` via `measure-phase-chrome.ts`) so the measure does not jump between phases; count-in also fades the live measure (`opacity-55`). Dashed = provisional (count-in / listening); solid active = playing. See [`A11Y.md`](A11Y.md).
 

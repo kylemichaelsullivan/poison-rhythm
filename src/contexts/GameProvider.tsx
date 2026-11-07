@@ -33,6 +33,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
 	const [currentIndex, setCurrentIndexState] = useState(0);
 	const [roundNumber, setRoundNumber] = useState(1);
 	const [visualHints, setVisualHints] = useState<VisualHint[]>([]);
+	const [poisonHitOpen, setPoisonHitOpen] = useState(false);
 	const rhythmRef = useRef<RhythmModule | null>(null);
 
 	useEffect(() => {
@@ -82,6 +83,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
 			setCurrentIndexState(0);
 			setRoundNumber(nextRoundNumber);
 			setVisualHints([]);
+			setPoisonHitOpen(false);
 		},
 		[difficulty, subdivisionLevel, settings, roundNumber],
 	);
@@ -101,7 +103,13 @@ export function GameProvider({ children }: { children: ReactNode }) {
 		});
 		setCurrentIndexState(0);
 		setVisualHints([]);
+		setPoisonHitOpen(false);
 	}, [difficulty, subdivisionLevel, settings, round, roundNumber]);
+
+	const acknowledgePoisonHit = useCallback(() => {
+		setPoisonHitOpen(false);
+		setVisualHints([]);
+	}, []);
 
 	const setCurrentIndex = useCallback(
 		(index: number) => {
@@ -144,6 +152,12 @@ export function GameProvider({ children }: { children: ReactNode }) {
 				measureIndex,
 			);
 			setVisualHints(result.visualHints);
+			if (
+				result.shouldStop &&
+				result.visualHints.some((hint) => hint.type === 'poison')
+			) {
+				setPoisonHitOpen(true);
+			}
 			return result.shouldStop;
 		},
 		[round, difficulty, subdivisionLevel, settings, roundNumber],
@@ -160,6 +174,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
 			currentIndex,
 			roundNumber,
 			visualHints,
+			poisonHitOpen,
+			acknowledgePoisonHit,
 			setCurrentIndex,
 			handleNewRound,
 			handleReuseRound,
@@ -172,6 +188,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
 			currentIndex,
 			roundNumber,
 			visualHints,
+			poisonHitOpen,
+			acknowledgePoisonHit,
 			setCurrentIndex,
 			handleNewRound,
 			handleReuseRound,

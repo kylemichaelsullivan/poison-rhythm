@@ -112,7 +112,7 @@ UI is composed like stacked layers (one concern per file; prefer one root DOM el
 | **Atoms** | `src/components/ui/` | Single-element primitives (`Button`, `IconButton`, `Caption`, `Stack`, `Row`) |
 | **Molecules** | `controls/`, `measures/`, `layout/`, `layout/settings/` | Composed pieces (`PlayModeOptionCard`, `MeasureCarouselChrome`, `ModalPanel`, `EnableToggle`, `ContrastGradeBadge`) |
 | **Composers** | feature folders | Wire context + hooks (`DifficultyControls`, `MeasureSlider`, `ShowNotes`, `Body`) |
-| **Hosts** | `App` / `Body` | Modal hosts beside the tree (`IntroModalHost`, `AboutPoisonRhythmModal`, `DifficultyRegenAckHost`, `DisplayModeModal`) |
+| **Hosts** | `App` / `Body` | Modal hosts beside the tree (`IntroModalHost`, `AboutPoisonRhythmModal`, `DifficultyRegenAckHost`, `PoisonHitOverlayHost`, `DisplayModeModal`) |
 | **Hooks** | `src/hooks/` | Side effects out of JSX (`useDisclosure`, `useModalFocusTrap`, `useNotationPrefetch`, `useMeasurePlaybackSync`, …) |
 
 Feature composers should import `@/components/ui` (or existing settings atoms) instead of inventing raw `<button className=…>` markup. Prefer **variants** (`tone`, `size`, `framed`, `slot`) over `className` passthrough. Keep **value imports** and **`import type`** on separate statements — Biome `useImportType` (`separatedType`) rejects `import { Foo, type Bar }`. Details: [`.cursor/components.mdc`](.cursor/components.mdc), [`.cursor/rules.mdc`](.cursor/rules.mdc), [`documentation/ARCHITECTURE.md`](documentation/ARCHITECTURE.md).
@@ -162,8 +162,8 @@ The rhythm engine (`src/lib/rhythm/`) accepts both `difficulty` and `subdivision
 
 | Area | Controls |
 |------|----------|
-| Mode | Display (grid / notation / scroll highway), play mode + Endless, complexity (difficulty, subdivision), practice (Show Poison?, show next, preview pass) |
-| Sound | Visual/audio feedback, Metronome / Playback / Preview mute, count-in, tempo |
+| Mode | Display (grid / notation / scroll highway), play mode + Endless, complexity (difficulty, subdivision), practice (show next, Listen Before You Play — whole Practice group hidden in Scroll) |
+| Sound | Visual/audio feedback, Metronome / Playback / Preview mute, count-in, tempo (Scroll hides Preview + Count-In and always counts in) |
 | Colors | Dominant / secondary Crayola accents + Light/Dark theme toggles on the contrast meter; see [`documentation/COLORS.md`](documentation/COLORS.md) and [`documentation/A11Y.md`](documentation/A11Y.md) |
 | Main-page shortcuts | Poison Display Mode badge, header ShowNotes, Measures Volume menu, footer metronome |
 

@@ -12,6 +12,9 @@ export type GameContextValue = {
 	currentIndex: number;
 	roundNumber: number;
 	visualHints: VisualHint[];
+	/** Classic-only: full-screen overlay after the poison measure plays. */
+	poisonHitOpen: boolean;
+	acknowledgePoisonHit: () => void;
 	setCurrentIndex: (index: number) => void;
 	handleNewRound: (overrides?: { difficulty?: number }) => void;
 	handleReuseRound: () => void;

@@ -119,7 +119,8 @@ Provider tree in `main.tsx`: `ThemeProvider` → `ColorPreferencesProvider` → 
 - **ui/**: Elemental atoms (`Button`, `IconButton` including `modalClose`, `Caption`, `Stack`, `Row`)
 - **Modal**: Composer over `ModalScrim` / `ModalPanel` / `ModalCloseButton` / `ModalTitle` + `useModalFocusTrap`; portals to `document.body` (nested dialogs escape parent overflow / backdrop-filter)
 - **DifficultyControls**: `DifficultyFramedBlock` / `DifficultySettingsBlock` + help / play-mode modals; regen ack via `DifficultyRegenAckHost`
-- **PoisonSection**: Composer; `PoisonSectionHeader`, `PoisonMeasureContent` / `PoisonMeasureFrame` / `HiddenPoisonOverlay`
+- **PoisonSection**: Composer; `PoisonSectionHeader`, `PoisonMeasureContent` / `PoisonReferenceViews` / `PoisonMeasureFrame` / `HiddenPoisonOverlay`
+- **PoisonHitOverlayHost**: App-level Classic full-screen poison-hit animation (Endless never opens it)
 - **MeasuresSection / MeasureSlider**: `NextMeasureToggle`, `MeasuresSectionHeaderActions`, carousel chrome + `useMeasurePlaybackSync`
 - **ShowNotes**: Subdivision popover; `useHoverPinPopover` + `ShowNotesTrigger`
 - **MeasureGrid / MeasureCell**: `MeasureCellGrid` or lazy notation; `useNotationPrefetch` + `useMusiSyncFont` + `useSubdivisionProgress` / `useActiveNotationStepIndex`
