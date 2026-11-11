@@ -49,11 +49,13 @@ describe('layoutNotationMeasure', () => {
 		const [longNote, shortNote] = notes;
 		expect(longNote).toBeDefined();
 		expect(shortNote).toBeDefined();
+		if (!longNote || !shortNote) return;
 		const layout = layoutNotationMeasure(steps);
 		const long = layout.get(longNote.stepIndex);
 		const short = layout.get(shortNote.stepIndex);
 		expect(long).toBeDefined();
 		expect(short).toBeDefined();
+		if (!long || !short) return;
 		const pairWidth = long.width + short.width;
 		expect(short.width / pairWidth).toBeCloseTo(1 / (1 + Math.sqrt(3)), 5);
 		expect(short.stemX).toBeGreaterThan(long.stemX);
@@ -69,11 +71,13 @@ describe('layoutNotationMeasure', () => {
 		const [shortNote, longNote] = notes;
 		expect(shortNote).toBeDefined();
 		expect(longNote).toBeDefined();
+		if (!shortNote || !longNote) return;
 		const layout = layoutNotationMeasure(steps);
 		const short = layout.get(shortNote.stepIndex);
 		const long = layout.get(longNote.stepIndex);
 		expect(short).toBeDefined();
 		expect(long).toBeDefined();
+		if (!short || !long) return;
 		const pairWidth = long.width + short.width;
 		expect(short.width / pairWidth).toBeCloseTo(1 / (1 + Math.sqrt(3)), 5);
 		expect(long.stemX).toBeGreaterThan(short.stemX);
@@ -87,18 +91,19 @@ describe('layoutNotationMeasure', () => {
 		);
 		const notes = steps.filter((s) => s.kind === 'note');
 		const layout = layoutNotationMeasure(steps);
-		const slots = notes.map((n) => {
-			const slot = layout.get(n.stepIndex);
-			expect(slot).toBeDefined();
-			return slot;
-		});
-		expect(
-			slots.every((slot) => Math.abs(slot.width - slots[0].width) < 1e-9),
-		).toBe(true);
+		const slots = notes.map((n) => layout.get(n.stepIndex));
+		expect(slots.every((slot) => slot !== undefined)).toBe(true);
 		const first = slots[0];
 		const last = slots[slots.length - 1];
 		expect(first).toBeDefined();
 		expect(last).toBeDefined();
+		if (!first || !last) return;
+		expect(
+			slots.every(
+				(slot) =>
+					slot !== undefined && Math.abs(slot.width - first.width) < 1e-9,
+			),
+		).toBe(true);
 		expect(first.x).toBeCloseTo(NOTATION_SIDE_PAD, 5);
 		expect(last.x + last.width).toBeCloseTo(
 			MEASURE_LENGTH - NOTATION_SIDE_PAD,
@@ -116,8 +121,10 @@ describe('layoutNotationMeasure', () => {
 		expect(steps).toHaveLength(1);
 		const [step] = steps;
 		expect(step).toBeDefined();
+		if (!step) return;
 		const slot = layout.get(step.stepIndex);
 		expect(slot).toBeDefined();
+		if (!slot) return;
 		expect(slot.stemX).toBeCloseTo(MEASURE_LENGTH / 2, 5);
 		expect(slot.x).toBeGreaterThan(NOTATION_SIDE_PAD);
 		expect(slot.x + slot.width).toBeLessThan(
