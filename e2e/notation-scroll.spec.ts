@@ -27,7 +27,7 @@ function inspectNotationBoxes(page: import('@playwright/test').Page) {
 }
 
 test.describe('notation scroll overflow', () => {
-	test('notation boxes fit MusiSync glyphs without vertical overflow', async ({
+	test('notation boxes fit SVG glyphs without vertical overflow', async ({
 		page,
 	}) => {
 		await page.goto('/');

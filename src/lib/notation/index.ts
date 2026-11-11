@@ -1,17 +1,12 @@
 export {
-	beamedGlyphForDurations,
-	MUSISYNC_BEAMED,
-	resolveBeamedGlyph,
-} from './beam-glyphs';
+	type BeamNoteLayout,
+	type BeamSegment,
+	beamSegmentsForGroup,
+	groupBeamedNotes,
+	stemXForNote,
+	stemXsForGroup,
+} from './beam-geometry';
 export { assignBeamGroups } from './beam-groups';
-export {
-	type BeamAttempt,
-	type BeamableNote,
-	beamNotesForDisplay,
-	collectBeamRuns,
-	isBeamableNote,
-	tryBeamNotes,
-} from './beam-notes';
 export {
 	beatIndex,
 	cellsForDuration,
@@ -21,23 +16,6 @@ export {
 	minCellUnitForLevel,
 } from './duration-units';
 export {
-	eventsToGlyphTokens,
-	eventsToMusiSyncString,
-	type NotationGlyphToken,
-} from './events-to-musisync';
-export {
-	ensureMusiSyncFaceRegistered,
-	isMusiSyncFontReady,
-	loadMusiSyncFont,
-	MUSISYNC_ALL_GLYPHS,
-	MUSISYNC_FALLBACK_FONT_SPEC,
-	MUSISYNC_FONT_STACK,
-	MUSISYNC_SUBDIVISION_FONT_SPEC,
-	MUSISYNC_SUBDIVISION_NOTE_GLYPHS,
-	musisyncGlyphsPaintable,
-	prefetchMusiSyncFont,
-} from './load-musisync-font';
-export {
 	type AbcTuneOptions,
 	eventsToAbc,
 	eventsToAbcBody,
@@ -46,16 +24,26 @@ export {
 export {
 	measureToNotationSteps,
 	type NotationStep,
-	notationStepsToGlyphString,
 	tokenCellSpan,
 } from './measure-to-notation';
 export {
-	durationGlyphsForLevel,
-	MUSISYNC_GLYPH,
-	musisyncGlyphFor,
+	BEAM_SECONDARY_GAP,
+	BEAM_THICKNESS,
+	HEAD_CY,
+	MUSISYNC_PATHS,
+	type MusiSyncPathKey,
+	STEM_TOP_Y,
+	STEM_X,
+	VIEW,
+} from './musisync-paths';
+export {
+	baseDuration,
+	durationInfoForLevel,
+	isDottedDuration,
 	type NotationDuration,
 	type NotationGlyphKind,
-} from './musisync-glyphs';
+	secondaryBeamCount,
+} from './notation-duration';
 export {
 	measureToNotationEvents,
 	type NotationEvent,
@@ -64,3 +52,9 @@ export {
 	activeNotationStepIndex,
 	buildNotationCellStepMap,
 } from './notation-playback';
+export {
+	layoutNotationMeasure,
+	NOTATION_SIDE_PAD,
+	type NotationLayoutSlot,
+	relativeAdvance,
+} from './notation-spacing';

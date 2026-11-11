@@ -1,8 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import {
 	eventsToAbcBody,
-	eventsToMusiSyncString,
-	MUSISYNC_BEAMED,
 	measureToAbc,
 	measureToNotationEvents,
 } from '@/lib/notation';
@@ -17,7 +15,7 @@ function hits(...cells: number[]): boolean[] {
 }
 
 describe('conventional ABC / beaming figures', () => {
-	test('sixteenth–eighth–sixteenth beams to MusiSync ¾', () => {
+	test('sixteenth–eighth–sixteenth beams as one group', () => {
 		const events = measureToNotationEvents(
 			hits(0, 1, 3),
 			undefined,
@@ -25,40 +23,35 @@ describe('conventional ABC / beaming figures', () => {
 		);
 		const notes = events.filter((e) => e.kind === 'note');
 		expect(notes.map((n) => n.durationCells)).toEqual([1, 2, 1]);
-		expect(
-			eventsToMusiSyncString(events).startsWith(
-				MUSISYNC_BEAMED.sixteenthEighthSixteenth,
-			),
-		).toBe(true);
+		expect(new Set(notes.map((n) => n.beamGroupId)).size).toBe(1);
 	});
 
 	test('Poison Rhythm ABC body matches conventional beat grouping', () => {
-		// Beats: 16-8-16 | 16-8-16 | 8-8 | 8-8  (ABC: c d2 c …)
 		const measure = hits(0, 1, 3, 4, 5, 7, 8, 10, 12, 14);
 		const events = measureToNotationEvents(measure, undefined, 'sixteenths');
 		expect(eventsToAbcBody(events)).toBe('c c2 c c c2 c c2 c2 c2 c2 |]');
-		expect(eventsToMusiSyncString(events)).toBe(
-			`${MUSISYNC_BEAMED.sixteenthEighthSixteenth}${MUSISYNC_BEAMED.sixteenthEighthSixteenth}${MUSISYNC_BEAMED.twoEighths}${MUSISYNC_BEAMED.twoEighths}`,
-		);
 	});
 
 	test('Current Measure ABC body matches conventional beat grouping', () => {
-		// Beats: 16-8-16 | 16-16-8 | 8-8 | 16×4
 		const measure = hits(0, 1, 3, 4, 5, 6, 8, 10, 12, 13, 14, 15);
 		const events = measureToNotationEvents(measure, undefined, 'sixteenths');
 		expect(eventsToAbcBody(events)).toBe('c c2 c c c c2 c2 c2 c c c c |]');
-		expect(eventsToMusiSyncString(events)).toBe(
-			`${MUSISYNC_BEAMED.sixteenthEighthSixteenth}${MUSISYNC_BEAMED.twoSixteenthsEighth}${MUSISYNC_BEAMED.twoEighths}${MUSISYNC_BEAMED.fourSixteenths}`,
-		);
 	});
 
 	test('rest-led [2,1] and [1,1] beam instead of flagged pairs', () => {
-		// Beats: rest16-8-16 | rest8-16-16 | 16×4 | 8-16-16
 		const measure = hits(1, 3, 6, 7, 8, 9, 10, 11, 12, 14, 15);
 		const events = measureToNotationEvents(measure, undefined, 'sixteenths');
-		expect(eventsToMusiSyncString(events)).toBe(
-			`S${MUSISYNC_BEAMED.eighthSixteenth}E${MUSISYNC_BEAMED.twoSixteenths}${MUSISYNC_BEAMED.fourSixteenths}${MUSISYNC_BEAMED.eighthTwoSixteenths}`,
+		const beat1 = events.filter(
+			(e) => e.kind === 'note' && e.startCell >= 0 && e.startCell < 4,
 		);
+		expect(beat1.map((n) => n.durationCells)).toEqual([2, 1]);
+		expect(new Set(beat1.map((n) => n.beamGroupId)).size).toBe(1);
+
+		const beat2 = events.filter(
+			(e) => e.kind === 'note' && e.startCell >= 4 && e.startCell < 8,
+		);
+		expect(beat2.map((n) => n.durationCells)).toEqual([1, 1]);
+		expect(new Set(beat2.map((n) => n.beamGroupId)).size).toBe(1);
 	});
 
 	test('measureToAbc emits perc clef header', () => {

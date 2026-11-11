@@ -1,5 +1,5 @@
 import { MEASURE_LENGTH } from '@/types';
-import type { NotationDuration } from './musisync-glyphs';
+import type { NotationDuration } from './notation-duration';
 
 /** Sixteenth-cells per quarter beat in 4/4. */
 export const CELLS_PER_BEAT = 4;

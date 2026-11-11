@@ -52,7 +52,7 @@ src/
 ├── lib/
 │   ├── audio/              # Web Audio engine, feedback gating
 │   ├── game-modes/         # Per-mode round creation and completion logic
-│   ├── notation/           # MusiSync glyph pipeline (events → beaming → display)
+│   ├── notation/           # Events → spelling → beam groups → per-event SVG steps
 │   ├── rhythm/             # Modular rhythm generation engine
 │   ├── playback-clock.ts / lookahead-scheduler.ts
 │   ├── __tests__/          # Bun unit tests (lib, rhythm/, game-modes/, integration/)

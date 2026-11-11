@@ -35,21 +35,42 @@ describe('notation-playback', () => {
 		expect(map[6]).not.toBe(0);
 	});
 
-	test('beamed token paints every cell in its span', () => {
+	test('beamed eighths highlight independently per duration', () => {
 		const steps = measureToNotationSteps(
 			hits(0, 2, 4),
 			undefined,
 			'sixteenths',
 		);
-		const beamed = steps.find((step) => step.glyph === 'n');
-		expect(beamed).toBeDefined();
-		if (!beamed) return;
-		const map = buildNotationCellStepMap(steps);
+		const first = steps.find(
+			(step) => step.beamGroupId !== undefined && step.startCell === 0,
+		);
+		const second = steps.find(
+			(step) => step.beamGroupId !== undefined && step.startCell === 2,
+		);
+		expect(first).toBeDefined();
+		expect(second).toBeDefined();
+		if (!first || !second) return;
 
-		expect(map[0]).toBe(beamed.stepIndex);
-		expect(map[1]).toBe(beamed.stepIndex);
-		expect(map[2]).toBe(beamed.stepIndex);
-		expect(map[3]).toBe(beamed.stepIndex);
+		const map = buildNotationCellStepMap(steps);
+		expect(map[0]).toBe(first.stepIndex);
+		expect(map[1]).toBe(first.stepIndex);
+		expect(map[2]).toBe(second.stepIndex);
+		expect(map[3]).toBe(second.stepIndex);
+	});
+
+	test('four beamed sixteenths advance the playhead per cell', () => {
+		const steps = measureToNotationSteps(
+			hits(0, 1, 2, 3),
+			undefined,
+			'sixteenths',
+		);
+		const notes = steps.filter((step) => step.kind === 'note');
+		expect(notes).toHaveLength(4);
+		const map = buildNotationCellStepMap(steps);
+		expect(map[0]).toBe(notes[0]?.stepIndex);
+		expect(map[1]).toBe(notes[1]?.stepIndex);
+		expect(map[2]).toBe(notes[2]?.stepIndex);
+		expect(map[3]).toBe(notes[3]?.stepIndex);
 	});
 
 	test('whole rest fills the entire measure map', () => {

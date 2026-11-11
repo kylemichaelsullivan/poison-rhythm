@@ -8,7 +8,7 @@ import { subdivisionStepToCell } from '@/lib/subdivision-playback';
 import type { NotationStep } from '@/lib/notation';
 
 /**
- * Active MusiSync glyph index for the current playhead cell, or null when
+ * Active notation glyph index for the current playhead cell, or null when
  * highlighting is disabled. Pass fractional `progress` from
  * {@link useSubdivisionProgress} so cursor and glyph share one RAF.
  */

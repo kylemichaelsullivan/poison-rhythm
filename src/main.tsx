@@ -7,13 +7,8 @@ import {
 	SettingsProvider,
 	ThemeProvider,
 } from '@/contexts';
-import { prefetchMusiSyncFont } from '@/lib/notation/load-musisync-font';
 import App from './App.tsx';
 import './index.css';
-
-// After CSS registers @font-face; fire-and-forget so React can paint without awaiting.
-// Pairs with the index.html preload + inline FontFace bootstrap.
-prefetchMusiSyncFont();
 
 const assetDragSelector = 'img, svg, picture, video, canvas, audio';
 const valueDragSelector =

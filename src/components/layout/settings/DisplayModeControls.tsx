@@ -36,11 +36,6 @@ export function DisplayModeControls() {
 						rhythmRenderMode: value,
 						scrollDirection: 'none',
 					});
-					if (value === 'notation') {
-						void import('@/lib/notation').then((module) =>
-							module.loadMusiSyncFont(),
-						);
-					}
 				}}
 			/>
 			<When condition={scrollMode}>

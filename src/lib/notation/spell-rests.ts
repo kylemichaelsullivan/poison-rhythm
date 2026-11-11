@@ -5,7 +5,7 @@ import {
 	HALF_BAR_CELL,
 	SPELLING_CELL_LENGTHS,
 } from './duration-units';
-import type { NotationDuration } from './musisync-glyphs';
+import type { NotationDuration } from './notation-duration';
 import type { NoteSegment } from './spell-onsets';
 
 export type RestSegment = {

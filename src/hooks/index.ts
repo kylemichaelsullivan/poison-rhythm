@@ -9,7 +9,6 @@ export { useMeasureDisplayOptions } from './useMeasureDisplayOptions';
 export { useMeasurePlaybackSync } from './useMeasurePlaybackSync';
 export { useMetronomeBeat } from './useMetronomeBeat';
 export { useModalFocusTrap } from './useModalFocusTrap';
-export { useMusiSyncFont } from './useMusiSyncFont';
 export { useNotationPrefetch } from './useNotationPrefetch';
 export { usePaletteContrast } from './usePaletteContrast';
 export { useScrollHighwayTrack } from './useScrollHighwayTrack';

@@ -1,15 +1,12 @@
 import clsx from 'clsx';
 import { useMemo } from 'react';
 import { useActiveNotationStepIndex } from '@/hooks/useActiveNotationStepIndex';
-import { useMusiSyncFont } from '@/hooks/useMusiSyncFont';
 import { useSubdivisionProgress } from '@/hooks/useSubdivisionProgress';
-import {
-	measureToNotationSteps,
-	notationStepsToGlyphString,
-} from '@/lib/notation';
+import { layoutNotationMeasure, measureToNotationSteps } from '@/lib/notation';
 import { shouldHighlightNotationPlayback } from '@/lib/playback-state';
 import { MeasureNotationGlyph } from './MeasureNotationGlyph';
 import { measureShellClass } from './measure-phase-chrome';
+import { NotationBeamLayer } from './notation/NotationBeamLayer';
 import { RhythmAccentOverlay } from './RhythmAccentOverlay';
 import { RhythmStickingOverlay } from './RhythmStickingOverlay';
 import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
@@ -33,14 +30,12 @@ export function MeasureNotation({
 	phase,
 	display,
 }: MeasureNotationProps) {
-	const { ready: fontReady } = useMusiSyncFont();
 	const steps = useMemo(
 		() =>
 			measureToNotationSteps(measure, richMeasure, display.subdivisionLevel),
 		[measure, richMeasure, display.subdivisionLevel],
 	);
-	const glyphString = notationStepsToGlyphString(steps);
-	const stepCount = Math.max(steps.length, 1);
+	const layout = useMemo(() => layoutNotationMeasure(steps), [steps]);
 	const { showAccents, showSticking } = display;
 
 	const highlighting = shouldHighlightNotationPlayback({
@@ -65,32 +60,35 @@ export function MeasureNotation({
 				hidden && 'opacity-0',
 			)}
 		>
-			<RhythmAccentOverlay
-				steps={steps}
-				stepCount={stepCount}
-				show={showAccents && fontReady}
-			/>
+			<RhythmAccentOverlay steps={steps} layout={layout} show={showAccents} />
 			<section
-				className={clsx(
-					'MeasureNotationLine MusiSync text-current focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface',
-					!fontReady && 'invisible',
-				)}
+				className='MeasureNotationLine relative text-current focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface'
 				aria-label='Rhythm Notation'
-				data-glyphs={glyphString}
+				data-step-count={steps.length}
 				// biome-ignore lint/a11y/noNoninteractiveTabindex: keyboard users must focus horizontal overflow
 				tabIndex={0}
 			>
-				{steps.map((step) => (
-					<MeasureNotationGlyph
-						key={step.stepIndex}
-						glyph={step.glyph}
-						active={step.stepIndex === activeStepIndex}
-						highlighting={highlighting}
-						phase={phase}
-					/>
-				))}
+				<NotationBeamLayer steps={steps} layout={layout} />
+				{steps.map((step) => {
+					const slot = layout.get(step.stepIndex);
+					if (!slot) return null;
+					return (
+						<MeasureNotationGlyph
+							key={step.stepIndex}
+							step={step}
+							slot={slot}
+							active={step.stepIndex === activeStepIndex}
+							highlighting={highlighting}
+							phase={phase}
+						/>
+					);
+				})}
 			</section>
-			<RhythmStickingOverlay steps={steps} show={showSticking && fontReady} />
+			<RhythmStickingOverlay
+				steps={steps}
+				layout={layout}
+				show={showSticking}
+			/>
 		</div>
 	);
 }

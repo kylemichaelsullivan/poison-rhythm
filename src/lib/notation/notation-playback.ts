@@ -3,7 +3,7 @@ import type { NotationStep } from './measure-to-notation';
 
 /**
  * Length-16 lookup: sixteenth-cell → visual glyph `stepIndex`.
- * Beamed tokens paint every cell in their span with the same index.
+ * Each spelled event paints every cell in its own duration span.
  */
 export function buildNotationCellStepMap(
 	steps: ReadonlyArray<

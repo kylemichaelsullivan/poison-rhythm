@@ -1,20 +1,19 @@
-import { eventsToGlyphTokens } from './events-to-musisync';
 import { measureToNotationEvents } from './notation-events';
 import type { SubdivisionLevel } from '@/lib/preference-schemas';
 import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
+import type { NotationDuration } from './notation-duration';
 
 /**
- * Overlay-friendly step derived from spelled (+ beamed) notation glyphs.
- * `stepIndex` is the visual glyph index in the MusiSync string.
- * `startCell` / `durationCells` span the full visual token (beamed groups
- * cover every collapsed event).
+ * Overlay-friendly step derived from spelled notation events.
+ * One step per event so beamed notes highlight independently.
  */
 export type NotationStep = {
 	stepIndex: number;
+	kind: 'note' | 'rest';
+	duration: NotationDuration;
 	hit: boolean;
 	accent?: boolean;
 	sticking?: 'L' | 'R';
-	glyph: string;
 	startCell: number;
 	durationCells: number;
 	tieContinuation?: boolean;
@@ -41,8 +40,8 @@ export function tokenCellSpan(
 }
 
 /**
- * Spell the measure with conventional 4/4 notation and MusiSync beaming,
- * then flatten to overlay-friendly steps (one per visual glyph).
+ * Spell the measure with conventional 4/4 notation and emit one visual step
+ * per event (beams are drawn separately via `beamGroupId`).
  */
 export function measureToNotationSteps(
 	measure: RhythmMeasure,
@@ -50,28 +49,20 @@ export function measureToNotationSteps(
 	level: SubdivisionLevel,
 ): NotationStep[] {
 	const events = measureToNotationEvents(measure, richMeasure, level);
-	const tokens = eventsToGlyphTokens(events);
 
-	return tokens.map((token, stepIndex) => {
-		const onset = token.events.find(
-			(event) => event.kind === 'note' && !event.tieContinuation,
-		);
-		const primary = onset ?? token.events[0];
-		const span = tokenCellSpan(token.events);
+	return events.map((event, stepIndex) => {
+		const hit = event.kind === 'note' && !event.tieContinuation;
 		return {
 			stepIndex,
-			hit: Boolean(onset),
-			accent: onset?.accent,
-			sticking: onset?.sticking,
-			glyph: token.glyph,
-			startCell: span.startCell,
-			durationCells: span.durationCells,
-			tieContinuation: primary?.tieContinuation,
-			beamGroupId: onset?.beamGroupId,
+			kind: event.kind,
+			duration: event.duration,
+			hit,
+			accent: hit ? event.accent : undefined,
+			sticking: hit ? event.sticking : undefined,
+			startCell: event.startCell,
+			durationCells: event.durationCells,
+			tieContinuation: event.tieContinuation,
+			beamGroupId: event.beamGroupId,
 		};
 	});
-}
-
-export function notationStepsToGlyphString(steps: NotationStep[]): string {
-	return steps.map((step) => step.glyph).join('');
 }

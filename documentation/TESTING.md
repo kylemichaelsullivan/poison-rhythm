@@ -46,15 +46,15 @@ Location: `e2e/`
 
 | Spec | Coverage |
 |------|----------|
-| `playback.spec.ts` | Round ready, count-in highlight gating, **count-in beats on the Play button**, post–count-in highlight, demo pass, **Escape stops playback** (including while Play/Pause is focused), **Measures tab order** (Eye, Volume, Previous Measure, Next Measure), **Volume menu Preview-only mute confirm** (Cancel / Mute Preview / Mute Both), **speaker mutes all while the menu is open**, **speaker restores the previous mix or unmutes all**, **Playback unmute restores Preview when both were muted**, **first-measure delayed Play** (cancel via click / outside), **last-measure New / Reuse / Play** |
+| `playback.spec.ts` | Round ready, count-in highlight gating, **count-in beats on the Play button**, post–count-in highlight, demo pass, **Escape stops playback** (including while Play/Pause is focused), **Measures tab order** (Show Next Measure, Listen Before You Play, Volume, Previous Measure, Next Measure), **Practice toggles** (eye / ear), **Volume menu Preview-only mute confirm** (Cancel / Mute Preview / Mute Both), **speaker mutes all while the menu is open**, **speaker restores the previous mix or unmutes all**, **Playback unmute restores Preview when both were muted**, **first-measure delayed Play** (cancel via click / outside), **last-measure New / Reuse / Play** |
 | `scroll-highway.spec.ts` | Highway progress during count-in + playback; Scroll always counts in; Settings hides Practice + Sound Preview/Count-In; poison shows notation and grid |
 | `poison-hit.spec.ts` | Classic bottle under “That’s the Poison!” explodes then auto-clears; Endless continuous play never shows it |
 | `difficulty-regen-ack.spec.ts` | Difficulty acknowledgement and Account notice: **no OK button**, `0.5rem` theme progress bar, dismiss on `TIMED_NOTICE_DURATION_MS`, **pause while hovered**. Account copy uses `text-wrap: pretty` (no non-breaking spaces) |
 | `a11y.spec.ts` | axe WCAG 2.2 A/AA + best-practice (start screen, round, settings/Sound, metronome, modals, count-in). Runs on **Desktop Chrome** and **mobile** (360×800) projects |
 | `mobile-layout.spec.ts` | 360×800 smoke: first-measure delayed Play + Next vs Play overlap, last-measure end menu, 2-col measure grid, Settings panel scroll |
 | `color-contrast.spec.ts` | Colors meter matches swatch chips plus ratios; Light on top in every theme; Dominant is scored against Secondary and the reverse |
-| `notation-scroll.spec.ts` | MusiSync boxes do not vertically overflow |
-| `shownotes-glyph.spec.ts` | Header note indicator paints a MusiSync glyph (not `q`/`e`/`s`) in Light, Dark and System |
+| `notation-scroll.spec.ts` | SVG notation boxes do not vertically overflow |
+| `shownotes-glyph.spec.ts` | Header note indicator paints an SVG note glyph in Light, Dark and System |
 | `intro.spec.ts` | First-visit Simon Says tutorial (two safe bars, then timed poison fail overlays); nav dots jump to a step; Arrow Left/Right move steps; Enter closes on Let’s Play before the halo; Arrow Right closes only after the halo; **Don’t show again** is checked by default so Let’s Play persists; uncheck it for session-only dismiss; returning visits skip it unless **Settings → Mode → Welcome Tutorial** |
 | `helpers.ts` | Shared prefs seeding and round-ready wait |
 
@@ -89,15 +89,12 @@ Assert these rather than scraping glyph text alone.
 
 The a11y “start screen” test expects a **seeded** round (`measure-slider`), not an empty Generate prompt.
 
-## Notation / font notes for tests
+## Notation notes for tests
 
-- Dotted note glyphs: `i` / `j` / `d` — see [`src/assets/fonts/README.md`](../src/assets/fonts/README.md)
-- `[1,2]` (sixteenth + eighth) beams to derived U+E001 (undotted `O`); never alias to stock `O` (`[1,3]`)
-- `[2,1]` (eighth + sixteenth) beams to derived U+E002 (undotted `o`); never alias to stock `o` (`[3,1]`)
-- `[1,1]` (two sixteenths) beams to derived U+E003 (left half of `y`)
-- Lazy `MeasureNotation` + `loadMusiSyncFont` prefetch when display mode is notation (`MeasureGrid` → `useNotationPrefetch`; loading shell is `NotationFallback`)
-- Header ShowNotes trigger: `e2e/shownotes-glyph.spec.ts` asserts the canvas paints a MusiSync note (not a fallback letter) in Light, Dark and System
-- `MUSISYNC_ALL_GLYPHS` unit test: every duration + beamed key is in the early-load string
+- One `NotationStep` per spelled event; beamed notes share `beamGroupId` and highlight independently
+- Beam geometry: primary spans the group; secondary covers contiguous sixteenths with partials for mixed `[2,1]` / `[1,2]`
+- Lazy `MeasureNotation` chunk prefetch when display mode is notation (`MeasureGrid` → `useNotationPrefetch`; loading shell is `NotationFallback`)
+- Header ShowNotes trigger: `e2e/shownotes-glyph.spec.ts` asserts an SVG note glyph is present in Light, Dark and System
 
 ## Scratch artifacts
 

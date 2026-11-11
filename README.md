@@ -85,11 +85,11 @@ src/
 │   ├── measures/     # Measure carousel chrome, grid, notation, playback highlighting
 │   └── poison/       # Poison rhythm section layers + New/Reuse
 ├── contexts/         # React context modules (see Context modules below)
-├── hooks/            # Playback sync, popovers, soft-disable focus, MusiSync font, …
+├── hooks/            # Playback sync, popovers, soft-disable focus, …
 ├── lib/
 │   ├── audio/        # Web Audio scheduling, feedback gating
 │   ├── game-modes/   # default, bucket trainer (+ endless stream)
-│   ├── notation/     # MusiSync glyph pipeline (events → beaming → display)
+│   ├── notation/     # Events → spelling → beam groups → per-event SVG steps
 │   ├── rhythm/       # Modular rhythm generation engine
 │   ├── playback-clock.ts / lookahead-scheduler.ts  # Count-in → playback audio clock
 │   ├── __tests__/    # Bun unit + integration tests
@@ -98,7 +98,8 @@ src/
 │   ├── preference-storage.ts
 │   └── …             # difficulty, tempo, subdivision playback, theme, storage
 ├── assets/
-│   └── fonts/        # MusiSync canonical copies (served from public/fonts/)
+│   ├── img/          # Brand images
+│   └── svg/          # UI icons
 └── types/            # RhythmMeasure, RichRhythmMeasure, Round, GameState
 e2e/                  # Playwright e2e + axe a11y specs
 ```
@@ -165,7 +166,7 @@ The rhythm engine (`src/lib/rhythm/`) accepts both `difficulty` and `subdivision
 | Mode | Display (grid / notation / scroll highway), play mode + Endless, complexity (difficulty, subdivision), practice (show next, Listen Before You Play — whole Practice group hidden in Scroll) |
 | Sound | Visual/audio feedback, Metronome / Playback / Preview mute, count-in, tempo (Scroll hides Preview + Count-In and always counts in) |
 | Colors | Dominant / secondary Crayola accents + Light/Dark theme toggles on the contrast meter; see [`documentation/COLORS.md`](documentation/COLORS.md) and [`documentation/A11Y.md`](documentation/A11Y.md) |
-| Main-page shortcuts | Poison Display Mode badge, header ShowNotes, Measures Volume menu, footer metronome |
+| Main-page shortcuts | Poison Display Mode badge, header ShowNotes, Measures Practice toggles (eye / ear), Measures Volume menu, footer metronome |
 
 Settings modal tabs: **Mode**, **Sound**, **Colors** (`SettingsTabs`).
 
@@ -206,13 +207,13 @@ Modules under `src/lib/rhythm/`:
 
 ### Notation display
 
-When display mode is **notation**, measures render as [MusiSync](https://www.fontspace.com/musisync-font-f3723) font glyphs:
+When display mode is **notation**, measures render as per-event SVG note/rest glyphs on a duration-proportional 16-cell track (beams drawn by `NotationBeamLayer`):
 
 ```
-measure → notation events → duration spelling → beaming → MusiSync string → MeasureNotation
+measure → notation events → duration spelling → beamGroupId → NotationStep[] → MeasureNotation
 ```
 
-Pipeline modules live in `src/lib/notation/`. Font files: `src/assets/fonts/` (canonical) and `public/fonts/` (served). Glyph keys and refresh steps: [`src/assets/fonts/README.md`](src/assets/fonts/README.md).
+Pipeline modules live in `src/lib/notation/`. SVG atoms live in `src/components/measures/notation/`.
 
 ## Tests
 
@@ -228,7 +229,7 @@ Coverage includes:
 - Settings schema validation and serialization
 - PRNG determinism
 - Rhythm generation (hit count, placement, sticking, poison)
-- Notation (duration spelling, beaming, MusiSync glyph mapping)
+- Notation (duration spelling, beam groups, SVG glyph layout)
 - Game modes (endless prefetch, demo playback audio gating)
 - Playback clock / look-ahead (count-in → playback join with no timer gap)
 - Difficulty levels, subdivision playback, metronome tempo/tap
@@ -246,7 +247,7 @@ Details: [`documentation/TESTING.md`](documentation/TESTING.md).
 4. Note the **poison rhythm** in the Poison Rhythm section (hidden when poison mode is off or set to hidden).
 5. Click **New (+)** for a fresh poison and measures, or **Reuse** to keep the same poison and regenerate measures.
 6. Use **Prev/Next** to step through measures and find which one matches the poison. On the first measure, the left control starts Play after a short cancelable countdown (click again, click outside or Escape to cancel). On the last measure, the right control offers **New** (+), **Reuse** (same poison, new measures) or **Play**.
-7. Use **Play** to hear measures (optional count-in shows beat numbers on the Play control and fades the live measure). With **Listen Before You Play** enabled (Settings → Mode), the current measure plays once as a demo (Listening — dashed primary shell and Secondary notes), then again as the student pass (Playing — secondary glow shell and Dominant notes). Mute **Playback** from the Measures Volume menu to silence the student pass.
+7. Use **Play** to hear measures (optional count-in shows beat numbers on the Play control and fades the live measure). With **Listen Before You Play** enabled (Measures ear toggle or Settings → Mode), the current measure plays once as a demo (Listening — dashed primary shell and Secondary notes), then again as the student pass (Playing — secondary glow shell and Dominant notes). Mute **Playback** from the Measures Volume menu to silence the student pass.
 8. Open the footer **metronome** to set tempo or tap tempo.
 9. Open the footer **Settings** for theme, colors, sound (including tempo), complexity, play/display mode, poison visibility and practice features (show next measure, demo pass). Difficulty + play mode are in the title **About** modal; other main-page shortcuts remain: Poison **Display Mode** badge, header ShowNotes, footer metronome.
 
@@ -260,7 +261,6 @@ Details: [`documentation/TESTING.md`](documentation/TESTING.md).
 - [`documentation/ARCHITECTURE.md`](documentation/ARCHITECTURE.md) — engine, state, settings, notation, UI composition
 - [`documentation/TESTING.md`](documentation/TESTING.md) — unit, integration and Playwright guidance
 - [`.cursor/git-commits.md`](.cursor/git-commits.md) — this repo’s overlay for `/git-commits` (gate + docs)
-- [`src/assets/fonts/README.md`](src/assets/fonts/README.md) — MusiSync font assets and glyph keys
 - [`.cursor/rules.mdc`](.cursor/rules.mdc) — project rules for Cursor
 - [`.cursor/react.mdc`](.cursor/react.mdc) — React, contexts, atomic component standards
 - [`.cursor/components.mdc`](.cursor/components.mdc) — component catalog and layer rules
