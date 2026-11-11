@@ -36,7 +36,7 @@ flowchart TB
 | Atoms | `src/components/ui/` | `Button`, `IconButton`, `Caption`, `Stack`, `Row` |
 | Molecules | domain folders | `PlayModeOptionCard`, `ModalActions`, `ModalPanel`, `MeasureCarouselChrome`, `ContrastGradeBadge`, settings `EnableToggle` |
 | Composers | domain folders | `DifficultyControls`, `MeasureSlider`, `ShowNotes`, `PoisonSection`, `Body` |
-| Hosts | `App` / `Body` | `IntroModalHost`, `AboutPoisonRhythmModal`, `DifficultyRegenAckHost`, `PoisonHitOverlayHost`, `DisplayModeModal` |
+| Hosts | `App` / `Body` | `IntroModalHost`, `AboutPoisonRhythmModal`, `DifficultyRegenAckHost`, `PoisonHitOverlayHost`, `ToastHost`, `DisplayModeModal` |
 | Hooks | `src/hooks/` | `useDisclosure`, `useModalFocusTrap`, `useTimedDismiss`, `useNotationPrefetch`, `useMeasureDisplayOptions`, `useMeasurePlaybackSync`, `useHoverPinPopover`, `useSoftDisableFocus` |
 
 Rules of thumb:
@@ -47,7 +47,7 @@ Rules of thumb:
 - Do not add raw `<button className=…>` in composers — use `@/components/ui` or settings atoms
 - **Variants over `className`** on shared components (`tone`, `size`, `framed`, `slot`)
 
-Main page shell: `Header` → `Body` (`PoisonSection`, `MeasuresSection`, `PlayControls`, single `DisplayModeModal`) → `Footer`. `IntroTutorialProvider` owns first-visit / replay state; `IntroModalHost` sits beside the tree in `App`. **Don’t show again** is on by default; dismissing with it checked writes `poison-rhythm-intro-seen`. Uncheck it to hide the welcome for the current visit only. **Settings → Mode → Welcome Tutorial** reopens it.
+Main page shell: `Header` → `Body` (`PoisonSection`, `MeasuresSection`, `PlayControls`, single `DisplayModeModal`) → `Footer`. `IntroTutorialProvider` owns first-visit / replay state; `IntroModalHost` sits beside the tree in `App`. **Don’t show again** is on by default; dismissing with it checked writes `poison-rhythm-intro-seen`. Uncheck it to hide the welcome for the current visit only. **Settings → Mode → Welcome Tutorial** reopens it. `StatusToastAnnouncer` watches settings / subdivision / channel mutes and shows a lower-right toast on diffs (`statusToastForTransition`); the Settings `CornerModal` suppresses announcements while open so mirrored Settings controls stay silent.
 
 Phone-up layout (≈360px primary; 320px must not overflow horizontally): safe-area insets on chrome, ≥44px touch targets on primary controls, near-fullscreen Settings sheet on small viewports and **sixteenth** beat groups wrapping to **2×2** below `sm` so all 16 cells stay visible (`MeasureCellGrid` — quarters/eighths stay four-across; never force 16ths→8ths for viewport size). Carousel prev/next sit above Play so they do not overlap.
 
@@ -61,6 +61,7 @@ Phone-up layout (≈360px primary; 320px must not overflow horizontally): safe-a
 | `VolumeMenu` | `VolumeMenuTrigger`, `VolumeMenuPanel`, `useHoverPinPopover`; Metronome / Playback / Preview mutes (Preview omitted in Scroll); click speaker while open mutes all, click again restores the last mix or unmutes all |
 | `PoisonSection` | `PoisonSectionHeader`, `PoisonMeasureContent`, `PoisonReferenceViews` (Scroll stacks notation + grid), `PoisonMeasureFrame` / `HiddenPoisonOverlay` (badge opens Body-owned `DisplayModeModal`) |
 | `Body` | `useSoftDisableFocus`, `useDisclosure` → single `DisplayModeModal` |
+| `StatusToastAnnouncer` + `ToastHost` | Diffs screen-relevant settings/prefs → one lower-right toast; Settings sets `statusToastSuppressed` while open |
 | `Modal` | Portals to `document.body`; `ModalScrim`, `ModalPanel`, `ModalCloseButton`, `ModalTitle`, `TimedNoticeProgress` when `dismissAfterMs` is set, `useModalFocusTrap` (topmost `.Modal` only), `useTimedDismiss` |
 | `MeasureGrid` | Prop-driven `display` → `MeasureCellGrid` / lazy `MeasureNotation`, `NotationFallback`, `useNotationPrefetch` |
 | `ColorAccentSettings` | Owns prefs + role/contrast hooks; `ContrastScoreMeter` owns theme; tray memoizes scores on role + partner |

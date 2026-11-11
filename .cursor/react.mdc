@@ -50,7 +50,7 @@ Import hooks and providers from `@/contexts`.
 | `MetronomeContext` | `useMetronome`, `useMetronomeTempo` | Playback clock vs tempo split — BPM UI must not subscribe to beat flash |
 | `ThemeContext` | `useTheme` | Light/dark/system theme only |
 
-Provider tree in `main.tsx`: `ThemeProvider` → `ColorPreferencesProvider` → `SettingsProvider` → `PreferencesProvider` → `MetronomeProvider` → `App`. `App.tsx` wraps content in `GameProvider` → `PendingDifficultyProvider` → `AboutPoisonRhythmProvider` (memoized `AppContent` so About open/close does not re-render the shell), then mounts `AboutPoisonRhythmModal` and `DifficultyRegenAckHost` beside the shell. **Providers own state only**; modal hosts sit next to the tree.
+Provider tree in `main.tsx`: `ThemeProvider` → `ColorPreferencesProvider` → `SettingsProvider` → `PreferencesProvider` → `MetronomeProvider` → `ToastProvider` → `App`. `App.tsx` wraps content in `GameProvider` → `PendingDifficultyProvider` → `AboutPoisonRhythmProvider` (memoized `AppContent` so About open/close does not re-render the shell), then mounts `AboutPoisonRhythmModal`, `DifficultyRegenAckHost`, `StatusToastAnnouncer` and `ToastHost` beside the shell. **Providers own state only**; modal hosts sit next to the tree. Status toasts come from one announcer that diffs settings/prefs; Settings sets `statusToastSuppressed` while open.
 
 - **Local state**: Use `useState` and `useCallback` in hooks or parent components
 - **Composition**: `App` renders `Header`, `Body` and `Footer`; `Body` composes game sections, play controls and the single `DisplayModeModal`

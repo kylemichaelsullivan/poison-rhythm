@@ -9,6 +9,8 @@ import {
 	Header,
 	IntroModalHost,
 	IntroTutorialProvider,
+	StatusToastAnnouncer,
+	ToastHost,
 } from '@/components/layout';
 import { PoisonHitOverlayHost } from '@/components/poison';
 import { GameProvider, PendingDifficultyProvider } from '@/contexts';
@@ -40,6 +42,8 @@ function App() {
 						<AboutPoisonRhythmModal />
 						<DifficultyRegenAckHost />
 						<PoisonHitOverlayHost />
+						<StatusToastAnnouncer />
+						<ToastHost />
 					</IntroTutorialProvider>
 				</AboutPoisonRhythmProvider>
 			</PendingDifficultyProvider>

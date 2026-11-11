@@ -62,6 +62,8 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 | `src/contexts/PendingDifficultyProvider.tsx` | Draft difficulty + regen; state only (no modal JSX) |
 | `src/contexts/MetronomeProvider.tsx` | Audio clock + `useMetronome` / `useMetronomeTempo` split; count-in, demo/student passes, Escape-to-stop |
 | `src/components/controls/DifficultyRegenAckHost.tsx` | App-level host for the timed post-regen acknowledgement |
+| `src/components/layout/StatusToastAnnouncer.tsx` | Diffs settings/prefs → status toast; Settings sets `statusToastSuppressed` while open |
+| `src/components/layout/ToastHost.tsx` | Lower-right timed `<output>` toast host |
 | `src/components/poison/PoisonHitOverlayHost.tsx` | App-level host for Classic full-screen poison-hit animation (skipped in Endless) |
 | `src/components/layout/about/AboutPoisonRhythmModal.tsx` | App-level host for title About + `DifficultyControls` |
 | `src/components/layout/intro/IntroModalHost.tsx` | App-level host for the first-visit welcome (`poison-rhythm-intro-seen`) |

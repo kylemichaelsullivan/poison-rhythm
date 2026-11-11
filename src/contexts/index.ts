@@ -32,3 +32,5 @@ export {
 export { SettingsProvider } from './SettingsProvider';
 export { type ThemeSetting, useTheme } from './ThemeContext';
 export { ThemeProvider } from './ThemeProvider';
+export { useToast } from './ToastContext';
+export { ToastProvider } from './ToastProvider';

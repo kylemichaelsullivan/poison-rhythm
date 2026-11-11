@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { usePendingDifficulty } from '@/contexts';
+import { usePendingDifficulty, useToast } from '@/contexts';
 import { CornerModal } from '../CornerModal';
 
 const SettingsOverlay = lazy(() =>
@@ -10,6 +10,7 @@ const SettingsOverlay = lazy(() =>
 
 export function Settings() {
 	const { onHostModalClosed } = usePendingDifficulty();
+	const { setStatusToastSuppressed } = useToast();
 
 	return (
 		<CornerModal
@@ -17,6 +18,7 @@ export function Settings() {
 			title='Settings'
 			size='xl'
 			lazy
+			onOpenChange={setStatusToastSuppressed}
 			onClose={onHostModalClosed}
 		>
 			<Suspense fallback={null}>

@@ -55,7 +55,7 @@ src/components/
 ### App (root)
 
 - **Uses**: `GameProvider`; renders Header, Body, Footer; mounts `IntroTutorialProvider` + `IntroModalHost` beside the tree
-- **State**: Round and measures via `useGame` in child sections. First-visit welcome persists via `poison-rhythm-intro-seen` only when the student opts out; **Settings → Mode → Welcome Tutorial** replays it
+- **State**: Round and measures via `useGame` in child sections. First-visit welcome persists via `poison-rhythm-intro-seen` only when the student opts out; **Settings → Mode → Welcome Tutorial** replays it. `StatusToastAnnouncer` + `ToastHost` announce screen-chrome preference diffs; Settings suppresses while open
 
 ### Body
 
@@ -81,7 +81,7 @@ src/components/
 ### CornerModal / CornerButton
 
 - **Variants**: `tone?: 'default' | 'muted'` (muted = dashed mid border for muted metronome); optional `dismissAfterMs` for the timed notice (Account). No `className` / `buttonClassName` passthrough
-- **Hooks**: `useDisclosure`, `useDelayedClick` for single vs double-click open
+- **Hooks**: `useDisclosure`, `useDelayedClick` for single vs double-click open; optional `onOpenChange` (Settings uses this to suppress status toasts)
 
 ### ui/ atoms
 

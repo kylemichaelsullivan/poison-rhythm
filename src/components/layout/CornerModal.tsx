@@ -30,6 +30,8 @@ type CornerModalProps = {
 	onDoubleClick?: () => void;
 	/** Called after the modal closes (X, scrim, Escape or timed dismiss). */
 	onClose?: () => void;
+	/** Fires when the dialog opens or closes (after open state commits). */
+	onOpenChange?: (open: boolean) => void;
 	/**
 	 * When set, the dialog dismisses itself after this many milliseconds and
 	 * shows the timed-notice progress bar. Omit for a manual dismiss only.
@@ -53,18 +55,25 @@ export function CornerModal({
 	buttonTitle,
 	onDoubleClick,
 	onClose,
+	onOpenChange,
 	dismissAfterMs,
 	headerLeading,
 	children,
 }: CornerModalProps) {
 	const { open, onOpen, onClose: closeDisclosure } = useDisclosure();
 
+	const handleOpen = useCallback(() => {
+		onOpen();
+		onOpenChange?.(true);
+	}, [onOpen, onOpenChange]);
+
 	const handleClose = useCallback(() => {
 		closeDisclosure();
+		onOpenChange?.(false);
 		onClose?.();
-	}, [closeDisclosure, onClose]);
+	}, [closeDisclosure, onClose, onOpenChange]);
 
-	const handleClick = useDelayedClick(onOpen, { onDoubleClick });
+	const handleClick = useDelayedClick(handleOpen, { onDoubleClick });
 
 	return (
 		<>

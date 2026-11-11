@@ -6,6 +6,7 @@ import {
 	PreferencesProvider,
 	SettingsProvider,
 	ThemeProvider,
+	ToastProvider,
 } from '@/contexts';
 import App from './App.tsx';
 import './index.css';
@@ -31,7 +32,9 @@ createRoot(root).render(
 				<SettingsProvider>
 					<PreferencesProvider>
 						<MetronomeProvider>
-							<App />
+							<ToastProvider>
+								<App />
+							</ToastProvider>
 						</MetronomeProvider>
 					</PreferencesProvider>
 				</SettingsProvider>
