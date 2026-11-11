@@ -805,7 +805,13 @@
 /* Duration-proportional SVG notation (16-cell track). */
 .MeasureNotation,
 .MeasureNotationLine {
-	--notation-line-height: clamp(2.75rem, 1.75rem + 4vw, 5rem);
+	/*
+	 * SVG track height (was font-size × 1.35 before MusiSync outlines).
+	 * Floor ~4.5rem keeps stems/heads readable at ≈360px. Glyph width follows
+	 * MusiSync viewBox 48×72 so notes are not squashed into a 1-cell pocket.
+	 */
+	--notation-line-height: clamp(4.5rem, 2.75rem + 6vw, 6.5rem);
+	--notation-glyph-width: calc(var(--notation-line-height) * 48 / 72);
 }
 
 .MeasureNotationLine {
@@ -822,23 +828,28 @@
 	min-height: 0;
 	height: 100%;
 	line-height: 1;
-	overflow: hidden;
+	overflow: visible;
 }
 
 .MeasureNotationGlyph svg {
 	display: block;
 	height: 100%;
 	width: auto;
-	max-width: 100%;
 	max-height: 100%;
 }
 
 .MeasureNotation {
-	min-height: calc(2rem + var(--notation-line-height));
+	min-height: calc(0.75rem + var(--notation-line-height));
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	overflow: hidden;
+}
+
+@media (min-width: 640px) {
+	.MeasureNotation {
+		min-height: calc(2rem + var(--notation-line-height));
+	}
 }
 
 .MeasureNotation .MeasureNotationLine {

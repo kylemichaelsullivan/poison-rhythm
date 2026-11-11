@@ -15,7 +15,7 @@ export function NotationFallback({
 	return (
 		<output
 			className={clsx(
-				'MeasureNotation relative flex w-full items-center justify-center px-3 py-4',
+				'MeasureNotation relative flex w-full items-center justify-center px-2 py-2 sm:px-3 sm:py-4',
 				measureShellClass(phase),
 				hidden && 'opacity-0',
 			)}

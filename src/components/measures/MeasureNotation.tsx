@@ -53,7 +53,7 @@ export function MeasureNotation({
 	return (
 		<div
 			className={clsx(
-				'MeasureNotation relative w-full px-3 py-4',
+				'MeasureNotation relative w-full px-2 py-2 sm:px-3 sm:py-4',
 				measureShellClass(phase),
 				showSticking && 'pb-4',
 				showAccents && 'pt-6',

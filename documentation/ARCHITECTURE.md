@@ -202,7 +202,7 @@ flowchart LR
 | `measure-to-notation.ts` | One `NotationStep` per event (`startCell` / `durationCells` / `beamGroupId`) |
 | `notation-playback.ts` | Length-16 cell→glyph `stepIndex` map for active-token highlight |
 
-UI atoms: `src/components/measures/notation/` (`NoteGlyph`, `RestGlyph`, `NotationBeamLayer`). Accents/sticking overlays position by cell percent on the same track.
+UI atoms: `src/components/measures/notation/` (`NoteGlyph`, `RestGlyph`, `NotationBeamLayer`). Accents/sticking overlays position by cell percent on the same track. Note pockets are height-locked to `--notation-line-height` with `--notation-glyph-width` from the MusiSync 48×72 aspect (stem-centered via `stemX`, not a 1-cell squeeze); rests still span their advance width. Header `ShowNotesTriggerGlyph` uses per-duration cropped square viewBoxes so stems/flags get equal padding. Track floor (~4.5rem) keeps glyphs readable near ≈360px; `MeasureNotation` padding/min-height tighten below `sm`.
 
 `MeasureGrid` lazy-loads `MeasureNotation` and prefetches the chunk via `useNotationPrefetch` when `rhythmRenderMode === 'notation'` (`NotationFallback` shell instead of flashing the cell grid). Grid layout lives in `MeasureCellGrid` (takes `showSticking` as a prop).
 

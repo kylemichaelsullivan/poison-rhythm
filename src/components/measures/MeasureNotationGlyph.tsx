@@ -14,8 +14,9 @@ type MeasureNotationGlyphProps = {
 };
 
 /**
- * One SVG note/rest placed by relative-duration layout. Notes sit in a
- * compact pocket at the stem; rests fill their advance width.
+ * One SVG note/rest placed by relative-duration layout. Notes use a
+ * height-locked MusiSync pocket centered on the stem (not a 1-cell squeeze);
+ * rests fill their advance width.
  */
 export function MeasureNotationGlyph({
 	step,
@@ -35,8 +36,8 @@ export function MeasureNotationGlyph({
 					width: `${Math.max(slot.width, 1) * unit}%`,
 				}
 			: {
-					left: `${(slot.stemX - 0.5) * unit}%`,
-					width: `${unit}%`,
+					left: `calc(${slot.stemX * unit}% - var(--notation-glyph-width) / 2)`,
+					width: 'var(--notation-glyph-width)',
 				};
 
 	return (
@@ -54,15 +55,12 @@ export function MeasureNotationGlyph({
 			data-stem-x={slot.stemX}
 		>
 			{step.kind === 'rest' ? (
-				<RestGlyph
-					duration={step.duration}
-					className='h-full w-auto max-w-full'
-				/>
+				<RestGlyph duration={step.duration} className='h-full w-auto' />
 			) : (
 				<NoteGlyph
 					duration={step.duration}
 					beamed={beamed}
-					className='h-full w-auto max-w-full'
+					className='h-full w-auto'
 				/>
 			)}
 		</span>
