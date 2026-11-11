@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
 import { useSubdivision } from '@/contexts';
 import { useHoverPinPopover } from '@/hooks/useHoverPinPopover';
-import { durationGlyphsForLevel } from '@/lib/notation';
+import { durationInfoForLevel } from '@/lib/notation';
 import { indexToLevel, levelToIndex } from '@/lib/subdivision-levels';
 import { ClickOutside } from './ClickOutside';
 import { ShowNotesSlider } from './ShowNotesSlider';
 import { ShowNotesTrigger } from './ShowNotesTrigger';
+import type { NotationDuration } from '@/lib/notation';
 
 export function ShowNotes() {
 	const { subdivisionLevel, setSubdivisionLevel } = useSubdivision();
@@ -21,7 +22,11 @@ export function ShowNotes() {
 		handleFocus,
 	} = useHoverPinPopover();
 	const value = levelToIndex(subdivisionLevel);
-	const { note: glyph } = durationGlyphsForLevel(subdivisionLevel);
+	const { duration } = durationInfoForLevel(subdivisionLevel);
+	const triggerDuration = duration as Extract<
+		NotationDuration,
+		'quarter' | 'eighth' | 'sixteenth'
+	>;
 
 	useEffect(() => {
 		if (!open) return;
@@ -54,7 +59,7 @@ export function ShowNotes() {
 	return (
 		<div className='ShowNotes relative' ref={wrapperRef}>
 			<ShowNotesTrigger
-				glyph={glyph}
+				duration={triggerDuration}
 				open={open}
 				onMouseEnter={handleHoverOpen}
 				onMouseLeave={handleMouseLeave}

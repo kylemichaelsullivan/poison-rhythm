@@ -14,10 +14,7 @@ export function NextMeasurePreview({
 	display,
 }: NextMeasurePreviewProps) {
 	return (
-		<div
-			className='NextMeasurePreview w-full opacity-35'
-			data-testid='next-measure'
-		>
+		<div className='NextMeasurePreview w-full' data-testid='next-measure'>
 			<span className='sr-only'>Next measure</span>
 			<CurrentMeasureDisplay
 				measure={measure}

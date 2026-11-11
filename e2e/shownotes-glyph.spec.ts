@@ -17,59 +17,25 @@ async function seedTheme(page: Page, theme: 'light' | 'dark' | null) {
 	);
 }
 
-async function expectNoteNotLetter(page: Page) {
+async function expectSvgNoteGlyph(page: Page) {
 	const button = page.getByRole('button', {
 		name: 'Choose Which Note Subdivisions to Show',
 	});
 	await expect(button).toBeVisible();
-	await expect(button).toHaveAttribute('data-musisync-ready', 'true', {
-		timeout: 10_000,
+	await expect(button).toHaveAttribute('data-notation-ready', 'true');
+
+	const glyph = button.locator('[data-notation-glyph]');
+	await expect(glyph).toBeVisible();
+	await expect(glyph.locator('svg')).toBeVisible();
+
+	const duration = await glyph.getAttribute('data-notation-glyph');
+	expect(['quarter', 'eighth', 'sixteenth']).toContain(duration);
+
+	const hasPathInk = await glyph.locator('svg').evaluate((svg) => {
+		const shapes = svg.querySelectorAll('ellipse, path, line, circle, rect');
+		return shapes.length > 0;
 	});
-
-	const canvas = button.locator('canvas');
-	await expect(canvas).toBeVisible();
-
-	const painted = await canvas.evaluate((node) => {
-		if (!(node instanceof HTMLCanvasElement)) {
-			return { ink: 0, musiVsFallback: 0 };
-		}
-		const ctx = node.getContext('2d');
-		if (!ctx) return { ink: 0, musiVsFallback: 0 };
-
-		const { data } = ctx.getImageData(0, 0, node.width, node.height);
-		let ink = 0;
-		for (let i = 3; i < data.length; i += 4) {
-			if (data[i] > 24) ink++;
-		}
-
-		const size = 64;
-		const probe = document.createElement('canvas');
-		probe.width = size;
-		probe.height = size;
-		const pctx = probe.getContext('2d');
-		if (!pctx) return { ink, musiVsFallback: 0 };
-
-		const paint = (font: string): Uint8ClampedArray => {
-			pctx.clearRect(0, 0, size, size);
-			pctx.font = font;
-			pctx.textBaseline = 'alphabetic';
-			pctx.fillStyle = '#000';
-			pctx.fillText('qes', 4, 48);
-			return pctx.getImageData(0, 0, size, size).data;
-		};
-
-		const musi = paint('34px "MusiSync", ui-monospace, monospace');
-		const fallback = paint('34px ui-monospace, monospace');
-		let musiVsFallback = 0;
-		for (let i = 0; i < musi.length; i++) {
-			if (musi[i] !== fallback[i]) musiVsFallback++;
-		}
-
-		return { ink, musiVsFallback };
-	});
-
-	expect(painted.ink).toBeGreaterThan(40);
-	expect(painted.musiVsFallback).toBeGreaterThan(80);
+	expect(hasPathInk).toBe(true);
 }
 
 const themes = [
@@ -93,12 +59,12 @@ const themes = [
 
 test.describe('ShowNotes trigger glyph', () => {
 	for (const theme of themes) {
-		test(`paints a note, not a letter, in ${theme.name}`, async ({ page }) => {
+		test(`paints a note SVG in ${theme.name}`, async ({ page }) => {
 			await seedTheme(page, theme.value);
 			await page.emulateMedia({ colorScheme: theme.colorScheme });
 			await page.goto('/');
 			await generateRound(page);
-			await expectNoteNotLetter(page);
+			await expectSvgNoteGlyph(page);
 		});
 	}
 });

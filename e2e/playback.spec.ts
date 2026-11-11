@@ -184,7 +184,7 @@ test.describe('measure playback', () => {
 		).toBeVisible();
 	});
 
-	test('Measures section tabs Eye, Volume, Previous, then Next', async ({
+	test('Measures section tabs Eye, Ear, Volume, Previous, then Next', async ({
 		page,
 	}) => {
 		await page.goto('/');
@@ -198,7 +198,10 @@ test.describe('measure playback', () => {
 		await next.click();
 
 		const eye = page.getByRole('button', {
-			name: /Next Measure Preview/,
+			name: /Show Next Measure/,
+		});
+		const ear = page.getByRole('button', {
+			name: /Listen Before You Play/,
 		});
 		const volume = page.getByRole('button', { name: 'Volume', exact: true });
 		const previous = page.getByRole('button', {
@@ -209,11 +212,46 @@ test.describe('measure playback', () => {
 		await eye.focus();
 		await expect(eye).toBeFocused();
 		await page.keyboard.press('Tab');
+		await expect(ear).toBeFocused();
+		await page.keyboard.press('Tab');
 		await expect(volume).toBeFocused();
 		await page.keyboard.press('Tab');
 		await expect(previous).toBeFocused();
 		await page.keyboard.press('Tab');
 		await expect(next).toBeFocused();
+	});
+
+	test('Measures practice toggles Show Next Measure and Listen Before You Play', async ({
+		page,
+	}) => {
+		await page.goto('/');
+		await generateRound(page);
+
+		const eye = page.getByRole('button', {
+			name: 'Show Next Measure: Off',
+			exact: true,
+		});
+		const ear = page.getByRole('button', {
+			name: 'Listen Before You Play: Off',
+			exact: true,
+		});
+
+		await eye.click();
+		await expect(
+			page.getByRole('button', {
+				name: 'Show Next Measure: On',
+				exact: true,
+			}),
+		).toBeVisible();
+		await expect(page.getByTestId('next-measure')).toBeVisible();
+
+		await ear.click();
+		await expect(
+			page.getByRole('button', {
+				name: 'Listen Before You Play: On',
+				exact: true,
+			}),
+		).toBeVisible();
 	});
 
 	test('Volume menu confirms Preview mute while Playback is on', async ({

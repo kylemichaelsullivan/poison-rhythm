@@ -8,7 +8,7 @@ import {
 } from './duration-units';
 import type { SubdivisionLevel } from '@/lib/preference-schemas';
 import type { RhythmMeasure } from '@/types';
-import type { NotationDuration } from './musisync-glyphs';
+import type { NotationDuration } from './notation-duration';
 
 export type OnsetSpan = {
 	startCell: number;

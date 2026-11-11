@@ -3,7 +3,7 @@ import { spellOnsetSegments } from './spell-onsets';
 import { spellRests } from './spell-rests';
 import type { SubdivisionLevel } from '@/lib/preference-schemas';
 import type { RhythmMeasure, RichRhythmMeasure, StickingHand } from '@/types';
-import type { NotationDuration } from './musisync-glyphs';
+import type { NotationDuration } from './notation-duration';
 
 export type NotationEvent = {
 	startCell: number;

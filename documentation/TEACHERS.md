@@ -13,7 +13,7 @@ Skills it targets:
 - Optional **auditory preview** before a “your turn” pass
 - Optional **memory** (poison hidden during playback)
 
-It is not a full notation curriculum. **Grid** mode is a piano-roll view; **Notation** mode uses MusiSync glyphs for conventional note/rest shapes when you want staff-like reading practice.
+It is not a full notation curriculum. **Grid** mode is a piano-roll view; **Notation** mode uses SVG note/rest shapes (duration-proportional spacing) when you want staff-like reading practice.
 
 ## Five-minute classroom start
 
@@ -60,10 +60,12 @@ Former separate Memory / Mirror play modes are gone; use **Poison Rhythm** mode 
 
 ## Listening then playing (demo pass)
 
-In **Settings → Mode**:
+From the Measures header (also **Settings → Mode**):
 
-- **Listen Before You Play** — for each measure: a **Listening** (demo) pass, then a **Playing** (student) pass.
-- **Volume** (Measures speaker, also Settings → Sound) — mute **Metronome**, **Playback** (the student pass) or **Preview** (the Listening pass). Click the speaker while the menu is open to mute all three; click again to restore the previous mix, or unmute all if there is nothing to restore. Mute Playback and leave Preview on for call-and-response. Muting Preview while Playback stays on asks for confirmation: Mute Preview, Mute Both or Cancel. If Playback and Preview are both muted, turning Playback on restores Preview too.
+- **Show Next Measure** (eye) — peeks the upcoming measure under the live one.
+- **Listen Before You Play** (ear) — for each measure: a **Listening** (demo) pass, then a **Playing** (student) pass.
+
+**Volume** (Measures speaker, also Settings → Sound) — mute **Metronome**, **Playback** (the student pass) or **Preview** (the Listening pass). Click the speaker while the menu is open to mute all three; click again to restore the previous mix, or unmute all if there is nothing to restore. Mute Playback and leave Preview on for call-and-response. Muting Preview while Playback stays on asks for confirmation: Mute Preview, Mute Both or Cancel. If Playback and Preview are both muted, turning Playback on restores Preview too.
 
 Optional **Count-In** is under **Settings → Sound** (Grid / Notation). During count-in, beat numbers show on the Play button. **Scroll** always counts in and hides the Mode **Practice** group, Preview and the Count-In toggle.
 
@@ -74,7 +76,7 @@ From the badge on the Poison Rhythm section, or **Settings → Mode → Display*
 | Mode | Teacher note |
 |------|----------------|
 | **Grid** | Clearest for counting cells and subdivisions; great for beginners. |
-| **Notation** | MusiSync note/rest glyphs; better once students can map duration shapes. |
+| **Notation** | SVG note/rest glyphs with conventional beams; better once students can map duration shapes. |
 | **Scroll** | Guitar Hero–style highway; rounded hit bars approach a judgment line and sound when they reach it (locked to the audio clock). Pick travel direction with a single-press D-pad (Up / Down / Left / Right). Always counts in (one lead-in measure so the first hit arrives with the downbeat); no Practice toggles or Preview mute. The Poison Rhythm box shows sheet music and the grid stacked; Measures is the highway. Extra decoy patterns more than fill the highway past the poison so students can’t spot it by empty space; Classic still stops playback on the poison. |
 
 ## Suggested lesson arcs

@@ -57,6 +57,7 @@ Phone-up layout (≈360px primary; 320px must not overflow horizontally): safe-a
 | `DifficultyControls` | `DifficultyFramedBlock` / `DifficultySettingsBlock`, help + play-mode modals; regen ack via `DifficultyRegenAckHost` |
 | `MeasureSlider` | `MeasureCarouselChrome` (`live` sets `data-testid="measure-slider"`), `NextMeasurePreview` / `ScrollHighway`, `useMeasurePlaybackSync` |
 | `ShowNotes` | `ShowNotesTrigger`, `ShowNotesSlider`, `useHoverPinPopover` |
+| `MeasuresPracticeToggles` | Header eye + ear IconToggles for Show Next Measure / Listen Before You Play (hidden in Scroll) |
 | `VolumeMenu` | `VolumeMenuTrigger`, `VolumeMenuPanel`, `useHoverPinPopover`; Metronome / Playback / Preview mutes (Preview omitted in Scroll); click speaker while open mutes all, click again restores the last mix or unmutes all |
 | `PoisonSection` | `PoisonSectionHeader`, `PoisonMeasureContent`, `PoisonReferenceViews` (Scroll stacks notation + grid), `PoisonMeasureFrame` / `HiddenPoisonOverlay` (badge opens Body-owned `DisplayModeModal`) |
 | `Body` | `useSoftDisableFocus`, `useDisclosure` → single `DisplayModeModal` |
@@ -64,7 +65,7 @@ Phone-up layout (≈360px primary; 320px must not overflow horizontally): safe-a
 | `MeasureGrid` | Prop-driven `display` → `MeasureCellGrid` / lazy `MeasureNotation`, `NotationFallback`, `useNotationPrefetch` |
 | `ColorAccentSettings` | Owns prefs + role/contrast hooks; `ContrastScoreMeter` owns theme; tray memoizes scores on role + partner |
 
-Settings shell: footer **Settings** → lazy `SettingsOverlay` → tabs `Mode` / `Sound` / `Colors` over `layout/settings/` atoms (`SettingsGroup`, `EnableToggle`, `When`, …). Color accents persist via `ColorPreferencesProvider` (student-scoped preference keys; null = brand); Colors UI is composed by `ColorAccentSettings`. Main-UI shortcuts remain: Poison/Measures badge → Body-owned `DisplayModeModal`; header ShowNotes; Measures **Volume** menu (Metronome / Playback / Preview); footer metronome for tempo (`CornerModal` `tone='muted'` when metronome muted). Mirrored in Settings: display + play mode + complexity + practice under Mode; feedback → mute channels → tempo under Sound; crayon accents + theme lightbulbs on the contrast meter under Colors. Difficulty + play-mode badge also live in the title About modal (`AboutPoisonRhythmModal`). See [`COLORS.md`](COLORS.md) and [`CONTRAST.md`](CONTRAST.md).
+Settings shell: footer **Settings** → lazy `SettingsOverlay` → tabs `Mode` / `Sound` / `Colors` over `layout/settings/` atoms (`SettingsGroup`, `EnableToggle`, `When`, …). Color accents persist via `ColorPreferencesProvider` (student-scoped preference keys; null = brand); Colors UI is composed by `ColorAccentSettings`. Main-UI shortcuts remain: Poison/Measures badge → Body-owned `DisplayModeModal`; header ShowNotes; Measures **Practice** toggles (Show Next / Listen Before You Play) and **Volume** menu (Metronome / Playback / Preview); footer metronome for tempo (`CornerModal` `tone='muted'` when metronome muted). Mirrored in Settings: display + play mode + complexity + practice under Mode; feedback → mute channels → tempo under Sound; crayon accents + theme lightbulbs on the contrast meter under Colors. Difficulty + play-mode badge also live in the title About modal (`AboutPoisonRhythmModal`). See [`COLORS.md`](COLORS.md) and [`CONTRAST.md`](CONTRAST.md).
 
 ## State flow
 
@@ -177,18 +178,17 @@ Hide-during-playback is controlled by Poison Rhythm visibility (`poisonMode: hid
 
 ## Notation pipeline
 
-When `rhythmRenderMode` is `notation`, measures render as MusiSync font glyphs instead of the 16-cell grid.
+When `rhythmRenderMode` is `notation`, measures render as per-event SVG note/rest glyphs on a 16-cell duration-proportional track (beams drawn separately).
 
 ```mermaid
 flowchart LR
   measure[RhythmMeasure + RichRhythmMeasure]
   events[measureToNotationEvents]
   spell[spell-onsets / spell-rests]
-  beam[beam-groups / beam-glyphs]
-  tokens[eventsToGlyphTokens]
+  beam[beam-groups]
   steps[measureToNotationSteps]
-  ui[MeasureNotation]
-  measure --> events --> spell --> beam --> tokens --> steps --> ui
+  ui[MeasureNotation SVG + BeamLayer]
+  measure --> events --> spell --> beam --> steps --> ui
 ```
 
 | Module | Role |
@@ -196,18 +196,17 @@ flowchart LR
 | `notation-events.ts` | Boolean grid → timed note/rest events |
 | `spell-onsets.ts` / `spell-rests.ts` | Conventional 4/4 duration spelling per subdivision level |
 | `duration-units.ts` | Cell ↔ duration mapping |
-| `beam-groups.ts` / `beam-notes.ts` / `beam-glyphs.ts` | Beamed eighth/sixteenth groups (exact patterns; `[1,2]`/`[2,1]`/`[1,1]` → derived U+E001–E003, not stock dotted `O`/`o`) |
-| `musisync-glyphs.ts` | Duration keys; dotted notes `i`/`j`/`d`; dotted rests = rest + `.` |
-| `events-to-musisync.ts` | Events → MusiSync glyph string |
-| `measure-to-notation.ts` | Flat `NotationStep[]` with `startCell` / `durationCells` for overlays and playback |
+| `beam-groups.ts` | Assign `beamGroupId` to contiguous beamable notes in a beat |
+| `beam-geometry.ts` | Primary/secondary beam segments for SVG `NotationBeamLayer` |
+| `notation-duration.ts` | Duration types; dotted helpers; ShowNotes `durationInfoForLevel` |
+| `measure-to-notation.ts` | One `NotationStep` per event (`startCell` / `durationCells` / `beamGroupId`) |
 | `notation-playback.ts` | Length-16 cell→glyph `stepIndex` map for active-token highlight |
-| `load-musisync-font.ts` | `@font-face` (`font-display: block`) + `index.html` preload + inline FontFace; `prefetchMusiSyncFont` in `main` loads **all** duration/beam glyphs; ready = canvas vs matching fallback (never `fonts.check()` on Latin keys); `useMusiSyncFont` in UI |
 
-Font assets: canonical copies in `src/assets/fonts/`; served from `public/fonts/` as static `/fonts/MusiSync.*` URLs. See [`src/assets/fonts/README.md`](../src/assets/fonts/README.md) for glyph keys and refresh steps.
+UI atoms: `src/components/measures/notation/` (`NoteGlyph`, `RestGlyph`, `NotationBeamLayer`). Accents/sticking overlays position by cell percent on the same track.
 
-`MeasureGrid` lazy-loads `MeasureNotation` and prefetches the chunk + MusiSync font via `useNotationPrefetch` when `rhythmRenderMode === 'notation'` (`NotationFallback` shell instead of flashing the cell grid). Grid layout lives in `MeasureCellGrid` (takes `showSticking` as a prop).
+`MeasureGrid` lazy-loads `MeasureNotation` and prefetches the chunk via `useNotationPrefetch` when `rhythmRenderMode === 'notation'` (`NotationFallback` shell instead of flashing the cell grid). Grid layout lives in `MeasureCellGrid` (takes `showSticking` as a prop).
 
-Playback follow: `useSubdivisionProgress` + `subdivisionStepToCell` + `buildNotationCellStepMap` keep the active `MeasureNotationGlyph` (`data-active`) colored for its full spelled duration (Secondary on listening, Dominant on playing; inactive tokens stay full ink).
+Playback follow: `useSubdivisionProgress` + `subdivisionStepToCell` + `buildNotationCellStepMap` keep the active `MeasureNotationGlyph` (`data-active`) colored for its spelled duration — beamed sixteenths highlight independently (Secondary on listening, Dominant on playing; inactive tokens stay full ink).
 
 ## Audio engine
 

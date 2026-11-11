@@ -76,8 +76,6 @@
 	--color-accent: var(--color-brand-cork);
 	--color-muted: var(--color-ink-700);
 
-	--font-musisync: "MusiSync", ui-monospace, monospace;
-
 	/*
 	 * Side-gutter exterior controls (carousel prev/next, metronome ±, …).
 	 * Lateral: sit `width` outside a `relative` host.
@@ -183,16 +181,6 @@
 		var(--side-gutter-control-size) +
 		var(--side-gutter-collapse-inset)
 	);
-}
-
-@font-face {
-	font-family: "MusiSync";
-	src:
-		url("/fonts/MusiSync.woff2") format("woff2"),
-		url("/fonts/MusiSync.ttf") format("truetype");
-	font-weight: normal;
-	font-style: normal;
-	font-display: block;
 }
 
 :root {
@@ -814,56 +802,64 @@
 	grid-column: span 2;
 }
 
-/* MusiSync notation — static files in public/fonts; preload + FontFace in index.html */
-.MusiSync {
-	font-family: "MusiSync", ui-monospace, monospace;
-}
-
+/* Duration-proportional SVG notation (16-cell track). */
 .MeasureNotation,
 .MeasureNotationLine {
-	--notation-font-size: clamp(2.5rem, 1.5rem + 5vw, 5.5rem);
-	--notation-line-height: 1.35;
+	--notation-line-height: clamp(2.75rem, 1.75rem + 4vw, 5rem);
 }
 
 .MeasureNotationLine {
-	font-size: var(--notation-font-size);
-	line-height: var(--notation-line-height);
-	min-height: calc(var(--notation-font-size) * var(--notation-line-height));
-	display: flex;
-	flex-wrap: nowrap;
-	justify-content: center;
-	align-items: center;
-	gap: 0.4em;
-	letter-spacing: normal;
-	overflow-x: auto;
-	overflow-y: hidden;
+	position: relative;
+	min-height: var(--notation-line-height);
+	height: var(--notation-line-height);
+	width: 100%;
+	/* Clip — never `auto`, which can paint a scrollbar track through the heads. */
+	overflow: hidden;
 }
 
 .MeasureNotationGlyph {
-	letter-spacing: 0;
-	flex: none;
+	min-width: 0;
+	min-height: 0;
+	height: 100%;
 	line-height: 1;
+	overflow: hidden;
 }
 
-/* Tuck rest augmentation dots slightly (MusiSync `.` advance is a bit wide). */
-.MeasureNotationGlyph--dotted {
-	letter-spacing: -0.08em;
-	padding-inline-end: 0.08em;
+.MeasureNotationGlyph svg {
+	display: block;
+	height: 100%;
+	width: auto;
+	max-width: 100%;
+	max-height: 100%;
 }
 
 .MeasureNotation {
-	min-height: calc(
-		2rem +
-		var(--notation-font-size) *
-		var(--notation-line-height)
-	);
+	min-height: calc(2rem + var(--notation-line-height));
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	overflow: hidden;
 }
 
 .MeasureNotation .MeasureNotationLine {
 	width: 100%;
+}
+
+.MeasureNotationGlyph,
+.NotationBeamLayer {
+	z-index: 1;
+}
+
+/*
+ * Next-measure preview: keep the measure shell fully opaque so its border and
+ * surface cannot composite into a gray stroke across the noteheads. Fade only
+ * the notation ink / grid cells inside.
+ */
+.NextMeasurePreview .MeasureNotationLine,
+.NextMeasurePreview .RhythmAccentOverlay,
+.NextMeasurePreview .RhythmStickingOverlay,
+.NextMeasurePreview .MeasureBeatGroup {
+	opacity: 0.35;
 }
 
 .RhythmStickingOverlay {

@@ -1,11 +1,10 @@
 import clsx from 'clsx';
-import { useTheme } from '@/contexts';
-import { useMusiSyncFont } from '@/hooks/useMusiSyncFont';
 import { controlButtonBaseClassName } from '@/lib/control-classes';
 import { ShowNotesTriggerGlyph } from './ShowNotesTriggerGlyph';
+import type { NotationDuration } from '@/lib/notation';
 
 type ShowNotesTriggerProps = {
-	glyph: string;
+	duration: Extract<NotationDuration, 'quarter' | 'eighth' | 'sixteenth'>;
 	open: boolean;
 	onMouseEnter: () => void;
 	onMouseLeave: () => void;
@@ -15,7 +14,7 @@ type ShowNotesTriggerProps = {
 };
 
 export function ShowNotesTrigger({
-	glyph,
+	duration,
 	open,
 	onMouseEnter,
 	onMouseLeave,
@@ -23,9 +22,6 @@ export function ShowNotesTrigger({
 	onBlur,
 	onClick,
 }: ShowNotesTriggerProps) {
-	const { ready: fontReady, ensureLoaded } = useMusiSyncFont();
-	const { effectiveTheme } = useTheme();
-
 	return (
 		<button
 			type='button'
@@ -35,28 +31,17 @@ export function ShowNotesTrigger({
 				open && 'ring-2 ring-primary',
 			)}
 			title='Choose Which Note Subdivisions to Show'
-			data-musisync-ready={fontReady ? 'true' : 'false'}
-			onMouseEnter={() => {
-				// Worst case: finish loading subdivision glyphs on hover.
-				ensureLoaded();
-				onMouseEnter();
-			}}
+			data-notation-ready='true'
+			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
-			onFocus={() => {
-				ensureLoaded();
-				onFocus();
-			}}
+			onFocus={onFocus}
 			onBlur={(e) => onBlur(e.relatedTarget)}
 			onClick={onClick}
 			aria-expanded={open}
 			aria-haspopup='dialog'
 			aria-label='Choose Which Note Subdivisions to Show'
 		>
-			<ShowNotesTriggerGlyph
-				glyph={glyph}
-				ready={fontReady}
-				effectiveTheme={effectiveTheme}
-			/>
+			<ShowNotesTriggerGlyph duration={duration} />
 		</button>
 	);
 }

@@ -1,13 +1,9 @@
 import { describe, expect, test } from 'bun:test';
 import {
-	beamedGlyphForDurations,
 	durationForCells,
 	eventsToAbcBody,
-	eventsToMusiSyncString,
-	MUSISYNC_BEAMED,
-	MUSISYNC_GLYPH,
+	isDottedDuration,
 	measureToNotationEvents,
-	musisyncGlyphFor,
 } from '@/lib/notation';
 import { REST_MEASURE } from '@/types';
 
@@ -24,44 +20,28 @@ describe('dotted notes', () => {
 		expect(durationForCells(3)).toBe('dottedEighth');
 		expect(durationForCells(6)).toBe('dottedQuarter');
 		expect(durationForCells(12)).toBe('dottedHalf');
+		expect(isDottedDuration('dottedEighth')).toBe(true);
+		expect(isDottedDuration('dottedQuarter')).toBe(true);
+		expect(isDottedDuration('dottedHalf')).toBe(true);
 	});
 
-	test('MusiSync glyphs for dotted values', () => {
-		expect(musisyncGlyphFor('note', 'dottedEighth')).toBe(
-			MUSISYNC_GLYPH.dottedEighthNote,
-		);
-		expect(musisyncGlyphFor('note', 'dottedQuarter')).toBe(
-			MUSISYNC_GLYPH.dottedQuarterNote,
-		);
-		expect(musisyncGlyphFor('note', 'dottedHalf')).toBe(
-			MUSISYNC_GLYPH.dottedHalfNote,
-		);
-		expect(musisyncGlyphFor('rest', 'dottedEighth')).toBe('E.');
-		expect(musisyncGlyphFor('rest', 'dottedQuarter')).toBe('Q.');
-		expect(musisyncGlyphFor('rest', 'dottedHalf')).toBe('H.');
-	});
-
-	test('dotted eighth + sixteenth beams to MusiSync o', () => {
-		expect(beamedGlyphForDurations([3, 1])).toBe(
-			MUSISYNC_BEAMED.dottedEighthSixteenth,
-		);
-		// Hits on beat and on “a”
+	test('dotted eighth + sixteenth share a beamGroupId', () => {
 		const events = measureToNotationEvents(hits(0, 3), undefined, 'sixteenths');
-		expect(eventsToMusiSyncString(events).startsWith('o')).toBe(true);
+		const notes = events.filter((e) => e.kind === 'note' && e.startCell < 4);
+		expect(notes.map((n) => n.durationCells)).toEqual([3, 1]);
+		expect(new Set(notes.map((n) => n.beamGroupId)).size).toBe(1);
 		expect(eventsToAbcBody(events).startsWith('c3 c')).toBe(true);
 	});
 
-	test('sixteenth + dotted eighth beams to MusiSync O', () => {
-		expect(beamedGlyphForDurations([1, 3])).toBe(
-			MUSISYNC_BEAMED.sixteenthDottedEighth,
-		);
-		// Hits on beat and on “e”; next attack on beat 2
+	test('sixteenth + dotted eighth share a beamGroupId', () => {
 		const events = measureToNotationEvents(
 			hits(0, 1, 4),
 			undefined,
 			'sixteenths',
 		);
-		expect(eventsToMusiSyncString(events).startsWith('O')).toBe(true);
+		const notes = events.filter((e) => e.kind === 'note' && e.startCell < 4);
+		expect(notes.map((n) => n.durationCells)).toEqual([1, 3]);
+		expect(new Set(notes.map((n) => n.beamGroupId)).size).toBe(1);
 		expect(eventsToAbcBody(events).startsWith('c c3')).toBe(true);
 	});
 
@@ -71,9 +51,11 @@ describe('dotted notes', () => {
 			undefined,
 			'sixteenths',
 		);
-		expect(eventsToMusiSyncString(events)).toBe(
-			`qS${MUSISYNC_BEAMED.sixteenthEighth}qn`,
+		const beat2 = events.filter(
+			(e) => e.kind === 'note' && e.startCell >= 4 && e.startCell < 8,
 		);
+		expect(beat2.map((n) => n.durationCells)).toEqual([1, 2]);
+		expect(new Set(beat2.map((n) => n.beamGroupId)).size).toBe(1);
 	});
 
 	test('rest + eighth + sixteenth beams as undotted [2,1]', () => {
@@ -82,11 +64,10 @@ describe('dotted notes', () => {
 			undefined,
 			'sixteenths',
 		);
-		expect(
-			eventsToMusiSyncString(events).startsWith(
-				`S${MUSISYNC_BEAMED.eighthSixteenth}`,
-			),
-		).toBe(true);
+		expect(events[0]).toMatchObject({ kind: 'rest', duration: 'sixteenth' });
+		const notes = events.filter((e) => e.kind === 'note' && e.startCell < 4);
+		expect(notes.map((n) => n.durationCells)).toEqual([2, 1]);
+		expect(new Set(notes.map((n) => n.beamGroupId)).size).toBe(1);
 	});
 
 	test('eighth rest + two sixteenths beams as [1,1]', () => {
@@ -95,11 +76,10 @@ describe('dotted notes', () => {
 			undefined,
 			'sixteenths',
 		);
-		expect(
-			eventsToMusiSyncString(events).startsWith(
-				`E${MUSISYNC_BEAMED.twoSixteenths}`,
-			),
-		).toBe(true);
+		expect(events[0]).toMatchObject({ kind: 'rest', duration: 'eighth' });
+		const notes = events.filter((e) => e.kind === 'note' && e.startCell < 4);
+		expect(notes.map((n) => n.durationCells)).toEqual([1, 1]);
+		expect(new Set(notes.map((n) => n.beamGroupId)).size).toBe(1);
 	});
 
 	test('repeated e+& syncopation beams each [1,2] pair', () => {
@@ -108,13 +88,19 @@ describe('dotted notes', () => {
 			undefined,
 			'sixteenths',
 		);
-		const se = MUSISYNC_BEAMED.sixteenthEighth;
-		expect(eventsToMusiSyncString(events)).toBe(`S${se}S${se}S${se}y`);
+		for (const beat of [0, 1, 2]) {
+			const notes = events.filter(
+				(e) =>
+					e.kind === 'note' &&
+					e.startCell >= beat * 4 &&
+					e.startCell < beat * 4 + 4,
+			);
+			expect(notes.map((n) => n.durationCells)).toEqual([1, 2]);
+			expect(new Set(notes.map((n) => n.beamGroupId)).size).toBe(1);
+		}
 	});
 
 	test('isolated dotted eighth then rest within a beat', () => {
-		// Hit only on beat 1; next hit on beat 2 → attack spelling prefers
-		// quarter when span is 4, not dotted eighth
 		const quarterSpan = measureToNotationEvents(
 			hits(0, 4),
 			undefined,
@@ -125,7 +111,6 @@ describe('dotted notes', () => {
 			duration: 'quarter',
 		});
 
-		// Span of 3 sixteenths to next attack → dotted eighth
 		const events = measureToNotationEvents(
 			hits(0, 3, 4),
 			undefined,
@@ -149,6 +134,5 @@ describe('dotted notes', () => {
 			duration: 'dottedHalf',
 			durationCells: 12,
 		});
-		expect(eventsToMusiSyncString(events).startsWith('d')).toBe(true);
 	});
 });

@@ -38,9 +38,12 @@ export default defineConfig({
 					if (id.includes('/src/components/layout/settings/')) {
 						return 'settings-ui';
 					}
+					// Lazy UI only — keep `@/lib/notation` in the shared graph so
+					// ShowNotes / settings can import duration helpers without a
+					// notation ↔ settings-ui circular chunk.
 					if (
-						id.includes('/src/lib/notation/') ||
-						id.includes('/src/components/measures/MeasureNotation')
+						id.includes('/src/components/measures/MeasureNotation') ||
+						id.includes('/src/components/measures/notation/')
 					) {
 						return 'notation';
 					}

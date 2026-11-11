@@ -13,8 +13,8 @@ import { REST_MEASURE } from '@/types';
 import { CurrentMeasureDisplay, MeasureSlider, ScrollHighway } from '.';
 import { MeasureCarouselChrome } from './MeasureCarouselChrome';
 import { MeasureHeightReserve } from './MeasureHeightReserve';
+import { MeasuresPracticeToggles } from './MeasuresPracticeToggles';
 import { MeasuresSectionHeaderActions } from './MeasuresSectionHeaderActions';
-import { NextMeasureToggle } from './NextMeasureToggle';
 
 type MeasuresSectionProps = {
 	onNewPoison: () => void;
@@ -70,7 +70,7 @@ export function MeasuresSection({
 		<MeasureCarouselChrome
 			nextSlot={
 				showNext ? (
-					<div className='NextMeasurePreview w-full opacity-35'>
+					<div className='NextMeasurePreview w-full'>
 						<MeasureHeightReserve measure={REST_MEASURE} display={display} />
 					</div>
 				) : undefined
@@ -96,7 +96,7 @@ export function MeasuresSection({
 		>
 			<Section
 				title='Measures'
-				headerLeading={scrollMode ? undefined : <NextMeasureToggle />}
+				headerLeading={scrollMode ? undefined : <MeasuresPracticeToggles />}
 				headerAction={
 					<MeasuresSectionHeaderActions
 						showDisplayModeTrigger={showDisplayModeTrigger}

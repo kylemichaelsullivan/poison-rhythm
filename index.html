@@ -11,25 +11,6 @@
 		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
 		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 		<link rel="manifest" href="/site.webmanifest" />
-		<link
-			rel="preload"
-			href="/fonts/MusiSync.woff2"
-			as="font"
-			type="font/woff2"
-			crossorigin
-		/>
-		<script>
-			(() => {
-				if (typeof FontFace === 'undefined' || !document.fonts) return;
-				var face = new FontFace(
-					'MusiSync',
-					'url("/fonts/MusiSync.woff2") format("woff2"), url("/fonts/MusiSync.ttf") format("truetype")',
-					{ display: 'block' },
-				);
-				document.fonts.add(face);
-				face.load().catch(() => {});
-			})();
-		</script>
 	</head>
 	<body>
 		<div id="root"></div>
