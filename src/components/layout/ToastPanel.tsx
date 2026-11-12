@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { TimedNoticeProgress } from '@/components/layout/TimedNoticeProgress';
 import { Caption } from '@/components/ui';
 import { useTimedDismiss } from '@/hooks/useTimedDismiss';
-import { controlSurfaceBaseClassName } from '@/lib/control-classes';
+import { hierarchyBorderClass } from '@/lib/hierarchy-border';
 
 type ToastPanelProps = {
 	message: string;
@@ -11,7 +11,7 @@ type ToastPanelProps = {
 	onDismiss: () => void;
 };
 
-/** Subtle lower-right status card with a timed-notice progress bar. */
+/** Lower-right status card with a timed-notice progress bar. */
 export function ToastPanel({
 	message,
 	durationMs,
@@ -23,8 +23,8 @@ export function ToastPanel({
 	return (
 		<output
 			className={clsx(
-				'ToastPanel relative block max-w-[min(18rem,calc(100vw-1.5rem))] overflow-hidden rounded-lg px-3 py-2.5 shadow-raised',
-				controlSurfaceBaseClassName,
+				'ToastPanel relative block max-w-[min(18rem,calc(100vw-1.5rem))] overflow-hidden rounded-lg bg-chrome px-3 py-2.5 text-black shadow-raised',
+				hierarchyBorderClass('emphasis', 'mid'),
 			)}
 			aria-live='polite'
 			aria-atomic='true'
@@ -33,7 +33,7 @@ export function ToastPanel({
 			onMouseLeave={() => setPaused(false)}
 		>
 			<TimedNoticeProgress durationMs={durationMs} paused={paused} />
-			<Caption size='sm'>{message}</Caption>
+			<Caption size='base'>{message}</Caption>
 		</output>
 	);
 }

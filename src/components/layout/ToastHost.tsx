@@ -10,7 +10,7 @@ export function ToastHost() {
 	if (message == null) return null;
 
 	return createPortal(
-		<div className='ToastHost pointer-events-auto fixed z-[60] bottom-[max(5.25rem,calc(4.5rem+env(safe-area-inset-bottom)))] right-[max(0.75rem,env(safe-area-inset-right))]'>
+		<div className='ToastHost pointer-events-auto fixed z-[60] bottom-[max(0.75rem,env(safe-area-inset-bottom))] right-[max(0.75rem,env(safe-area-inset-right))]'>
 			<ToastPanel
 				key={toastId}
 				message={message}
