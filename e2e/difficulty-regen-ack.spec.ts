@@ -1,15 +1,11 @@
 import { expect, test } from '@playwright/test';
 import { TIMED_NOTICE_DURATION_MS } from '../src/lib/timed-notice';
-import { generateRound } from './helpers';
+import { generateRound, openAboutFromTitle } from './helpers';
 import type { Page } from '@playwright/test';
 
 async function draftDifficulty(page: Page) {
-	await page
-		.getByRole('banner')
-		.getByRole('button', { name: 'Poison Rhythm' })
-		.click();
+	await openAboutFromTitle(page);
 	const about = page.getByRole('dialog', { name: 'About Poison Rhythm' });
-	await expect(about).toBeVisible();
 	const slider = about.getByRole('slider', { name: 'Difficulty' });
 	const current = Number(await slider.getAttribute('aria-valuenow'));
 	await slider.focus();
@@ -98,10 +94,7 @@ test.describe('difficulty regen acknowledgement', () => {
 	}) => {
 		await page.goto('/');
 		await generateRound(page);
-		await page
-			.getByRole('banner')
-			.getByRole('button', { name: 'Poison Rhythm' })
-			.click();
+		await openAboutFromTitle(page);
 		const about = page.getByRole('dialog', { name: 'About Poison Rhythm' });
 		await about.getByRole('button', { name: 'Close Modal' }).click();
 		await expect(

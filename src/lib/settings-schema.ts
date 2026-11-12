@@ -289,3 +289,16 @@ export function gameModeHudBadge(
 				: null;
 	}
 }
+
+const CLASSIC_POISON_HUD_BADGE: GameModeHudBadge = {
+	label: 'Poison',
+	tone: 'classic',
+	endless: false,
+};
+
+/** HUD badge for the current play mode, including classic Poison. */
+export function resolveGameModeHudBadge(
+	settings: Pick<GameSettings, 'gameMode' | 'endless'>,
+): GameModeHudBadge {
+	return gameModeHudBadge(settings) ?? CLASSIC_POISON_HUD_BADGE;
+}

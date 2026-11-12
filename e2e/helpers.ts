@@ -91,6 +91,14 @@ export async function seedPlaybackPrefs(
 	);
 }
 
+/** Open About from the header brand title (not the Mode icon). */
+export async function openAboutFromTitle(page: Page) {
+	await page.locator('header .AppTitleBrandTrigger').click();
+	await expect(
+		page.getByRole('dialog', { name: 'About Poison Rhythm' }),
+	).toBeVisible();
+}
+
 /** Wait for the auto-seeded first round (or after New) to be ready for play. */
 export async function generateRound(page: Page) {
 	await expect(page.getByTestId('measure-slider')).toBeVisible();

@@ -40,7 +40,7 @@ Tip: raise **subdivision** before maxing difficulty if students struggle to *see
 
 ## Play modes
 
-Change mode from the **Difficulty** section badge in the title About modal (click Poison Rhythm), or under **Settings → Mode → Play Mode**.
+Open the title About modal from the **Poison Rhythm** header title or the Mode icon beside it, then use the **Difficulty** section badge to change play mode — or go to **Settings → Mode → Play Mode**.
 
 | Mode | Use when… |
 |------|-----------|

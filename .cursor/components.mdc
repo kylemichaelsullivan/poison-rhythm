@@ -63,13 +63,19 @@ src/components/
 - **Uses**: `useSoftDisableFocus` for New → Play focus guidance; renders PoisonSection, MeasuresSection, PlayControls; owns the single `DisplayModeModal` via `useDisclosure`
 - **No props**: Reads game state from context
 
+### AppTitle
+
+- **Purpose**: Header brand title + Mode icon
+- **Uses**: `AboutPoisonRhythmButton` and `ModeBadgeTrigger` both call `openAbout`; `resolveGameModeHudBadge` from settings
+- **Layout**: Mode icon sits immediately to the right of **Poison Rhythm**; Mode trigger accessible name is **Mode and Difficulty** (distinct from the brand title); Play Modes stay on the Difficulty badge inside About
+
 ### DifficultyControls (composer)
 
 - **Purpose**: Difficulty section with play-mode badge + help / Play Modes modals
 - **Uses**: `DifficultyFramedBlock` / `DifficultySettingsBlock`, `DifficultyHelpModal`, `PlayModesModal`, `useDisclosure` (local open/close only)
 - **Global bindings**: `DifficultySlider` → `usePendingDifficulty`; `PlayModeOptionList` / mode badge → `useSettings`
 - **Variants**: `framed` (About section box with mode badge) vs compact Settings block (`framed={false}`)
-- **Note**: Lives in the title About modal and Settings → Mode; header ShowNotes remains the quick subdivision control. After the host modal closes with a pending difficulty change, `PendingDifficultyProvider` regenerates the round; `DifficultyRegenAckHost` (App-level) shows a timed acknowledgement (`Modal` `dismissAfterMs`, no OK button).
+- **Note**: Header title Mode icon opens this About modal; Settings → Mode has the full Play Mode list; header ShowNotes remains the quick subdivision control. After the host modal closes with a pending difficulty change, `PendingDifficultyProvider` regenerates the round; `DifficultyRegenAckHost` (App-level) shows a timed acknowledgement (`Modal` `dismissAfterMs`, no OK button).
 
 ### Modal (composer)
 
@@ -86,7 +92,7 @@ src/components/
 ### ui/ atoms
 
 - **Button**: text actions (`primary` | `secondary` | `ghost`); `grow` fills row space (`true` → flex-1, `'auto'` → flex-auto)
-- **IconButton**: glyph/icon-only (`info` | `bare` | `modalClose`)
+- **IconButton**: glyph/icon-only (`info` | `bare` | `circle` | `modalClose`); `circle` wraps round badges (Mode) so hover recolors the badge border instead of drawing an inset box
 - **Caption**: muted helper `<p>` (`xs` | `sm`)
 - **Stack** / **Row**: vertical / horizontal flex+gap layout layers
 

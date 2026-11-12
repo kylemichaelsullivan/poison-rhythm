@@ -5,22 +5,34 @@ import type { GameModeHudBadge } from '@/lib/settings-schema';
 type ModeBadgeTriggerProps = {
 	badge: GameModeHudBadge;
 	onClick: () => void;
+	/** Overrides the default Change Play Mode accessible name. */
+	label?: string;
+	title?: string;
 };
 
-export function ModeBadgeTrigger({ badge, onClick }: ModeBadgeTriggerProps) {
+function playModeLabel(badge: GameModeHudBadge): string {
+	return badge.endless && badge.tone !== 'bucket'
+		? `Play Mode: ${badge.label}, Endless. Change Play Mode`
+		: `Play Mode: ${badge.label}. Change Play Mode`;
+}
+
+function playModeTitle(badge: GameModeHudBadge): string {
+	return badge.endless && badge.tone !== 'bucket'
+		? `Change Play Mode (${badge.label}, Endless)`
+		: `Change Play Mode (${badge.label})`;
+}
+
+export function ModeBadgeTrigger({
+	badge,
+	onClick,
+	label,
+	title,
+}: ModeBadgeTriggerProps) {
 	return (
 		<IconButton
-			variant='bare'
-			label={
-				badge.endless && badge.tone !== 'bucket'
-					? `Play Mode: ${badge.label}, Endless. Change Play Mode`
-					: `Play Mode: ${badge.label}. Change Play Mode`
-			}
-			title={
-				badge.endless && badge.tone !== 'bucket'
-					? `Change Play Mode (${badge.label}, Endless)`
-					: `Change Play Mode (${badge.label})`
-			}
+			variant='circle'
+			label={label ?? playModeLabel(badge)}
+			title={title ?? playModeTitle(badge)}
 			popup='dialog'
 			onClick={onClick}
 		>

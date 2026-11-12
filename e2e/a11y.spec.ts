@@ -5,6 +5,7 @@ import {
 	clickPlay,
 	FIRST_VISIT_STORAGE_STATE,
 	generateRound,
+	openAboutFromTitle,
 	seedPlaybackPrefs,
 } from './helpers';
 import type { Page } from '@playwright/test';
@@ -93,13 +94,7 @@ test.describe('accessibility', () => {
 		page,
 	}) => {
 		await page.goto('/');
-		await page
-			.getByRole('banner')
-			.getByRole('button', { name: 'Poison Rhythm' })
-			.click();
-		await expect(
-			page.getByRole('dialog', { name: 'About Poison Rhythm' }),
-		).toBeVisible();
+		await openAboutFromTitle(page);
 		await page
 			.getByRole('button', { name: 'Explain Difficulty Levels' })
 			.click();

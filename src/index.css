@@ -676,8 +676,9 @@
  * chips). Inset ring + lift only — do not change fill or ink. Shapes stay on
  * the control. Native :hover / :focus so tablets match mouse.
  *
- * Exceptions: `.ModalScrim` (full-bleed dismiss) and `.IntroTutorialDot`
- * (quiet marker hover on the inner span).
+ * Exceptions: `.ModalScrim` (full-bleed dismiss), `.IntroTutorialDot`
+ * (quiet marker hover on the inner span), and Mode badge triggers
+ * (`:has(> .ModeBadge)` — recolor the circular border instead).
  */
 :is(button, .InteractiveInsetChrome) {
 	--interactive-inset-ring-color: var(--color-primary);
@@ -697,12 +698,36 @@
 		[aria-expanded="true"]
 	):not(:disabled):not([aria-disabled="true"]):not(.ModalScrim):not(
 		.IntroTutorialDot
-	) {
+	):not(:has(> .ModeBadge)) {
 	outline: none;
 	box-shadow:
 		inset 0 0 0 var(--interactive-inset-ring-width)
 		var(--interactive-inset-ring-color),
 		var(--interactive-inset-shadow);
+}
+
+/* Mode badge: hover / focus recolors the circular border, no inset box. */
+button:has(> .ModeBadge) {
+	--mode-badge-hover-border: var(--color-primary);
+}
+
+button:has(> .ModeBadge):is(
+		:hover,
+		:focus,
+		:focus-visible,
+		[aria-expanded="true"]
+	):not(:disabled):not([aria-disabled="true"]) {
+	outline: none;
+}
+
+button:has(> .ModeBadge):is(
+		:hover,
+		:focus,
+		:focus-visible,
+		[aria-expanded="true"]
+	):not(:disabled):not([aria-disabled="true"])
+	> .ModeBadge {
+	border-color: var(--mode-badge-hover-border);
 }
 
 /*
@@ -712,6 +737,10 @@
 .Header .AppTitleBrandTrigger,
 .Header .AppChromeControl {
 	--interactive-inset-ring-color: var(--color-secondary);
+}
+
+.Header button:has(> .ModeBadge) {
+	--mode-badge-hover-border: var(--color-secondary);
 }
 
 .Footer .AppTitleBrandTrigger,
