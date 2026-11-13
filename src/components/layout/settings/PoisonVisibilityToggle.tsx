@@ -1,4 +1,5 @@
 import EyeIcon from '@/assets/svg/eye.svg?react';
+import { POISON_SHOW_QUESTION, poisonVisibilityTitle } from '@/lib/ui-copy';
 import { EnableToggle } from './EnableToggle';
 import { IconToggle } from './IconToggle';
 import { useSetting } from './useSetting';
@@ -25,26 +26,19 @@ export function PoisonVisibilityToggle({
 	const onChange = (next: boolean) => {
 		setPoisonMode(next ? 'visible' : 'hidden');
 	};
+	const title = poisonVisibilityTitle(visible);
 
 	if (showLabel) {
 		return (
 			<EnableToggle
-				label='Show Poison?'
+				label={POISON_SHOW_QUESTION}
 				enabled={visible}
 				disabled={disabled}
 				onChange={onChange}
-				title={
-					visible
-						? 'Click to Hide Poison During Playback'
-						: 'Click to Always Show Poison Rhythm'
-				}
+				title={title}
 			/>
 		);
 	}
-
-	const actionLabel = visible
-		? 'Click to Hide Poison During Playback'
-		: 'Click to Always Show Poison Rhythm';
 
 	return (
 		<IconToggle
@@ -52,7 +46,7 @@ export function PoisonVisibilityToggle({
 			pressed={visible}
 			pressedIcon={EyeIcon}
 			unpressedIcon={EyeIcon}
-			title={actionLabel}
+			title={title}
 			disabled={disabled}
 			variant='header'
 			onPressedChange={onChange}

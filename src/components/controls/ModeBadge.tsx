@@ -16,7 +16,6 @@ export function ModeBadge({ badge }: ModeBadgeProps) {
 			)}
 			data-testid='mode-badge'
 			data-mode-tone={badge.tone}
-			data-endless={badge.endless ? 'true' : 'false'}
 		>
 			{badge.tone === 'bucket' ? (
 				<PlayModeBucketGlyph active size='sm' />

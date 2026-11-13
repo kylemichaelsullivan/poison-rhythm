@@ -24,11 +24,7 @@ export {
 	useTempoPreference,
 } from './PreferencesContext';
 export { PreferencesProvider } from './PreferencesProvider';
-export {
-	useSettingKey,
-	useSettings,
-	useSettingsStore,
-} from './SettingsContext';
+export { useSettings, useSettingsStore } from './SettingsContext';
 export { SettingsProvider } from './SettingsProvider';
 export { type ThemeSetting, useTheme } from './ThemeContext';
 export { ThemeProvider } from './ThemeProvider';

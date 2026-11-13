@@ -1,3 +1,20 @@
+import {
+	DISPLAY_MODE_LABELS,
+	ENDLESS_LABEL,
+	GAME_MODE_LABELS,
+	MUTE_ALL_CHANNELS_LABEL,
+	MUTE_CHANNEL_LABELS,
+	MUTE_CHANNELS_RESTORED,
+	MUTE_PLAYBACK_AND_PREVIEW_LABEL,
+	PRACTICE_TOGGLE_LABELS,
+	SCROLL_DIRECTION_LABELS,
+} from '@/lib/settings-labels';
+import { SUBDIVISION_PROSE_LABELS } from '@/lib/subdivision-levels';
+import {
+	NEW_ROUND_TITLE,
+	REUSE_ROUND_TITLE,
+	statusOnOffLabel,
+} from '@/lib/ui-copy';
 import type { SubdivisionLevel } from '@/lib/preference-schemas';
 import type {
 	GameMode,
@@ -21,33 +38,6 @@ export type StatusToastSnapshot = {
 	mutePreview: boolean;
 };
 
-const SUBDIVISION_TOAST: Record<SubdivisionLevel, string> = {
-	quarters: 'Quarter Notes',
-	eighths: 'Eighth Notes',
-	sixteenths: 'Sixteenth Notes',
-};
-
-const DISPLAY_MODE_TOAST: Record<RhythmRenderMode, string> = {
-	grid: 'Grid',
-	notation: 'Notation',
-	scroll: 'Scroll',
-};
-
-const SCROLL_DIRECTION_TOAST: Record<
-	Exclude<ScrollDirection, 'none'>,
-	string
-> = {
-	up: 'Up',
-	down: 'Down',
-	left: 'Left',
-	right: 'Right',
-};
-
-const GAME_MODE_TOAST: Record<GameMode, string> = {
-	default: 'Poison Rhythm',
-	bucketTrainer: 'Bucket Drumming',
-};
-
 const POISON_TOAST: Record<PoisonMode, string> = {
 	visible: 'Poison: Visible',
 	hidden: 'Poison: Hidden During Playback',
@@ -58,18 +48,14 @@ function muteToastMessage(label: string, muted: boolean): string {
 	return muted ? `${label}: Muted` : `${label}: Unmuted`;
 }
 
-function practiceToggleToastMessage(label: string, enabled: boolean): string {
-	return `${label}: ${enabled ? 'On' : 'Off'}`;
-}
-
 /** Poison section New (+) — new poison and new measures. */
 export function newRoundToastMessage(): string {
-	return 'New Poison Rhythm, New Measures';
+	return NEW_ROUND_TITLE;
 }
 
 /** Poison section Reuse — keep poison, regenerate measures. */
 export function reuseRoundToastMessage(): string {
-	return 'New Measures, Same Poison Rhythm';
+	return REUSE_ROUND_TITLE;
 }
 
 /**
@@ -94,61 +80,61 @@ export function statusToastForTransition(
 		prev.muteMetronome && prev.mutePlayback && prev.mutePreview;
 
 	if (muteChangeCount >= 2 && allMuted) {
-		return 'All Channels: Muted';
+		return `${MUTE_ALL_CHANNELS_LABEL}: Muted`;
 	}
 	if (muteChangeCount >= 2 && allWereMuted && !allMuted) {
-		return 'Channels: Restored';
+		return MUTE_CHANNELS_RESTORED;
 	}
 	if (muteChanged.playback && muteChanged.preview) {
 		if (next.mutePlayback && next.mutePreview) {
-			return 'Playback and Preview: Muted';
+			return `${MUTE_PLAYBACK_AND_PREVIEW_LABEL}: Muted`;
 		}
 		if (!next.mutePlayback && !next.mutePreview) {
-			return 'Playback and Preview: Unmuted';
+			return `${MUTE_PLAYBACK_AND_PREVIEW_LABEL}: Unmuted`;
 		}
 	}
 
 	if (prev.rhythmRenderMode !== next.rhythmRenderMode) {
-		return `Display: ${DISPLAY_MODE_TOAST[next.rhythmRenderMode]}`;
+		return `Display: ${DISPLAY_MODE_LABELS[next.rhythmRenderMode]}`;
 	}
 	if (
 		prev.scrollDirection !== next.scrollDirection &&
 		next.scrollDirection !== 'none'
 	) {
-		return `Scroll: ${SCROLL_DIRECTION_TOAST[next.scrollDirection]}`;
+		return `Scroll: ${SCROLL_DIRECTION_LABELS[next.scrollDirection]}`;
 	}
 	if (prev.poisonMode !== next.poisonMode) {
 		return POISON_TOAST[next.poisonMode];
 	}
 	if (prev.showNextMeasure !== next.showNextMeasure) {
-		return practiceToggleToastMessage(
-			'Show Next Measure',
+		return statusOnOffLabel(
+			PRACTICE_TOGGLE_LABELS.showNextMeasure,
 			next.showNextMeasure,
 		);
 	}
 	if (prev.demoBeforePlay !== next.demoBeforePlay) {
-		return practiceToggleToastMessage(
-			'Listen Before You Play',
+		return statusOnOffLabel(
+			PRACTICE_TOGGLE_LABELS.demoBeforePlay,
 			next.demoBeforePlay,
 		);
 	}
 	if (prev.gameMode !== next.gameMode) {
-		return `Play Mode: ${GAME_MODE_TOAST[next.gameMode]}`;
+		return `Play Mode: ${GAME_MODE_LABELS[next.gameMode]}`;
 	}
 	if (prev.endless !== next.endless) {
-		return practiceToggleToastMessage('Endless', next.endless);
+		return statusOnOffLabel(ENDLESS_LABEL, next.endless);
 	}
 	if (prev.subdivisionLevel !== next.subdivisionLevel) {
-		return `Show Notes: ${SUBDIVISION_TOAST[next.subdivisionLevel]}`;
+		return `Show Notes: ${SUBDIVISION_PROSE_LABELS[next.subdivisionLevel]}`;
 	}
 	if (muteChanged.metronome) {
-		return muteToastMessage('Metronome', next.muteMetronome);
+		return muteToastMessage(MUTE_CHANNEL_LABELS.metronome, next.muteMetronome);
 	}
 	if (muteChanged.playback) {
-		return muteToastMessage('Playback', next.mutePlayback);
+		return muteToastMessage(MUTE_CHANNEL_LABELS.playback, next.mutePlayback);
 	}
 	if (muteChanged.preview) {
-		return muteToastMessage('Preview', next.mutePreview);
+		return muteToastMessage(MUTE_CHANNEL_LABELS.preview, next.mutePreview);
 	}
 
 	return null;

@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { dataFlag } from '@/lib/data-attr';
 
 type ColorPairPlayPreviewProps = {
 	dominantHex: string;
@@ -74,7 +75,7 @@ export function ColorPairPlayPreview({
 										? 'Hit'
 										: 'Rest'
 							}
-							data-highlighted={cell.highlighted ? 'true' : undefined}
+							data-highlighted={dataFlag(Boolean(cell.highlighted))}
 						/>
 					))}
 				</div>

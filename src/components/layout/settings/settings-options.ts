@@ -1,3 +1,4 @@
+import { DISPLAY_MODE_LABELS, GAME_MODE_LABELS } from '@/lib/settings-labels';
 import type {
 	GameMode,
 	RhythmRenderMode,
@@ -5,10 +6,21 @@ import type {
 } from '@/lib/settings-schema';
 import type { SegmentOption } from './SegmentButton';
 
+export {
+	DISPLAY_MODE_LABELS,
+	displayModeBadgeLabel,
+	ENDLESS_LABEL,
+	GAME_MODE_LABELS,
+	MUTE_CHANNEL_LABELS,
+	MUTE_CHANNEL_NAMES,
+	PRACTICE_TOGGLE_LABELS,
+	SCROLL_DIRECTION_LABELS,
+} from '@/lib/settings-labels';
+
 export const RENDER_MODE_OPTIONS: SegmentOption<RhythmRenderMode>[] = [
-	{ label: 'Grid', value: 'grid' },
-	{ label: 'Notation', value: 'notation' },
-	{ label: 'Scroll', value: 'scroll' },
+	{ label: DISPLAY_MODE_LABELS.grid, value: 'grid' },
+	{ label: DISPLAY_MODE_LABELS.notation, value: 'notation' },
+	{ label: DISPLAY_MODE_LABELS.scroll, value: 'scroll' },
 ];
 
 export const STICKING_OPTIONS: SegmentOption<StickingMode>[] = [
@@ -27,12 +39,12 @@ export type GameModeOption = {
 export const GAME_MODE_OPTIONS: GameModeOption[] = [
 	{
 		value: 'default',
-		label: 'Poison Rhythm',
+		label: GAME_MODE_LABELS.default,
 		description: 'Practice against a poison rhythm among decoy measures.',
 	},
 	{
 		value: 'bucketTrainer',
-		label: 'Bucket Drumming',
+		label: GAME_MODE_LABELS.bucketTrainer,
 		description: 'No poison rhythm and endless play.',
 	},
 ];

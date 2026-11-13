@@ -10,9 +10,9 @@ Compose UI from small layers. Prefer **one root HTML element per component** (or
 
 ```
 atoms (ui/)     → one element: Button, IconButton, Caption, Stack, Row
-molecules       → compose atoms: PlayModeOptionCard, ModalActions, MeasureCarouselChrome
+molecules       → compose atoms: DescribedOptionCard, MeasuresPlayPauseButton, ModalActions, MeasureCarouselChrome
 composers       → wire context + hooks: DifficultyControls, MeasureSlider, ShowNotes, Body
-hooks           → interaction / playback: useMeasurePlaybackSync, useHoverPinPopover, …
+hooks           → interaction / playback: useOutsideDismiss, useMeasuresPlayPauseChrome, useMeasurePlaybackSync, useHoverPinPopover, …
 ```
 
 - **Do not** invent raw `<button className=…>` in feature composers — use `@/components/ui` or existing control atoms
@@ -133,8 +133,8 @@ src/components/
 - **Settings binders:** keyed `useSetting(key)` (store subscription), `useUpdateSetting` (full blob), `usePlaybackMute(channel)` (`metronome` / `playback` / `preview`), mute / count-in composers, `MetronomeTempoSlider` via `useMetronomeTempo`, `PlayModeOptionList`, `DifficultySlider`, `FeedbackToggles`, `DisplayModeControls`. Keep props for local UI (crayon edit role, modal open/close) or reusable atoms (`MuteToggle`, `EnableToggle`, `IconToggle`). Practice and Volume are mirrored: Measures `MeasuresPracticeToggles` / `VolumeMenu` + Settings → Mode / Sound.
 - **Efficiency:** functional `useLocalStorage`; prefs split (complexity / sound / tempo); metronome tempo vs playback contexts; settings keyed store; Colors tray memo + theme isolation
 - **SettingsGroup** / **ConditionalSettingsGroup**: Section dividers inside a tab
-- **Setting utilities**: `NumberSetting`, `OnOffSetting`, `SelectSetting`, `SegmentedControl`, `When`, `useSetting`, `useUpdateSetting`
-- **Fieldset**, **SegmentButton**, **SettingRow**, **EnableToggle** / **IconToggle**, **FieldCaption**, **ThemeScoreRow**
+- **Setting utilities**: `SegmentedControl`, `When`, `useSetting`, `useUpdateSetting`
+- **Fieldset**, **SegmentButton**, **SettingRow**, **EnableToggle** / **IconToggle** / **StatusIconToggle**, **FieldCaption**, **ThemeScoreRow**
 - **Canonical grouping**: `SettingsGroup` (do not revive removed `SettingsSection` / `SettingsPanel`)
 
 **Not in Settings as separate dials:** density or syncopation. Subdivision is mirrored (header ShowNotes + Settings → Mode).

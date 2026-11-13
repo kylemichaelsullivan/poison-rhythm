@@ -51,7 +51,6 @@ export function ThemeScoreRow({
 			data-contrast-mode={mode}
 			data-contrast-grade={rating.grade}
 			data-contrast-ratio={rating.ratio.toFixed(1)}
-			data-theme-selected={selected ? 'true' : 'false'}
 			onClick={onSelect}
 		>
 			<span

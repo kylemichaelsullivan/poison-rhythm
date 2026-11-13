@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import { controlSurfaceBaseClassName } from '@/lib/control-classes';
-import { SUBDIVISION_LABELS } from '@/lib/subdivision-levels';
+import { NOTE_SUBDIVISIONS_LABEL } from '@/lib/ui-copy';
+import { SubdivisionRangeInput } from './SubdivisionRangeInput';
 import type { RefObject } from 'react';
 
 type ShowNotesSliderProps = {
@@ -25,31 +26,15 @@ export function ShowNotesSlider({
 				controlSurfaceBaseClassName,
 			)}
 			role='dialog'
-			aria-label='Note Subdivisions'
+			aria-label={NOTE_SUBDIVISIONS_LABEL}
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
 		>
-			<input
-				type='range'
-				className='w-full'
-				min={0}
-				max={2}
-				step={1}
+			<SubdivisionRangeInput
 				value={value}
-				title={`Note Subdivisions (${SUBDIVISION_LABELS[value]})`}
-				aria-label='Note Subdivisions'
-				aria-valuemin={0}
-				aria-valuemax={2}
-				aria-valuenow={value}
-				aria-valuetext={SUBDIVISION_LABELS[value]}
-				onChange={(e) => onChange(Number(e.target.value))}
-				ref={inputRef}
+				onChange={onChange}
+				inputRef={inputRef}
 			/>
-			<div className='flex justify-between text-xs pt-1'>
-				{SUBDIVISION_LABELS.map((label) => (
-					<span key={label}>{label}</span>
-				))}
-			</div>
 		</div>
 	);
 }

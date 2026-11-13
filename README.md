@@ -111,10 +111,10 @@ UI is composed like stacked layers (one concern per file; prefer one root DOM el
 | Layer | Location | Role |
 |-------|----------|------|
 | **Atoms** | `src/components/ui/` | Single-element primitives (`Button`, `IconButton`, `Caption`, `Stack`, `Row`) |
-| **Molecules** | `controls/`, `measures/`, `layout/`, `layout/settings/` | Composed pieces (`PlayModeOptionCard`, `MeasureCarouselChrome`, `ModalPanel`, `EnableToggle`, `ContrastGradeBadge`) |
+| **Molecules** | `controls/`, `measures/`, `layout/`, `layout/settings/` | Composed pieces (`DescribedOptionCard`, `MeasuresPlayPauseButton`, `MeasureCarouselChrome`, `ModalPanel`, `EnableToggle`, `StatusIconToggle`, `ContrastGradeBadge`) |
 | **Composers** | feature folders | Wire context + hooks (`DifficultyControls`, `MeasureSlider`, `ShowNotes`, `Body`) |
 | **Hosts** | `App` / `Body` | Modal hosts beside the tree (`IntroModalHost`, `AboutPoisonRhythmModal`, `DifficultyRegenAckHost`, `PoisonHitOverlayHost`, `DisplayModeModal`) |
-| **Hooks** | `src/hooks/` | Side effects out of JSX (`useDisclosure`, `useModalFocusTrap`, `useNotationPrefetch`, `useMeasurePlaybackSync`, …) |
+| **Hooks** | `src/hooks/` | Side effects out of JSX (`useDisclosure`, `useOutsideDismiss`, `useMeasuresPlayPauseChrome`, `useModalFocusTrap`, `useNotationPrefetch`, `useMeasurePlaybackSync`, …) |
 
 Feature composers should import `@/components/ui` (or existing settings atoms) instead of inventing raw `<button className=…>` markup. Prefer **variants** (`tone`, `size`, `framed`, `slot`) over `className` passthrough. Keep **value imports** and **`import type`** on separate statements — Biome `useImportType` (`separatedType`) rejects `import { Foo, type Bar }`. Details: [`.cursor/components.mdc`](.cursor/components.mdc), [`.cursor/rules.mdc`](.cursor/rules.mdc), [`documentation/ARCHITECTURE.md`](documentation/ARCHITECTURE.md).
 

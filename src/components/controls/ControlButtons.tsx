@@ -1,5 +1,12 @@
 import PlusIcon from '@/assets/svg/plus.svg?react';
 import RepeatIcon from '@/assets/svg/repeat.svg?react';
+import {
+	GENERATE_ROUND_TITLE,
+	NEW_LABEL,
+	NEW_ROUND_TITLE,
+	REUSE_LABEL,
+	REUSE_ROUND_TITLE,
+} from '@/lib/ui-copy';
 import { ControlButton } from './ControlButton';
 
 type ControlButtonsProps = {
@@ -19,19 +26,15 @@ export function ControlButtons({
 		<div className='ControlButtons flex flex-wrap justify-between gap-3 items-center'>
 			<ControlButton
 				variant='primary'
-				label='New'
+				label={NEW_LABEL}
 				icon={PlusIcon}
-				title='New Poison Rhythm, New Measures'
+				title={NEW_ROUND_TITLE}
 				onClick={onNewPoison}
 			/>
 			<ControlButton
-				label='Reuse'
+				label={REUSE_LABEL}
 				icon={RepeatIcon}
-				title={
-					reuseDisabled
-						? 'Click to Generate a Round'
-						: 'New Measures, Same Poison Rhythm'
-				}
+				title={reuseDisabled ? GENERATE_ROUND_TITLE : REUSE_ROUND_TITLE}
 				onClick={onReusePoison}
 				disabled={reuseDisabled}
 				onDisabledClick={onReuseDisabledClick}

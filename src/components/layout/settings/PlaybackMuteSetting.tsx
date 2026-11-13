@@ -1,6 +1,11 @@
 import { useSettings } from '@/contexts';
 import { usePreviewSoloMuteConfirm } from '@/hooks/usePreviewSoloMuteConfirm';
+import {
+	MUTE_CHANNEL_LABELS,
+	MUTE_PLAYBACK_AND_PREVIEW_LABEL,
+} from '@/lib/settings-labels';
 import { isScrollDisplayMode } from '@/lib/settings-schema';
+import { clickToTitle, muteActionLabel } from '@/lib/ui-copy';
 import { MuteToggle } from './MuteToggle';
 
 /** Settings → Sound / Volume menu: student-pass rhythm mute. */
@@ -9,19 +14,16 @@ export function PlaybackMuteSetting() {
 	const scrollMode = isScrollDisplayMode(settings.rhythmRenderMode);
 	const { mutePlayback, mutePreview, requestMutePlayback } =
 		usePreviewSoloMuteConfirm();
+	const action = muteActionLabel(mutePlayback);
 	const title = scrollMode
-		? mutePlayback
-			? 'Click to Unmute Playback'
-			: 'Click to Mute Playback'
+		? clickToTitle(action, MUTE_CHANNEL_LABELS.playback)
 		: mutePlayback && mutePreview
-			? 'Click to Unmute Playback and Preview'
-			: mutePlayback
-				? 'Click to Unmute Playback (Playing Pass)'
-				: 'Click to Mute Playback (Playing Pass)';
+			? clickToTitle(action, MUTE_PLAYBACK_AND_PREVIEW_LABEL)
+			: clickToTitle(action, `${MUTE_CHANNEL_LABELS.playback} (Playing Pass)`);
 
 	return (
 		<MuteToggle
-			label='Playback'
+			label={MUTE_CHANNEL_LABELS.playback}
 			muted={mutePlayback}
 			title={title}
 			onChange={requestMutePlayback}

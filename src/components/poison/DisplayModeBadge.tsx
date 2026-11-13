@@ -1,14 +1,9 @@
 import clsx from 'clsx';
+import { displayModeBadgeLabel } from '@/lib/settings-labels';
 import type { RhythmRenderMode } from '@/lib/settings-schema';
 
 type DisplayModeBadgeProps = {
 	renderMode: RhythmRenderMode;
-};
-
-const RENDER_LABEL: Record<RhythmRenderMode, string> = {
-	grid: 'GRID',
-	notation: 'NOTATION',
-	scroll: 'SCROLL',
 };
 
 export function DisplayModeBadge({ renderMode }: DisplayModeBadgeProps) {
@@ -20,7 +15,7 @@ export function DisplayModeBadge({ renderMode }: DisplayModeBadgeProps) {
 			data-testid='display-mode-badge'
 			data-render-mode={renderMode}
 		>
-			{RENDER_LABEL[renderMode]}
+			{displayModeBadgeLabel(renderMode)}
 		</span>
 	);
 }

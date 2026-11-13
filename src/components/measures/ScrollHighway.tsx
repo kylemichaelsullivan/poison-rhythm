@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import { useMemo, useRef } from 'react';
 import { useScrollHighwayTrack } from '@/hooks/useScrollHighwayTrack';
+import { dataBool } from '@/lib/data-attr';
 import {
 	collectHighwayNotes,
 	HIGHWAY_LOOKAHEAD_MEASURES,
@@ -71,7 +72,7 @@ export function ScrollHighway({
 			ref={rootRef}
 			data-testid='scroll-highway'
 			data-direction={direction}
-			data-counting-in={countingIn ? 'true' : 'false'}
+			data-counting-in={dataBool(countingIn)}
 			data-progress='0.000'
 		>
 			{label ? (

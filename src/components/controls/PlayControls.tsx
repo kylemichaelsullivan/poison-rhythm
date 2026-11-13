@@ -1,7 +1,7 @@
-import clsx from 'clsx';
 import { useEffect } from 'react';
 import { useMetronome } from '@/contexts';
-import { RoundPlayPauseButton } from './RoundPlayPauseButton';
+import { dataBool } from '@/lib/data-attr';
+import { MeasuresPlayPauseButton } from './MeasuresPlayPauseButton';
 import type { Ref } from 'react';
 
 type PlayControlsProps = {
@@ -21,8 +21,6 @@ export function PlayControls({
 		isMeasuresPlaying,
 		isCountingIn,
 		countInBeat,
-		isLit,
-		toggleMeasures,
 		stop,
 	} = useMetronome();
 
@@ -36,27 +34,13 @@ export function PlayControls({
 		<div
 			className='PlayControls flex justify-center w-full'
 			data-testid='play-controls'
-			data-counting-in={isCountingIn ? 'true' : 'false'}
+			data-counting-in={dataBool(isCountingIn)}
 			data-count-in-beat={countInBeat != null ? String(countInBeat) : ''}
-			data-measures-playing={isMeasuresPlaying ? 'true' : 'false'}
+			data-measures-playing={dataBool(isMeasuresPlaying)}
 		>
-			<RoundPlayPauseButton
-				className={clsx(
-					'PlayControlsButton transition-[box-shadow] duration-100',
-					(isCountingIn || isMeasuresRunning) && isLit && 'ring-2 ring-primary',
-				)}
-				isPlaying={isMeasuresRunning && !isCountingIn}
-				label={isMeasuresRunning ? 'Pause' : 'Play'}
-				countBeat={isCountingIn ? countInBeat : null}
-				title={
-					disabled
-						? 'Click to Generate a Round'
-						: isMeasuresRunning
-							? 'Pause Playback'
-							: 'Play Measures'
-				}
+			<MeasuresPlayPauseButton
+				className='PlayControlsButton'
 				disabled={disabled}
-				onClick={toggleMeasures}
 				onDisabledClick={onDisabledClick}
 				ref={playButtonRef}
 			/>

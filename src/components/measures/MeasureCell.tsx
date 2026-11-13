@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import { cellToSubdivisionStep } from '@/lib';
+import { dataFlag } from '@/lib/data-attr';
 import { shouldHighlightPlaybackStep } from '@/lib/playback-state';
 import {
 	measureHitClass,
@@ -64,7 +65,7 @@ export function MeasureCell({
 			)}
 			title={showStepHighlight ? `${cellTitle} (current)` : cellTitle}
 			data-cell-index={index}
-			data-highlighted={showStepHighlight ? 'true' : undefined}
+			data-highlighted={dataFlag(showStepHighlight)}
 		>
 			{showAccentMark ? <RhythmAccentMark /> : null}
 			{showStickingLabel ? (

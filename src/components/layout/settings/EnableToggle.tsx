@@ -1,4 +1,5 @@
 import CheckmarkIcon from '@/assets/svg/checkmark.svg?react';
+import { clickToTitle, enableActionLabel } from '@/lib/ui-copy';
 import { IconToggle } from './IconToggle';
 import { SettingRow } from './SettingRow';
 import type { SvgIconComponent } from '@/components/layout/Icon';
@@ -22,15 +23,15 @@ export function EnableToggle({
 	icon = CheckmarkIcon,
 	title,
 }: EnableToggleProps) {
-	const actionLabel = enabled ? 'Disable' : 'Enable';
+	const action = enableActionLabel(enabled);
 
 	return (
 		<SettingRow label={label}>
 			<IconToggle
-				label={`${label}: ${actionLabel}`}
+				label={`${label}: ${action}`}
 				pressed={enabled}
 				pressedIcon={icon}
-				title={title ?? `Click to ${actionLabel} ${label}`}
+				title={title ?? clickToTitle(action, label)}
 				disabled={disabled}
 				variant='checkbox'
 				onPressedChange={onChange}

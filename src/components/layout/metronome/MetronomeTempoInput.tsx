@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { inputSurfaceClassName } from '@/lib/control-classes';
 import { BPM_MAX, BPM_MIN } from '@/lib/metronome-defaults';
 import { clampTempo } from '@/lib/metronome-tempo';
+import { BEATS_PER_MINUTE, setTempoTitle } from '@/lib/ui-copy';
 
 type MetronomeTempoInputProps = {
 	tempo: number;
@@ -72,8 +73,8 @@ export function MetronomeTempoInput({
 			pattern='[0-9]*'
 			min={BPM_MIN}
 			max={BPM_MAX}
-			title={`Set Tempo (${tempo} BPM)`}
-			aria-label='Beats per Minute'
+			title={setTempoTitle(tempo)}
+			aria-label={BEATS_PER_MINUTE}
 			value={inputValue}
 			onFocus={(e) => {
 				isEditingRef.current = true;

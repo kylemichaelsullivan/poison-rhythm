@@ -1,6 +1,7 @@
 import { useMetronomeTempo } from '@/contexts';
 import { BPM_INPUT_STEP, BPM_MAX, BPM_MIN } from '@/lib/metronome-defaults';
 import { tempoTickValues } from '@/lib/metronome-tempo';
+import { BEATS_PER_MINUTE, setTempoTitle } from '@/lib/ui-copy';
 import { MetronomeTempoInput } from './MetronomeTempoInput';
 
 const TEMPO_TICKS = tempoTickValues();
@@ -26,10 +27,10 @@ export function MetronomeTempoSlider() {
 					max={BPM_MAX}
 					step={BPM_INPUT_STEP}
 					list={TEMPO_DATALIST_ID}
-					title={`Set Tempo (${tempo} BPM)`}
+					title={setTempoTitle(tempo)}
 					value={tempo}
 					onChange={(e) => handleTempoChange(Number(e.target.value))}
-					aria-label='Beats per Minute'
+					aria-label={BEATS_PER_MINUTE}
 					aria-valuemin={BPM_MIN}
 					aria-valuemax={BPM_MAX}
 					aria-valuenow={tempo}

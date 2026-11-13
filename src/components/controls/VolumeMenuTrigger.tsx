@@ -4,6 +4,7 @@ import Volume2Icon from '@/assets/svg/volume-2.svg?react';
 import Volume3Icon from '@/assets/svg/volume-3.svg?react';
 import { Icon } from '@/components/layout/Icon';
 import { segmentControlClassName } from '@/lib/control-classes';
+import { MUTE_CHANNEL_NAMES } from '@/lib/settings-labels';
 import type { SvgIconComponent } from '@/components/layout/Icon';
 
 type VolumeActiveCount = 0 | 1 | 2 | 3;
@@ -27,7 +28,7 @@ const VOLUME_LEVEL_ICONS: Record<VolumeActiveCount, SvgIconComponent> = {
 	3: Volume3Icon,
 };
 
-const VOLUME_CHANNELS = ['Metronome', 'Playback', 'Preview'] as const;
+const VOLUME_CHANNELS = MUTE_CHANNEL_NAMES;
 
 /** Unmuted Metronome / Playback / Preview channels → speaker waves. */
 export function volumeActiveCount(

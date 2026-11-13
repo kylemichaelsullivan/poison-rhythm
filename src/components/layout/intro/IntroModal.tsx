@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Stack } from '@/components/ui';
+import { useArrowKeyCapture } from '@/hooks/useArrowKeyCapture';
 import {
 	INTRO_PLAY_HALO_AFTER_MS,
 	INTRO_TUTORIAL_STEPS,
@@ -72,41 +73,24 @@ export function IntroModal({ open, onClose }: IntroModalProps) {
 		setStepIndex(Math.min(LAST_STEP, Math.max(0, index)));
 	}, []);
 
-	useEffect(() => {
-		if (!open) return;
+	const onLeft = useCallback(() => {
+		goBack();
+	}, [goBack]);
 
-		// Arrow keys only — never touch Enter/Space; those activate the focused CTA.
-		function handleKeyDown(e: KeyboardEvent) {
-			if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
-
-			e.preventDefault();
-			e.stopPropagation();
-
-			if (e.key === 'ArrowLeft') {
-				goBack();
-				return;
-			}
-			if (onLastStep) {
-				// Right Arrow dismisses only after fail copy + Let’s Play halo.
-				if (playHalo) dismiss();
-				return;
-			}
-			goNext();
+	const onRight = useCallback(() => {
+		if (onLastStep) {
+			// Right Arrow dismisses only after fail copy + Let’s Play halo.
+			if (playHalo) dismiss();
+			return;
 		}
+		goNext();
+	}, [onLastStep, playHalo, dismiss, goNext]);
 
-		function handleKeyUp(e: KeyboardEvent) {
-			if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
-			e.preventDefault();
-			e.stopPropagation();
-		}
-
-		window.addEventListener('keydown', handleKeyDown, true);
-		window.addEventListener('keyup', handleKeyUp, true);
-		return () => {
-			window.removeEventListener('keydown', handleKeyDown, true);
-			window.removeEventListener('keyup', handleKeyUp, true);
-		};
-	}, [open, goBack, goNext, onLastStep, playHalo, dismiss]);
+	useArrowKeyCapture(open, {
+		onLeft,
+		onRight,
+		preventDefaultOnKeyUp: true,
+	});
 
 	const step = INTRO_TUTORIAL_STEPS[stepIndex] ?? INTRO_TUTORIAL_STEPS[0];
 

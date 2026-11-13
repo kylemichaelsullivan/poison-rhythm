@@ -3,12 +3,11 @@ import ArrowDownIcon from '@/assets/svg/arrow-down.svg?react';
 import ArrowLeftIcon from '@/assets/svg/arrow-left.svg?react';
 import ArrowRightIcon from '@/assets/svg/arrow-right.svg?react';
 import ArrowUpIcon from '@/assets/svg/arrow-up.svg?react';
+import { SCROLL_DIRECTION_LABELS } from '@/lib/settings-labels';
 import { Fieldset } from './Fieldset';
 import { SegmentButton } from './SegmentButton';
 import type { SvgIconComponent } from '@/components/layout/Icon';
-import type { ScrollDirection } from '@/lib/settings-schema';
-
-type ScrollDir = Exclude<ScrollDirection, 'none'>;
+import type { ScrollDir } from '@/lib/settings-labels';
 
 type PadCell = {
 	direction: ScrollDir;
@@ -21,25 +20,25 @@ type PadCell = {
 const PAD_CELLS: readonly PadCell[] = [
 	{
 		direction: 'up',
-		label: 'Up',
+		label: SCROLL_DIRECTION_LABELS.up,
 		icon: ArrowUpIcon,
 		placement: 'col-start-2 row-start-1',
 	},
 	{
 		direction: 'left',
-		label: 'Left',
+		label: SCROLL_DIRECTION_LABELS.left,
 		icon: ArrowLeftIcon,
 		placement: 'col-start-1 row-start-2',
 	},
 	{
 		direction: 'right',
-		label: 'Right',
+		label: SCROLL_DIRECTION_LABELS.right,
 		icon: ArrowRightIcon,
 		placement: 'col-start-3 row-start-2',
 	},
 	{
 		direction: 'down',
-		label: 'Down',
+		label: SCROLL_DIRECTION_LABELS.down,
 		icon: ArrowDownIcon,
 		placement: 'col-start-2 row-start-3',
 	},

@@ -1,4 +1,4 @@
-import { createContext, useContext, useSyncExternalStore } from 'react';
+import { createContext, useContext } from 'react';
 import type { GameSettings } from '@/lib/settings-schema';
 
 export type SettingsContextValue = {
@@ -45,18 +45,4 @@ export function useSettingsStore(): SettingsStoreApi {
 		throw new Error('useSettingsStore must be used within SettingsProvider');
 	}
 	return store;
-}
-
-/**
- * One game-settings key with a keyed subscription (does not re-render when
- * unrelated keys change).
- */
-export function useSettingKey<K extends keyof GameSettings>(key: K) {
-	const store = useSettingsStore();
-	const value = useSyncExternalStore(
-		(onStoreChange) => store.subscribeKey(key, onStoreChange),
-		() => store.getSettings()[key],
-		() => store.getSettings()[key],
-	);
-	return [value, store] as const;
 }

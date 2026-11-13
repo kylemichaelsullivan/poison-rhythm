@@ -16,9 +16,10 @@ flowchart TB
     Row
   end
   subgraph molecules [molecules]
-    PlayModeOptionCard
+    DescribedOptionCard
+    MeasuresPlayPauseButton
     MeasureCarouselChrome
-    EnableToggle
+    StatusIconToggle
   end
   subgraph composers [composers]
     DifficultyControls
@@ -34,10 +35,10 @@ flowchart TB
 | Layer | Path | Examples |
 |-------|------|----------|
 | Atoms | `src/components/ui/` | `Button`, `IconButton`, `Caption`, `Stack`, `Row` |
-| Molecules | domain folders | `PlayModeOptionCard`, `ModalActions`, `ModalPanel`, `MeasureCarouselChrome`, `ContrastGradeBadge`, settings `EnableToggle` |
+| Molecules | domain folders | `DescribedOptionCard`, `MeasuresPlayPauseButton`, `ModalActions`, `ModalPanel`, `MeasureCarouselChrome`, `ContrastGradeBadge`, settings `EnableToggle` / `StatusIconToggle` |
 | Composers | domain folders | `DifficultyControls`, `MeasureSlider`, `ShowNotes`, `PoisonSection`, `Body` |
 | Hosts | `App` / `Body` | `IntroModalHost`, `AboutPoisonRhythmModal`, `DifficultyRegenAckHost`, `PoisonHitOverlayHost`, `ToastHost`, `DisplayModeModal` |
-| Hooks | `src/hooks/` | `useDisclosure`, `useModalFocusTrap`, `useTimedDismiss`, `useNotationPrefetch`, `useMeasureDisplayOptions`, `useMeasurePlaybackSync`, `useHoverPinPopover`, `useSoftDisableFocus` |
+| Hooks | `src/hooks/` | `useDisclosure`, `useOutsideDismiss`, `useArrowKeyCapture`, `useMeasuresPlayPauseChrome`, `useModalFocusTrap`, `useTimedDismiss`, `useNotationPrefetch`, `useMeasureDisplayOptions`, `useMeasurePlaybackSync`, `useHoverPinPopover`, `useSoftDisableFocus` |
 
 Rules of thumb:
 

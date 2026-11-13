@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { dataBool } from '@/lib/data-attr';
 import { MeasureGrid } from './MeasureGrid';
 import type { RhythmMeasure, RichRhythmMeasure } from '@/types';
 import type { MeasureDisplayOptions } from './measure-display-options';
@@ -36,7 +37,7 @@ export function CurrentMeasureDisplay({
 				'CurrentMeasureDisplay w-full rounded-lg transition-opacity duration-200',
 				countingIn && 'opacity-55',
 			)}
-			data-counting-in={countingIn ? 'true' : 'false'}
+			data-counting-in={dataBool(countingIn)}
 			data-playback-phase={phase}
 		>
 			{label ? (

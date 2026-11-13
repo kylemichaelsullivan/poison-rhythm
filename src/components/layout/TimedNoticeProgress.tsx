@@ -1,3 +1,4 @@
+import { dataBool } from '@/lib/data-attr';
 import type { CSSProperties } from 'react';
 
 type TimedNoticeProgressProps = {
@@ -29,7 +30,7 @@ export function TimedNoticeProgress({
 			aria-valuetext={paused ? 'Paused' : 'Closes automatically'}
 			data-testid='timed-notice-progress'
 			data-duration-ms={durationMs}
-			data-paused={paused ? 'true' : 'false'}
+			data-paused={dataBool(paused)}
 		/>
 	);
 }

@@ -4,7 +4,7 @@ import {
 	feedbackModeFromToggles,
 	feedbackTogglesFromMode,
 } from '@/lib/settings-schema';
-import { IconToggle } from './IconToggle';
+import { StatusIconToggle } from './StatusIconToggle';
 import { useUpdateSetting } from './useUpdateSetting';
 
 /** Visual / audio feedback gates — binds to global game settings. */
@@ -14,13 +14,10 @@ export function FeedbackToggles() {
 
 	return (
 		<div className='FeedbackToggles flex w-full flex-wrap items-center gap-2'>
-			<IconToggle
-				label='Visual Feedback'
-				title={
-					visual
-						? 'Click to Disable Visual Feedback'
-						: 'Click to Enable Visual Feedback'
-				}
+			<StatusIconToggle
+				name='Visual Feedback'
+				strategy='enableDisable'
+				labelMode='plain'
 				pressed={visual}
 				pressedIcon={EyeIcon}
 				unpressedIcon={EyeIcon}
@@ -29,13 +26,10 @@ export function FeedbackToggles() {
 					set('feedbackMode', feedbackModeFromToggles(next, audio))
 				}
 			/>
-			<IconToggle
-				label='Audio Feedback'
-				title={
-					audio
-						? 'Click to Disable Audio Feedback'
-						: 'Click to Enable Audio Feedback'
-				}
+			<StatusIconToggle
+				name='Audio Feedback'
+				strategy='enableDisable'
+				labelMode='plain'
 				pressed={audio}
 				pressedIcon={EarIcon}
 				unpressedIcon={EarIcon}

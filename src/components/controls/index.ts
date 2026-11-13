@@ -13,6 +13,7 @@ export { DifficultyRegenAckHost } from './DifficultyRegenAckHost';
 export { DifficultyRegenAckModal } from './DifficultyRegenAckModal';
 export { DifficultySlider } from './DifficultySlider';
 export { InfoGlyphButton } from './InfoGlyphButton';
+export { MeasuresPlayPauseButton } from './MeasuresPlayPauseButton';
 export { ModalActions } from './ModalActions';
 export { ModeBadge } from './ModeBadge';
 export { ModeBadgeTrigger } from './ModeBadgeTrigger';

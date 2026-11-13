@@ -1,6 +1,7 @@
 import EarIcon from '@/assets/svg/ear.svg?react';
 import EyeIcon from '@/assets/svg/eye.svg?react';
 import { useSettings } from '@/contexts';
+import { PRACTICE_TOGGLE_LABELS } from '@/lib/settings-labels';
 import { isScrollDisplayMode } from '@/lib/settings-schema';
 import { ConditionalSettingsGroup } from './ConditionalSettingsGroup';
 import { DisplayModeControls } from './DisplayModeControls';
@@ -23,12 +24,12 @@ export function GameSettingsPanel() {
 			<ConditionalSettingsGroup when={!scrollMode} title='Practice'>
 				<GameBooleanSetting
 					setting='showNextMeasure'
-					label='Show Next Measure'
+					label={PRACTICE_TOGGLE_LABELS.showNextMeasure}
 					icon={EyeIcon}
 				/>
 				<GameBooleanSetting
 					setting='demoBeforePlay'
-					label='Listen Before You Play'
+					label={PRACTICE_TOGGLE_LABELS.demoBeforePlay}
 					icon={EarIcon}
 				/>
 			</ConditionalSettingsGroup>

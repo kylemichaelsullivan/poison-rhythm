@@ -64,7 +64,11 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 | `src/components/controls/DifficultyRegenAckHost.tsx` | App-level host for the timed post-regen acknowledgement |
 | `src/components/layout/StatusToastAnnouncer.tsx` | Diffs settings/prefs → status toast; Settings sets `statusToastSuppressed` while open |
 | `src/components/layout/ToastHost.tsx` | Lower-right timed `<output>` toast host |
-| `src/lib/status-toast.ts` | Toast copy helpers + `statusToastForTransition`; New/Reuse phrases; mute lines use `Label: Value` |
+| `src/lib/ui-copy.ts` | Cross-cutting UI chrome (New/Reuse, Play/Pause, tempo, Click-to helpers) |
+| `src/lib/settings-labels.ts` | Display/play mode, practice, mute channel and scroll direction labels (toast + UI) |
+| `src/lib/status-toast.ts` | Toast composition over shared labels; New/Reuse wrappers; mute lines use `Label: Value` |
+| `src/lib/keyboard-target.ts` | Text-input / modal ignore helpers for Escape and global shortcuts |
+| `src/lib/data-attr.ts` | `dataBool` / `dataFlag` for stable `data-*` encoding |
 | `src/components/poison/PoisonHitOverlayHost.tsx` | App-level host for Classic full-screen poison-hit animation (skipped in Endless) |
 | `src/components/layout/AppTitle.tsx` | Header brand title + Mode icon (`ModeBadgeTrigger` → About modal) |
 | `src/components/layout/about/AboutPoisonRhythmModal.tsx` | App-level host for title About + `DifficultyControls` |
@@ -74,7 +78,11 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 | `src/components/controls/PlayControls.tsx` | Play/Pause; `data-count-in-beat` during count-in |
 | `src/components/measures/MeasuresPracticeToggles.tsx` | Measures header eye + ear: Show Next Measure / Listen Before You Play (hidden in Scroll) |
 | `src/components/controls/VolumeMenu.tsx` | Measures speaker popover: Metronome / Playback / Preview mutes (Preview omitted in Scroll); click while open mutes all, click again restores or unmutes all |
-| `src/components/controls/CarouselStartPlayButton.tsx` | First-measure delayed Play; empty at rest |
+| `src/components/controls/CarouselStartPlayButton.tsx` | First-measure delayed Play; empty at rest (`useOutsideDismiss`) |
+| `src/components/controls/MeasuresPlayPauseButton.tsx` | Shared measures Play/Pause chrome (footer + carousel end) |
+| `src/components/layout/settings/StatusIconToggle.tsx` | IconToggle with On/Off + Click-to copy strategies |
+| `src/components/layout/SubdivisionRangeInput.tsx` | Shared subdivision range for ShowNotes + Settings |
+| `src/components/layout/ContentModal.tsx` | Titled Modal shell for Display / Play Modes |
 | `src/components/controls/CarouselEndMenu.tsx` | Last-measure New / Reuse / Play |
 | `src/components/measures/MeasureGrid.tsx` | Mode switch + Suspense; prop-driven `display`; grid via `MeasureCellGrid`; prefetch via `useNotationPrefetch` |
 | `src/hooks/useMeasureDisplayOptions.ts` | Derive measure chrome flags once for section composers |
@@ -82,6 +90,9 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 | `src/components/measures/measure-phase-chrome.ts` | Live-measure shell/hit classes by `data-playback-phase` (idle / count-in / listening / playing) |
 | `src/components/measures/MeasureCarouselChrome.tsx` | Carousel chrome; `live` sets `data-testid="measure-slider"` |
 | `src/hooks/useDisclosure.ts` | Shared open/close state for modals |
+| `src/hooks/useOutsideDismiss.ts` | Outside pointerdown + Escape dismiss |
+| `src/hooks/useArrowKeyCapture.ts` | Capture-phase Arrow Left/Right (ShowNotes, Intro) |
+| `src/hooks/useMeasuresPlayPauseChrome.ts` | Lit ring / labels / count-in for measures Play |
 | `src/hooks/useNotationPrefetch.ts` | Prefetch notation chunk when mode is notation |
 | `src/hooks/useSubdivisionProgress.ts` | Fractional subdivision step (RAF) for notation playhead consumers |
 | `src/hooks/useActiveNotationStepIndex.ts` | Cell-map lookup → active SVG glyph during playback |

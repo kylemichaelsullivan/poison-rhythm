@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import { primaryFillChromeClassName } from '@/lib/control-classes';
+import { dataFlag } from '@/lib/data-attr';
 import type { ReactNode, Ref } from 'react';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost';
@@ -50,8 +51,8 @@ export function Button({
 			)}
 			title={title}
 			disabled={disabled}
-			data-chrome-active={variant === 'primary' ? 'true' : undefined}
-			data-modal-initial-focus={modalInitialFocus ? 'true' : undefined}
+			data-chrome-active={dataFlag(variant === 'primary')}
+			data-modal-initial-focus={dataFlag(Boolean(modalInitialFocus))}
 			onClick={onClick}
 			ref={ref}
 		>

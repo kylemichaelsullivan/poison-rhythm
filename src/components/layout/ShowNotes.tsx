@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
+import { useCallback } from 'react';
 import { useSubdivision } from '@/contexts';
+import { useArrowKeyCapture } from '@/hooks/useArrowKeyCapture';
 import { useHoverPinPopover } from '@/hooks/useHoverPinPopover';
 import { durationInfoForLevel } from '@/lib/notation';
 import { indexToLevel, levelToIndex } from '@/lib/subdivision-levels';
@@ -28,33 +29,15 @@ export function ShowNotes() {
 		'quarter' | 'eighth' | 'sixteenth'
 	>;
 
-	useEffect(() => {
-		if (!open) return;
+	const onLeft = useCallback(() => {
+		setSubdivisionLevel(indexToLevel(value - 1));
+	}, [setSubdivisionLevel, value]);
 
-		function handleKeyDown(e: KeyboardEvent) {
-			if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+	const onRight = useCallback(() => {
+		setSubdivisionLevel(indexToLevel(value + 1));
+	}, [setSubdivisionLevel, value]);
 
-			e.preventDefault();
-			e.stopPropagation();
-
-			const delta = e.key === 'ArrowLeft' ? -1 : 1;
-			setSubdivisionLevel(indexToLevel(value + delta));
-		}
-
-		function handleKeyUp(e: KeyboardEvent) {
-			if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
-
-			e.stopPropagation();
-		}
-
-		window.addEventListener('keydown', handleKeyDown, true);
-		window.addEventListener('keyup', handleKeyUp, true);
-
-		return () => {
-			window.removeEventListener('keydown', handleKeyDown, true);
-			window.removeEventListener('keyup', handleKeyUp, true);
-		};
-	}, [open, value, setSubdivisionLevel]);
+	useArrowKeyCapture(open, { onLeft, onRight });
 
 	return (
 		<div className='ShowNotes relative' ref={wrapperRef}>

@@ -1,4 +1,6 @@
 import { usePreviewSoloMuteConfirm } from '@/hooks/usePreviewSoloMuteConfirm';
+import { MUTE_CHANNEL_LABELS } from '@/lib/settings-labels';
+import { clickToTitle, muteActionLabel } from '@/lib/ui-copy';
 import { MuteToggle } from './MuteToggle';
 import { PreviewMuteConfirmModal } from './PreviewMuteConfirmModal';
 
@@ -16,13 +18,12 @@ export function PreviewMuteSetting() {
 	return (
 		<>
 			<MuteToggle
-				label='Preview'
+				label={MUTE_CHANNEL_LABELS.preview}
 				muted={mutePreview}
-				title={
-					mutePreview
-						? 'Click to Unmute Preview (Listening Pass)'
-						: 'Click to Mute Preview (Listening Pass)'
-				}
+				title={clickToTitle(
+					muteActionLabel(mutePreview),
+					`${MUTE_CHANNEL_LABELS.preview} (Listening Pass)`,
+				)}
 				onChange={requestMutePreview}
 			/>
 			<PreviewMuteConfirmModal

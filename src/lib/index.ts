@@ -3,6 +3,7 @@ export {
 	shouldPlayRhythmAudio,
 	shouldShowVisualFeedback,
 } from './audio';
+export { dataBool, dataFlag } from './data-attr';
 export {
 	DIFFICULTY_LEVELS,
 	DIFFICULTY_MAX,
@@ -29,6 +30,13 @@ export {
 	INTRO_TUTORIAL_STEPS,
 	quarterNoteMeasure,
 } from './intro-tutorial';
+export {
+	isAppModalOpen,
+	isEditableTarget,
+	isTextInputTarget,
+	shouldIgnoreEscapeStop,
+	shouldIgnoreOutsideEscape,
+} from './keyboard-target';
 export {
 	createLookaheadScheduler,
 	drainDueEvents,
@@ -128,6 +136,16 @@ export {
 	TRAILING_DECOYS_AFTER_POISON,
 } from './scroll-animation';
 export {
+	DISPLAY_MODE_LABELS,
+	displayModeBadgeLabel,
+	ENDLESS_LABEL,
+	GAME_MODE_LABELS,
+	MUTE_CHANNEL_LABELS,
+	MUTE_CHANNEL_NAMES,
+	PRACTICE_TOGGLE_LABELS,
+	SCROLL_DIRECTION_LABELS,
+} from './settings-labels';
+export {
 	DEFAULT_SETTINGS,
 	effectiveCountInEnabled,
 	effectiveDemoBeforePlay,
@@ -149,6 +167,7 @@ export {
 	levelToIndex,
 	SUBDIVISION_LABELS,
 	SUBDIVISION_LEVELS,
+	SUBDIVISION_PROSE_LABELS,
 } from './subdivision-levels';
 export {
 	cellsPerSubdivisionPulse,
@@ -165,6 +184,13 @@ export {
 	THEME_OPTIONS,
 	themeOptionFor,
 } from './theme-options';
+export {
+	clickToTitle,
+	GENERATE_ROUND_TITLE,
+	NEW_ROUND_TITLE,
+	REUSE_ROUND_TITLE,
+	statusOnOffLabel,
+} from './ui-copy';
 export type {
 	DifficultyLevel,
 	DifficultyLevelEntry,

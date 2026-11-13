@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import { Icon } from '@/components/layout/Icon';
 import { primaryFillChromeClassName } from '@/lib/control-classes';
+import { dataFlag } from '@/lib/data-attr';
 import type { Ref } from 'react';
 import type { SvgIconComponent } from '@/components/layout/Icon';
 
@@ -49,9 +50,7 @@ export function ControlButton({
 			disabled={disabled && !isSoftDisabled}
 			onClick={disabled ? onDisabledClick : onClick}
 			aria-disabled={disabled || undefined}
-			data-chrome-active={
-				variant === 'primary' && !disabled ? 'true' : undefined
-			}
+			data-chrome-active={dataFlag(variant === 'primary' && !disabled)}
 			aria-label={icon ? label : undefined}
 			ref={ref}
 		>

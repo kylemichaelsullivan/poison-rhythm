@@ -1,4 +1,4 @@
-import { Modal } from '@/components/layout';
+import { ContentModal } from '@/components/layout/ContentModal';
 import { PlayModeOptionList } from './PlayModeOptionList';
 
 type PlayModesModalProps = {
@@ -9,8 +9,8 @@ type PlayModesModalProps = {
 /** Play Modes dialog — mode/endless bind globally inside the option list. */
 export function PlayModesModal({ open, onClose }: PlayModesModalProps) {
 	return (
-		<Modal open={open} title='Play Modes' onClose={onClose}>
+		<ContentModal open={open} title='Play Modes' onClose={onClose}>
 			<PlayModeOptionList />
-		</Modal>
+		</ContentModal>
 	);
 }

@@ -1,6 +1,8 @@
 import clsx from 'clsx';
 import CheckmarkIcon from '@/assets/svg/checkmark.svg?react';
 import { Caption } from '@/components/ui';
+import { ENDLESS_LABEL } from '@/lib/settings-labels';
+import { clickToTitle } from '@/lib/ui-copy';
 
 type PlayModeEndlessOptionProps = {
 	endless: boolean;
@@ -17,8 +19,8 @@ export function PlayModeEndlessOption({
 			className='PlayModeEndlessOption flex cursor-pointer gap-3 rounded-md border border-mid bg-white px-3 py-2.5 transition-[box-shadow] hover:shadow-soft has-[:focus-visible]:shadow-soft'
 			title={
 				endless
-					? 'Click to Turn Off Endless Play'
-					: 'Click to Keep Playing as Measures Generate Ahead'
+					? clickToTitle('Turn Off Endless Play')
+					: clickToTitle('Keep Playing as Measures Generate Ahead')
 			}
 		>
 			<span
@@ -39,7 +41,9 @@ export function PlayModeEndlessOption({
 				onChange={(event) => onChange(event.target.checked)}
 			/>
 			<span className='flex min-w-0 flex-col gap-0.5'>
-				<span className='text-sm font-semibold text-black'>Endless</span>
+				<span className='text-sm font-semibold text-black'>
+					{ENDLESS_LABEL}
+				</span>
 				<Caption>
 					Keep playing as measures generate ahead; poison can appear without
 					stopping.

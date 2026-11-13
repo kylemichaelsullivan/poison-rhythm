@@ -10,6 +10,10 @@ import {
 } from '@/contexts/PreferencesContext';
 import { useSettings } from '@/contexts/SettingsContext';
 import { createAudioEngine, shouldPlayRhythmAudio } from '@/lib/audio';
+import {
+	isEditableTarget,
+	shouldIgnoreEscapeStop,
+} from '@/lib/keyboard-target';
 import { createLookaheadScheduler } from '@/lib/lookahead-scheduler';
 import { BEAT_FLASH_MS, BPM_MAX, BPM_MIN } from '@/lib/metronome-defaults';
 import { clampTempo } from '@/lib/metronome-tempo';
@@ -48,40 +52,6 @@ import type { RhythmMeasure } from '@/types';
 type MetronomeProviderProps = {
 	children: ReactNode;
 };
-
-function isTextInputTarget(target: EventTarget | null) {
-	return (
-		target instanceof HTMLElement &&
-		(target.tagName === 'INPUT' ||
-			target.tagName === 'TEXTAREA' ||
-			target.tagName === 'SELECT' ||
-			target.isContentEditable)
-	);
-}
-
-/** True while a portaled `.Modal` overlay is mounted (focus may sit on `body`). */
-function isAppModalOpen() {
-	return document.querySelector('.Modal') !== null;
-}
-
-/** Space/Enter/arrows should not fire while focus is on controls or dialogs. */
-function isEditableTarget(target: EventTarget | null) {
-	return (
-		isTextInputTarget(target) ||
-		isAppModalOpen() ||
-		(target instanceof HTMLElement &&
-			target.closest('button, a[href], [role="button"], [role="dialog"]') !==
-				null)
-	);
-}
-
-/** Escape still stops playback when a control is focused; leave inputs/dialogs alone. */
-function shouldIgnoreEscapeStop(target: EventTarget | null) {
-	return (
-		isTextInputTarget(target) ||
-		(target instanceof Element && target.closest('[role="dialog"]') !== null)
-	);
-}
 
 export function MetronomeProvider({ children }: MetronomeProviderProps) {
 	const { subdivisionLevel } = useSubdivision();

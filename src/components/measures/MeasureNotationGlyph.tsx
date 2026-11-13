@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { dataFlag } from '@/lib/data-attr';
 import { MEASURE_LENGTH } from '@/types';
 import { NoteGlyph } from './notation/NoteGlyph';
 import { RestGlyph } from './notation/RestGlyph';
@@ -47,7 +48,7 @@ export function MeasureNotationGlyph({
 				highlighting && (active ? activeTone : 'text-black'),
 			)}
 			style={style}
-			data-active={highlighting && active ? 'true' : undefined}
+			data-active={dataFlag(Boolean(highlighting && active))}
 			data-kind={step.kind}
 			data-duration={step.duration}
 			data-start-cell={step.startCell}

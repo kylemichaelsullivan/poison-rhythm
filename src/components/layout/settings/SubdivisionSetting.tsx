@@ -4,6 +4,7 @@ import {
 	levelToIndex,
 	SUBDIVISION_LABELS,
 } from '@/lib/subdivision-levels';
+import { SubdivisionRangeInput } from '../SubdivisionRangeInput';
 import { SettingRow } from './SettingRow';
 
 /** Inline subdivision slider for Settings (mirrors header ShowNotes). */
@@ -18,28 +19,11 @@ export function SubdivisionSetting() {
 					{SUBDIVISION_LABELS[value]}
 				</span>
 			</SettingRow>
-			<input
-				type='range'
-				className='w-full'
-				min={0}
-				max={2}
-				step={1}
+			<SubdivisionRangeInput
 				value={value}
-				title={`Note Subdivisions (${SUBDIVISION_LABELS[value]})`}
-				aria-label='Note Subdivisions'
-				aria-valuemin={0}
-				aria-valuemax={2}
-				aria-valuenow={value}
-				aria-valuetext={SUBDIVISION_LABELS[value]}
-				onChange={(e) =>
-					setSubdivisionLevel(indexToLevel(Number(e.target.value)))
-				}
+				onChange={(index) => setSubdivisionLevel(indexToLevel(index))}
+				ticksClassName='flex justify-between text-xs text-muted'
 			/>
-			<div className='flex justify-between text-xs text-muted'>
-				{SUBDIVISION_LABELS.map((label) => (
-					<span key={label}>{label}</span>
-				))}
-			</div>
 		</div>
 	);
 }

@@ -1,4 +1,4 @@
-import { Modal } from '@/components/layout';
+import { ContentModal } from '@/components/layout/ContentModal';
 import { DisplayModeControls } from '@/components/layout/settings/DisplayModeControls';
 
 type DisplayModeModalProps = {
@@ -8,8 +8,8 @@ type DisplayModeModalProps = {
 
 export function DisplayModeModal({ open, onClose }: DisplayModeModalProps) {
 	return (
-		<Modal open={open} title='Display Mode' onClose={onClose}>
+		<ContentModal open={open} title='Display Mode' onClose={onClose}>
 			<DisplayModeControls />
-		</Modal>
+		</ContentModal>
 	);
 }

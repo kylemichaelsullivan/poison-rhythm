@@ -1,8 +1,9 @@
 import EarIcon from '@/assets/svg/ear.svg?react';
 import EyeIcon from '@/assets/svg/eye.svg?react';
-import { IconToggle } from '@/components/layout/settings';
+import { StatusIconToggle } from '@/components/layout/settings/StatusIconToggle';
 import { useSetting } from '@/components/layout/settings/useSetting';
 import { Row } from '@/components/ui';
+import { PRACTICE_TOGGLE_LABELS } from '@/lib/settings-labels';
 
 /** Measures header: Show Next Measure (eye) and Listen Before You Play (ear). */
 export function MeasuresPracticeToggles() {
@@ -11,11 +12,10 @@ export function MeasuresPracticeToggles() {
 
 	return (
 		<Row gap='2' align='center'>
-			<IconToggle
-				label={showNext ? 'Show Next Measure: On' : 'Show Next Measure: Off'}
-				title={
-					showNext ? 'Click to Hide Next Measure' : 'Click to Show Next Measure'
-				}
+			<StatusIconToggle
+				name={PRACTICE_TOGGLE_LABELS.showNextMeasure}
+				titleSubject='Next Measure'
+				strategy='showHide'
 				pressed={showNext}
 				pressedIcon={EyeIcon}
 				unpressedIcon={EyeIcon}
@@ -23,17 +23,9 @@ export function MeasuresPracticeToggles() {
 				grow={false}
 				onPressedChange={setShowNext}
 			/>
-			<IconToggle
-				label={
-					demoBeforePlay
-						? 'Listen Before You Play: On'
-						: 'Listen Before You Play: Off'
-				}
-				title={
-					demoBeforePlay
-						? 'Click to Disable Listen Before You Play'
-						: 'Click to Enable Listen Before You Play'
-				}
+			<StatusIconToggle
+				name={PRACTICE_TOGGLE_LABELS.demoBeforePlay}
+				strategy='enableDisable'
 				pressed={demoBeforePlay}
 				pressedIcon={EarIcon}
 				unpressedIcon={EarIcon}

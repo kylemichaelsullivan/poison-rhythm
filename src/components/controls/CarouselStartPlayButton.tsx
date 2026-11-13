@@ -1,11 +1,14 @@
 import clsx from 'clsx';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import PlayIcon from '@/assets/svg/play.svg?react';
 import { Icon } from '@/components/layout/Icon';
 import { useDisclosure } from '@/hooks/useDisclosure';
+import { useOutsideDismiss } from '@/hooks/useOutsideDismiss';
 import { useTimedDismiss } from '@/hooks/useTimedDismiss';
 import { carouselNavButtonClassName } from '@/lib/control-classes';
+import { dataBool } from '@/lib/data-attr';
 import { CAROUSEL_PLAY_DELAY_MS } from '@/lib/timed-notice';
+import { carouselStartPlayLabel } from '@/lib/ui-copy';
 import { CarouselPlayDelayProgress } from './CarouselPlayDelayProgress';
 
 type CarouselStartPlayButtonProps = {
@@ -30,34 +33,20 @@ export function CarouselStartPlayButton({
 	}, [cancel, onStart]);
 
 	useTimedDismiss(armed, CAROUSEL_PLAY_DELAY_MS, fire);
+	useOutsideDismiss({
+		enabled: armed,
+		rootRef: buttonRef,
+		onDismiss: cancel,
+	});
 
-	useEffect(() => {
-		if (!armed) return;
-
-		const onPointerDown = (event: PointerEvent) => {
-			if (buttonRef.current?.contains(event.target as Node)) return;
+	const label = carouselStartPlayLabel(armed);
+	const onClick = () => {
+		if (armed) {
 			cancel();
-		};
-
-		const onKeyDown = (event: KeyboardEvent) => {
-			if (event.key !== 'Escape') return;
-			const target = event.target;
-			if (target instanceof HTMLElement) {
-				if (target.closest('.Modal') || target.closest('input, textarea')) {
-					return;
-				}
-			}
-			event.preventDefault();
-			cancel();
-		};
-
-		document.addEventListener('pointerdown', onPointerDown);
-		window.addEventListener('keydown', onKeyDown);
-		return () => {
-			document.removeEventListener('pointerdown', onPointerDown);
-			window.removeEventListener('keydown', onKeyDown);
-		};
-	}, [armed, cancel]);
+			return;
+		}
+		arm();
+	};
 
 	return (
 		<button
@@ -67,19 +56,13 @@ export function CarouselStartPlayButton({
 				'CarouselStartPlayButton relative overflow-hidden',
 			)}
 			disabled={isPlaying}
-			title={armed ? 'Cancel Delayed Play' : 'Play Measures'}
-			aria-label={armed ? 'Cancel Delayed Play' : 'Play Measures'}
+			title={label}
+			aria-label={label}
 			aria-pressed={armed}
 			data-testid='carousel-start-play'
-			data-armed={armed ? 'true' : 'false'}
+			data-armed={dataBool(armed)}
 			ref={buttonRef}
-			onClick={() => {
-				if (armed) {
-					cancel();
-					return;
-				}
-				arm();
-			}}
+			onClick={onClick}
 		>
 			{armed ? (
 				<CarouselPlayDelayProgress durationMs={CAROUSEL_PLAY_DELAY_MS} />

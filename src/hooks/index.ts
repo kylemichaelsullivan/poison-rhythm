@@ -1,4 +1,5 @@
 export { useActiveNotationStepIndex } from './useActiveNotationStepIndex';
+export { useArrowKeyCapture } from './useArrowKeyCapture';
 export { useColorRoleSelection } from './useColorRoleSelection';
 export { useDelayedClick } from './useDelayedClick';
 export { useDisclosure } from './useDisclosure';
@@ -7,9 +8,11 @@ export { useHoverPinPopover } from './useHoverPinPopover';
 export { useLocalStorage } from './useLocalStorage';
 export { useMeasureDisplayOptions } from './useMeasureDisplayOptions';
 export { useMeasurePlaybackSync } from './useMeasurePlaybackSync';
+export { useMeasuresPlayPauseChrome } from './useMeasuresPlayPauseChrome';
 export { useMetronomeBeat } from './useMetronomeBeat';
 export { useModalFocusTrap } from './useModalFocusTrap';
 export { useNotationPrefetch } from './useNotationPrefetch';
+export { useOutsideDismiss } from './useOutsideDismiss';
 export { usePaletteContrast } from './usePaletteContrast';
 export { useScrollHighwayTrack } from './useScrollHighwayTrack';
 export { useSoftDisableFocus } from './useSoftDisableFocus';
