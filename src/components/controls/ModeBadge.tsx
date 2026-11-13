@@ -19,7 +19,7 @@ export function ModeBadge({ badge }: ModeBadgeProps) {
 			data-endless={badge.endless ? 'true' : 'false'}
 		>
 			{badge.tone === 'bucket' ? (
-				<PlayModeBucketGlyph active={false} size='sm' />
+				<PlayModeBucketGlyph active size='sm' />
 			) : (
 				<PlayModePoisonGlyph size='sm' />
 			)}
