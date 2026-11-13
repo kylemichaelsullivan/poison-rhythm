@@ -64,6 +64,7 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 | `src/components/controls/DifficultyRegenAckHost.tsx` | App-level host for the timed post-regen acknowledgement |
 | `src/components/layout/StatusToastAnnouncer.tsx` | Diffs settings/prefs → status toast; Settings sets `statusToastSuppressed` while open |
 | `src/components/layout/ToastHost.tsx` | Lower-right timed `<output>` toast host |
+| `src/lib/status-toast.ts` | Toast copy helpers + `statusToastForTransition`; New/Reuse phrases; mute lines use `Label: Value` |
 | `src/components/poison/PoisonHitOverlayHost.tsx` | App-level host for Classic full-screen poison-hit animation (skipped in Endless) |
 | `src/components/layout/AppTitle.tsx` | Header brand title + Mode icon (`ModeBadgeTrigger` → About modal) |
 | `src/components/layout/about/AboutPoisonRhythmModal.tsx` | App-level host for title About + `DifficultyControls` |

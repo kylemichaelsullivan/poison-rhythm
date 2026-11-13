@@ -55,11 +55,21 @@ const POISON_TOAST: Record<PoisonMode, string> = {
 };
 
 function muteToastMessage(label: string, muted: boolean): string {
-	return muted ? `${label} Muted` : `${label} Unmuted`;
+	return muted ? `${label}: Muted` : `${label}: Unmuted`;
 }
 
 function practiceToggleToastMessage(label: string, enabled: boolean): string {
 	return `${label}: ${enabled ? 'On' : 'Off'}`;
+}
+
+/** Poison section New (+) — new poison and new measures. */
+export function newRoundToastMessage(): string {
+	return 'New Poison Rhythm, New Measures';
+}
+
+/** Poison section Reuse — keep poison, regenerate measures. */
+export function reuseRoundToastMessage(): string {
+	return 'New Measures, Same Poison Rhythm';
 }
 
 /**
@@ -84,17 +94,17 @@ export function statusToastForTransition(
 		prev.muteMetronome && prev.mutePlayback && prev.mutePreview;
 
 	if (muteChangeCount >= 2 && allMuted) {
-		return 'All Channels Muted';
+		return 'All Channels: Muted';
 	}
 	if (muteChangeCount >= 2 && allWereMuted && !allMuted) {
-		return 'Channels Restored';
+		return 'Channels: Restored';
 	}
 	if (muteChanged.playback && muteChanged.preview) {
 		if (next.mutePlayback && next.mutePreview) {
-			return 'Playback and Preview Muted';
+			return 'Playback and Preview: Muted';
 		}
 		if (!next.mutePlayback && !next.mutePreview) {
-			return 'Playback and Preview Unmuted';
+			return 'Playback and Preview: Unmuted';
 		}
 	}
 

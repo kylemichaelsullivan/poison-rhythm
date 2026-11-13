@@ -50,7 +50,7 @@ Location: `e2e/`
 | `scroll-highway.spec.ts` | Highway progress during count-in + playback; Scroll always counts in; Settings hides Practice + Sound Preview/Count-In; poison shows notation and grid |
 | `poison-hit.spec.ts` | Classic bottle under “That’s the Poison!” explodes then auto-clears; Endless continuous play never shows it |
 | `difficulty-regen-ack.spec.ts` | Difficulty acknowledgement and Account notice: **no OK button**, `0.5rem` theme progress bar, dismiss on `TIMED_NOTICE_DURATION_MS`, **pause while hovered**. Account copy uses `text-wrap: pretty` (no non-breaking spaces) |
-| `status-toast.spec.ts` | Lower-right status toast for screen UI toggles (`data-testid="status-toast"`); Settings → Mode practice toggles stay silent |
+| `status-toast.spec.ts` | Lower-right status toast for screen UI toggles (`data-testid="status-toast"`); Poison New / Reuse copy; Settings → Mode practice toggles stay silent |
 | `a11y.spec.ts` | axe WCAG 2.2 A/AA + best-practice (start screen, round, settings/Sound, metronome, modals, count-in). Runs on **Desktop Chrome** and **mobile** (360×800) projects |
 | `mobile-layout.spec.ts` | 360×800 smoke: first-measure delayed Play + Next vs Play overlap, last-measure end menu, 2-col measure grid, Settings panel scroll |
 | `color-contrast.spec.ts` | Colors meter matches swatch chips plus ratios; Light on top in every theme; Dominant is scored against Secondary and the reverse |

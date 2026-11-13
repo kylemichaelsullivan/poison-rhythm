@@ -52,4 +52,16 @@ test.describe('status toast', () => {
 
 		await expect(page.getByTestId('status-toast')).toHaveCount(0);
 	});
+
+	test('toasts for Poison New and Reuse controls', async ({ page }) => {
+		const controls = page.locator('.ControlButtons');
+		await controls.getByRole('button', { name: 'New', exact: true }).click();
+		const toast = page.getByTestId('status-toast');
+		await expect(toast).toBeVisible();
+		await expect(toast).toHaveText('New Poison Rhythm, New Measures');
+
+		await controls.getByRole('button', { name: 'Reuse', exact: true }).click();
+		await expect(toast).toBeVisible();
+		await expect(toast).toHaveText('New Measures, Same Poison Rhythm');
+	});
 });

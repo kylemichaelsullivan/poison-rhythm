@@ -1,15 +1,21 @@
 import clsx from 'clsx';
+import { useCallback } from 'react';
 import { PlayControls } from '@/components/controls';
 import { MeasuresSection } from '@/components/measures';
 import { DisplayModeModal, PoisonSection } from '@/components/poison';
-import { useGame, useSettings, useSubdivision } from '@/contexts';
+import { useGame, useSettings, useSubdivision, useToast } from '@/contexts';
 import { useDisclosure } from '@/hooks/useDisclosure';
 import { useSoftDisableFocus } from '@/hooks/useSoftDisableFocus';
 import { isBucketTrainerMode } from '@/lib/settings-schema';
+import {
+	newRoundToastMessage,
+	reuseRoundToastMessage,
+} from '@/lib/status-toast';
 
 export function Body() {
 	const { subdivisionLevel } = useSubdivision();
 	const { settings } = useSettings();
+	const { showToast } = useToast();
 	const { poisonRhythm, measures, round, handleNewRound, handleReuseRound } =
 		useGame();
 	const { playButtonRef, handleNewPoison } =
@@ -20,6 +26,16 @@ export function Body() {
 		onOpen: onOpenDisplayMode,
 		onClose: onCloseDisplayMode,
 	} = useDisclosure();
+
+	const onNewPoison = useCallback(() => {
+		handleNewPoison();
+		showToast(newRoundToastMessage());
+	}, [handleNewPoison, showToast]);
+
+	const onReusePoison = useCallback(() => {
+		handleReuseRound();
+		showToast(reuseRoundToastMessage());
+	}, [handleReuseRound, showToast]);
 
 	return (
 		<main
@@ -33,16 +49,16 @@ export function Body() {
 				<PoisonSection
 					poisonRhythm={poisonRhythm}
 					hasRound={round !== null}
-					onNewPoison={handleNewPoison}
-					onReusePoison={handleReuseRound}
-					onReuseDisabledClick={handleNewPoison}
+					onNewPoison={onNewPoison}
+					onReusePoison={onReusePoison}
+					onReuseDisabledClick={onNewPoison}
 					onOpenDisplayMode={onOpenDisplayMode}
 				/>
 			) : null}
 
 			<MeasuresSection
-				onNewPoison={handleNewPoison}
-				onReusePoison={handleReuseRound}
+				onNewPoison={onNewPoison}
+				onReusePoison={onReusePoison}
 				onOpenDisplayMode={onOpenDisplayMode}
 			/>
 

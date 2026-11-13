@@ -1,5 +1,9 @@
 import { describe, expect, test } from 'bun:test';
-import { statusToastForTransition } from '../status-toast';
+import {
+	newRoundToastMessage,
+	reuseRoundToastMessage,
+	statusToastForTransition,
+} from '../status-toast';
 import type { StatusToastSnapshot } from '../status-toast';
 
 const base: StatusToastSnapshot = {
@@ -81,7 +85,7 @@ describe('statusToastForTransition', () => {
 				mutePlayback: true,
 				mutePreview: true,
 			}),
-		).toBe('All Channels Muted');
+		).toBe('All Channels: Muted');
 		expect(
 			statusToastForTransition(
 				{
@@ -92,7 +96,7 @@ describe('statusToastForTransition', () => {
 				},
 				base,
 			),
-		).toBe('Channels Restored');
+		).toBe('Channels: Restored');
 	});
 
 	test('coalesces playback + preview mute pair', () => {
@@ -102,18 +106,23 @@ describe('statusToastForTransition', () => {
 				mutePlayback: true,
 				mutePreview: true,
 			}),
-		).toBe('Playback and Preview Muted');
+		).toBe('Playback and Preview: Muted');
 	});
 
 	test('single mute channel', () => {
 		expect(
 			statusToastForTransition(base, { ...base, muteMetronome: true }),
-		).toBe('Metronome Muted');
+		).toBe('Metronome: Muted');
 		expect(
 			statusToastForTransition(
 				{ ...base, mutePreview: true },
 				{ ...base, mutePreview: false },
 			),
-		).toBe('Preview Unmuted');
+		).toBe('Preview: Unmuted');
+	});
+
+	test('new and reuse round actions', () => {
+		expect(newRoundToastMessage()).toBe('New Poison Rhythm, New Measures');
+		expect(reuseRoundToastMessage()).toBe('New Measures, Same Poison Rhythm');
 	});
 });
