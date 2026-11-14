@@ -41,7 +41,7 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 3. **`e2e/helpers.ts` `generateRound` does not click New.** It waits for `data-testid="measure-slider"` and an enabled Play button (auto-seeded round).
 4. **Complexity is available from the title About modal and Settings → Mode** (difficulty 1–5 + subdivision). Header ShowNotes remains a quick control. Do not add Settings dials for density or syncopation as separate fields.
 5. **Display mode** is on the Poison section badge (and Measures badge in Bucket mode) → one `DisplayModeModal` owned by `Body`, and also under **Settings → Mode → Display**. Badge labels are **GRID** / **NOTATION** / **SCROLL**; Scroll is a Guitar Hero–style beat-synced highway (`ScrollHighway`) with a single-press D-pad for Up / Down / Left / Right. Scroll omits Measures side gutters (prev/next, first-measure Play, last-measure menu). Rounds leave more than a full highway of decoys after poison (`TRAILING_DECOYS_AFTER_POISON`) so emptiness cannot tip players off; Classic still stops on the poison and shows `PoisonHitOverlay` (Endless / continuous skips it). Scroll also locks practice/sound: Settings hides the whole **Practice** group, no Preview mute channel and always Count-In (`effectiveDemoBeforePlay` / `effectiveCountInEnabled`); stored prefs return when leaving Scroll. Poison reference stacks **notation + grid** (`PoisonReferenceViews`); Measures stays the highway.
-6. **Play modes** live in the title About modal (Difficulty section badge → `PlayModesModal`) and under **Settings → Mode → Play Mode** (Classic / Bucket Drumming + Endless). The Mode icon to the right of the header title opens the same About modal as the brand name (`AppTitle` → `ModeBadgeTrigger` → `openAbout`).
+6. **Play modes** are separate from difficulty. Brand title and Mode icon both open About (`AppTitle` → `openAbout`): brand header, then **Play Mode** (`PlayModeControls`) then **Difficulty** (`DifficultyControls`). Same split under **Settings → Mode**. Changing `gameMode` regenerates the round (`handleNewRound({ gameMode })`); Endless only affects stop-on-poison.
 7. **Color accents are preference keys**, not the game-settings blob — `ColorPreferencesProvider` + `poison-rhythm-dominant-color` / `poison-rhythm-secondary-color` (null = brand `#914893` / `#246028`). Picking Dominant scores that color against the current Secondary, and the reverse. The meter is the grade stack with ratios; each row is also Light Mode / Dark Mode / Match System (tap to lock, tap again for Match System; lit bulb = selection: none on System, Light row on Light, Dark row on Dark). Meter bars and swatch chips use stable ink fills and stay Light-over-Dark. Read [`documentation/CONTRAST.md`](documentation/CONTRAST.md) and [`.cursor/skills/color-contrast/SKILL.md`](.cursor/skills/color-contrast/SKILL.md) before changing it.
 8. **User-facing copy** uses typographic apostrophe `’` (not `'`) and no Oxford comma (`A, B and C`, not `A, B, and C`). Prefer Title Case for labels/titles; sentence case for body hints.
 9. **Do not commit `.tmp-*`.** Local glyph audits, screenshots and scratch venvs; gitignored and Biome-ignored.
@@ -70,8 +70,9 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 | `src/lib/keyboard-target.ts` | Text-input / modal ignore helpers for Escape and global shortcuts |
 | `src/lib/data-attr.ts` | `dataBool` / `dataFlag` for stable `data-*` encoding |
 | `src/components/poison/PoisonHitOverlayHost.tsx` | App-level host for Classic full-screen poison-hit animation (skipped in Endless) |
-| `src/components/layout/AppTitle.tsx` | Header brand title + Mode icon (`ModeBadgeTrigger` → About modal) |
-| `src/components/layout/about/AboutPoisonRhythmModal.tsx` | App-level host for title About + `DifficultyControls` |
+| `src/components/layout/AppTitle.tsx` | Header brand title + Mode icon (both → About) |
+| `src/components/controls/PlayModeControls.tsx` | Play Mode composer (About framed section / Settings list) |
+| `src/components/layout/about/AboutPoisonRhythmModal.tsx` | App-level host for title About: brand + Play Mode + Difficulty |
 | `src/components/layout/intro/IntroModalHost.tsx` | App-level host for the first-visit welcome (`poison-rhythm-intro-seen`) |
 | `src/components/layout/Modal.tsx` | Modal composer; portals to `document.body`; chrome atoms + `useModalFocusTrap` |
 | `src/components/layout/settings/` | Settings modal (`SettingsOverlay` → Mode / Sound / Colors) |
@@ -82,7 +83,7 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 | `src/components/controls/MeasuresPlayPauseButton.tsx` | Shared measures Play/Pause chrome (footer + carousel end) |
 | `src/components/layout/settings/StatusIconToggle.tsx` | IconToggle with On/Off + Click-to copy strategies |
 | `src/components/layout/SubdivisionRangeInput.tsx` | Shared subdivision range for ShowNotes + Settings |
-| `src/components/layout/ContentModal.tsx` | Titled Modal shell for Display / Play Modes |
+| `src/components/layout/ContentModal.tsx` | Titled Modal shell for content dialogs (e.g. Display Mode) |
 | `src/components/controls/CarouselEndMenu.tsx` | Last-measure New / Reuse / Play |
 | `src/components/measures/MeasureGrid.tsx` | Mode switch + Suspense; prop-driven `display`; grid via `MeasureCellGrid`; prefetch via `useNotationPrefetch` |
 | `src/hooks/useMeasureDisplayOptions.ts` | Derive measure chrome flags once for section composers |

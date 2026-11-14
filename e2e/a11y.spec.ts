@@ -90,11 +90,19 @@ test.describe('accessibility', () => {
 		await expectNoA11yViolations(page, 'metronome panel');
 	});
 
-	test('difficulty help and play modes modals have no axe violations', async ({
+	test('about mode/difficulty and help modal have no axe violations', async ({
 		page,
 	}) => {
 		await page.goto('/');
 		await openAboutFromTitle(page);
+		await expect(
+			page.getByRole('heading', { name: 'Play Mode' }),
+		).toBeVisible();
+		await expect(
+			page.getByRole('heading', { name: 'Difficulty' }),
+		).toBeVisible();
+		await expectNoA11yViolations(page, 'about modal with mode and difficulty');
+
 		await page
 			.getByRole('button', { name: 'Explain Difficulty Levels' })
 			.click();
@@ -102,12 +110,6 @@ test.describe('accessibility', () => {
 			page.getByRole('dialog', { name: 'Difficulty Levels' }),
 		).toBeVisible();
 		await expectNoA11yViolations(page, 'difficulty help modal');
-
-		await page.getByTitle('Open Play Modes').click();
-		await expect(
-			page.getByRole('dialog', { name: 'Play Modes' }),
-		).toBeVisible();
-		await expectNoA11yViolations(page, 'play modes modal');
 	});
 
 	test('display mode modal has no axe violations', async ({ page }) => {

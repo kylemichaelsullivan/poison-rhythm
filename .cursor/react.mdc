@@ -75,7 +75,8 @@ Provider tree in `main.tsx`: `ThemeProvider` → `ColorPreferencesProvider` → 
 
 ### Rhythm complexity
 
-- **Difficulty (1–5)**: Hit count and placement bias — title About modal + Settings → Mode (`DifficultyControls` / `PendingDifficultyProvider` + `DifficultyRegenAckHost`)
+- **Difficulty (1–5)**: Hit count and placement bias — title About modal + Settings → Mode → Difficulty (`DifficultyControls` / `PendingDifficultyProvider` + `DifficultyRegenAckHost`); independent of play mode
+- **Play mode**: About modal + Settings → Mode → Play Mode (`PlayModeControls` / `PlayModeOptionList`); `gameMode` change regenerates the round
 - **Subdivision**: Header ShowNotes + Settings → Mode → `subdivisionLevel` — drives generation, display and playback
 - **Do not** add Settings dials for density or syncopation as separate fields (subdivision is mirrored, not a third independent control)
 
@@ -118,7 +119,8 @@ Provider tree in `main.tsx`: `ThemeProvider` → `ColorPreferencesProvider` → 
 - **Body**: Composer; soft-disable focus via `useSoftDisableFocus`; owns single `DisplayModeModal`
 - **ui/**: Elemental atoms (`Button`, `IconButton` including `modalClose`, `Caption`, `Stack`, `Row`)
 - **Modal**: Composer over `ModalScrim` / `ModalPanel` / `ModalCloseButton` / `ModalTitle` + `useModalFocusTrap`; portals to `document.body` (nested dialogs escape parent overflow / backdrop-filter)
-- **DifficultyControls**: `DifficultyFramedBlock` / `DifficultySettingsBlock` + help / play-mode modals; regen ack via `DifficultyRegenAckHost`
+- **DifficultyControls**: `DifficultyFramedBlock` / `DifficultySettingsBlock` + help modal; regen ack via `DifficultyRegenAckHost`
+- **PlayModeControls**: About framed Play Mode section / Settings list; regenerates round on `gameMode` change
 - **PoisonSection**: Composer; `PoisonSectionHeader`, `PoisonMeasureContent` / `PoisonReferenceViews` / `PoisonMeasureFrame` / `HiddenPoisonOverlay`
 - **PoisonHitOverlayHost**: App-level Classic full-screen poison-hit animation (Endless never opens it)
 - **MeasuresSection / MeasureSlider**: `MeasuresPracticeToggles`, `MeasuresSectionHeaderActions`, carousel chrome + `useMeasurePlaybackSync`

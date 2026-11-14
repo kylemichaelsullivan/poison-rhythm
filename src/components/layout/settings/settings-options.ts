@@ -40,11 +40,11 @@ export const GAME_MODE_OPTIONS: GameModeOption[] = [
 	{
 		value: 'default',
 		label: GAME_MODE_LABELS.default,
-		description: 'Practice against a poison rhythm among decoy measures.',
+		description: 'Play Everything EXCEPT the Poison Rhythm',
 	},
 	{
 		value: 'bucketTrainer',
 		label: GAME_MODE_LABELS.bucketTrainer,
-		description: 'No poison rhythm and endless play.',
+		description: 'Simple, Endless Play',
 	},
 ];

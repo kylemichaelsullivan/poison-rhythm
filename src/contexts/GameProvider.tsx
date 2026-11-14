@@ -6,6 +6,7 @@ import { createRoundForMode, onMeasureCompleteForMode } from '@/lib/game-modes';
 import { isEndlessMode } from '@/lib/settings-schema';
 import { richToRhythmMeasure } from '@/types';
 import type { MutableRefObject, ReactNode } from 'react';
+import type { NewRoundOverrides } from '@/contexts/GameContext';
 import type { VisualHint } from '@/lib/game-modes';
 import type { RhythmMeasure, Round } from '@/types';
 
@@ -71,12 +72,16 @@ export function GameProvider({ children }: { children: ReactNode }) {
 	);
 
 	const handleNewRound = useCallback(
-		(overrides?: { difficulty?: number }) => {
+		(overrides?: NewRoundOverrides) => {
 			const nextRoundNumber = roundNumber + 1;
+			const nextSettings =
+				overrides?.gameMode !== undefined
+					? { ...settings, gameMode: overrides.gameMode }
+					: settings;
 			const newRound = createRoundForMode({
 				difficulty: overrides?.difficulty ?? difficulty,
 				subdivisionLevel,
-				settings,
+				settings: nextSettings,
 				roundNumber: nextRoundNumber,
 			});
 			setRound(newRound);

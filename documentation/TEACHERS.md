@@ -26,21 +26,20 @@ It is not a full notation curriculum. **Grid** mode is a piano-roll view; **Nota
 
 ## Difficulty (what changes)
 
-| Level | Classroom feel (on a 1/16 reference grid) |
-|-------|-------------------------------------------|
-| 1 | Fewest hits — mainly downbeats |
-| 2 | More hits — mostly downbeats, a few offbeats |
-| 3 | Busier — mix of strong and weaker spots |
-| 4 | Dense — freer placement across the grid |
-| 5 | Densest — nearly filling the measure |
+Difficulty raises **how many hits** and (on 1/8 and 1/16) **where they land**. Hit bands are hardcoded per **Show Notes** subdivision. On **1/4**, only downbeats exist, so help shows hit counts alone.
 
-Hit counts **scale down** when you choose coarser subdivisions (1/8 or 1/4), so level 5 on quarters is not the same absolute density as level 5 on sixteenths.
+| Level | Placement (1/8 and 1/16) |
+|-------|--------------------------|
+| 1 | downbeats only |
+| 2 | mostly downbeats |
+| 3 | some offbeats |
+| 4–5 | any allowed beat (5 is denser) |
 
 Tip: raise **subdivision** before maxing difficulty if students struggle to *see* the grid, not just hear density.
 
 ## Play modes
 
-Open the title About modal from the **Poison Rhythm** header title or the Mode icon beside it, then use the **Difficulty** section badge to change play mode — or go to **Settings → Mode → Play Mode**.
+Open the About modal from the **Poison Rhythm** header title or the Mode icon beside it — Play Mode and Difficulty are separate sections there. The same controls live under **Settings → Mode**.
 
 | Mode | Use when… |
 |------|-----------|

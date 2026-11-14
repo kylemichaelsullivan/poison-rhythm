@@ -6,6 +6,7 @@ export {
 } from './about';
 export { Body } from './Body';
 export { ActionButton, Metronome, Settings } from './button';
+export { ClickOutside } from './ClickOutside';
 export { ContentModal } from './ContentModal';
 export { CornerModal } from './CornerModal';
 export { EmptyStartPrompt } from './EmptyStartPrompt';
@@ -18,7 +19,9 @@ export { OutsideDismissRegion } from './OutsideDismissRegion';
 export { Section } from './Section';
 export { SectionTitle } from './SectionTitle';
 export { ShowNotes } from './ShowNotes';
+export { ShowNotesSlider } from './ShowNotesSlider';
 export { ShowNotesTrigger } from './ShowNotesTrigger';
+export { ShowNotesTriggerGlyph } from './ShowNotesTriggerGlyph';
 export { StableContentFrame } from './StableContentFrame';
 export { StatusToastAnnouncer } from './StatusToastAnnouncer';
 export { SubdivisionRangeInput } from './SubdivisionRangeInput';

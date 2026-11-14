@@ -5,13 +5,15 @@ export {
 } from './audio';
 export { dataBool, dataFlag } from './data-attr';
 export {
+	allowedSlotsForSubdivision,
 	DIFFICULTY_LEVELS,
 	DIFFICULTY_MAX,
 	DIFFICULTY_MIN,
+	difficultyPlacementHelp,
 	formatDifficultyHelpText,
 	HIT_RANGE_REFERENCE_SLOTS,
 	hitRangeForLevel,
-	scaleHitRange,
+	subdivisionForSlotCount,
 } from './difficulty-levels';
 export {
 	createRoundForMode,

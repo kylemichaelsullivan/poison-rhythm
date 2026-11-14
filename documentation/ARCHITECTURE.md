@@ -22,7 +22,7 @@ flowchart TB
     StatusIconToggle
   end
   subgraph composers [composers]
-    DifficultyControls
+    PlayModeControls / DifficultyControls
     MeasureSlider
     ShowNotes
     Body
@@ -55,7 +55,8 @@ Phone-up layout (≈360px primary; 320px must not overflow horizontally): safe-a
 | Composer / host | Notable layers / hooks |
 |-----------------|------------------------|
 | `IntroModalHost` | `IntroTutorialProvider` + `IntroModal` / `IntroTutorialStep` (quarters `MeasureGrid`) / `IntroSkipToggle` (checked by default); writes `poison-rhythm-intro-seen` when skip is checked on dismiss |
-| `DifficultyControls` | `DifficultyFramedBlock` / `DifficultySettingsBlock`, help + play-mode modals; regen ack via `DifficultyRegenAckHost` |
+| `DifficultyControls` | `DifficultyFramedBlock` / `DifficultySettingsBlock` + help modal; regen ack via `DifficultyRegenAckHost` (About / Settings; no play mode) |
+| `PlayModeControls` | About framed Play Mode section / Settings list; round regen on `gameMode` change |
 | `MeasureSlider` | `MeasureCarouselChrome` (`live` sets `data-testid="measure-slider"`), `NextMeasurePreview` / `ScrollHighway`, `useMeasurePlaybackSync` |
 | `ShowNotes` | `ShowNotesTrigger`, `ShowNotesSlider`, `useHoverPinPopover` |
 | `MeasuresPracticeToggles` | Header eye + ear IconToggles for Show Next Measure / Listen Before You Play (hidden in Scroll) |
@@ -67,7 +68,7 @@ Phone-up layout (≈360px primary; 320px must not overflow horizontally): safe-a
 | `MeasureGrid` | Prop-driven `display` → `MeasureCellGrid` / lazy `MeasureNotation`, `NotationFallback`, `useNotationPrefetch` |
 | `ColorAccentSettings` | Owns prefs + role/contrast hooks; `ContrastScoreMeter` owns theme; tray memoizes scores on role + partner |
 
-Settings shell: footer **Settings** → lazy `SettingsOverlay` → tabs `Mode` / `Sound` / `Colors` over `layout/settings/` atoms (`SettingsGroup`, `EnableToggle`, `When`, …). Color accents persist via `ColorPreferencesProvider` (student-scoped preference keys; null = brand); Colors UI is composed by `ColorAccentSettings`. Main-UI shortcuts remain: header title / Mode icon → About (`AboutPoisonRhythmModal`; Difficulty badge → `PlayModesModal`); Poison/Measures badge → Body-owned `DisplayModeModal`; header ShowNotes; Measures **Practice** toggles (Show Next / Listen Before You Play) and **Volume** menu (Metronome / Playback / Preview); footer metronome for tempo (`CornerModal` `tone='muted'` when metronome muted). Mirrored in Settings: display + play mode + complexity + practice under Mode; feedback → mute channels → tempo under Sound; crayon accents + theme lightbulbs on the contrast meter under Colors. See [`COLORS.md`](COLORS.md) and [`CONTRAST.md`](CONTRAST.md).
+Settings shell: footer **Settings** → lazy `SettingsOverlay` → tabs `Mode` / `Sound` / `Colors` over `layout/settings/` atoms (`SettingsGroup`, `EnableToggle`, `When`, …). Color accents persist via `ColorPreferencesProvider` (student-scoped preference keys; null = brand); Colors UI is composed by `ColorAccentSettings`. Main-UI shortcuts remain: header title / Mode icon → About (`AboutPoisonRhythmModal`: brand + Play Mode + Difficulty); Poison/Measures badge → Body-owned `DisplayModeModal`; header ShowNotes; Measures **Practice** toggles (Show Next / Listen Before You Play) and **Volume** menu (Metronome / Playback / Preview); footer metronome for tempo (`CornerModal` `tone='muted'` when metronome muted). Mirrored in Settings: display + play mode + complexity + practice under Mode; feedback → mute channels → tempo under Sound; crayon accents + theme lightbulbs on the contrast meter under Colors. See [`COLORS.md`](COLORS.md) and [`CONTRAST.md`](CONTRAST.md).
 
 ## State flow
 
@@ -115,7 +116,7 @@ flowchart TB
 
 | Input | Source | Generation effect |
 |-------|--------|-------------------|
-| Difficulty 1–5 | Title About modal + Settings → Mode | Hit count range; placement bias (downbeats → full 16th grid) |
+| Difficulty 1–5 | Title About modal + Settings → Mode | Hardcoded hit bands per subdivision; placement bias via `pickHitIndices` (1 downbeats only, 2 mostly downbeats, 3 some offbeats, 4–5 uniform on allowed grid). Quarters only expose downbeats so placement bias is a no-op. |
 | Subdivision 1/4–1/16 | Header ShowNotes + Settings → Mode | Allowed grid positions; display and playback grid |
 | Accents / phrase | Settings → Rhythm (Coming Soon) | Optional accent marks, multi-bar phrases |
 | Sticking | Settings → Rhythm (Coming Soon) | L/R assignment on hits |

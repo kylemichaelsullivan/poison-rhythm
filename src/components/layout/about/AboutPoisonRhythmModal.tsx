@@ -1,9 +1,10 @@
-import { DifficultyControls } from '@/components/controls';
+import { DifficultyControls, PlayModeControls } from '@/components/controls';
+import { Stack } from '@/components/ui';
 import { Modal } from '../Modal';
 import { AboutBrandHeader } from './AboutBrandHeader';
 import { useAboutPoisonRhythm } from './AboutPoisonRhythmContext';
 
-/** App-level host for the title About modal. */
+/** App-level host for the title About modal (brand + Mode + Difficulty). */
 export function AboutPoisonRhythmModal() {
 	const { open, closeAbout } = useAboutPoisonRhythm();
 
@@ -15,8 +16,11 @@ export function AboutPoisonRhythmModal() {
 			onClose={closeAbout}
 		>
 			<AboutBrandHeader version={__APP_VERSION__} />
-			<div className='mt-2 w-full border-t border-primary/20 pt-4'>
-				<DifficultyControls />
+			<div className='mt-4 w-full'>
+				<Stack gap='4'>
+					<PlayModeControls />
+					<DifficultyControls />
+				</Stack>
 			</div>
 		</Modal>
 	);

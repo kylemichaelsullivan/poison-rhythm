@@ -11,7 +11,7 @@ Compose UI from small layers. Prefer **one root HTML element per component** (or
 ```
 atoms (ui/)     → one element: Button, IconButton, Caption, Stack, Row
 molecules       → compose atoms: DescribedOptionCard, MeasuresPlayPauseButton, ModalActions, MeasureCarouselChrome
-composers       → wire context + hooks: DifficultyControls, MeasureSlider, ShowNotes, Body
+composers       → wire context + hooks: DifficultyControls, PlayModeControls, MeasureSlider, ShowNotes, Body
 hooks           → interaction / playback: useOutsideDismiss, useMeasuresPlayPauseChrome, useMeasurePlaybackSync, useHoverPinPopover, …
 ```
 
@@ -25,7 +25,7 @@ hooks           → interaction / playback: useOutsideDismiss, useMeasuresPlayPa
 ```
 src/components/
 ├── ui/                    # Elemental shared primitives (Button, IconButton, Caption, Stack, Row)
-├── controls/              # Play modes, difficulty molecules + DifficultyControls composer
+├── controls/              # PlayModeControls + difficulty / DifficultyControls composers
 ├── layout/                # App chrome, overlays, metronome UI
 │   ├── about/
 │   ├── button/
@@ -67,21 +67,27 @@ src/components/
 
 - **Purpose**: Header brand title + Mode icon
 - **Uses**: `AboutPoisonRhythmButton` and `ModeBadgeTrigger` both call `openAbout`; `resolveGameModeHudBadge` from settings
-- **Layout**: Mode icon sits immediately to the right of **Poison Rhythm**; Mode trigger accessible name is **Mode and Difficulty** (distinct from the brand title); Play Modes stay on the Difficulty badge inside About
+- **Layout**: Mode icon sits immediately to the right of **Poison Rhythm**; Mode trigger accessible name is **Mode and Difficulty** (distinct from the brand title)
+
+### PlayModeControls (composer)
+
+- **Purpose**: Play Mode section independent of Difficulty
+- **Uses**: `PlayModeFramedBlock` (About) or `PlayModeOptionList` (Settings `framed={false}`)
+- **Global bindings**: `PlayModeOptionList` → `useSetting('gameMode'|'endless')` + `handleNewRound({ gameMode })` on mode change
 
 ### DifficultyControls (composer)
 
-- **Purpose**: Difficulty section with play-mode badge + help / Play Modes modals
-- **Uses**: `DifficultyFramedBlock` / `DifficultySettingsBlock`, `DifficultyHelpModal`, `PlayModesModal`, `useDisclosure` (local open/close only)
-- **Global bindings**: `DifficultySlider` → `usePendingDifficulty`; `PlayModeOptionList` / mode badge → `useSettings`
-- **Variants**: `framed` (About section box with mode badge) vs compact Settings block (`framed={false}`)
-- **Note**: Header title Mode icon opens this About modal; Settings → Mode has the full Play Mode list; header ShowNotes remains the quick subdivision control. After the host modal closes with a pending difficulty change, `PendingDifficultyProvider` regenerates the round; `DifficultyRegenAckHost` (App-level) shows a timed acknowledgement (`Modal` `dismissAfterMs`, no OK button).
+- **Purpose**: Difficulty section + help modal only (play mode is separate)
+- **Uses**: `DifficultyFramedBlock` / `DifficultySettingsBlock`, `DifficultyHelpModal`, `useDisclosure` (local open/close only)
+- **Global bindings**: `DifficultySlider` → `usePendingDifficulty`
+- **Variants**: `framed` (About section box) vs compact Settings block (`framed={false}`)
+- **Note**: Brand title and Mode icon both open About (Play Mode then Difficulty). Settings → Mode mirrors both groups. After the host modal closes with a pending difficulty change, `PendingDifficultyProvider` regenerates the round; `DifficultyRegenAckHost` (App-level) shows a timed acknowledgement (`Modal` `dismissAfterMs`, no OK button).
 
 ### Modal (composer)
 
 - **Purpose**: Shared dialog shell
 - **Layers**: `ModalScrim`, `ModalPanel` (`size` / `fullWidth`), `ModalCloseButton` (`IconButton` `modalClose`), `ModalTitle`, `useModalFocusTrap`
-- **Portal**: Renders via `createPortal(..., document.body)` so nested dialogs (Difficulty Help / Play Modes inside About or Settings) are not clipped by a parent `ModalPanel` `overflow` / `backdrop-filter` containing block. Non-`xl` panels use a definite `dvh` max-height and scroll the body; `useModalFocusTrap` only handles Escape/Tab for the topmost `.Modal`.
+- **Portal**: Renders via `createPortal(..., document.body)` so nested dialogs (Difficulty Help inside About or Settings) are not clipped by a parent `ModalPanel` `overflow` / `backdrop-filter` containing block. Non-`xl` panels use a definite `dvh` max-height and scroll the body; `useModalFocusTrap` only handles Escape/Tab for the topmost `.Modal`.
 - **Props**: `open`, `onClose`, `title`, `ariaLabel`, `size`, `fullWidth`, optional `headerLeading` (upper-left slot; metronome mute) and `dismissAfterMs` (auto-close + `TimedNoticeProgress`)
 
 ### CornerModal / CornerButton

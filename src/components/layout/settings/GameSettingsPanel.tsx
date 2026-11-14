@@ -1,5 +1,6 @@
 import EarIcon from '@/assets/svg/ear.svg?react';
 import EyeIcon from '@/assets/svg/eye.svg?react';
+import { DifficultyControls, PlayModeControls } from '@/components/controls';
 import { useSettings } from '@/contexts';
 import { PRACTICE_TOGGLE_LABELS } from '@/lib/settings-labels';
 import { isScrollDisplayMode } from '@/lib/settings-schema';
@@ -10,7 +11,7 @@ import { IntroTutorialSetting } from './IntroTutorialSetting';
 import { SettingRow } from './SettingRow';
 import { SettingsGroup } from './SettingsGroup';
 
-/** Settings → Mode. Display + practice bind globally inside their composers. */
+/** Settings → Mode. Display, play mode, difficulty and practice bind globally. */
 export function GameSettingsPanel() {
 	const { settings } = useSettings();
 	const scrollMode = isScrollDisplayMode(settings.rhythmRenderMode);
@@ -19,6 +20,14 @@ export function GameSettingsPanel() {
 		<>
 			<SettingsGroup title='Display'>
 				<DisplayModeControls />
+			</SettingsGroup>
+
+			<SettingsGroup title='Play Mode'>
+				<PlayModeControls framed={false} />
+			</SettingsGroup>
+
+			<SettingsGroup title='Difficulty'>
+				<DifficultyControls framed={false} />
 			</SettingsGroup>
 
 			<ConditionalSettingsGroup when={!scrollMode} title='Practice'>

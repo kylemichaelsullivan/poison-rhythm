@@ -1,6 +1,13 @@
 import { createContext, useContext } from 'react';
 import type { VisualHint } from '@/lib/game-modes';
+import type { GameMode } from '@/lib/settings-schema';
 import type { RhythmMeasure, RichRhythmMeasure, Round } from '@/types';
+
+export type NewRoundOverrides = {
+	difficulty?: number;
+	/** Apply before create when mode just changed (settings may still be stale). */
+	gameMode?: GameMode;
+};
 
 export type GameContextValue = {
 	round: Round | null;
@@ -16,7 +23,7 @@ export type GameContextValue = {
 	poisonHitOpen: boolean;
 	acknowledgePoisonHit: () => void;
 	setCurrentIndex: (index: number) => void;
-	handleNewRound: (overrides?: { difficulty?: number }) => void;
+	handleNewRound: (overrides?: NewRoundOverrides) => void;
 	handleReuseRound: () => void;
 	onMeasureComplete: (measureIndex: number) => boolean;
 };

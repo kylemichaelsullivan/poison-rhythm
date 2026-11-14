@@ -1,39 +1,56 @@
+import { allowedIndicesForSubdivisionLevel } from '@/lib/rhythm/grid';
+import type { SubdivisionLevel } from '@/lib/preference-schemas';
+
 export type HitRange = readonly [min: number, max: number];
 
+export type DifficultyLevelHits = Record<SubdivisionLevel, HitRange>;
+
 export type DifficultyLevel = {
-	readonly hits: HitRange;
-	readonly summary: string;
-	readonly description: string;
+	readonly hits: DifficultyLevelHits;
 };
 
-/** Hit ranges below are calibrated for a full sixteenth-note grid. */
+/** Reference slot count for sixteenths (longest grid). */
 export const HIT_RANGE_REFERENCE_SLOTS = 16;
 
+/**
+ * Hardcoded hit ranges per Show Notes subdivision (used by generation + help).
+ * Placement is separate — see {@link difficultyPlacementHelp}.
+ */
 export const DIFFICULTY_LEVELS = [
 	{
-		hits: [2, 4],
-		summary: 'Fewest hits',
-		description: 'only on the downbeats.',
+		hits: {
+			sixteenths: [2, 4],
+			eighths: [1, 2],
+			quarters: [1, 2],
+		},
 	},
 	{
-		hits: [4, 6],
-		summary: 'More hits',
-		description: 'mostly downbeats with a few offbeats.',
+		hits: {
+			sixteenths: [4, 6],
+			eighths: [2, 3],
+			quarters: [2, 3],
+		},
 	},
 	{
-		hits: [6, 8],
-		summary: 'Busier patterns',
-		description: 'mixing downbeats and weaker subdivisions.',
+		hits: {
+			sixteenths: [6, 8],
+			eighths: [3, 4],
+			quarters: [2, 3],
+		},
 	},
 	{
-		hits: [8, 10],
-		summary: 'Dense patterns',
-		description: 'landing freely across the available grid.',
+		hits: {
+			sixteenths: [8, 10],
+			eighths: [4, 5],
+			quarters: [3, 4],
+		},
 	},
 	{
-		hits: [10, 14],
-		summary: 'Densest patterns',
-		description: 'nearly filling the measure.',
+		hits: {
+			sixteenths: [10, 14],
+			eighths: [5, 7],
+			quarters: [3, 4],
+		},
 	},
 ] as const satisfies readonly DifficultyLevel[];
 
@@ -42,22 +59,19 @@ export type DifficultyLevelEntry = (typeof DIFFICULTY_LEVELS)[number];
 export const DIFFICULTY_MIN = 1;
 export const DIFFICULTY_MAX = DIFFICULTY_LEVELS.length;
 
-/** Scale sixteenth-calibrated hit counts onto a coarser subdivision grid. */
-export function scaleHitRange(
-	range: HitRange,
+export function allowedSlotsForSubdivision(
+	subdivisionLevel: SubdivisionLevel,
+): number {
+	return allowedIndicesForSubdivisionLevel(subdivisionLevel).length;
+}
+
+/** Map an allowed-slot count (from the active grid) onto a Show Notes level. */
+export function subdivisionForSlotCount(
 	allowedSlots: number,
-	referenceSlots: number = HIT_RANGE_REFERENCE_SLOTS,
-): HitRange {
-	if (allowedSlots <= 0) return [0, 0];
-	if (allowedSlots === referenceSlots) return range;
-
-	const scale = allowedSlots / referenceSlots;
-	let min = Math.round(range[0] * scale);
-	let max = Math.round(range[1] * scale);
-
-	min = Math.max(1, Math.min(min, allowedSlots));
-	max = Math.max(min, Math.min(max, allowedSlots));
-	return [min, max];
+): SubdivisionLevel {
+	if (allowedSlots <= 4) return 'quarters';
+	if (allowedSlots <= 8) return 'eighths';
+	return 'sixteenths';
 }
 
 export function hitRangeForLevel(
@@ -65,11 +79,51 @@ export function hitRangeForLevel(
 	allowedSlots: number = HIT_RANGE_REFERENCE_SLOTS,
 ): HitRange {
 	const i = Math.max(0, Math.min(level - 1, DIFFICULTY_LEVELS.length - 1));
-	return scaleHitRange(DIFFICULTY_LEVELS[i].hits, allowedSlots);
+	const subdivision = subdivisionForSlotCount(allowedSlots);
+	return DIFFICULTY_LEVELS[i].hits[subdivision];
 }
 
-export function formatDifficultyHelpText(entry: DifficultyLevelEntry): string {
-	const [min, max] = entry.hits;
-	// Hit ranges are sixteenth-calibrated; caption covers subdivision scaling.
-	return `${entry.summary} (${min}–${max}), ${entry.description}`;
+/**
+ * Placement copy for help UI — mirrors `pickHitIndices`.
+ * Quarters only allow downbeats, so placement bias has nothing to say.
+ */
+export function difficultyPlacementHelp(
+	level: number,
+	subdivisionLevel: SubdivisionLevel,
+): string | null {
+	if (subdivisionLevel === 'quarters') {
+		return null;
+	}
+
+	switch (level) {
+		case 1:
+			return 'downbeats only';
+		case 2:
+			return 'mostly downbeats';
+		case 3:
+			return 'some offbeats';
+		case 4:
+		case 5:
+			return 'any beat';
+		default:
+			return null;
+	}
+}
+
+function formatHitCount(min: number, max: number): string {
+	if (min === max) {
+		return min === 1 ? '1 hit' : `${min} hits`;
+	}
+	return `${min}–${max} hits`;
+}
+
+export function formatDifficultyHelpText(
+	level: number,
+	subdivisionLevel: SubdivisionLevel = 'sixteenths',
+): string {
+	const i = Math.max(0, Math.min(level - 1, DIFFICULTY_LEVELS.length - 1));
+	const [min, max] = DIFFICULTY_LEVELS[i].hits[subdivisionLevel];
+	const hits = formatHitCount(min, max);
+	const placement = difficultyPlacementHelp(level, subdivisionLevel);
+	return placement ? `${hits} — ${placement}` : hits;
 }

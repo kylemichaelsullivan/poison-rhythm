@@ -1,53 +1,78 @@
 import clsx from 'clsx';
 import CheckmarkIcon from '@/assets/svg/checkmark.svg?react';
-import { Caption } from '@/components/ui';
-import { ENDLESS_LABEL } from '@/lib/settings-labels';
-import { clickToTitle } from '@/lib/ui-copy';
+
+const ENDLESS_DESCRIPTION =
+	'Keep playing as measures generate ahead; poison can appear without stopping';
+
+const ENDLESS_ACTIVATE_DESCRIPTION = 'Poison Rhythm, Endless Play';
+
+/** Visible label when the option card has room; ∞ is the narrow fallback. */
+const ENDLESS_PROMPT = 'Endless?';
 
 type PlayModeEndlessOptionProps = {
 	endless: boolean;
 	onChange: (enabled: boolean) => void;
+	/**
+	 * Faded while Bucket is active — still clickable; activates Poison Rhythm
+	 * + Endless via `onChange(true)`.
+	 */
+	faded?: boolean;
 };
 
-/** Endless toggle — props from PlayModeOptionList (single settings read). */
+/**
+ * Endless checkbox for the Poison Rhythm row. Shows “Endless?” when the parent
+ * `@container/option-card` is wide enough; otherwise ∞.
+ */
 export function PlayModeEndlessOption({
 	endless,
 	onChange,
+	faded = false,
 }: PlayModeEndlessOptionProps) {
 	return (
 		<label
-			className='PlayModeEndlessOption flex cursor-pointer gap-3 rounded-md border border-mid bg-white px-3 py-2.5 transition-[box-shadow] hover:shadow-soft has-[:focus-visible]:shadow-soft'
-			title={
-				endless
-					? clickToTitle('Turn Off Endless Play')
-					: clickToTitle('Keep Playing as Measures Generate Ahead')
-			}
+			className={clsx(
+				'PlayModeEndlessOption flex cursor-pointer items-center gap-1.5 rounded-md px-1 py-1 transition-[opacity,box-shadow] hover:shadow-soft has-[:focus-visible]:shadow-soft',
+				faded && 'opacity-40',
+			)}
+			title={faded ? ENDLESS_ACTIVATE_DESCRIPTION : ENDLESS_DESCRIPTION}
+			aria-label={faded ? 'Select Poison Rhythm with Endless' : ENDLESS_PROMPT}
 		>
 			<span
 				className={clsx(
-					'mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-colors',
-					endless
+					'flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-colors',
+					endless && !faded
 						? 'border-primary-border bg-primary text-on-primary'
 						: 'border-mid bg-surface text-dark',
 				)}
 				aria-hidden
 			>
-				{endless ? <CheckmarkIcon className='h-3 w-3 fill-current' /> : null}
+				{endless && !faded ? (
+					<CheckmarkIcon className='h-3 w-3 fill-current' />
+				) : null}
 			</span>
 			<input
 				type='checkbox'
 				className='sr-only'
-				checked={endless}
-				onChange={(event) => onChange(event.target.checked)}
+				checked={endless && !faded}
+				onChange={(event) => {
+					if (faded) {
+						onChange(true);
+						return;
+					}
+					onChange(event.target.checked);
+				}}
 			/>
-			<span className='flex min-w-0 flex-col gap-0.5'>
-				<span className='text-sm font-semibold text-black'>
-					{ENDLESS_LABEL}
-				</span>
-				<Caption>
-					Keep playing as measures generate ahead; poison can appear without
-					stopping.
-				</Caption>
+			<span
+				className='hidden text-sm font-semibold text-dark @[16rem]/option-card:inline'
+				aria-hidden
+			>
+				{ENDLESS_PROMPT}
+			</span>
+			<span
+				className='text-base font-bold leading-none text-dark @[16rem]/option-card:hidden'
+				aria-hidden
+			>
+				∞
 			</span>
 		</label>
 	);

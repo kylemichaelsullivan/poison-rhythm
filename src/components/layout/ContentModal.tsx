@@ -11,7 +11,7 @@ type ContentModalProps = {
 	children: ReactNode;
 };
 
-/** Thin titled Modal shell for content-only dialogs (Display Mode, Play Modes). */
+/** Thin titled Modal shell for content-only dialogs (Display Mode, …). */
 export function ContentModal({
 	open,
 	title,

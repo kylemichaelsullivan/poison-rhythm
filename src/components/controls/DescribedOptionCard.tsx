@@ -1,6 +1,5 @@
 import clsx from 'clsx';
 import { focusVisibleRingClassName } from '@/lib/control-classes';
-import { OptionCardDescription } from './OptionCardDescription';
 import { OptionCardTitle } from './OptionCardTitle';
 import { RadioInput } from './RadioInput';
 import type { ReactNode } from 'react';
@@ -10,16 +9,17 @@ type DescribedOptionCardProps<T extends string> = {
 	name: string;
 	value: T;
 	label: string;
+	/** Hover explanation (`title`); not shown as body copy. */
 	description: string;
 	selected: boolean;
 	onSelect: (value: T) => void;
 	/** Replaces the default radio dot when set. */
 	leading?: ReactNode;
-	/** Shown below the description when this option is selected. */
-	selectedFooter?: ReactNode;
+	/** Trailing control on the same row (e.g. Endless checkbox). */
+	trailing?: ReactNode;
 };
 
-/** Radio card with title + short description (play modes, …). */
+/** Radio card with bold label; description on hover via `title`. */
 export function DescribedOptionCard<T extends string>({
 	id,
 	name,
@@ -29,12 +29,12 @@ export function DescribedOptionCard<T extends string>({
 	selected,
 	onSelect,
 	leading,
-	selectedFooter,
+	trailing,
 }: DescribedOptionCardProps<T>) {
 	return (
 		<div
 			className={clsx(
-				'DescribedOptionCard overflow-hidden rounded-lg border-2 transition-colors',
+				'DescribedOptionCard @container/option-card flex items-center overflow-hidden rounded-lg border-2 transition-colors',
 				selected
 					? 'border-primary bg-primary/10'
 					: 'border-mid/80 bg-surface-muted hover:border-primary hover:shadow-raised',
@@ -42,8 +42,9 @@ export function DescribedOptionCard<T extends string>({
 		>
 			<label
 				htmlFor={id}
+				title={description}
 				className={clsx(
-					'flex cursor-pointer items-center gap-4 p-4',
+					'flex min-w-0 flex-1 cursor-pointer items-center gap-4 p-4',
 					focusVisibleRingClassName,
 					'has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-inset has-[:focus-visible]:shadow-raised',
 				)}
@@ -67,16 +68,9 @@ export function DescribedOptionCard<T extends string>({
 						) : null}
 					</span>
 				)}
-				<div className='flex min-w-0 flex-1 flex-col gap-1'>
-					<OptionCardTitle>{label}</OptionCardTitle>
-					<OptionCardDescription>{description}</OptionCardDescription>
-				</div>
+				<OptionCardTitle>{label}</OptionCardTitle>
 			</label>
-			{selected && selectedFooter ? (
-				<div className='border-t border-mid/80 bg-surface-muted/60 px-4 pb-4 pt-3'>
-					{selectedFooter}
-				</div>
-			) : null}
+			{trailing ? <div className='shrink-0 pr-3'>{trailing}</div> : null}
 		</div>
 	);
 }
