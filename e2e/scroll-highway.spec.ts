@@ -159,4 +159,55 @@ test.describe('scroll highway', () => {
 		await expect(poison.locator('.MeasureNotationGlyph').first()).toBeVisible();
 		await expect(poison.locator('.MeasureCellGrid')).toBeVisible();
 	});
+
+	test('Grid → Scroll → Right shows gems like a seeded Scroll+Right load', async ({
+		page,
+	}) => {
+		await seedPlaybackPrefs(page, {
+			countIn: true,
+			demoBeforePlay: false,
+			tempo: 90,
+			subdivision: 'quarters',
+			rhythmRenderMode: 'grid',
+			scrollDirection: 'none',
+		});
+		await page.goto('/');
+		await generateRound(page);
+
+		await page.getByRole('button', { name: 'Change Display Mode' }).click();
+		const displayMode = page.getByRole('dialog', { name: 'Display Mode' });
+		await expect(displayMode).toBeVisible();
+		await displayMode
+			.getByRole('button', { name: 'Scroll', exact: true })
+			.click();
+		await displayMode
+			.getByRole('button', { name: 'Right', exact: true })
+			.click();
+		await page.keyboard.press('Escape');
+		await expect(displayMode).toBeHidden();
+
+		const slider = page.getByTestId('measure-slider');
+		const highway = slider.getByTestId('scroll-highway');
+		const track = slider.getByTestId('scroll-highway-track');
+		await expect(highway).toBeVisible();
+		await expect(highway).toHaveAttribute('data-direction', 'right');
+		await expect(highway).toHaveAttribute('data-progress', '-1.000');
+		await expect(track.locator('[data-note-id]').first()).toBeVisible();
+
+		const transform = await track.evaluate(
+			(el) => getComputedStyle(el).transform,
+		);
+		// Idle Right lead-in is translateX(−160px), not a leftover translateY.
+		expect(transform).toMatch(/matrix\([^)]+\)/);
+		const matrix = transform.match(
+			/matrix\(([^,]+),\s*([^,]+),\s*([^,]+),\s*([^,]+),\s*([^,]+),\s*([^)]+)\)/,
+		);
+		expect(matrix).not.toBeNull();
+		if (matrix) {
+			const tx = Number(matrix[5]);
+			const ty = Number(matrix[6]);
+			expect(tx).toBeCloseTo(-160, 0);
+			expect(ty).toBeCloseTo(0, 0);
+		}
+	});
 });

@@ -145,6 +145,28 @@ describe('highwayTrackTransform', () => {
 		expect(highwayTrackTransform('up', 1.5, 100)).toBe(
 			'translate3d(0, -150px, 0)',
 		);
+		expect(highwayTrackTransform('right', 1.5, 100)).toBe(
+			'translate3d(150px, 0, 0)',
+		);
+		expect(highwayTrackTransform('left', 1.5, 100)).toBe(
+			'translate3d(-150px, 0, 0)',
+		);
+	});
+
+	test('idle lead-in uses the travel axis for the chosen direction', () => {
+		// progress −1 → ±pxPerMeasure; wrong-axis leftover clips horizontal viewports.
+		expect(highwayTrackTransform('down', -1, 160)).toBe(
+			'translate3d(0, -160px, 0)',
+		);
+		expect(highwayTrackTransform('right', -1, 160)).toBe(
+			'translate3d(-160px, 0, 0)',
+		);
+		expect(highwayTrackTransform('left', -1, 160)).toBe(
+			'translate3d(160px, 0, 0)',
+		);
+		expect(highwayTrackTransform('up', -1, 160)).toBe(
+			'translate3d(0, 160px, 0)',
+		);
 	});
 });
 
@@ -152,6 +174,12 @@ describe('highwayNoteTrackInset', () => {
 	test('pins gems in track space for down scroll', () => {
 		expect(highwayNoteTrackInset('down', 1, 160, 16)).toEqual({
 			bottom: `${160 - 8}px`,
+		});
+	});
+
+	test('pins gems in track space for right scroll', () => {
+		expect(highwayNoteTrackInset('right', 1, 160, 16)).toEqual({
+			right: `${160 - 8}px`,
 		});
 	});
 });

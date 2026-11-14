@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import { useMetronome, useMetronomeTempo } from '@/contexts';
 import {
 	HIGHWAY_IDLE_PROGRESS,
@@ -21,6 +21,11 @@ type TrackRefs = {
  * scheduleHit, so gems cross the judgment line when hits sound.
  * Count-in scrolls immediately across one lead-in measure (−1 → 0); idle rests
  * at −1 so that space is already visible. Writes to the DOM in rAF.
+ *
+ * `direction` must re-run the effect: switching Up/Down ↔ Left/Right while idle
+ * remaps axes; a leftover translate on the wrong axis clips gems out of the
+ * viewport (Grid → Scroll → Right looked empty; loading already in Scroll+Right
+ * did not).
  */
 export function useScrollHighwayTrack(
 	{ trackRef, rootRef }: TrackRefs,
@@ -43,7 +48,7 @@ export function useScrollHighwayTrack(
 	scrollingRef.current = scrolling;
 	highwayClockRef.current = highwayClock;
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		const sampleProgress = (): number => {
 			if (!scrollingRef.current) return HIGHWAY_IDLE_PROGRESS;
 			const clock = highwayClockRef.current;
@@ -61,7 +66,7 @@ export function useScrollHighwayTrack(
 			);
 		};
 
-		applyFrame(trackRef, rootRef, directionRef.current, sampleProgress());
+		applyFrame(trackRef, rootRef, direction, sampleProgress());
 
 		if (!scrolling) {
 			return;
@@ -76,7 +81,7 @@ export function useScrollHighwayTrack(
 
 		rafId = requestAnimationFrame(tick);
 		return () => cancelAnimationFrame(rafId);
-	}, [scrolling, trackRef, rootRef]);
+	}, [scrolling, direction, trackRef, rootRef]);
 }
 
 function applyFrame(

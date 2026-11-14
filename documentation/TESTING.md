@@ -47,7 +47,7 @@ Location: `e2e/`
 | Spec | Coverage |
 |------|----------|
 | `playback.spec.ts` | Round ready, count-in highlight gating, **count-in beats on the Play button**, post–count-in highlight, demo pass, **Escape stops playback** (including while Play/Pause is focused), **Measures tab order** (Show Next Measure, Listen Before You Play, Volume, Previous Measure, Next Measure), **Practice toggles** (eye / ear), **Volume menu Preview-only mute confirm** (Cancel / Mute Preview / Mute Both), **speaker mutes all while the menu is open**, **speaker restores the previous mix or unmutes all**, **Playback unmute restores Preview when both were muted**, **first-measure delayed Play** (cancel via click / outside), **last-measure New / Reuse / Play** |
-| `scroll-highway.spec.ts` | Highway progress during count-in + playback; Scroll always counts in; Settings hides Practice + Sound Preview/Count-In; poison shows notation and grid |
+| `scroll-highway.spec.ts` | Highway progress during count-in + playback; Scroll always counts in; Settings hides Practice + Sound Preview/Count-In; poison shows notation and grid; **Grid → Scroll → Right** keeps idle gems visible (same as a seeded Scroll+Right load) |
 | `poison-hit.spec.ts` | Classic bottle under “That’s the Poison!” explodes then auto-clears; Endless continuous play never shows it |
 | `difficulty-regen-ack.spec.ts` | Difficulty acknowledgement and Account notice: **no OK button**, `0.5rem` theme progress bar, dismiss on `TIMED_NOTICE_DURATION_MS`, **pause while hovered**. Account copy uses `text-wrap: pretty` (no non-breaking spaces) |
 | `status-toast.spec.ts` | Lower-right status toast for screen UI toggles (`data-testid="status-toast"`); Poison New / Reuse copy; Settings → Mode practice toggles stay silent |
