@@ -25,4 +25,5 @@ export { ShowNotesTriggerGlyph } from './ShowNotesTriggerGlyph';
 export { StableContentFrame } from './StableContentFrame';
 export { StatusToastAnnouncer } from './StatusToastAnnouncer';
 export { SubdivisionRangeInput } from './SubdivisionRangeInput';
+export { TickedRangeInput } from './TickedRangeInput';
 export { ToastHost } from './ToastHost';

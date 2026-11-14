@@ -1,10 +1,13 @@
+import { TickedRangeInput } from '@/components/layout';
 import { usePendingDifficulty } from '@/contexts';
-import { DIFFICULTY_MAX, DIFFICULTY_MIN } from '@/lib';
+import { DIFFICULTY_MAX, DIFFICULTY_MIN, inclusiveRangeTicks } from '@/lib';
 
 type DifficultySliderProps = {
 	/** Show the numeric value beside the track. Default true. */
 	showValue?: boolean;
 };
+
+const DIFFICULTY_TICKS = inclusiveRangeTicks(DIFFICULTY_MIN, DIFFICULTY_MAX);
 
 /**
  * Difficulty 1–5 — drafts via PendingDifficulty until the host modal closes.
@@ -14,19 +17,15 @@ export function DifficultySlider({ showValue = true }: DifficultySliderProps) {
 
 	return (
 		<div className='DifficultySlider flex items-center gap-4'>
-			<input
-				type='range'
-				className='w-full'
+			<TickedRangeInput
 				min={DIFFICULTY_MIN}
 				max={DIFFICULTY_MAX}
 				step={1}
-				title={`Set Difficulty (Level ${sliderValue})`}
 				value={sliderValue}
-				onChange={(e) => onDifficultyChange(Number(e.target.value))}
-				aria-label={`Difficulty Level ${sliderValue}`}
-				aria-valuemin={DIFFICULTY_MIN}
-				aria-valuemax={DIFFICULTY_MAX}
-				aria-valuenow={sliderValue}
+				ticks={DIFFICULTY_TICKS}
+				title={`Set Difficulty (Level ${sliderValue})`}
+				ariaLabel={`Difficulty Level ${sliderValue}`}
+				onChange={onDifficultyChange}
 			/>
 			{showValue ? (
 				<span className='tabular-nums font-bold'>{sliderValue}</span>

@@ -112,6 +112,10 @@ export {
 	writeThemeSetting,
 } from './preference-storage';
 export {
+	inclusiveRangeTicks,
+	rangeTickOffsetPercent,
+} from './range-ticks';
+export {
 	generateAppendBatch,
 	generateMeasure,
 	generateRound,

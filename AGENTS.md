@@ -83,6 +83,8 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 | `src/components/controls/MeasuresPlayPauseButton.tsx` | Shared measures Play/Pause chrome (footer + carousel end) |
 | `src/components/layout/settings/StatusIconToggle.tsx` | IconToggle with On/Off + Click-to copy strategies |
 | `src/components/layout/SubdivisionRangeInput.tsx` | Shared subdivision range for ShowNotes + Settings |
+| `src/components/layout/TickedRangeInput.tsx` | Shared stepped range + half-thumb tick marks (Difficulty, Tempo) |
+| `src/lib/range-ticks.ts` | Tick offset % + inclusive integer tick lists |
 | `src/components/layout/ContentModal.tsx` | Titled Modal shell for content dialogs (e.g. Display Mode) |
 | `src/components/controls/CarouselEndMenu.tsx` | Last-measure New / Reuse / Play |
 | `src/components/measures/MeasureGrid.tsx` | Mode switch + Suspense; prop-driven `display`; grid via `MeasureCellGrid`; prefetch via `useNotationPrefetch` |
