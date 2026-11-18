@@ -1,9 +1,5 @@
 import { DISPLAY_MODE_LABELS, GAME_MODE_LABELS } from '@/lib/settings-labels';
-import type {
-	GameMode,
-	RhythmRenderMode,
-	StickingMode,
-} from '@/lib/settings-schema';
+import type { GameMode, RhythmRenderMode } from '@/lib/settings-schema';
 import type { SegmentOption } from './SegmentButton';
 
 export {
@@ -21,13 +17,6 @@ export const RENDER_MODE_OPTIONS: SegmentOption<RhythmRenderMode>[] = [
 	{ label: DISPLAY_MODE_LABELS.grid, value: 'grid' },
 	{ label: DISPLAY_MODE_LABELS.notation, value: 'notation' },
 	{ label: DISPLAY_MODE_LABELS.scroll, value: 'scroll' },
-];
-
-export const STICKING_OPTIONS: SegmentOption<StickingMode>[] = [
-	{ label: 'Off', value: 'off' },
-	{ label: 'Alternate', value: 'alternating' },
-	{ label: 'Dominant', value: 'dominant' },
-	{ label: 'Random', value: 'random' },
 ];
 
 export type GameModeOption = {

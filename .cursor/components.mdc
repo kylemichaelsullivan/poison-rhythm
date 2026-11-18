@@ -143,7 +143,7 @@ src/components/
 - **Fieldset**, **SegmentButton**, **SettingRow**, **EnableToggle** / **IconToggle** / **StatusIconToggle**, **FieldCaption**, **ThemeScoreRow**
 - **Canonical grouping**: `SettingsGroup` (do not revive removed `SettingsSection` / `SettingsPanel`)
 
-**Not in Settings as separate dials:** density or syncopation. Subdivision is mirrored (header ShowNotes + Settings → Mode).
+**Not in Settings as separate dials:** density, syncopation, accents or sticking (schema defaults only). Subdivision is mirrored (header ShowNotes + Settings → Mode).
 
 ## Guidelines
 

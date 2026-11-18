@@ -118,10 +118,8 @@ flowchart TB
 |-------|--------|-------------------|
 | Difficulty 1–5 | Title About modal + Settings → Mode | Hardcoded hit bands per subdivision; placement bias via `pickHitIndices` (1 downbeats only, 2 mostly downbeats, 3 some offbeats, 4–5 uniform on allowed grid). Quarters only expose downbeats so placement bias is a no-op. |
 | Subdivision 1/4–1/16 | Header ShowNotes + Settings → Mode | Allowed grid positions; display and playback grid |
-| Accents / phrase | Settings → Rhythm (Coming Soon) | Optional accent marks, multi-bar phrases |
-| Sticking | Settings → Rhythm (Coming Soon) | L/R assignment on hits |
 
-Density and syncopation are **not** separate Settings fields; subdivision is mirrored (header + Settings), not a third independent dial.
+Density and syncopation are **not** separate Settings fields; subdivision is mirrored (header + Settings), not a third independent dial. Accents, sticking and multi-bar phrases exist in the schema/engine with defaults but are not exposed in Settings.
 
 ## Game settings schema
 
@@ -131,7 +129,7 @@ Defined in `src/lib/settings-schema.ts`, persisted as `poison-rhythm-settings-v1
 |----------|--------|
 | General | `players`, `feedbackMode`; `rhythmRenderMode` (`grid` \| `notation` \| `scroll`); `scrollDirection` when mode is Scroll; `scrollSpeed` (schema retained) |
 | Practice | `showNextMeasure`, `demoBeforePlay` (Scroll forces demo off via `effectiveDemoBeforePlay`) |
-| Rhythm | `accents`, `sticking`, `phraseLength` (Coming Soon in Settings); `rests` (unused; always off) |
+| Rhythm | `accents`, `sticking`, `phraseLength` (schema defaults; not in Settings UI); `rests` (unused; always off) |
 | Poison | `poisonMode` (Eye toggle on Poison section + Settings → Mode → Practice) |
 | Game mode | `gameMode` |
 | Endless | `endless` toggle (Play Modes / Settings → Mode); batch sizes (`endlessInitialBatch`, `endlessAppendBatch`, `endlessPrefetchRemaining`) use schema defaults — not exposed in the Settings modal |
