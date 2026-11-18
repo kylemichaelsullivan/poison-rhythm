@@ -1,13 +1,42 @@
+import { execSync } from 'node:child_process';
 import path from 'node:path';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import svgr from 'vite-plugin-svgr';
-import { version } from './package.json';
+
+function readGitCommitSha(): string {
+	try {
+		return execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim();
+	} catch {
+		return '';
+	}
+}
+
+function readGitHubCommitUrl(sha: string): string {
+	if (!sha) return '';
+	try {
+		const remote = execSync('git remote get-url origin', {
+			encoding: 'utf8',
+		}).trim();
+		const match = remote.match(
+			/(?:github\.com[:/]|git@github\.com:)([^/]+)\/([^/.]+)(?:\.git)?$/,
+		);
+		if (!match) return '';
+		const [, owner, repo] = match;
+		return `https://github.com/${owner}/${repo}/commit/${sha}`;
+	} catch {
+		return '';
+	}
+}
+
+const commitSha = readGitCommitSha();
+const commitUrl = readGitHubCommitUrl(commitSha);
 
 // https://vite.dev/config/
 export default defineConfig({
 	define: {
-		__APP_VERSION__: JSON.stringify(version),
+		__APP_COMMIT_SHA__: JSON.stringify(commitSha),
+		__APP_COMMIT_URL__: JSON.stringify(commitUrl),
 	},
 	plugins: [react(), svgr()],
 	css: {

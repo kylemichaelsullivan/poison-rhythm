@@ -15,7 +15,11 @@ export function AboutPoisonRhythmModal() {
 			ariaLabel='About Poison Rhythm'
 			onClose={closeAbout}
 		>
-			<AboutBrandHeader version={__APP_VERSION__} />
+			<AboutBrandHeader
+				commitSha={__APP_COMMIT_SHA__}
+				commitUrl={__APP_COMMIT_URL__}
+			/>
+
 			<div className='mt-4 w-full'>
 				<Stack gap='4'>
 					<PlayModeControls />
