@@ -73,7 +73,8 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 | `src/components/layout/AppTitle.tsx` | Header brand title + Mode icon (both → About) |
 | `src/components/controls/PlayModeControls.tsx` | Play Mode composer (About framed section / Settings list) |
 | `src/components/layout/about/AboutPoisonRhythmModal.tsx` | App-level host for title About: brand + Play Mode + Difficulty |
-| `src/components/layout/about/AboutBrandHeader.tsx` | About brand block; truncated commit SHA (hover 500ms → GitHub link) |
+| `src/components/layout/about/AboutBrandHeader.tsx` | About brand block (icon + title + commit chip) |
+| `src/components/layout/about/AboutCommitLink.tsx` | Quiet GitHub-mark + short SHA; hover 1000ms arms the commit link (`-translate-y` toward title) |
 | `vite.config.ts` | Injects `__APP_COMMIT_SHA__` / `__APP_COMMIT_URL__` from `git` at build time |
 | `src/components/layout/intro/IntroModalHost.tsx` | App-level host for the first-visit welcome (`poison-rhythm-intro-seen`) |
 | `src/components/layout/Modal.tsx` | Modal composer; portals to `document.body`; chrome atoms + `useModalFocusTrap` |
