@@ -32,7 +32,7 @@ Avoid near-identical crayons for both roles — borders disappear and badges los
 ## Mitigating decision fatigue
 
 - Only **two roles** (not a free hex picker or full theme editor).
-- Full tray for personal expression; **Suggested Pairings** sit below the tray as a fast recovery path (Brand first). Swatches are **squares** in four Crayola-style sleeves (16 each, 2×8), stacked in **portrait** and labeled Sleeve 1–4.
+- Full tray for personal expression; **Suggested Pairings** sit below the tray as a fast recovery path (Brand first). Swatches are **squares** in four Crayola-style sleeves (16 each, 2×8), stacked in **portrait**.
 
 ## Contrast grades
 

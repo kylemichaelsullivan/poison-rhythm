@@ -76,7 +76,7 @@ export const CrayonTray = memo(function CrayonTray({
 						scores: scoresById.get(crayon.id) as ThemeContrastScores,
 					}),
 				);
-				return { id: tray.id, label: tray.label, swatches };
+				return { id: tray.id, swatches };
 			}),
 		[scoresById, activeId, partnerId],
 	);
@@ -99,7 +99,6 @@ export const CrayonTray = memo(function CrayonTray({
 			{sleeves.map((sleeve) => (
 				<CrayonTraySleeve
 					key={sleeve.id}
-					label={sleeve.label}
 					swatches={sleeve.swatches}
 					roleLabel={roleLabel}
 					partnerRoleLabel={partnerRoleLabel}

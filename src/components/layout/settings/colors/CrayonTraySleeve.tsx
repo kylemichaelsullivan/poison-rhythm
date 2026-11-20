@@ -11,29 +11,21 @@ export type CrayonTraySwatchModel = {
 };
 
 type CrayonTraySleeveProps = {
-	label: string;
 	swatches: readonly CrayonTraySwatchModel[];
 	roleLabel: string;
 	partnerRoleLabel: string;
 	onSelect: (id: CrayonId) => void;
 };
 
-/** One crayon sleeve: tray label + 2×8 swatch grid. */
+/** One crayon sleeve: 2×8 swatch grid. */
 export function CrayonTraySleeve({
-	label,
 	swatches,
 	roleLabel,
 	partnerRoleLabel,
 	onSelect,
 }: CrayonTraySleeveProps) {
 	return (
-		<section
-			className='CrayonTraySleeve flex flex-col gap-1.5 rounded-lg border border-mid bg-surface-muted p-2'
-			aria-label={label}
-		>
-			<h4 className='text-xs font-semibold uppercase tracking-wide text-muted'>
-				{label}
-			</h4>
+		<div className='CrayonTraySleeve rounded-lg border border-mid bg-surface-muted p-2'>
 			<div className='grid grid-cols-8 gap-1 max-tray:grid-cols-4'>
 				{swatches.map((swatch) => (
 					<CrayonSwatch
@@ -50,6 +42,6 @@ export function CrayonTraySleeve({
 					/>
 				))}
 			</div>
-		</section>
+		</div>
 	);
 }

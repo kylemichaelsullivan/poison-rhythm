@@ -155,7 +155,6 @@ export const CRAYOLA_TRAY_SIZE = 16;
 
 export type CrayonTrayGroup = {
 	id: string;
-	label: string;
 	crayons: readonly CrayonColor[];
 };
 
@@ -166,22 +165,18 @@ export type CrayonTrayGroup = {
 export const CRAYOLA_TRAYS: readonly CrayonTrayGroup[] = [
 	{
 		id: 'sleeve-1',
-		label: 'Sleeve 1',
 		crayons: CRAYOLA_64.slice(0, 16),
 	},
 	{
 		id: 'sleeve-2',
-		label: 'Sleeve 2',
 		crayons: CRAYOLA_64.slice(16, 32),
 	},
 	{
 		id: 'sleeve-3',
-		label: 'Sleeve 3',
 		crayons: CRAYOLA_64.slice(32, 48),
 	},
 	{
 		id: 'sleeve-4',
-		label: 'Sleeve 4',
 		crayons: CRAYOLA_64.slice(48, 64),
 	},
 ] as const;
