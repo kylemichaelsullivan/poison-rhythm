@@ -7,5 +7,6 @@ export { MeasureSlider } from './MeasureSlider';
 export { MeasuresSection } from './MeasuresSection';
 export { NextMeasurePreview } from './NextMeasurePreview';
 export { ScrollHighway } from './ScrollHighway';
+export { ScrollHighwayBarLine } from './ScrollHighwayBarLine';
 export { ScrollHighwayNote } from './ScrollHighwayNote';
 export type { MeasureDisplayOptions } from './measure-display-options';

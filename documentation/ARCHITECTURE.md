@@ -219,7 +219,7 @@ Playback follow: `useSubdivisionProgress` + `subdivisionStepToCell` + `buildNota
 | `count-in-schedule.ts` | `planCountIn` helper over the playback clock |
 | `measure-playback.ts` | Measure-level step indexing for carousel sync |
 | `playback-state.ts` | Count-in / demo / student pass gating for cell highlight |
-| `scroll-animation.ts` | Scroll highway math (`highwayAudioProgress`, lane insets, `padMeasuresForHighwayLookahead`); judgment line is AudioContext-locked |
+| `scroll-animation.ts` | Scroll highway math (`highwayAudioProgress`, lane insets, bar lines on beat 1, `padMeasuresForHighwayLookahead`); judgment line is AudioContext-locked; viewport capped via `useScrollHighwayViewportCap` with fixed px/measure |
 | `MetronomeProvider` | Schedules clicks/hits on the audio clock; exposes `highwayClock` for Scroll; UI updates via delayed timeouts; **Escape** stops playback (keydown; ignored in inputs/dialogs) |
 
 ## TypeScript imports

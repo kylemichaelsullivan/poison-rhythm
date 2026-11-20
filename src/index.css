@@ -906,8 +906,16 @@ button:has(> .ModeBadge):is(
 	padding-inline: 0.75rem;
 }
 
+.ScrollHighway {
+	max-width: 100%;
+	min-width: 0;
+}
+
 .ScrollHighwayViewport {
 	isolation: isolate;
+	/* Inline style prefers design span via min(); these are hard caps. */
+	max-width: 100%;
+	max-height: 100dvh;
 }
 
 .ScrollHighwayJudgment {

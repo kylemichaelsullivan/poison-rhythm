@@ -101,7 +101,8 @@ Types: `ADD`, `FIX`, `UPDATE`, `REMOVE`, `REFACTOR`, `MERGE`, `REVERT`, `BRANCH`
 | `src/hooks/useMeasuresPlayPauseChrome.ts` | Lit ring / labels / count-in for measures Play |
 | `src/hooks/useNotationPrefetch.ts` | Prefetch notation chunk when mode is notation |
 | `src/hooks/useSubdivisionProgress.ts` | Fractional subdivision step (RAF) for notation playhead consumers |
-| `src/hooks/useScrollHighwayTrack.ts` | DOM track transform from audio clock; re-applies when `direction` changes |
+| `src/hooks/useScrollHighwayTrack.ts` | DOM track transform from audio clock; re-applies when `direction` / `pxPerMeasure` change |
+| `src/hooks/useScrollHighwayViewportCap.ts` | Caps highway size to the browser viewport; keeps px/measure fixed (short screens show less lookahead) |
 | `src/hooks/useActiveNotationStepIndex.ts` | Cell-map lookup → active SVG glyph during playback |
 | `src/lib/rhythm/` | Measure/round generation |
 | `src/lib/notation/` | Events → spelling → beam groups → per-event SVG steps |

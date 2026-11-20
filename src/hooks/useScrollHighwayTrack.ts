@@ -26,11 +26,14 @@ type TrackRefs = {
  * remaps axes; a leftover translate on the wrong axis clips gems out of the
  * viewport (Grid → Scroll → Right looked empty; loading already in Scroll+Right
  * did not).
+ *
+ * `pxPerMeasure` must match note/bar insets (fixed travel spacing).
  */
 export function useScrollHighwayTrack(
 	{ trackRef, rootRef }: TrackRefs,
 	active: boolean,
 	direction: Exclude<ScrollDirection, 'none'>,
+	pxPerMeasure: number = HIGHWAY_PX_PER_MEASURE,
 ): void {
 	const { isMeasuresRunning, highwayClock } = useMetronome();
 	const { tempo } = useMetronomeTempo();
@@ -42,11 +45,13 @@ export function useScrollHighwayTrack(
 	const measureSecRef = useRef(measureSec);
 	const scrollingRef = useRef(scrolling);
 	const highwayClockRef = useRef(highwayClock);
+	const pxPerMeasureRef = useRef(pxPerMeasure);
 
 	directionRef.current = direction;
 	measureSecRef.current = measureSec;
 	scrollingRef.current = scrolling;
 	highwayClockRef.current = highwayClock;
+	pxPerMeasureRef.current = pxPerMeasure;
 
 	useLayoutEffect(() => {
 		const sampleProgress = (): number => {
@@ -66,7 +71,7 @@ export function useScrollHighwayTrack(
 			);
 		};
 
-		applyFrame(trackRef, rootRef, direction, sampleProgress());
+		applyFrame(trackRef, rootRef, direction, sampleProgress(), pxPerMeasure);
 
 		if (!scrolling) {
 			return;
@@ -75,13 +80,19 @@ export function useScrollHighwayTrack(
 		let rafId = 0;
 		const tick = () => {
 			if (!scrollingRef.current) return;
-			applyFrame(trackRef, rootRef, directionRef.current, sampleProgress());
+			applyFrame(
+				trackRef,
+				rootRef,
+				directionRef.current,
+				sampleProgress(),
+				pxPerMeasureRef.current,
+			);
 			rafId = requestAnimationFrame(tick);
 		};
 
 		rafId = requestAnimationFrame(tick);
 		return () => cancelAnimationFrame(rafId);
-	}, [scrolling, direction, trackRef, rootRef]);
+	}, [scrolling, direction, pxPerMeasure, trackRef, rootRef]);
 }
 
 function applyFrame(
@@ -89,13 +100,14 @@ function applyFrame(
 	rootRef: RefObject<HTMLDivElement | null>,
 	direction: Exclude<ScrollDirection, 'none'>,
 	progress: number,
+	pxPerMeasure: number,
 ): void {
 	const track = trackRef.current;
 	if (track) {
 		track.style.transform = highwayTrackTransform(
 			direction,
 			progress,
-			HIGHWAY_PX_PER_MEASURE,
+			pxPerMeasure,
 		);
 	}
 	const root = rootRef.current;

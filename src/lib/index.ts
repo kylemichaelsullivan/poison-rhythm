@@ -123,11 +123,14 @@ export {
 export { countHits, isValidRhythm, rhythmsEqual } from './rhythm-utils';
 export {
 	accumulateHighwayHold,
+	clampHighwayAlongSpan,
+	collectHighwayBarLines,
 	collectHighwayNotes,
 	HIGHWAY_COUNT_IN_LEAD_MEASURES,
 	HIGHWAY_IDLE_PROGRESS,
 	HIGHWAY_LOOKAHEAD_MEASURES,
 	HIGHWAY_PX_PER_MEASURE,
+	HIGHWAY_VIEWPORT_ALONG_PX,
 	highwayAudioNowWhileHeld,
 	highwayAudioProgress,
 	highwayMeasureSec,

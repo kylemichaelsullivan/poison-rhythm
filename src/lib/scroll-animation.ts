@@ -13,14 +13,53 @@ export const HIGHWAY_LOOKAHEAD_MEASURES = 3;
  */
 export const TRAILING_DECOYS_AFTER_POISON = HIGHWAY_LOOKAHEAD_MEASURES + 2;
 
-/** Pixels of travel per measure; tempo maps this distance to wall-clock time. */
-export const HIGHWAY_PX_PER_MEASURE = 160;
+/**
+ * Pixels of travel per measure; tempo maps this distance to wall-clock time.
+ * Kept roomy so eighths/sixteenths do not stack into a solid block; short
+ * viewports clip lookahead instead of shrinking this spacing.
+ */
+export const HIGHWAY_PX_PER_MEASURE = 240;
+
+/** Design length of the visible highway along the travel axis. */
+export const HIGHWAY_VIEWPORT_ALONG_PX =
+	(HIGHWAY_LOOKAHEAD_MEASURES + 0.5) * HIGHWAY_PX_PER_MEASURE;
+
+/**
+ * Clamp the highway’s along-axis size: prefer the design span, never exceed the
+ * browser viewport. Spacing ({@link HIGHWAY_PX_PER_MEASURE}) stays fixed — a
+ * shorter window just shows fewer measures ahead.
+ */
+export function clampHighwayAlongSpan(
+	designSpan: number,
+	availableAlong: number,
+	viewportAlong: number,
+): number {
+	const room = Math.min(designSpan, availableAlong, viewportAlong);
+	return Number.isFinite(room) && room > 0 ? room : 0;
+}
+
+/**
+ * One measure of highway approach before the first playback attack (count-in).
+ * Progress runs ≈ −1 → 0 over the count-in bar, then continues through the round.
+ */
+export const HIGHWAY_COUNT_IN_LEAD_MEASURES = 1;
+
+/** Resting playhead before a session so the lead-in measure is already on screen. */
+export const HIGHWAY_IDLE_PROGRESS = -HIGHWAY_COUNT_IN_LEAD_MEASURES;
 
 export type HighwayNote = {
 	id: string;
 	measureIndex: number;
 	cellIndex: number;
 	/** Absolute attack time in measure units (0 = start of round). */
+	at: number;
+};
+
+export type HighwayBarLine = {
+	id: string;
+	/** Measure index; −1 is the count-in lead bar. */
+	measureIndex: number;
+	/** Absolute downbeat time in measure units (0 = start of round). */
 	at: number;
 };
 
@@ -45,6 +84,28 @@ export function collectHighwayNotes(measures: RhythmMeasure[]): HighwayNote[] {
 		}
 	}
 	return notes;
+}
+
+/**
+ * Downbeat (beat 1) bar lines: count-in lead plus each highway measure start.
+ * Empty when there is nothing to scroll.
+ */
+export function collectHighwayBarLines(measureCount: number): HighwayBarLine[] {
+	if (measureCount <= 0) return [];
+	const lines: HighwayBarLine[] = [];
+	const start = -HIGHWAY_COUNT_IN_LEAD_MEASURES;
+	for (
+		let measureIndex = start;
+		measureIndex < measureCount;
+		measureIndex += 1
+	) {
+		lines.push({
+			id: `bar-${measureIndex}`,
+			measureIndex,
+			at: measureIndex,
+		});
+	}
+	return lines;
 }
 
 /**
@@ -106,15 +167,6 @@ export function highwayProgress(
 		measureProgressFraction(subdivisionIndex, level, beatFraction)
 	);
 }
-
-/**
- * One measure of highway approach before the first playback attack (count-in).
- * Progress runs ≈ −1 → 0 over the count-in bar, then continues through the round.
- */
-export const HIGHWAY_COUNT_IN_LEAD_MEASURES = 1;
-
-/** Resting playhead before a session so the lead-in measure is already on screen. */
-export const HIGHWAY_IDLE_PROGRESS = -HIGHWAY_COUNT_IN_LEAD_MEASURES;
 
 /**
  * Highway progress from the AudioContext timeline used by `scheduleHit`.

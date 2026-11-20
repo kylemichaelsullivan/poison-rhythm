@@ -1,10 +1,14 @@
 import { describe, expect, test } from 'bun:test';
 import {
 	accumulateHighwayHold,
+	clampHighwayAlongSpan,
+	collectHighwayBarLines,
 	collectHighwayNotes,
 	HIGHWAY_COUNT_IN_LEAD_MEASURES,
 	HIGHWAY_IDLE_PROGRESS,
 	HIGHWAY_LOOKAHEAD_MEASURES,
+	HIGHWAY_PX_PER_MEASURE,
+	HIGHWAY_VIEWPORT_ALONG_PX,
 	highwayAudioNowWhileHeld,
 	highwayAudioProgress,
 	highwayMeasureSec,
@@ -29,6 +33,43 @@ describe('HIGHWAY_LOOKAHEAD_MEASURES', () => {
 			HIGHWAY_LOOKAHEAD_MEASURES,
 		);
 		expect(TRAILING_DECOYS_AFTER_POISON).toBe(HIGHWAY_LOOKAHEAD_MEASURES + 2);
+	});
+
+	test('design along span is lookahead plus half a measure', () => {
+		expect(HIGHWAY_VIEWPORT_ALONG_PX).toBe(
+			(HIGHWAY_LOOKAHEAD_MEASURES + 0.5) * HIGHWAY_PX_PER_MEASURE,
+		);
+	});
+});
+
+describe('clampHighwayAlongSpan', () => {
+	test('prefers the design span when the viewport has room', () => {
+		expect(clampHighwayAlongSpan(HIGHWAY_VIEWPORT_ALONG_PX, 2000, 2000)).toBe(
+			HIGHWAY_VIEWPORT_ALONG_PX,
+		);
+	});
+
+	test('never exceeds the browser viewport or remaining room', () => {
+		expect(clampHighwayAlongSpan(HIGHWAY_VIEWPORT_ALONG_PX, 300, 800)).toBe(
+			300,
+		);
+		expect(clampHighwayAlongSpan(HIGHWAY_VIEWPORT_ALONG_PX, 900, 400)).toBe(
+			400,
+		);
+	});
+
+	test('returns 0 when there is no positive room', () => {
+		expect(clampHighwayAlongSpan(HIGHWAY_VIEWPORT_ALONG_PX, 0, 800)).toBe(0);
+		expect(clampHighwayAlongSpan(HIGHWAY_VIEWPORT_ALONG_PX, -20, 800)).toBe(0);
+	});
+});
+
+describe('HIGHWAY_PX_PER_MEASURE', () => {
+	test('stays fixed so short viewports clip lookahead instead of packing gems', () => {
+		expect(HIGHWAY_PX_PER_MEASURE).toBe(240);
+		expect(HIGHWAY_VIEWPORT_ALONG_PX / HIGHWAY_PX_PER_MEASURE).toBe(
+			HIGHWAY_LOOKAHEAD_MEASURES + 0.5,
+		);
 	});
 });
 
@@ -55,6 +96,21 @@ describe('collectHighwayNotes', () => {
 		expect(notes).toEqual([
 			{ id: '1-0', measureIndex: 1, cellIndex: 0, at: 1 },
 		]);
+	});
+});
+
+describe('collectHighwayBarLines', () => {
+	test('returns empty when there are no measures', () => {
+		expect(collectHighwayBarLines(0)).toEqual([]);
+	});
+
+	test('marks count-in lead and each measure downbeat', () => {
+		expect(collectHighwayBarLines(2)).toEqual([
+			{ id: 'bar--1', measureIndex: -1, at: -1 },
+			{ id: 'bar-0', measureIndex: 0, at: 0 },
+			{ id: 'bar-1', measureIndex: 1, at: 1 },
+		]);
+		expect(HIGHWAY_COUNT_IN_LEAD_MEASURES).toBe(1);
 	});
 });
 

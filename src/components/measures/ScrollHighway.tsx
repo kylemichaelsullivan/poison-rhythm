@@ -1,14 +1,18 @@
 import clsx from 'clsx';
 import { useMemo, useRef } from 'react';
 import { useScrollHighwayTrack } from '@/hooks/useScrollHighwayTrack';
+import { useScrollHighwayViewportCap } from '@/hooks/useScrollHighwayViewportCap';
 import { dataBool } from '@/lib/data-attr';
 import {
+	collectHighwayBarLines,
 	collectHighwayNotes,
-	HIGHWAY_LOOKAHEAD_MEASURES,
-	HIGHWAY_PX_PER_MEASURE,
 	highwayNoteTrackInset,
 	padMeasuresForHighwayLookahead,
 } from '@/lib/scroll-animation';
+import {
+	SCROLL_HIGHWAY_BAR_ALONG_PX,
+	ScrollHighwayBarLine,
+} from './ScrollHighwayBarLine';
 import {
 	SCROLL_HIGHWAY_GEM_ALONG_PX,
 	SCROLL_HIGHWAY_HORIZONTAL_VIEWPORT_PX,
@@ -35,7 +39,8 @@ function isVertical(direction: Exclude<ScrollDirection, 'none'>): boolean {
 
 /**
  * Guitar Hero–style note highway: stable gems on a DOM-driven track so notes
- * do not remount or flash while scrolling.
+ * do not remount or flash while scrolling. Sized to stay within the browser
+ * viewport (never taller or wider than the screen).
  */
 export function ScrollHighway({
 	measures,
@@ -48,27 +53,56 @@ export function ScrollHighway({
 }: ScrollHighwayProps) {
 	const rootRef = useRef<HTMLDivElement>(null);
 	const trackRef = useRef<HTMLDivElement>(null);
-	useScrollHighwayTrack({ trackRef, rootRef }, playbackActive, direction);
+	const viewportRef = useRef<HTMLDivElement>(null);
 
 	const vertical = isVertical(direction);
-	const pxPerMeasure = HIGHWAY_PX_PER_MEASURE;
-	const viewportSpan = (HIGHWAY_LOOKAHEAD_MEASURES + 0.5) * pxPerMeasure;
+	const { verticalAlongPx, horizontalCrossPx, pxPerMeasure } =
+		useScrollHighwayViewportCap({
+			viewportRef,
+			vertical,
+			horizontalCrossPx: SCROLL_HIGHWAY_HORIZONTAL_VIEWPORT_PX,
+		});
+
+	useScrollHighwayTrack(
+		{ trackRef, rootRef },
+		playbackActive,
+		direction,
+		pxPerMeasure,
+	);
+
 	const gemAlongPx = SCROLL_HIGHWAY_GEM_ALONG_PX;
+	const barAlongPx = SCROLL_HIGHWAY_BAR_ALONG_PX;
 
 	const highwayMeasures = useMemo(
 		() => padMeasuresForHighwayLookahead(measures, poisonIndex),
 		[measures, poisonIndex],
 	);
 
-	// Stable list — never filter by playhead or gems remount and flash.
+	// Stable lists — never filter by playhead or gems remount and flash.
 	const notes = useMemo(
 		() => collectHighwayNotes(highwayMeasures),
 		[highwayMeasures],
 	);
+	const barLines = useMemo(
+		() => collectHighwayBarLines(highwayMeasures.length),
+		[highwayMeasures.length],
+	);
+
+	const viewportStyle = vertical
+		? {
+				height: `${verticalAlongPx}px`,
+				width: '100%',
+				maxWidth: '100%',
+			}
+		: {
+				height: `${horizontalCrossPx}px`,
+				width: '100%',
+				maxWidth: '100%',
+			};
 
 	return (
 		<div
-			className='ScrollHighway flex w-full flex-col gap-2'
+			className='ScrollHighway flex w-full max-w-full min-w-0 flex-col gap-2'
 			ref={rootRef}
 			data-testid='scroll-highway'
 			data-direction={direction}
@@ -91,15 +125,9 @@ export function ScrollHighway({
 			) : null}
 
 			<div
-				className='ScrollHighwayViewport relative w-full overflow-hidden rounded-lg border-2 border-primary/30 bg-primary/5 shadow-soft'
-				style={
-					vertical
-						? { height: `${viewportSpan}px` }
-						: {
-								height: `${SCROLL_HIGHWAY_HORIZONTAL_VIEWPORT_PX}px`,
-								minHeight: `${SCROLL_HIGHWAY_HORIZONTAL_VIEWPORT_PX}px`,
-							}
-				}
+				className='ScrollHighwayViewport relative w-full max-w-full overflow-hidden rounded-lg border-2 border-primary/30 bg-primary/5 shadow-soft'
+				ref={viewportRef}
+				style={viewportStyle}
 			>
 				<div
 					className={clsx(
@@ -130,6 +158,29 @@ export function ScrollHighway({
 					ref={trackRef}
 					data-testid='scroll-highway-track'
 				>
+					{barLines.map((bar) => {
+						const inset = highwayNoteTrackInset(
+							direction,
+							bar.at,
+							pxPerMeasure,
+							barAlongPx,
+						);
+						return (
+							<div
+								className={clsx(
+									'ScrollHighwayBarSlot pointer-events-none absolute',
+									// Slightly wider than gems so downbeats read as measure structure.
+									vertical && 'left-[5%] w-[90%]',
+									!vertical && 'top-[5%] h-[90%]',
+								)}
+								style={inset}
+								data-bar-id={bar.id}
+								key={bar.id}
+							>
+								<ScrollHighwayBarLine vertical={vertical} />
+							</div>
+						);
+					})}
 					{notes.map((note) => {
 						const inset = highwayNoteTrackInset(
 							direction,

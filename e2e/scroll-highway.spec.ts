@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { HIGHWAY_PX_PER_MEASURE } from '../src/lib/scroll-animation';
 import {
 	clickPause,
 	clickPlay,
@@ -197,7 +198,7 @@ test.describe('scroll highway', () => {
 		const transform = await track.evaluate(
 			(el) => getComputedStyle(el).transform,
 		);
-		// Idle Right lead-in is translateX(−160px), not a leftover translateY.
+		// Idle Right lead-in is translateX(−pxPerMeasure), not a leftover translateY.
 		expect(transform).toMatch(/matrix\([^)]+\)/);
 		const matrix = transform.match(
 			/matrix\(([^,]+),\s*([^,]+),\s*([^,]+),\s*([^,]+),\s*([^,]+),\s*([^)]+)\)/,
@@ -206,7 +207,7 @@ test.describe('scroll highway', () => {
 		if (matrix) {
 			const tx = Number(matrix[5]);
 			const ty = Number(matrix[6]);
-			expect(tx).toBeCloseTo(-160, 0);
+			expect(tx).toBeCloseTo(-HIGHWAY_PX_PER_MEASURE, 0);
 			expect(ty).toBeCloseTo(0, 0);
 		}
 	});

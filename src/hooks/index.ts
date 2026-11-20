@@ -15,6 +15,7 @@ export { useNotationPrefetch } from './useNotationPrefetch';
 export { useOutsideDismiss } from './useOutsideDismiss';
 export { usePaletteContrast } from './usePaletteContrast';
 export { useScrollHighwayTrack } from './useScrollHighwayTrack';
+export { useScrollHighwayViewportCap } from './useScrollHighwayViewportCap';
 export { useSoftDisableFocus } from './useSoftDisableFocus';
 export { useSubdivisionProgress } from './useSubdivisionProgress';
 export { useTapTempo } from './useTapTempo';
