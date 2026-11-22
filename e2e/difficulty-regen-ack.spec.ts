@@ -136,8 +136,8 @@ test.describe('difficulty regen acknowledgement', () => {
 	});
 });
 
-test.describe('account notice', () => {
-	test('closes on the timed notice without a one-word last line', async ({
+test.describe('account profiles', () => {
+	test('opens a persistent Account modal with the default profile', async ({
 		page,
 	}) => {
 		await page.goto('/');
@@ -149,25 +149,60 @@ test.describe('account notice', () => {
 
 		const dialog = page.getByRole('dialog', { name: 'Account' });
 		await expect(dialog).toBeVisible();
-		await expect(dialog.getByRole('button', { name: 'OK' })).toHaveCount(0);
-		await expect(dialog.getByRole('progressbar')).toHaveAttribute(
-			'data-duration-ms',
-			String(TIMED_NOTICE_DURATION_MS),
-		);
+		await expect(dialog.getByRole('progressbar')).toHaveCount(0);
+		await expect(dialog.getByText('Default', { exact: true })).toBeVisible();
+		await expect(dialog.getByText('Tempo Limits')).toBeVisible();
+		await expect(
+			dialog.getByRole('button', { name: 'Drag to Reorder: Default' }),
+		).toBeVisible();
+		await expect(
+			dialog.getByRole('button', { name: 'Close Modal' }),
+		).toBeVisible();
+	});
 
-		const copy = dialog.getByText('Accounts aren’t available yet.');
-		await expect(copy).toHaveCSS('text-wrap', 'pretty');
-		const hasNbsp = await copy.evaluate((element) =>
-			element.textContent?.includes('\u00A0'),
-		);
-		expect(hasNbsp).toBe(false);
+	test('creates a profile and switches to it', async ({ page }) => {
+		await page.goto('/');
+		await generateRound(page);
+		await page
+			.getByRole('banner')
+			.getByRole('button', { name: 'Account' })
+			.click();
 
-		await dialog.hover();
-		await page.waitForTimeout(TIMED_NOTICE_DURATION_MS);
-		await expect(dialog).toBeVisible();
-		await page.mouse.move(0, 0);
-		await expect(dialog).toBeHidden({
-			timeout: TIMED_NOTICE_DURATION_MS + 1500,
-		});
+		const dialog = page.getByRole('dialog', { name: 'Account' });
+		await dialog.getByLabel('Profile Name').fill('Alex');
+		await dialog.getByRole('button', { name: 'Add' }).click();
+
+		await expect(
+			page.getByRole('banner').getByRole('button', { name: 'Account' }),
+		).toHaveAttribute('title', 'Account: Alex');
+		await expect(page.getByText('Created Profile: Alex')).toBeVisible();
+	});
+
+	test('reorders profiles with Move Up / Move Down', async ({ page }) => {
+		await page.goto('/');
+		await generateRound(page);
+		await page
+			.getByRole('banner')
+			.getByRole('button', { name: 'Account' })
+			.click();
+
+		const dialog = page.getByRole('dialog', { name: 'Account' });
+		await dialog.getByLabel('Profile Name').fill('Alex');
+		await dialog.getByRole('button', { name: 'Add' }).click();
+
+		await page
+			.getByRole('banner')
+			.getByRole('button', { name: 'Account' })
+			.click();
+		const account = page.getByRole('dialog', { name: 'Account' });
+		await expect(account.getByText('Alex')).toBeVisible();
+
+		await account.getByRole('button', { name: 'Move Alex Up' }).click();
+		const names = account.locator('[data-profile-name]');
+		await expect(names.nth(0)).toHaveAttribute('data-profile-name', 'Alex');
+		await expect(names.nth(1)).toHaveAttribute('data-profile-name', 'Default');
+		await expect(account.locator('output')).toContainText(
+			'Alex moved to position 1 of 2.',
+		);
 	});
 });

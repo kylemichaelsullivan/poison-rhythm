@@ -1,11 +1,8 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
-	ColorPreferencesProvider,
-	MetronomeProvider,
-	PreferencesProvider,
-	SettingsProvider,
-	ThemeProvider,
+	ProfileScopedProviders,
+	ProfilesProvider,
 	ToastProvider,
 } from '@/contexts';
 import App from './App.tsx';
@@ -18,6 +15,8 @@ const valueDragSelector =
 document.addEventListener('dragstart', (event) => {
 	const target = event.target;
 	if (!(target instanceof Element)) return;
+	// Profile reorder handles opt in; block accidental drags on media / text fields.
+	if (target.closest('[data-allow-drag]')) return;
 	if (target.closest(`${assetDragSelector}, ${valueDragSelector}`)) {
 		event.preventDefault();
 	}
@@ -27,18 +26,12 @@ const root = document.getElementById('root');
 if (!root) throw new Error('Root element not found');
 createRoot(root).render(
 	<StrictMode>
-		<ThemeProvider>
-			<ColorPreferencesProvider>
-				<SettingsProvider>
-					<PreferencesProvider>
-						<MetronomeProvider>
-							<ToastProvider>
-								<App />
-							</ToastProvider>
-						</MetronomeProvider>
-					</PreferencesProvider>
-				</SettingsProvider>
-			</ColorPreferencesProvider>
-		</ThemeProvider>
+		<ProfilesProvider>
+			<ToastProvider>
+				<ProfileScopedProviders>
+					<App />
+				</ProfileScopedProviders>
+			</ToastProvider>
+		</ProfilesProvider>
 	</StrictMode>,
 );

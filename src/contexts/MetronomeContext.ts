@@ -8,6 +8,8 @@ export type { PlaybackPass, PlaybackSource };
 /** Tempo preference + change handler (stable across beat flash / pass updates). */
 export type MetronomeTempoContextValue = {
 	tempo: number;
+	tempoMin: number;
+	tempoMax: number;
 	handleTempoChange: (updated: number) => void;
 	setTempo: Dispatch<SetStateAction<number>>;
 };

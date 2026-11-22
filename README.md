@@ -79,7 +79,8 @@ src/
 │   ├── layout/       # Chrome, modals, ShowNotes, metronome, settings, about
 │   │   ├── about/    # About modal content
 │   │   ├── intro/    # First-visit welcome (localStorage `poison-rhythm-intro-seen`)
-│   │   ├── button/   # Footer corner triggers (Settings, Metronome, Account)
+│   │   ├── account/  # Device profiles + tempo limits (header Account)
+│   │   ├── button/   # Corner triggers (Settings, Metronome, Account)
 │   │   ├── metronome/
 │   │   └── settings/ # SettingsOverlay + Mode / Sound / Colors panels
 │   ├── measures/     # Measure carousel chrome, grid, notation, playback highlighting
@@ -129,13 +130,14 @@ Import from the barrel: `@/contexts`.
 
 | Module | Hook(s) | Provider | Role |
 |--------|---------|----------|------|
+| `ProfilesContext` | `useProfiles`, `useActiveProfileId` | `ProfilesProvider` | Device profile registry; switch/create/rename/delete |
 | `GameContext` | `useGame` | `GameProvider` | Sync-seeded round on first paint, measures, poison index, endless prefetch, visual hints |
 | `SettingsContext` | `useSettings`, `useSetting(key)` | `SettingsProvider` | Game modes / practice; keyed `useSetting` for single-field UI |
-| `PreferencesContext` | `useComplexityPreferences`, `useSoundPreferences`, `useTempoPreference`, `usePlaybackMute`, … | `PreferencesProvider` | Complexity / sound channels / tempo are separate slices |
+| `PreferencesContext` | `useComplexityPreferences`, `useSoundPreferences`, `useTempoPreference`, `usePlaybackMute`, … | `PreferencesProvider` | Complexity / sound channels / tempo (+ min/max limits) |
 | `MetronomeContext` | `useMetronome`, `useMetronomeTempo` | `MetronomeProvider` | Playback clock vs tempo (BPM UI ignores beat flash) |
 | `ThemeContext` | `useTheme` | `ThemeProvider` | Light/dark/system theme |
 
-Provider tree: `main.tsx` wraps `ThemeProvider` → `ColorPreferencesProvider` → `SettingsProvider` → `PreferencesProvider` → `MetronomeProvider`; `App.tsx` adds `GameProvider` → `PendingDifficultyProvider` → `AboutPoisonRhythmProvider`, then mounts `AppContent` plus modal hosts (`AboutPoisonRhythmModal`, `DifficultyRegenAckHost`). Providers own state only; UI hosts sit beside the tree.
+Provider tree: `main.tsx` wraps `ProfilesProvider` → `ToastProvider` → `ProfileScopedProviders` (`ThemeProvider` → `ColorPreferencesProvider` → `SettingsProvider` → `PreferencesProvider` → `MetronomeProvider`, remounted on profile switch); `App.tsx` adds `GameProvider` → `PendingDifficultyProvider` → `AboutPoisonRhythmProvider`, then mounts `AppContent` plus modal hosts. Providers own state only; UI hosts sit beside the tree.
 
 ### Playback timing
 
@@ -172,9 +174,11 @@ Settings modal tabs: **Mode**, **Sound**, **Colors** (`SettingsTabs`).
 
 **Persistence:**
 
-- Theme, color accents, difficulty, tempo, subdivision, mute flags → preference keys (`poison-rhythm-*`; color via `ColorPreferencesProvider`)
-- Game settings → `SettingsProvider` (`poison-rhythm-settings-v1`)
-- Schemas: `src/lib/preference-schemas.ts`, `src/lib/settings-schema.ts`
+- Device profiles → `ProfilesProvider` (`poison-rhythm-profiles-v1`); header **Account**
+- Theme, color accents, difficulty, tempo (+ min/max), subdivision, mute flags → per-profile keys (`poison-rhythm:{profileId}:…`; color via `ColorPreferencesProvider`)
+- `introSeen` stays device-global (`poison-rhythm-intro-seen`)
+- Game settings → `SettingsProvider` (namespaced `settings-v1` per profile)
+- Schemas: `src/lib/preference-schemas.ts`, `src/lib/settings-schema.ts`, `src/lib/profiles.ts`
 
 ### Game modes
 

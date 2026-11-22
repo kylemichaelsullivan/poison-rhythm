@@ -4,7 +4,6 @@ import PlusIcon from '@/assets/svg/plus.svg?react';
 import { Icon } from '@/components/layout/Icon';
 import { useMetronomeTempo } from '@/contexts';
 import { modifyTempoButtonClassName } from '@/lib/control-classes';
-import { BPM_MAX, BPM_MIN } from '@/lib/metronome-defaults';
 import {
 	decrementTempoByStep,
 	incrementTempoByStep,
@@ -22,7 +21,7 @@ type MetronomeModifyTempoButtonProps = {
 export function MetronomeModifyTempoButton({
 	direction,
 }: MetronomeModifyTempoButtonProps) {
-	const { tempo, handleTempoChange } = useMetronomeTempo();
+	const { tempo, tempoMin, tempoMax, handleTempoChange } = useMetronomeTempo();
 	const isDecrease = direction === 'decrease';
 	const label = isDecrease ? 'Decrease Tempo' : 'Increase Tempo';
 
@@ -31,7 +30,7 @@ export function MetronomeModifyTempoButton({
 			type='button'
 			className={clsx('ModifyTempoButton shrink-0', modifyTempoButtonClassName)}
 			title={label}
-			disabled={isDecrease ? tempo <= BPM_MIN : tempo >= BPM_MAX}
+			disabled={isDecrease ? tempo <= tempoMin : tempo >= tempoMax}
 			data-chrome-active='true'
 			onClick={() =>
 				handleTempoChange(

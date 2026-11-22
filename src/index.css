@@ -677,8 +677,9 @@
  * the control. Native :hover / :focus so tablets match mouse.
  *
  * Exceptions: `.ModalScrim` (full-bleed dismiss), `.IntroTutorialDot`
- * (quiet marker hover on the inner span), and Mode badge triggers
- * (`:has(> .ModeBadge)` — recolor the circular border instead).
+ * (quiet marker hover on the inner span), Mode badge triggers
+ * (`:has(> .ModeBadge)` — recolor the circular border instead), and
+ * `.ProfileRowSwitch` (row perimeter highlight instead of a field-like ring).
  */
 :is(button, .InteractiveInsetChrome) {
 	--interactive-inset-ring-color: var(--color-primary);
@@ -698,12 +699,38 @@
 		[aria-expanded="true"]
 	):not(:disabled):not([aria-disabled="true"]):not(.ModalScrim):not(
 		.IntroTutorialDot
-	):not(:has(> .ModeBadge)) {
+	):not(.ProfileRowSwitch):not(:has(> .ModeBadge)) {
 	outline: none;
 	box-shadow:
 		inset 0 0 0 var(--interactive-inset-ring-width)
 		var(--interactive-inset-ring-color),
 		var(--interactive-inset-shadow);
+}
+
+/*
+ * Account profile rows: hovering/focusing the name (or empty row chrome)
+ * lights the whole card edge. Other buttons keep global inset chrome.
+ */
+.ProfileRow {
+	transition:
+		border-color 200ms ease-out,
+		box-shadow 200ms ease-out,
+		opacity 200ms ease-out;
+}
+
+.ProfileRow:is(:hover, :focus-within):not(
+		:has(
+				button:is(:hover, :focus, :focus-visible):not(.ProfileRowSwitch):not(
+						:disabled
+					)
+			)
+	) {
+	border-color: var(--color-primary);
+	box-shadow: 0 0 0 1px var(--color-primary);
+}
+
+.ProfileRowSwitch:is(:hover, :focus, :focus-visible) {
+	outline: none;
 }
 
 /* Mode badge: hover / focus recolors the circular border, no inset box. */

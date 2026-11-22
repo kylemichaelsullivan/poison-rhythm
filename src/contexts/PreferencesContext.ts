@@ -25,6 +25,10 @@ export type SoundPreferencesValue = {
 export type TempoPreferencesValue = {
 	tempo: number;
 	setTempo: (value: number | ((prev: number) => number)) => void;
+	tempoMin: number;
+	tempoMax: number;
+	setTempoMin: (value: number) => void;
+	setTempoMax: (value: number) => void;
 };
 
 /** Combined sound + tempo for callers that still want both. */

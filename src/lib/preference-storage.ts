@@ -6,6 +6,8 @@ import {
 	parseExplicitTrue,
 	parseSubdivisionLevel,
 	parseTempo,
+	parseTempoMax,
+	parseTempoMin,
 	parseThemeSetting,
 	serializeColorPreference,
 	serializeCountInEnabled,
@@ -13,6 +15,8 @@ import {
 	serializeExplicitTrue,
 	serializeSubdivisionLevel,
 	serializeTempo,
+	serializeTempoMax,
+	serializeTempoMin,
 	serializeThemeSetting,
 } from './preference-schemas';
 import {
@@ -20,7 +24,11 @@ import {
 	removeStorageItem,
 	writeStorageItem,
 } from './storage';
-import { LEGACY_STORAGE_KEYS, STORAGE_KEYS } from './storage-keys';
+import {
+	DEFAULT_PROFILE_ID,
+	LEGACY_STORAGE_KEYS,
+	preferenceStorageKey,
+} from './storage-keys';
 import type {
 	ColorPreference,
 	SubdivisionLevel,
@@ -36,13 +44,28 @@ export {
 	parseExplicitTrue,
 	parseSubdivisionLevel,
 	parseTempo,
+	parseTempoMax,
+	parseTempoMin,
 	parseThemeSetting,
+	serializeTempoMax,
+	serializeTempoMin,
 } from './preference-schemas';
 export type {
 	ColorPreference,
 	SubdivisionLevel,
 	ThemeSetting,
 } from './preference-schemas';
+
+/** Imperative helpers default to this id (ProfilesProvider keeps it in sync). */
+let imperativeProfileId = DEFAULT_PROFILE_ID;
+
+export function getImperativeProfileId(): string {
+	return imperativeProfileId;
+}
+
+export function setImperativeProfileId(profileId: string): void {
+	imperativeProfileId = profileId;
+}
 
 export function parseStoredTempo(raw: string | null): number {
 	const parsed = parseTempo(raw);
@@ -54,7 +77,6 @@ export function parseCountInEnabledStored(raw: string | null): boolean {
 	if (parsed !== null) {
 		return parsed;
 	}
-
 	return readCountInEnabled();
 }
 
@@ -71,44 +93,100 @@ function writePreference(key: string, value: string | null): void {
 	writeStorageItem(key, value);
 }
 
-export function readThemeSetting(): ThemeSetting {
-	return readPreference(STORAGE_KEYS.theme, parseThemeSetting);
+function profileKey(
+	name: Parameters<typeof preferenceStorageKey>[0],
+	profileId: string = imperativeProfileId,
+): string {
+	return preferenceStorageKey(name, profileId);
 }
 
-export function writeThemeSetting(value: ThemeSetting): void {
-	writePreference(STORAGE_KEYS.theme, serializeThemeSetting(value));
+export function readThemeSetting(
+	profileId: string = imperativeProfileId,
+): ThemeSetting {
+	return readPreference(profileKey('theme', profileId), parseThemeSetting);
 }
 
-export function readSubdivisionLevel(): SubdivisionLevel {
-	return readPreference(STORAGE_KEYS.subdivision, parseSubdivisionLevel);
+export function writeThemeSetting(
+	value: ThemeSetting,
+	profileId: string = imperativeProfileId,
+): void {
+	writePreference(profileKey('theme', profileId), serializeThemeSetting(value));
 }
 
-export function writeSubdivisionLevel(level: SubdivisionLevel): void {
-	writePreference(STORAGE_KEYS.subdivision, serializeSubdivisionLevel(level));
+export function readSubdivisionLevel(
+	profileId: string = imperativeProfileId,
+): SubdivisionLevel {
+	return readPreference(
+		profileKey('subdivision', profileId),
+		parseSubdivisionLevel,
+	);
 }
 
-export function readMuteMetronome(): boolean {
-	return readPreference(STORAGE_KEYS.muteMetronome, parseExplicitTrue);
+export function writeSubdivisionLevel(
+	level: SubdivisionLevel,
+	profileId: string = imperativeProfileId,
+): void {
+	writePreference(
+		profileKey('subdivision', profileId),
+		serializeSubdivisionLevel(level),
+	);
 }
 
-export function writeMuteMetronome(muted: boolean): void {
-	writePreference(STORAGE_KEYS.muteMetronome, serializeExplicitTrue(muted));
+export function readMuteMetronome(
+	profileId: string = imperativeProfileId,
+): boolean {
+	return readPreference(
+		profileKey('muteMetronome', profileId),
+		parseExplicitTrue,
+	);
 }
 
-export function readMutePlayback(): boolean {
-	return readPreference(STORAGE_KEYS.mutePlayback, parseExplicitTrue);
+export function writeMuteMetronome(
+	muted: boolean,
+	profileId: string = imperativeProfileId,
+): void {
+	writePreference(
+		profileKey('muteMetronome', profileId),
+		serializeExplicitTrue(muted),
+	);
 }
 
-export function writeMutePlayback(muted: boolean): void {
-	writePreference(STORAGE_KEYS.mutePlayback, serializeExplicitTrue(muted));
+export function readMutePlayback(
+	profileId: string = imperativeProfileId,
+): boolean {
+	return readPreference(
+		profileKey('mutePlayback', profileId),
+		parseExplicitTrue,
+	);
 }
 
-export function readMutePreview(): boolean {
-	return readPreference(STORAGE_KEYS.mutePreview, parseExplicitTrue);
+export function writeMutePlayback(
+	muted: boolean,
+	profileId: string = imperativeProfileId,
+): void {
+	writePreference(
+		profileKey('mutePlayback', profileId),
+		serializeExplicitTrue(muted),
+	);
 }
 
-export function writeMutePreview(muted: boolean): void {
-	writePreference(STORAGE_KEYS.mutePreview, serializeExplicitTrue(muted));
+export function readMutePreview(
+	profileId: string = imperativeProfileId,
+): boolean {
+	return readPreference(
+		profileKey('mutePreview', profileId),
+		parseExplicitTrue,
+	);
+}
+
+export function writeMutePreview(
+	muted: boolean,
+	profileId: string = imperativeProfileId,
+): void {
+	writePreference(
+		profileKey('mutePreview', profileId),
+		serializeExplicitTrue(muted),
+	);
 }
 
 export type RhythmMuteState = {
@@ -124,8 +202,8 @@ export function coerceRhythmMutes(
 	return { mutePlayback, mutePreview };
 }
 
-function peekLegacyMuteOnStudentPass(): boolean {
-	const raw = readStorageItem(STORAGE_KEYS.gameSettings);
+function peekLegacyMuteOnStudentPass(profileId: string): boolean {
+	const raw = readStorageItem(profileKey('gameSettings', profileId));
 	if (raw === null) {
 		return false;
 	}
@@ -143,8 +221,9 @@ function peekLegacyMuteOnStudentPass(): boolean {
 	}
 }
 
-function stripLegacyMuteOnStudentPass(): void {
-	const raw = readStorageItem(STORAGE_KEYS.gameSettings);
+function stripLegacyMuteOnStudentPass(profileId: string): void {
+	const key = profileKey('gameSettings', profileId);
+	const raw = readStorageItem(key);
 	if (raw === null) {
 		return;
 	}
@@ -159,25 +238,28 @@ function stripLegacyMuteOnStudentPass(): void {
 			return;
 		}
 		delete record.muteOnStudentPass;
-		writeStorageItem(STORAGE_KEYS.gameSettings, JSON.stringify(record));
+		writeStorageItem(key, JSON.stringify(record));
 	} catch {
 		// Corrupt settings fall back in parseGameSettings.
 	}
 }
 
-let rhythmMutesResolved: RhythmMuteState | null = null;
+const rhythmMutesResolvedByProfile = new Map<string, RhythmMuteState>();
 
 /**
- * Resolve Playback / Preview mutes once per load.
+ * Resolve Playback / Preview mutes once per profile load.
  * Migrates legacy `muteRhythm` (both muted) and `muteOnStudentPass` (Playback only).
  */
-export function resolveRhythmMutes(): RhythmMuteState {
-	if (rhythmMutesResolved !== null) {
-		return rhythmMutesResolved;
+export function resolveRhythmMutes(
+	profileId: string = imperativeProfileId,
+): RhythmMuteState {
+	const cached = rhythmMutesResolvedByProfile.get(profileId);
+	if (cached) {
+		return cached;
 	}
 
-	const playbackRaw = readStorageItem(STORAGE_KEYS.mutePlayback);
-	const previewRaw = readStorageItem(STORAGE_KEYS.mutePreview);
+	const playbackRaw = readStorageItem(profileKey('mutePlayback', profileId));
+	const previewRaw = readStorageItem(profileKey('mutePreview', profileId));
 	const hasNewKeys = playbackRaw !== null || previewRaw !== null;
 
 	let mutePlayback: boolean;
@@ -190,17 +272,18 @@ export function resolveRhythmMutes(): RhythmMuteState {
 		const legacyRhythm = parseExplicitTrue(
 			readStorageItem(LEGACY_STORAGE_KEYS.muteRhythm),
 		);
-		const legacyStudent = peekLegacyMuteOnStudentPass();
+		const legacyStudent = peekLegacyMuteOnStudentPass(profileId);
 		mutePlayback = legacyRhythm || legacyStudent;
 		mutePreview = legacyRhythm;
-		writeMutePlayback(mutePlayback);
-		writeMutePreview(mutePreview);
+		writeMutePlayback(mutePlayback, profileId);
+		writeMutePreview(mutePreview, profileId);
 		removeStorageItem(LEGACY_STORAGE_KEYS.muteRhythm);
 	}
 
-	stripLegacyMuteOnStudentPass();
-	rhythmMutesResolved = { mutePlayback, mutePreview };
-	return rhythmMutesResolved;
+	stripLegacyMuteOnStudentPass(profileId);
+	const resolved = { mutePlayback, mutePreview };
+	rhythmMutesResolvedByProfile.set(profileId, resolved);
+	return resolved;
 }
 
 /** @deprecated Use readMutePlayback */
@@ -214,9 +297,11 @@ export function writeMuteRhythmSounds(muted: boolean): void {
 }
 
 /** Count-in is enabled unless explicitly stored as false (legacy mute key honored once). */
-export function readCountInEnabled(): boolean {
+export function readCountInEnabled(
+	profileId: string = imperativeProfileId,
+): boolean {
 	const stored = readPreference(
-		STORAGE_KEYS.countInEnabled,
+		profileKey('countInEnabled', profileId),
 		parseCountInEnabled,
 	);
 	if (stored !== null) {
@@ -230,53 +315,116 @@ export function readCountInEnabled(): boolean {
 	return true;
 }
 
-export function writeCountInEnabled(enabled: boolean): void {
+export function writeCountInEnabled(
+	enabled: boolean,
+	profileId: string = imperativeProfileId,
+): void {
 	writePreference(
-		STORAGE_KEYS.countInEnabled,
+		profileKey('countInEnabled', profileId),
 		serializeCountInEnabled(enabled),
 	);
 	removeStorageItem(LEGACY_STORAGE_KEYS.muteCountIn);
 }
 
-export function readDifficulty(): number {
-	return readPreference(STORAGE_KEYS.difficulty, parseDifficulty);
+export function readDifficulty(
+	profileId: string = imperativeProfileId,
+): number {
+	return readPreference(profileKey('difficulty', profileId), parseDifficulty);
 }
 
-export function writeDifficulty(value: number): void {
-	writePreference(STORAGE_KEYS.difficulty, serializeDifficulty(value));
+export function writeDifficulty(
+	value: number,
+	profileId: string = imperativeProfileId,
+): void {
+	writePreference(
+		profileKey('difficulty', profileId),
+		serializeDifficulty(value),
+	);
 }
 
-export function readStoredTempo(): number | null {
-	return readPreference(STORAGE_KEYS.tempo, parseTempo);
+export function readStoredTempo(
+	profileId: string = imperativeProfileId,
+): number | null {
+	return readPreference(profileKey('tempo', profileId), parseTempo);
 }
 
-export function writeStoredTempo(value: number): void {
-	writePreference(STORAGE_KEYS.tempo, serializeTempo(value));
+export function writeStoredTempo(
+	value: number,
+	profileId: string = imperativeProfileId,
+): void {
+	writePreference(profileKey('tempo', profileId), serializeTempo(value));
 }
 
-export function readDominantColor(): ColorPreference {
-	return readPreference(STORAGE_KEYS.dominantColor, parseColorPreference);
+export function readTempoMin(profileId: string = imperativeProfileId): number {
+	return readPreference(profileKey('tempoMin', profileId), parseTempoMin);
 }
 
-export function writeDominantColor(value: ColorPreference): void {
-	writePreference(STORAGE_KEYS.dominantColor, serializeColorPreference(value));
+export function writeTempoMin(
+	value: number,
+	profileId: string = imperativeProfileId,
+): void {
+	writePreference(profileKey('tempoMin', profileId), serializeTempoMin(value));
 }
 
-export function readSecondaryColor(): ColorPreference {
-	return readPreference(STORAGE_KEYS.secondaryColor, parseColorPreference);
+export function readTempoMax(profileId: string = imperativeProfileId): number {
+	return readPreference(profileKey('tempoMax', profileId), parseTempoMax);
 }
 
-export function writeSecondaryColor(value: ColorPreference): void {
-	writePreference(STORAGE_KEYS.secondaryColor, serializeColorPreference(value));
+export function writeTempoMax(
+	value: number,
+	profileId: string = imperativeProfileId,
+): void {
+	writePreference(profileKey('tempoMax', profileId), serializeTempoMax(value));
+}
+
+export function readDominantColor(
+	profileId: string = imperativeProfileId,
+): ColorPreference {
+	return readPreference(
+		profileKey('dominantColor', profileId),
+		parseColorPreference,
+	);
+}
+
+export function writeDominantColor(
+	value: ColorPreference,
+	profileId: string = imperativeProfileId,
+): void {
+	writePreference(
+		profileKey('dominantColor', profileId),
+		serializeColorPreference(value),
+	);
+}
+
+export function readSecondaryColor(
+	profileId: string = imperativeProfileId,
+): ColorPreference {
+	return readPreference(
+		profileKey('secondaryColor', profileId),
+		parseColorPreference,
+	);
+}
+
+export function writeSecondaryColor(
+	value: ColorPreference,
+	profileId: string = imperativeProfileId,
+): void {
+	writePreference(
+		profileKey('secondaryColor', profileId),
+		serializeColorPreference(value),
+	);
 }
 
 /** First-visit welcome is shown until the student opts to skip it on this device. */
 export function readIntroSeen(): boolean {
-	return readPreference(STORAGE_KEYS.introSeen, parseExplicitTrue);
+	return readPreference(preferenceStorageKey('introSeen'), parseExplicitTrue);
 }
 
 export function writeIntroSeen(seen: boolean): void {
-	writePreference(STORAGE_KEYS.introSeen, serializeExplicitTrue(seen));
+	writePreference(
+		preferenceStorageKey('introSeen'),
+		serializeExplicitTrue(seen),
+	);
 }
 
 function readTempoFromSearchParams(search: string): number | null {
@@ -303,35 +451,46 @@ export function stripBpmSearchParam(): void {
 	globalThis.history.replaceState(globalThis.history.state, '', next);
 }
 
-let initialTempoResolved: number | null = null;
+const initialTempoResolvedByProfile = new Map<string, number>();
+let bpmSearchParamConsumed = false;
 
 /** @internal Test helper */
 export function resetPreferenceBootstrapForTests(): void {
-	initialTempoResolved = null;
-	rhythmMutesResolved = null;
+	initialTempoResolvedByProfile.clear();
+	bpmSearchParamConsumed = false;
+	rhythmMutesResolvedByProfile.clear();
+	imperativeProfileId = DEFAULT_PROFILE_ID;
 }
 
 /** URL ?bpm= overrides storage once; param is stripped from the address bar. */
-export function resolveInitialTempo(): number {
-	if (initialTempoResolved !== null) {
-		return initialTempoResolved;
+export function resolveInitialTempo(
+	profileId: string = imperativeProfileId,
+): number {
+	const cached = initialTempoResolvedByProfile.get(profileId);
+	if (cached !== undefined) {
+		return cached;
 	}
 
 	if (typeof globalThis.location === 'undefined') {
-		initialTempoResolved = BPM_DEFAULT;
-		return initialTempoResolved;
+		initialTempoResolvedByProfile.set(profileId, BPM_DEFAULT);
+		return BPM_DEFAULT;
 	}
 
-	const fromUrl = readTempoFromSearchParams(globalThis.location.search);
-	if (fromUrl !== null) {
-		stripBpmSearchParam();
-		writeStoredTempo(fromUrl);
-		initialTempoResolved = fromUrl;
-		return fromUrl;
+	if (!bpmSearchParamConsumed) {
+		const fromUrl = readTempoFromSearchParams(globalThis.location.search);
+		if (fromUrl !== null) {
+			stripBpmSearchParam();
+			bpmSearchParamConsumed = true;
+			writeStoredTempo(fromUrl, profileId);
+			initialTempoResolvedByProfile.set(profileId, fromUrl);
+			return fromUrl;
+		}
+		bpmSearchParamConsumed = true;
 	}
 
-	initialTempoResolved = readStoredTempo() ?? BPM_DEFAULT;
-	return initialTempoResolved;
+	const fromStorage = readStoredTempo(profileId) ?? BPM_DEFAULT;
+	initialTempoResolvedByProfile.set(profileId, fromStorage);
+	return fromStorage;
 }
 
 /** @deprecated Use readMuteMetronome / writeMuteMetronome */

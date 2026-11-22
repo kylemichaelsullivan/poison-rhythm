@@ -11,7 +11,7 @@ For full accessibility policy (grades, border hierarchy, keyboard), see [`A11Y.m
 | **Dominant** | Primary accent: Play fills, badges, section titles, page wash, panel surfaces, header edge, playback highlights |
 | **Secondary** | Complement accent: section borders, footer edge, chrome bars, opposite page wash, title gradient |
 
-Unset preferences keep the shipped **Poison Rhythm** purple + mint tokens from the favicon brand. Choosing crayons overrides those CSS variables for this browser (student-scoped local storage today). Swapping roles materializes unset brand defaults as `poison-purple` / `poison-mint` tokens so mint can sit on Dominant (and purple on Secondary); swapping back to canonical brand order clears storage to unset again.
+Unset preferences keep the shipped **Poison Rhythm** purple + mint tokens from the favicon brand. Choosing crayons overrides those CSS variables for the **active device profile** (`poison-rhythm:{profileId}:dominant-color` / `secondary-color`). Swapping roles materializes unset brand defaults as `poison-purple` / `poison-mint` tokens so mint can sit on Dominant (and purple on Secondary); swapping back to canonical brand order clears storage to unset again.
 
 ## Why Brand is recommended
 
@@ -40,9 +40,9 @@ The meter and each swatch stack two grades: Light Mode, then Dark Mode. Light st
 
 **Strongly discourage, do not block:** `ColorAccentSettings` owns prefs (+ role selection) and prop-drives the tray and pairings. The meter (`ContrastScoreMeter`) owns theme so locking Light/Dark does not rescore all 64 crayons. Per-swatch grade badges (`ContrastGradeBadge`) update live when the partner color changes. Role tiles live in `ColorRoleTile`; the swap control (`SwapColorRolesButton`) exchanges Dominant and Secondary; the decorative preview is `ColorPairPlayPreview` (mini measure grid). **A/B** get solid hierarchy borders; **F** is dashed and dimmed. In the tray, the active role’s crayon uses strongest border/shadow; the other role’s crayon stays visible at lighter emphasis (switches when you change Dominant vs Secondary). Suggested Pairings remain the easy recovery.
 
-## Student profiles (later)
+## Student profiles
 
-Color preferences are stored on **student-scoped** preference keys (`poison-rhythm-dominant-color`, `poison-rhythm-secondary-color`), same family as theme and tempo. They are intended to move into student profiles when that feature ships. Profile UI and account sync are **not** implemented yet.
+Color preferences are stored per **device profile** (same family as theme and tempo), switched from the header **Account** control. Cloud sync and teacher-linked accounts are not implemented yet.
 
 ## Related
 

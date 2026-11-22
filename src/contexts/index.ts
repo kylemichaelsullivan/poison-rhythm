@@ -24,6 +24,12 @@ export {
 	useTempoPreference,
 } from './PreferencesContext';
 export { PreferencesProvider } from './PreferencesProvider';
+export { ProfileScopedProviders } from './ProfileScopedProviders';
+export {
+	useActiveProfileId,
+	useProfiles,
+} from './ProfilesContext';
+export { ProfilesProvider } from './ProfilesProvider';
 export { useSettings, useSettingsStore } from './SettingsContext';
 export { SettingsProvider } from './SettingsProvider';
 export { type ThemeSetting, useTheme } from './ThemeContext';

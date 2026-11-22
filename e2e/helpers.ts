@@ -1,11 +1,54 @@
 import { expect } from '@playwright/test';
+import {
+	DEFAULT_PROFILE_ID,
+	DEVICE_STORAGE_KEYS,
+	preferenceStorageKey,
+} from '../src/lib/storage-keys';
 import type { Page } from '@playwright/test';
 
-export const COUNT_IN_KEY = 'poison-rhythm-count-in-enabled';
-export const SETTINGS_KEY = 'poison-rhythm-settings-v1';
-export const TEMPO_KEY = 'poison-rhythm-tempo';
-export const SUBDIVISION_KEY = 'poison-rhythm-subdivision';
-export const INTRO_SEEN_KEY = 'poison-rhythm-intro-seen';
+export const DEFAULT_E2E_PROFILE_ID = DEFAULT_PROFILE_ID;
+
+export const COUNT_IN_KEY = preferenceStorageKey(
+	'countInEnabled',
+	DEFAULT_E2E_PROFILE_ID,
+);
+export const SETTINGS_KEY = preferenceStorageKey(
+	'gameSettings',
+	DEFAULT_E2E_PROFILE_ID,
+);
+export const TEMPO_KEY = preferenceStorageKey('tempo', DEFAULT_E2E_PROFILE_ID);
+export const SUBDIVISION_KEY = preferenceStorageKey(
+	'subdivision',
+	DEFAULT_E2E_PROFILE_ID,
+);
+export const INTRO_SEEN_KEY = DEVICE_STORAGE_KEYS.introSeen;
+export const PROFILES_KEY = DEVICE_STORAGE_KEYS.profiles;
+export const MUTE_PLAYBACK_KEY = preferenceStorageKey(
+	'mutePlayback',
+	DEFAULT_E2E_PROFILE_ID,
+);
+export const MUTE_PREVIEW_KEY = preferenceStorageKey(
+	'mutePreview',
+	DEFAULT_E2E_PROFILE_ID,
+);
+export const MUTE_METRONOME_KEY = preferenceStorageKey(
+	'muteMetronome',
+	DEFAULT_E2E_PROFILE_ID,
+);
+export const THEME_KEY = preferenceStorageKey('theme', DEFAULT_E2E_PROFILE_ID);
+
+export function defaultProfilesRegistryJson(name = 'Default'): string {
+	return JSON.stringify({
+		activeProfileId: DEFAULT_E2E_PROFILE_ID,
+		profiles: [
+			{
+				id: DEFAULT_E2E_PROFILE_ID,
+				name,
+				createdAt: 0,
+			},
+		],
+	});
+}
 
 /** Empty Playwright storage so the first-visit welcome can open. */
 export const FIRST_VISIT_STORAGE_STATE = {
@@ -38,7 +81,11 @@ export async function seedPlaybackPrefs(
 			settingsKey,
 			tempoKey,
 			subdivisionKey,
+			profilesKey,
+			profilesJson,
 		}) => {
+			window.localStorage.setItem(profilesKey, profilesJson);
+
 			if (countIn) {
 				window.localStorage.removeItem(countInKey);
 			} else {
@@ -87,6 +134,8 @@ export async function seedPlaybackPrefs(
 			settingsKey: SETTINGS_KEY,
 			tempoKey: TEMPO_KEY,
 			subdivisionKey: SUBDIVISION_KEY,
+			profilesKey: PROFILES_KEY,
+			profilesJson: defaultProfilesRegistryJson(),
 		},
 	);
 }

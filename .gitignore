@@ -30,6 +30,9 @@ coverage
 # Local scratch (glyph audits, screenshots, python venvs)
 .tmp-*
 
+# Local product roadmap (not shipped)
+documentation/PLAN.md
+
 # Caches
 .cache
 *.tsbuildinfo

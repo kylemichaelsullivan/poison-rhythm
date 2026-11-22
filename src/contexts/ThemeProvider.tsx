@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useMemo, useSyncExternalStore } from 'react';
+import { useActiveProfileId } from '@/contexts/ProfilesContext';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import {
 	parseThemeSetting,
 	serializeThemeSetting,
 } from '@/lib/preference-schemas';
-import { STORAGE_KEYS } from '@/lib/storage-keys';
+import { preferenceStorageKey } from '@/lib/storage-keys';
 import type { ReactNode } from 'react';
 import type { ThemeSetting } from '@/lib/preference-schemas';
 
@@ -23,8 +24,9 @@ function getSystemDark() {
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
+	const profileId = useActiveProfileId();
 	const [theme, setTheme] = useLocalStorage({
-		key: STORAGE_KEYS.theme,
+		key: preferenceStorageKey('theme', profileId),
 		parse: parseThemeSetting,
 		serialize: serializeThemeSetting,
 		getDefault: () => null,

@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import { ColorPreferencesContext } from '@/contexts/ColorPreferencesContext';
+import { useActiveProfileId } from '@/contexts/ProfilesContext';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { applyColorPreferenceVars, swapAccentColors } from '@/lib/colors';
 import {
 	parseColorPreference,
 	serializeColorPreference,
 } from '@/lib/preference-schemas';
-import { STORAGE_KEYS } from '@/lib/storage-keys';
+import { preferenceStorageKey } from '@/lib/storage-keys';
 import type { ReactNode } from 'react';
 import type { ColorPreference } from '@/lib/preference-schemas';
 
@@ -15,15 +16,16 @@ export function ColorPreferencesProvider({
 }: {
 	children: ReactNode;
 }) {
+	const profileId = useActiveProfileId();
 	const [dominantColor, setDominantColorState] = useLocalStorage({
-		key: STORAGE_KEYS.dominantColor,
+		key: preferenceStorageKey('dominantColor', profileId),
 		parse: parseColorPreference,
 		serialize: serializeColorPreference,
 		getDefault: () => null,
 	});
 
 	const [secondaryColor, setSecondaryColorState] = useLocalStorage({
-		key: STORAGE_KEYS.secondaryColor,
+		key: preferenceStorageKey('secondaryColor', profileId),
 		parse: parseColorPreference,
 		serialize: serializeColorPreference,
 		getDefault: () => null,

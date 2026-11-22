@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useActiveProfileId } from '@/contexts/ProfilesContext';
 import {
 	SettingsContext,
 	SettingsStoreContext,
@@ -10,7 +11,7 @@ import {
 	sanitizeGameSettings,
 	serializeGameSettings,
 } from '@/lib/settings-schema';
-import { STORAGE_KEYS } from '@/lib/storage-keys';
+import { preferenceStorageKey } from '@/lib/storage-keys';
 import type { ReactNode } from 'react';
 import type { SettingsStoreApi } from '@/contexts/SettingsContext';
 import type { GameSettings } from '@/lib/settings-schema';
@@ -27,8 +28,9 @@ function diffSettingsKeys(
 }
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
+	const profileId = useActiveProfileId();
 	const [settings, setSettingsState] = useLocalStorage({
-		key: STORAGE_KEYS.gameSettings,
+		key: preferenceStorageKey('gameSettings', profileId),
 		parse: parseGameSettings,
 		serialize: serializeGameSettings,
 		getDefault: getDefaultGameSettings,

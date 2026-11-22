@@ -1,5 +1,10 @@
 import { expect, test } from '@playwright/test';
-import { clickPlay, generateRound, seedPlaybackPrefs } from './helpers';
+import {
+	clickPlay,
+	generateRound,
+	SETTINGS_KEY,
+	seedPlaybackPrefs,
+} from './helpers';
 
 test.describe('poison hit overlay', () => {
 	test('shows a full-screen animation after Classic poison plays', async ({
@@ -45,7 +50,7 @@ test.describe('poison hit overlay', () => {
 			const parsed = JSON.parse(raw) as Record<string, unknown>;
 			parsed.endless = true;
 			window.localStorage.setItem(settingsKey, JSON.stringify(parsed));
-		}, 'poison-rhythm-settings-v1');
+		}, SETTINGS_KEY);
 
 		await page.goto('/');
 		await generateRound(page);

@@ -100,6 +100,15 @@ From the badge on the Poison Rhythm section, or **Settings → Mode → Display*
 - Colors (dominant / secondary) are under **Settings → Colors** — prefer the **Poison Rhythm** pairing for shared classrooms; each crayon shows a letter grade (A / B / C / D / F). See [`COLORS.md`](COLORS.md) and [`A11Y.md`](A11Y.md).
 - Feedback toggles (visual / audio) live under **Settings → Sound** if the room setup needs quieter or less flashy play.
 
+## Device profiles (this browser)
+
+Use the header **Account** control to keep named student profiles on a shared station:
+
+- Every device starts with a built-in **Default** profile (cannot rename or delete). Create additional profiles per student; switch before they play so colors, mode, mutes and tempo come back with them.
+- Tap a profile name to switch. Drag the handle or use the arrows to reorder (keyboard: focus the handle and press Arrow Up / Arrow Down).
+- Set **Tempo Limits** (min / max BPM) on a profile when a student parks at extremes — the metronome cannot leave that band while the profile is active.
+- Profiles stay on this device/browser only (no cloud sign-in yet). Prefer brand colors on a projected shared screen if students are not switching profiles.
+
 ## Student records (printable PDF)
 
 Use the one-page letter-size form to log sessions and observed skills:

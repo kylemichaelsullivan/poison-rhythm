@@ -129,6 +129,34 @@ export function serializeTempo(value: number): string | null {
 	return String(tempoSchema.parse(value));
 }
 
+export function parseTempoMin(raw: string | null): number {
+	if (raw === null) {
+		return BPM_MIN;
+	}
+	const parsed = Number.parseFloat(raw);
+	const result = tempoSchema.safeParse(parsed);
+	return result.success ? result.data : BPM_MIN;
+}
+
+export function parseTempoMax(raw: string | null): number {
+	if (raw === null) {
+		return BPM_MAX;
+	}
+	const parsed = Number.parseFloat(raw);
+	const result = tempoSchema.safeParse(parsed);
+	return result.success ? result.data : BPM_MAX;
+}
+
+export function serializeTempoMin(value: number): string | null {
+	const parsed = tempoSchema.parse(value);
+	return parsed === BPM_MIN ? null : String(parsed);
+}
+
+export function serializeTempoMax(value: number): string | null {
+	const parsed = tempoSchema.parse(value);
+	return parsed === BPM_MAX ? null : String(parsed);
+}
+
 export function serializeExplicitTrue(enabled: boolean): string | null {
 	return enabled ? 'true' : null;
 }

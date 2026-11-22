@@ -7,12 +7,16 @@ import { BEATS_PER_MINUTE, setTempoTitle } from '@/lib/ui-copy';
 
 type MetronomeTempoInputProps = {
 	tempo: number;
+	tempoMin?: number;
+	tempoMax?: number;
 	onTempoChange: (value: number) => void;
 };
 
 /** BPM text field — props from MetronomeTempoSlider (avoids a second useMetronome). */
 export function MetronomeTempoInput({
 	tempo,
+	tempoMin = BPM_MIN,
+	tempoMax = BPM_MAX,
 	onTempoChange,
 }: MetronomeTempoInputProps) {
 	const [inputValue, setInputValue] = useState(String(tempo));
@@ -57,7 +61,7 @@ export function MetronomeTempoInput({
 	}
 
 	function adjustTempo(delta: number) {
-		const next = clampTempo(getCurrentTempo() + delta);
+		const next = clampTempo(getCurrentTempo() + delta, tempoMin, tempoMax);
 		setInputValue(String(next));
 		onTempoChange(next);
 	}
@@ -71,8 +75,8 @@ export function MetronomeTempoInput({
 			)}
 			inputMode='numeric'
 			pattern='[0-9]*'
-			min={BPM_MIN}
-			max={BPM_MAX}
+			min={tempoMin}
+			max={tempoMax}
 			title={setTempoTitle(tempo)}
 			aria-label={BEATS_PER_MINUTE}
 			value={inputValue}

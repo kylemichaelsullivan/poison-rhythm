@@ -68,3 +68,57 @@ export function measuresPlayPauseLabel(isRunning: boolean): string {
 export function carouselStartPlayLabel(armed: boolean): string {
 	return armed ? CANCEL_DELAYED_PLAY : PLAY_MEASURES;
 }
+
+export const ACCOUNT_LABEL = 'Account';
+export const PROFILES_GROUP_TITLE = 'Profiles';
+export const TEMPO_LIMITS_GROUP_TITLE = 'Tempo Limits';
+export const NEW_PROFILE_LABEL = 'New Profile';
+export const PROFILE_NAME_LABEL = 'Profile Name';
+export const TEMPO_MIN_LABEL = 'Minimum Tempo';
+export const TEMPO_MAX_LABEL = 'Maximum Tempo';
+export const RENAME_PROFILE_LABEL = 'Rename';
+export const DELETE_PROFILE_LABEL = 'Delete';
+export const SWITCH_PROFILE_LABEL = 'Switch';
+export const ACTIVE_PROFILE_LABEL = 'Active';
+export const DEFAULT_PROFILE_LABEL = 'Default';
+export const MOVE_PROFILE_UP_LABEL = 'Move Profile Up';
+export const MOVE_PROFILE_DOWN_LABEL = 'Move Profile Down';
+export const PROFILE_DRAG_HANDLE_LABEL = 'Drag to Reorder';
+export const PROFILE_REORDER_HINT =
+	'Drag the handle or use the arrows to reorder.';
+
+export function switchToProfileLabel(name: string): string {
+	return `Switch to ${name}`;
+}
+
+export function editProfileLabel(name: string): string {
+	return `Edit ${name}`;
+}
+
+export function profileSwitchToastMessage(name: string): string {
+	return `Profile: ${name}`;
+}
+
+export function profileCreatedToastMessage(name: string): string {
+	return `Created Profile: ${name}`;
+}
+
+export function profileMovedAnnouncement(
+	name: string,
+	position: number,
+	total: number,
+): string {
+	return `${name} moved to position ${position} of ${total}.`;
+}
+
+export function profileDragHandleLabel(name: string): string {
+	return `${PROFILE_DRAG_HANDLE_LABEL}: ${name}`;
+}
+
+export function moveProfileUpLabel(name: string): string {
+	return `Move ${name} Up`;
+}
+
+export function moveProfileDownLabel(name: string): string {
+	return `Move ${name} Down`;
+}

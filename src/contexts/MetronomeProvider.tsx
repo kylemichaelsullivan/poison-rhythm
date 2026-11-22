@@ -15,7 +15,7 @@ import {
 	shouldIgnoreEscapeStop,
 } from '@/lib/keyboard-target';
 import { createLookaheadScheduler } from '@/lib/lookahead-scheduler';
-import { BEAT_FLASH_MS, BPM_MAX, BPM_MIN } from '@/lib/metronome-defaults';
+import { BEAT_FLASH_MS } from '@/lib/metronome-defaults';
 import { clampTempo } from '@/lib/metronome-tempo';
 import {
 	createPlaybackClock,
@@ -55,7 +55,7 @@ type MetronomeProviderProps = {
 
 export function MetronomeProvider({ children }: MetronomeProviderProps) {
 	const { subdivisionLevel } = useSubdivision();
-	const { tempo, setTempo } = useTempoPreference();
+	const { tempo, setTempo, tempoMin, tempoMax } = useTempoPreference();
 	const { muteMetronome, countInEnabled, mutePlayback, mutePreview } =
 		useSoundPreferences();
 	const { settings } = useSettings();
@@ -156,9 +156,9 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 	const handleTempoChange = useCallback(
 		(updated: number) => {
 			stop();
-			setTempo(clampTempo(updated));
+			setTempo(clampTempo(updated, tempoMin, tempoMax));
 		},
-		[stop, setTempo],
+		[stop, setTempo, tempoMin, tempoMax],
 	);
 
 	useEffect(() => {
@@ -428,13 +428,13 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 			let nextTempo = tempo;
 
 			if (e.key === 'ArrowLeft') {
-				nextTempo = tempo - 5 >= BPM_MIN ? tempo - 5 : BPM_MIN;
+				nextTempo = tempo - 5 >= tempoMin ? tempo - 5 : tempoMin;
 			} else if (e.key === 'ArrowRight') {
-				nextTempo = tempo + 5 <= BPM_MAX ? tempo + 5 : BPM_MAX;
+				nextTempo = tempo + 5 <= tempoMax ? tempo + 5 : tempoMax;
 			} else if (e.key === 'ArrowUp') {
-				nextTempo = tempo + 1 <= BPM_MAX ? tempo + 1 : BPM_MAX;
+				nextTempo = tempo + 1 <= tempoMax ? tempo + 1 : tempoMax;
 			} else if (e.key === 'ArrowDown') {
-				nextTempo = tempo - 1 >= BPM_MIN ? tempo - 1 : BPM_MIN;
+				nextTempo = tempo - 1 >= tempoMin ? tempo - 1 : tempoMin;
 			}
 
 			handleTempoChange(nextTempo);
@@ -446,16 +446,18 @@ export function MetronomeProvider({ children }: MetronomeProviderProps) {
 			window.removeEventListener('keydown', handleKeyDown);
 			window.removeEventListener('keyup', handleKeyUp);
 		};
-	}, [tempo, handleTempoChange, stop]);
+	}, [tempo, tempoMin, tempoMax, handleTempoChange, stop]);
 
 	const tempoValue = useMemo(
 		() =>
 			({
 				tempo,
+				tempoMin,
+				tempoMax,
 				handleTempoChange,
 				setTempo,
 			}) satisfies MetronomeTempoContextValue,
-		[tempo, handleTempoChange, setTempo],
+		[tempo, tempoMin, tempoMax, handleTempoChange, setTempo],
 	);
 
 	const playbackValue = useMemo(

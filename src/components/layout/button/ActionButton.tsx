@@ -1,19 +1,28 @@
 import PersonIcon from '@/assets/svg/person.svg?react';
-import { TIMED_NOTICE_DURATION_MS } from '@/lib/timed-notice';
+import { useProfiles, useToast } from '@/contexts';
+import { ACCOUNT_LABEL } from '@/lib/ui-copy';
+import { AccountPanel } from '../account';
 import { CornerModal } from '../CornerModal';
 
 export function ActionButton() {
+	const { activeProfile } = useProfiles();
+	const { setStatusToastSuppressed } = useToast();
+
 	return (
 		<CornerModal
 			icon={PersonIcon}
-			label='Account'
-			title='Account'
-			dismissAfterMs={TIMED_NOTICE_DURATION_MS}
+			label={ACCOUNT_LABEL}
+			title={ACCOUNT_LABEL}
+			buttonTitle={`${ACCOUNT_LABEL}: ${activeProfile.name}`}
+			detail={
+				<span className='max-w-20 truncate text-xs font-medium sm:max-w-28'>
+					{activeProfile.name}
+				</span>
+			}
+			size='lg'
+			onOpenChange={setStatusToastSuppressed}
 		>
-			<p className='text-center text-sm text-dark'>
-				Accounts aren’t available yet. Your theme, subdivision and sound
-				preferences are saved on this device.
-			</p>
+			<AccountPanel />
 		</CornerModal>
 	);
 }
