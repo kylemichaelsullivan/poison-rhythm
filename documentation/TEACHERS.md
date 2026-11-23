@@ -106,7 +106,7 @@ Use the header **Account** control to keep named student profiles on a shared st
 
 - Every device starts with a built-in **Default** profile (cannot rename or delete). Create additional profiles per student; switch before they play so colors, mode, mutes and tempo come back with them.
 - Tap a profile name to switch. Drag the handle or use the arrows to reorder (keyboard: focus the handle and press Arrow Up / Arrow Down).
-- Set **Tempo Limits** (min / max BPM) on a profile when a student parks at extremes — the metronome cannot leave that band while the profile is active.
+- Tap the pencil (**Edit**) to open that student’s settings: name (except Default), **Tempo Limits** and the full **Mode / Sound / Colors** tabs. **Done** or Escape returns to the profile list without closing Account. Delete is available on inactive non-Default profiles only.
 - Profiles stay on this device/browser only (no cloud sign-in yet). Prefer brand colors on a projected shared screen if students are not switching profiles.
 
 ## Student records (printable PDF)

@@ -76,7 +76,8 @@ export const NEW_PROFILE_LABEL = 'New Profile';
 export const PROFILE_NAME_LABEL = 'Profile Name';
 export const TEMPO_MIN_LABEL = 'Minimum Tempo';
 export const TEMPO_MAX_LABEL = 'Maximum Tempo';
-export const RENAME_PROFILE_LABEL = 'Rename';
+export const SAVE_PROFILE_LABEL = 'Save';
+export const DONE_EDITING_PROFILE_LABEL = 'Done';
 export const DELETE_PROFILE_LABEL = 'Delete';
 export const SWITCH_PROFILE_LABEL = 'Switch';
 export const ACTIVE_PROFILE_LABEL = 'Active';
@@ -95,12 +96,20 @@ export function editProfileLabel(name: string): string {
 	return `Edit ${name}`;
 }
 
+export function editStudentHeading(name: string): string {
+	return `Edit ${name}`;
+}
+
 export function profileSwitchToastMessage(name: string): string {
 	return `Profile: ${name}`;
 }
 
 export function profileCreatedToastMessage(name: string): string {
 	return `Created Profile: ${name}`;
+}
+
+export function profileRenamedToastMessage(name: string): string {
+	return `Renamed Profile: ${name}`;
 }
 
 export function profileMovedAnnouncement(

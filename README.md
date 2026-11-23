@@ -131,13 +131,14 @@ Import from the barrel: `@/contexts`.
 | Module | Hook(s) | Provider | Role |
 |--------|---------|----------|------|
 | `ProfilesContext` | `useProfiles`, `useActiveProfileId` | `ProfilesProvider` | Device profile registry; switch/create/rename/delete |
+| `AccountUiContext` | `useAccountUi` | `AccountUiProvider` | Account open + student edit mode (survives profile remount) |
 | `GameContext` | `useGame` | `GameProvider` | Sync-seeded round on first paint, measures, poison index, endless prefetch, visual hints |
 | `SettingsContext` | `useSettings`, `useSetting(key)` | `SettingsProvider` | Game modes / practice; keyed `useSetting` for single-field UI |
 | `PreferencesContext` | `useComplexityPreferences`, `useSoundPreferences`, `useTempoPreference`, `usePlaybackMute`, … | `PreferencesProvider` | Complexity / sound channels / tempo (+ min/max limits) |
 | `MetronomeContext` | `useMetronome`, `useMetronomeTempo` | `MetronomeProvider` | Playback clock vs tempo (BPM UI ignores beat flash) |
 | `ThemeContext` | `useTheme` | `ThemeProvider` | Light/dark/system theme |
 
-Provider tree: `main.tsx` wraps `ProfilesProvider` → `ToastProvider` → `ProfileScopedProviders` (`ThemeProvider` → `ColorPreferencesProvider` → `SettingsProvider` → `PreferencesProvider` → `MetronomeProvider`, remounted on profile switch); `App.tsx` adds `GameProvider` → `PendingDifficultyProvider` → `AboutPoisonRhythmProvider`, then mounts `AppContent` plus modal hosts. Providers own state only; UI hosts sit beside the tree.
+Provider tree: `main.tsx` wraps `ProfilesProvider` → `ToastProvider` → `AccountUiProvider` → `ProfileScopedProviders` (`ThemeProvider` → `ColorPreferencesProvider` → `SettingsProvider` → `PreferencesProvider` → `MetronomeProvider`, remounted on profile switch); `App.tsx` adds `GameProvider` → `PendingDifficultyProvider` → `AboutPoisonRhythmProvider`, then mounts `AppContent` plus modal hosts. Providers own state only; UI hosts sit beside the tree.
 
 ### Playback timing
 

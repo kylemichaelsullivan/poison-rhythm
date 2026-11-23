@@ -72,7 +72,7 @@ Settings shell: footer **Settings** → lazy `SettingsOverlay` → tabs `Mode` /
 
 ### Device profiles
 
-`ProfilesProvider` owns `poison-rhythm-profiles-v1` (active id + named profiles). `ProfileScopedProviders` remounts theme / colors / settings / prefs / metronome when the active profile changes so `GameProvider` re-seeds the round. Profile prefs use `poison-rhythm:{profileId}:…` keys from `preferenceStorageKey`; `poison-rhythm-intro-seen` stays device-scoped. First launch migrates legacy flat keys into the built-in **Default** profile (`id: default`; cannot rename or delete). Account list supports drag-and-drop reorder plus Move Up / Move Down with a live announcement.
+`ProfilesProvider` owns `poison-rhythm-profiles-v1` (active id + named profiles). `AccountUiProvider` (above `ProfileScopedProviders`) keeps Account open/edit state across profile switches. `ProfileScopedProviders` remounts theme / colors / settings / prefs / metronome when the active profile changes so `GameProvider` re-seeds the round. Profile prefs use `poison-rhythm:{profileId}:…` keys from `preferenceStorageKey`; `poison-rhythm-intro-seen` stays device-scoped. First launch migrates legacy flat keys into the built-in **Default** profile (`id: default`; cannot rename or delete). Account **Edit** switches to that student and shows name (non-Default), tempo limits and the Settings Mode / Sound / Colors tabs; Escape / Done return to the list without dismissing Account. The list also supports drag-and-drop reorder plus Move Up / Move Down with a live announcement.
 
 ## State flow
 

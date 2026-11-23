@@ -156,6 +156,9 @@ test.describe('account profiles', () => {
 			dialog.getByRole('button', { name: 'Drag to Reorder: Default' }),
 		).toBeVisible();
 		await expect(
+			dialog.getByRole('button', { name: 'Edit Default' }),
+		).toBeVisible();
+		await expect(
 			dialog.getByRole('button', { name: 'Close Modal' }),
 		).toBeVisible();
 	});
@@ -186,15 +189,9 @@ test.describe('account profiles', () => {
 			.getByRole('button', { name: 'Account' })
 			.click();
 
-		const dialog = page.getByRole('dialog', { name: 'Account' });
-		await dialog.getByLabel('Profile Name').fill('Alex');
-		await dialog.getByRole('button', { name: 'Add' }).click();
-
-		await page
-			.getByRole('banner')
-			.getByRole('button', { name: 'Account' })
-			.click();
 		const account = page.getByRole('dialog', { name: 'Account' });
+		await account.getByLabel('Profile Name').fill('Alex');
+		await account.getByRole('button', { name: 'Add' }).click();
 		await expect(account.getByText('Alex')).toBeVisible();
 
 		await account.getByRole('button', { name: 'Move Alex Up' }).click();
@@ -204,5 +201,70 @@ test.describe('account profiles', () => {
 		await expect(account.locator('output')).toContainText(
 			'Alex moved to position 1 of 2.',
 		);
+	});
+
+	test('edits a student name and shows Mode / Sound / Colors', async ({
+		page,
+	}) => {
+		await page.goto('/');
+		await generateRound(page);
+		await page
+			.getByRole('banner')
+			.getByRole('button', { name: 'Account' })
+			.click();
+
+		const account = page.getByRole('dialog', { name: 'Account' });
+		await account.getByLabel('Profile Name').fill('Alex');
+		await account.getByRole('button', { name: 'Add' }).click();
+		await account.getByRole('button', { name: 'Edit Alex' }).click();
+
+		await expect(
+			account.getByRole('heading', { name: 'Edit Alex' }),
+		).toBeVisible();
+		await expect(account.getByRole('tab', { name: 'Mode' })).toBeVisible();
+		await expect(account.getByRole('tab', { name: 'Sound' })).toBeVisible();
+		await expect(account.getByRole('tab', { name: 'Colors' })).toBeVisible();
+		await expect(account.getByText('Tempo Limits')).toBeVisible();
+
+		const renameField = account.getByLabel('Profile Name');
+		await renameField.fill('Sam');
+		await account.getByRole('button', { name: 'Save' }).click();
+
+		await expect(
+			account.getByRole('heading', { name: 'Edit Sam' }),
+		).toBeVisible();
+		await expect(
+			page.getByRole('banner').getByRole('button', { name: 'Account' }),
+		).toHaveAttribute('title', 'Account: Sam');
+		await expect(page.getByText('Renamed Profile: Sam')).toBeVisible();
+
+		await account.getByRole('button', { name: 'Done' }).click();
+		await expect(
+			account.getByRole('button', { name: 'Edit Sam' }),
+		).toBeVisible();
+	});
+
+	test('Escape leaves student edit without closing Account', async ({
+		page,
+	}) => {
+		await page.goto('/');
+		await generateRound(page);
+		await page
+			.getByRole('banner')
+			.getByRole('button', { name: 'Account' })
+			.click();
+
+		const account = page.getByRole('dialog', { name: 'Account' });
+		await account.getByLabel('Profile Name').fill('Alex');
+		await account.getByRole('button', { name: 'Add' }).click();
+		await account.getByRole('button', { name: 'Edit Alex' }).click();
+		await account.getByLabel('Profile Name').fill('Sam');
+		await page.keyboard.press('Escape');
+
+		await expect(account).toBeVisible();
+		await expect(
+			account.getByRole('button', { name: 'Edit Alex' }),
+		).toBeVisible();
+		await expect(account.getByRole('tab', { name: 'Mode' })).toHaveCount(0);
 	});
 });

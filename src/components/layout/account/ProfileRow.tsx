@@ -23,13 +23,12 @@ type ProfileRowProps = {
 	index: number;
 	total: number;
 	active: boolean;
-	canRename: boolean;
 	canDelete: boolean;
 	dragging: boolean;
 	dropTarget: boolean;
 	reorderHintId: string;
 	onSwitch: () => void;
-	onRename: () => void;
+	onEdit: () => void;
 	onDelete: () => void;
 	onMoveUp: () => void;
 	onMoveDown: () => void;
@@ -45,13 +44,12 @@ export function ProfileRow({
 	index,
 	total,
 	active,
-	canRename,
 	canDelete,
 	dragging,
 	dropTarget,
 	reorderHintId,
 	onSwitch,
-	onRename,
+	onEdit,
 	onDelete,
 	onMoveUp,
 	onMoveDown,
@@ -131,18 +129,16 @@ export function ProfileRow({
 				</span>
 			) : null}
 
-			{canRename ? (
-				<IconButton
-					label={editProfileLabel(profile.name)}
-					title={editProfileLabel(profile.name)}
-					variant='circle'
-					onClick={onRename}
-				>
-					<span className='inline-flex size-11 items-center justify-center'>
-						<Icon svg={EditIcon} size='sm' />
-					</span>
-				</IconButton>
-			) : null}
+			<IconButton
+				label={editProfileLabel(profile.name)}
+				title={editProfileLabel(profile.name)}
+				variant='circle'
+				onClick={onEdit}
+			>
+				<span className='inline-flex size-11 items-center justify-center'>
+					<Icon svg={EditIcon} size='sm' />
+				</span>
+			</IconButton>
 			{canDelete ? (
 				<IconButton
 					label={DELETE_PROFILE_LABEL}

@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
+	AccountUiProvider,
 	ProfileScopedProviders,
 	ProfilesProvider,
 	ToastProvider,
@@ -28,9 +29,11 @@ createRoot(root).render(
 	<StrictMode>
 		<ProfilesProvider>
 			<ToastProvider>
-				<ProfileScopedProviders>
-					<App />
-				</ProfileScopedProviders>
+				<AccountUiProvider>
+					<ProfileScopedProviders>
+						<App />
+					</ProfileScopedProviders>
+				</AccountUiProvider>
 			</ToastProvider>
 		</ProfilesProvider>
 	</StrictMode>,

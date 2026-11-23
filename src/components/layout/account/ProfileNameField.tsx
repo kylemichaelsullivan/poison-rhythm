@@ -48,6 +48,7 @@ export function ProfileNameField({
 			placeholder={placeholder}
 			maxLength={40}
 			aria-label={PROFILE_NAME_LABEL}
+			data-modal-initial-focus={focusOnMount ? 'true' : undefined}
 			onChange={(event) => onChange(event.target.value)}
 			onKeyDown={(event) => {
 				if (event.key === 'Enter') {
