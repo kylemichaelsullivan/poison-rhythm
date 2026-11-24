@@ -126,7 +126,7 @@ test.describe('scroll highway', () => {
 			settings.getByRole('button', { name: /Show Next Measure/ }),
 		).toHaveCount(0);
 		await expect(
-			settings.getByRole('button', { name: /Listen Before You Play/ }),
+			settings.getByRole('button', { name: /Preview Before/ }),
 		).toHaveCount(0);
 
 		await settings.getByRole('tab', { name: 'Sound' }).click();

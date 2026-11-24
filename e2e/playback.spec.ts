@@ -184,7 +184,7 @@ test.describe('measure playback', () => {
 		).toBeVisible();
 	});
 
-	test('Measures section tabs Eye, Ear, Volume, Previous, then Next', async ({
+	test('Measures section tabs Eye, Preview, Volume, Previous, then Next', async ({
 		page,
 	}) => {
 		await page.goto('/');
@@ -200,8 +200,8 @@ test.describe('measure playback', () => {
 		const eye = page.getByRole('button', {
 			name: /Show Next Measure/,
 		});
-		const ear = page.getByRole('button', {
-			name: /Listen Before You Play/,
+		const preview = page.getByRole('button', {
+			name: /Preview Before/,
 		});
 		const volume = page.getByRole('button', { name: 'Volume', exact: true });
 		const previous = page.getByRole('button', {
@@ -212,7 +212,7 @@ test.describe('measure playback', () => {
 		await eye.focus();
 		await expect(eye).toBeFocused();
 		await page.keyboard.press('Tab');
-		await expect(ear).toBeFocused();
+		await expect(preview).toBeFocused();
 		await page.keyboard.press('Tab');
 		await expect(volume).toBeFocused();
 		await page.keyboard.press('Tab');
@@ -221,7 +221,7 @@ test.describe('measure playback', () => {
 		await expect(next).toBeFocused();
 	});
 
-	test('Measures practice toggles Show Next Measure and Listen Before You Play', async ({
+	test('Measures practice toggles Show Next Measure and Preview Before', async ({
 		page,
 	}) => {
 		await page.goto('/');
@@ -231,8 +231,8 @@ test.describe('measure playback', () => {
 			name: 'Show Next Measure: Off',
 			exact: true,
 		});
-		const ear = page.getByRole('button', {
-			name: 'Listen Before You Play: Off',
+		const preview = page.getByRole('button', {
+			name: 'Preview Before: Off',
 			exact: true,
 		});
 
@@ -245,10 +245,10 @@ test.describe('measure playback', () => {
 		).toBeVisible();
 		await expect(page.getByTestId('next-measure')).toBeVisible();
 
-		await ear.click();
+		await preview.click();
 		await expect(
 			page.getByRole('button', {
-				name: 'Listen Before You Play: On',
+				name: 'Preview Before: On',
 				exact: true,
 			}),
 		).toBeVisible();

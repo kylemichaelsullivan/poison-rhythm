@@ -163,10 +163,10 @@ The rhythm engine (`src/lib/rhythm/`) accepts both `difficulty` and `subdivision
 
 | Area | Controls |
 |------|----------|
-| Mode | Display (grid / notation / scroll highway), play mode + Endless, complexity (difficulty, subdivision), practice (show next, Listen Before You Play — whole Practice group hidden in Scroll) |
+| Mode | Display (grid / notation / scroll highway), play mode + Endless, complexity (difficulty, subdivision), practice (show next, Preview Before — whole Practice group hidden in Scroll) |
 | Sound | Visual/audio feedback, Metronome / Playback / Preview mute, count-in, tempo (Scroll hides Preview + Count-In and always counts in) |
 | Colors | Dominant / secondary Crayola accents + Light/Dark theme toggles on the contrast meter; see [`documentation/COLORS.md`](documentation/COLORS.md) and [`documentation/A11Y.md`](documentation/A11Y.md) |
-| Main-page shortcuts | Header title / Mode icon (About: Play Mode + Difficulty), Poison Display Mode badge, header ShowNotes, Measures Practice toggles (eye / ear), Measures Volume menu, footer metronome |
+| Main-page shortcuts | Header title / Mode icon (About: Play Mode + Difficulty), Poison Display Mode badge, header ShowNotes, Measures Practice toggles (eye / preview), Measures Volume menu, footer metronome |
 
 Settings modal tabs: **Mode**, **Sound**, **Colors** (`SettingsTabs`).
 
@@ -247,7 +247,7 @@ Details: [`documentation/TESTING.md`](documentation/TESTING.md).
 4. Note the **poison rhythm** in the Poison Rhythm section (hidden when poison mode is off or set to hidden).
 5. Click **New (+)** for a fresh poison and measures, or **Reuse** to keep the same poison and regenerate measures.
 6. Use **Prev/Next** to step through measures and find which one matches the poison. On the first measure, the left control starts Play after a short cancelable countdown (click again, click outside or Escape to cancel). On the last measure, the right control offers **New** (+), **Reuse** (same poison, new measures) or **Play**.
-7. Use **Play** to hear measures (optional count-in shows beat numbers on the Play control and fades the live measure). With **Listen Before You Play** enabled (Measures ear toggle or Settings → Mode), the current measure plays once as a demo (Listening — dashed primary shell and Secondary notes), then again as the student pass (Playing — secondary glow shell and Dominant notes). Mute **Playback** from the Measures Volume menu to silence the student pass.
+7. Use **Play** to hear measures (optional count-in shows beat numbers on the Play control and fades the live measure). With **Preview Before** enabled (Measures preview toggle or Settings → Mode), the current measure plays once as a demo (Listening — dashed primary shell and Secondary notes), then again as the student pass (Playing — secondary glow shell and Dominant notes). Mute **Playback** from the Measures Volume menu to silence the student pass.
 8. Open the footer **metronome** to set tempo or tap tempo.
 9. Open the footer **Settings** for theme, colors, sound (including tempo), complexity, play/display mode, poison visibility and practice features (show next measure, demo pass). Play Mode + Difficulty are in the title **About** modal (header brand title or Mode icon) and under Settings → Mode. Other main-page shortcuts remain: Poison **Display Mode** badge, header ShowNotes, footer metronome.
 

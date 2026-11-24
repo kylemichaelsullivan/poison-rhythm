@@ -59,7 +59,7 @@ Phone-up layout (≈360px primary; 320px must not overflow horizontally): safe-a
 | `PlayModeControls` | About framed Play Mode section / Settings list; round regen on `gameMode` change |
 | `MeasureSlider` | `MeasureCarouselChrome` (`live` sets `data-testid="measure-slider"`), `NextMeasurePreview` / `ScrollHighway`, `useMeasurePlaybackSync` |
 | `ShowNotes` | `ShowNotesTrigger`, `ShowNotesSlider`, `useHoverPinPopover` |
-| `MeasuresPracticeToggles` | Header eye + ear IconToggles for Show Next Measure / Listen Before You Play (hidden in Scroll) |
+| `MeasuresPracticeToggles` | Header eye + preview IconToggles for Show Next Measure / Preview Before (hidden in Scroll) |
 | `VolumeMenu` | `VolumeMenuTrigger`, `VolumeMenuPanel`, `useHoverPinPopover`; Metronome / Playback / Preview mutes (Preview omitted in Scroll); click speaker while open mutes all, click again restores the last mix or unmutes all |
 | `PoisonSection` | `PoisonSectionHeader`, `PoisonMeasureContent`, `PoisonReferenceViews` (Scroll stacks notation + grid), `PoisonMeasureFrame` / `HiddenPoisonOverlay` (badge opens Body-owned `DisplayModeModal`) |
 | `Body` | `useSoftDisableFocus`, `useDisclosure` → single `DisplayModeModal` |
@@ -68,7 +68,7 @@ Phone-up layout (≈360px primary; 320px must not overflow horizontally): safe-a
 | `MeasureGrid` | Prop-driven `display` → `MeasureCellGrid` / lazy `MeasureNotation`, `NotationFallback`, `useNotationPrefetch` |
 | `ColorAccentSettings` | Owns prefs + role/contrast hooks; `ContrastScoreMeter` owns theme; tray memoizes scores on role + partner |
 
-Settings shell: footer **Settings** → lazy `SettingsOverlay` → tabs `Mode` / `Sound` / `Colors` over `layout/settings/` atoms (`SettingsGroup`, `EnableToggle`, `When`, …). Color accents persist via `ColorPreferencesProvider` (student-scoped preference keys; null = brand); Colors UI is composed by `ColorAccentSettings`. Main-UI shortcuts remain: header title / Mode icon → About (`AboutPoisonRhythmModal`: brand + Play Mode + Difficulty); Poison/Measures badge → Body-owned `DisplayModeModal`; header ShowNotes; Measures **Practice** toggles (Show Next / Listen Before You Play) and **Volume** menu (Metronome / Playback / Preview); footer metronome for tempo (`CornerModal` `tone='muted'` when metronome muted). Mirrored in Settings: display + play mode + complexity + practice under Mode; feedback → mute channels → tempo under Sound; crayon accents + theme lightbulbs on the contrast meter under Colors. See [`COLORS.md`](COLORS.md) and [`CONTRAST.md`](CONTRAST.md).
+Settings shell: footer **Settings** → lazy `SettingsOverlay` → tabs `Mode` / `Sound` / `Colors` over `layout/settings/` atoms (`SettingsGroup`, `EnableToggle`, `When`, …). Color accents persist via `ColorPreferencesProvider` (student-scoped preference keys; null = brand); Colors UI is composed by `ColorAccentSettings`. Main-UI shortcuts remain: header title / Mode icon → About (`AboutPoisonRhythmModal`: brand + Play Mode + Difficulty); Poison/Measures badge → Body-owned `DisplayModeModal`; header ShowNotes; Measures **Practice** toggles (Show Next / Preview Before) and **Volume** menu (Metronome / Playback / Preview); footer metronome for tempo (`CornerModal` `tone='muted'` when metronome muted). Mirrored in Settings: display + play mode + complexity + practice under Mode; feedback → mute channels → tempo under Sound; crayon accents + theme lightbulbs on the contrast meter under Colors. See [`COLORS.md`](COLORS.md) and [`CONTRAST.md`](CONTRAST.md).
 
 ## State flow
 

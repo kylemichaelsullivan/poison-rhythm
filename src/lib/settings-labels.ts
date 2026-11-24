@@ -24,7 +24,7 @@ export const GAME_MODE_LABELS: Record<GameMode, string> = {
 
 export const PRACTICE_TOGGLE_LABELS = {
 	showNextMeasure: 'Show Next Measure',
-	demoBeforePlay: 'Listen Before You Play',
+	demoBeforePlay: 'Preview Before',
 } as const;
 
 export type ScrollDir = Exclude<ScrollDirection, 'none'>;

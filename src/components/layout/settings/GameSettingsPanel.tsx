@@ -1,5 +1,5 @@
-import EarIcon from '@/assets/svg/ear.svg?react';
 import EyeIcon from '@/assets/svg/eye.svg?react';
+import PreviewIcon from '@/assets/svg/look.svg?react';
 import { DifficultyControls, PlayModeControls } from '@/components/controls';
 import { useSettings } from '@/contexts';
 import { PRACTICE_TOGGLE_LABELS } from '@/lib/settings-labels';
@@ -38,7 +38,7 @@ export function GameSettingsPanel() {
 				<GameBooleanSetting
 					setting='demoBeforePlay'
 					label={PRACTICE_TOGGLE_LABELS.demoBeforePlay}
-					icon={EarIcon}
+					icon={PreviewIcon}
 				/>
 			</ConditionalSettingsGroup>
 

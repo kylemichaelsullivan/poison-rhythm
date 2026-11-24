@@ -37,7 +37,7 @@ describe('statusToastForTransition', () => {
 				...base,
 				demoBeforePlay: true,
 			}),
-		).toBe('Listen Before You Play: On');
+		).toBe('Preview Before: On');
 		expect(
 			statusToastForTransition(base, {
 				...base,

@@ -62,7 +62,7 @@ Former separate Memory / Mirror play modes are gone; use **Poison Rhythm** mode 
 From the Measures header (also **Settings → Mode**):
 
 - **Show Next Measure** (eye) — peeks the upcoming measure under the live one.
-- **Listen Before You Play** (ear) — for each measure: a **Listening** (demo) pass, then a **Playing** (student) pass.
+- **Preview Before** (preview) — for each measure: a **Listening** (demo) pass, then a **Playing** (student) pass.
 
 **Volume** (Measures speaker, also Settings → Sound) — mute **Metronome**, **Playback** (the student pass) or **Preview** (the Listening pass). Click the speaker while the menu is open to mute all three; click again to restore the previous mix, or unmute all if there is nothing to restore. Mute Playback and leave Preview on for call-and-response. Muting Preview while Playback stays on asks for confirmation: Mute Preview, Mute Both or Cancel. If Playback and Preview are both muted, turning Playback on restores Preview too.
 
@@ -84,7 +84,7 @@ From the badge on the Poison Rhythm section, or **Settings → Mode → Display*
 
 **Compare & contrast (10–15 min)** — Subdivision 1/8, difficulty 2–3. Reuse the same poison while regenerating decoys so students practice *discrimination*, not memorizing one set.
 
-**Memory challenge** — Same as above, but Eye → hidden during playback. Listen Before You Play on; mute Playback (leave Preview on) so students must internalize the Listening pass.
+**Memory challenge** — Same as above, but Eye → hidden during playback. Preview Before on; mute Playback (leave Preview on) so students must internalize the Listening pass.
 
 **Bucket groove** — Bucket Drumming mode, raise difficulty gradually; set tempo from the footer metronome or **Settings → Sound**.
 
